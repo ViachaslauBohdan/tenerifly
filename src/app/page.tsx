@@ -5,6 +5,7 @@ import { DatePickerInput } from '@mantine/dates';
 import { IconHome, IconCar, IconMap, IconPlane, IconStar, IconHeart, IconLocation, IconPhone, IconMail, IconLanguage, IconClock, IconUsers, IconCurrencyEuro } from '@tabler/icons-react';
 import { Carousel } from '@mantine/carousel';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 
 const translations = {
@@ -377,6 +378,7 @@ const translations = {
 };
 
 export default function Home() {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [language, setLanguage] = useState<'en' | 'pl'>('en');
   const t = translations[language];
@@ -386,6 +388,7 @@ export default function Home() {
   const [excursionDate, setExcursionDate] = useState<Date | null>(null);
   const [excursionPeople, setExcursionPeople] = useState(2);
   const [carType, setCarType] = useState('all');
+  const [activeTab, setActiveTab] = useState('excursions');
 
   useEffect(() => {
     setMounted(true);
@@ -422,7 +425,7 @@ export default function Home() {
           </Text>
           
           <Card withBorder p="xl" radius="md" style={{ maxWidth: 800 }}>
-            <Tabs defaultValue="excursions">
+            <Tabs defaultValue="excursions" value={activeTab} onChange={(value) => value && setActiveTab(value)}>
               <Tabs.List grow>
                 <Tabs.Tab value="excursions" leftSection={<IconMap size={20} />}>
                   {t.hero.tabs.excursions}
@@ -516,7 +519,24 @@ export default function Home() {
                 </Grid>
               </Tabs.Panel>
               
-              <Button fullWidth size="lg" mt="xl">
+              <Button 
+                fullWidth 
+                size="lg" 
+                mt="xl"
+                onClick={() => {
+                  switch (activeTab) {
+                    case 'excursions':
+                      router.push('/excursions');
+                      break;
+                    case 'cars':
+                      router.push('/cars');
+                      break;
+                    case 'accommodation':
+                      router.push('/accommodation');
+                      break;
+                  }
+                }}
+              >
                 {t.hero.search}
               </Button>
             </Tabs>
