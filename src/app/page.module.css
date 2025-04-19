@@ -166,3 +166,36 @@ a.secondary {
     filter: invert();
   }
 }
+
+.heroSection {
+  background-image: url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+
+.section {
+  padding: 80px 0;
+}
+
+.sectionAlt {
+  composes: section;
+  background-color: #f8f9fa;
+}

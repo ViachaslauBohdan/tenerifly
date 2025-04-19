@@ -18,6 +18,8 @@
     "@mantine/notifications": "^7.17.4",
     "@mantine/spotlight": "^7.17.4",
     "@tabler/icons-react": "^3.31.0",
+    "dayjs": "^1.11.13",
+    "embla-carousel-react": "^8.6.0",
     "next": "15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

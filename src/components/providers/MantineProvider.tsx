@@ -1,7 +1,12 @@
 'use client';
 
-import { MantineProvider as MantineProviderBase } from '@mantine/core';
+import { MantineProvider as MantineProviderBase, createTheme } from '@mantine/core';
 import { ReactNode } from 'react';
+
+const theme = createTheme({
+  primaryColor: 'blue',
+  // Add any theme customizations here
+});
 
 interface MantineProviderProps {
   children: ReactNode;
@@ -9,7 +14,7 @@ interface MantineProviderProps {
 
 export function MantineProvider({ children }: MantineProviderProps) {
   return (
-    <MantineProviderBase defaultColorScheme="light">
+    <MantineProviderBase theme={theme} defaultColorScheme="light">
       {children}
     </MantineProviderBase>
   );
