@@ -765,7 +765,13 @@ export default function Home() {
           <Card withBorder padding="xl" radius="md" style={{ textAlign: 'center' }}>
             <Title order={2} mb="md">{t.cta.title}</Title>
             <Text size="lg" mb="xl">{t.cta.subtitle}</Text>
-            <Button size="lg" leftSection={<IconPhone size={20} />}>
+            <Button 
+              size="lg" 
+              leftSection={<IconPhone size={20} />}
+              component="a"
+              href="https://wa.me/34656641433"
+              target="_blank"
+            >
               {t.cta.button}
             </Button>
           </Card>
@@ -784,7 +790,7 @@ export default function Home() {
               <Title order={4} c="white" mb="md">{t.footer.contacts}</Title>
               <Group>
                 <IconPhone size={20} />
-                <Text c="dimmed">+34 XXX XXX XXX</Text>
+                <Text c="dimmed">+34656641433</Text>
               </Group>
               <Group mt="md">
                 <IconMail size={20} />
