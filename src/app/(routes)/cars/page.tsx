@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Container, Grid, Title, Text } from '@mantine/core';
 import { FilterPanel, FilterConfig } from '@/components/filters/FilterPanel';
 import { CarTile } from '@/components/tiles';
+import { BackToHome } from '@/components/BackToHome';
 import { Car } from '@/types/strapi';
 
 const carFilters: FilterConfig[] = [
@@ -130,7 +131,8 @@ export default function CarsPage() {
 
   return (
     <Container size="xl" py="xl">
-      <Title order={1} mb="xl">Car Rental in Tenerife</Title>
+      <BackToHome />
+      <Title order={1} mb="xl">Cars</Title>
 
       <Grid>
         <Grid.Col span={{ base: 12, md: 3 }}>

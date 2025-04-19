@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Container, Grid, Title, Text } from '@mantine/core';
 import { FilterPanel, FilterConfig } from '@/components/filters/FilterPanel';
 import { AccommodationTile } from '@/components/tiles';
+import { BackToHome } from '@/components/BackToHome';
 import { Accommodation } from '@/types/strapi';
 
 const accommodationFilters: FilterConfig[] = [
@@ -124,6 +125,7 @@ export default function AccommodationPage() {
 
   return (
     <Container size="xl" py="xl">
+      <BackToHome />
       <Title order={1} mb="xl">Accommodation in Tenerife</Title>
 
       <Grid>

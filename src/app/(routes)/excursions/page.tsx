@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Container, Grid, Title, Text } from '@mantine/core';
 import { FilterPanel, FilterConfig } from '@/components/filters/FilterPanel';
 import { ExcursionTile } from '@/components/tiles';
+import { BackToHome } from '@/components/BackToHome';
 import { Excursion } from '@/types/strapi';
 
 const excursionFilters: FilterConfig[] = [
@@ -107,6 +108,7 @@ export default function ExcursionsPage() {
 
   return (
     <Container size="xl" py="xl">
+      <BackToHome />
       <Title order={1} mb="xl">Excursions in Tenerife</Title>
 
       <Grid>
