@@ -1,15 +1,14 @@
-import { Card, Image, Text, Badge, Group, Button } from '@mantine/core';
-import { IconStar, IconClock, IconUsers, IconCurrencyEuro, IconMap } from '@tabler/icons-react';
+import { Card, Image, Text, Badge, Group, Button, Stack } from '@mantine/core';
+import { IconClock, IconLanguage } from '@tabler/icons-react';
 
-interface ExcursionTileProps {
+export interface ExcursionTileProps {
   title: string;
   description: string;
   image: string;
   duration: string;
-  groupSize: string;
   price: string;
-  rating: number;
-  onBook?: () => void;
+  language: 'RU' | 'EN' | 'ES';
+  onView: () => void;
 }
 
 export function ExcursionTile({
@@ -17,55 +16,54 @@ export function ExcursionTile({
   description,
   image,
   duration,
-  groupSize,
   price,
-  rating,
-  onBook
+  language,
+  onView,
 }: ExcursionTileProps) {
+  const getLanguageLabel = (lang: 'RU' | 'EN' | 'ES') => {
+    const labels = {
+      RU: 'Russian',
+      EN: 'English',
+      ES: 'Spanish',
+    };
+    return labels[lang];
+  };
+
   return (
-    <Card withBorder padding="lg" radius="md">
+    <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Card.Section>
         <Image
           src={image}
-          height={200}
+          height={160}
           alt={title}
         />
       </Card.Section>
 
-      <Group justify="space-between" mt="md">
-        <Text size="lg" fw={500}>{title}</Text>
-        <Badge leftSection={<IconStar size={14} />} color="yellow">
-          {rating}
-        </Badge>
-      </Group>
+      <Stack mt="md">
+        <Text fw={500} size="lg">{title}</Text>
+        <Text size="sm" c="dimmed" lineClamp={2}>
+          {description}
+        </Text>
 
-      <Text size="sm" c="dimmed" mt="sm" lineClamp={2}>
-        {description}
-      </Text>
+        <Group justify="space-between" mt="md">
+          <Group gap="xs">
+            <IconClock size="1rem" />
+            <Text size="sm">{duration}</Text>
+          </Group>
+          <Badge color="blue" variant="light">
+            {price}
+          </Badge>
+        </Group>
 
-      <Group mt="md" gap="xs">
-        <IconClock size={16} />
-        <Text size="sm">{duration}</Text>
-      </Group>
+        <Group gap="xs">
+          <IconLanguage size="1rem" />
+          <Text size="sm">{getLanguageLabel(language)}</Text>
+        </Group>
 
-      <Group mt="xs" gap="xs">
-        <IconUsers size={16} />
-        <Text size="sm">{groupSize}</Text>
-      </Group>
-
-      <Group mt="xs" gap="xs">
-        <IconCurrencyEuro size={16} />
-        <Text size="sm">{price}</Text>
-      </Group>
-
-      <Button 
-        fullWidth 
-        mt="xl" 
-        leftSection={<IconMap size={20} />}
-        onClick={onBook}
-      >
-        Book Now
-      </Button>
+        <Button variant="light" color="blue" fullWidth mt="md" radius="md" onClick={onView}>
+          View Details
+        </Button>
+      </Stack>
     </Card>
   );
 } 

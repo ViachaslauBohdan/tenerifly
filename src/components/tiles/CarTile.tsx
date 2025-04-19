@@ -1,87 +1,104 @@
-import { Card, Image, Text, Badge, Group, Button } from '@mantine/core';
-import { IconStar, IconCar, IconUsers, IconCurrencyEuro, IconManualGearbox } from '@tabler/icons-react';
+import { Card, Image, Text, Badge, Group, Button, Stack } from '@mantine/core';
+import { IconCar, IconGasStation, IconGauge, IconUsers } from '@tabler/icons-react';
 
-interface CarTileProps {
+export interface CarTileProps {
   title: string;
   description: string;
   image: string;
-  transmission: string;
-  seats: number;
-  features: string;
+  type: 'rent' | 'sale';
+  status: 'available' | 'reserved' | 'sold' | 'maintenance';
   price: string;
-  rating: number;
-  brand: string;
-  model: string;
-  year: number;
-  onRent?: () => void;
+  specifications: {
+    brand: string;
+    model: string;
+    year: number;
+    fuel_type: string;
+    transmission: string;
+    seats: number;
+  };
+  onView: () => void;
 }
 
 export function CarTile({
   title,
   description,
   image,
-  transmission,
-  seats,
-  features,
+  type,
+  status,
   price,
-  rating,
-  brand,
-  model,
-  year,
-  onRent
+  specifications,
+  onView,
 }: CarTileProps) {
+  const getStatusColor = (status: CarTileProps['status']) => {
+    const colors: Record<CarTileProps['status'], string> = {
+      available: 'green',
+      reserved: 'yellow',
+      sold: 'red',
+      maintenance: 'gray',
+    };
+    return colors[status];
+  };
+
   return (
-    <Card withBorder padding="lg" radius="md">
+    <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Card.Section>
         <Image
           src={image}
-          height={200}
+          height={160}
           alt={title}
         />
       </Card.Section>
 
-      <Group justify="space-between" mt="md">
-        <Text size="lg" fw={500}>{title}</Text>
-        <Badge leftSection={<IconStar size={14} />} color="yellow">
-          {rating}
-        </Badge>
-      </Group>
+      <Stack mt="md">
+        <Text fw={500} size="lg">{title}</Text>
+        <Group gap="xs">
+          <Text size="sm" c="dimmed">{specifications.brand}</Text>
+          <Text size="sm" c="dimmed">•</Text>
+          <Text size="sm" c="dimmed">{specifications.model}</Text>
+          <Text size="sm" c="dimmed">•</Text>
+          <Text size="sm" c="dimmed">{specifications.year}</Text>
+        </Group>
 
-      <Text size="sm" c="dimmed" mt="sm">
-        {brand} {model} ({year})
-      </Text>
+        <Text size="sm" c="dimmed" lineClamp={2}>
+          {description}
+        </Text>
 
-      <Text size="sm" c="dimmed" mt="sm" lineClamp={2}>
-        {description}
-      </Text>
+        <Group justify="space-between" mt="xs">
+          <Group gap="xs">
+            <IconGasStation size="1rem" />
+            <Text size="sm">{specifications.fuel_type}</Text>
+          </Group>
+          <Group gap="xs">
+            <IconGauge size="1rem" />
+            <Text size="sm">{specifications.transmission}</Text>
+          </Group>
+          <Group gap="xs">
+            <IconUsers size="1rem" />
+            <Text size="sm">{specifications.seats} seats</Text>
+          </Group>
+        </Group>
 
-      <Group mt="md" gap="xs">
-        <IconManualGearbox size={16} />
-        <Text size="sm">{transmission}</Text>
-      </Group>
+        <Group justify="space-between" mt="md">
+          <Badge color={getStatusColor(status)} variant="light">
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </Badge>
+          <Badge color="blue" variant="filled">
+            {price}
+          </Badge>
+        </Group>
 
-      <Group mt="xs" gap="xs">
-        <IconUsers size={16} />
-        <Text size="sm">{seats} seats</Text>
-      </Group>
-
-      <Text size="sm" mt="xs">
-        {features}
-      </Text>
-
-      <Group mt="xs" gap="xs">
-        <IconCurrencyEuro size={16} />
-        <Text size="sm">{price}/day</Text>
-      </Group>
-
-      <Button 
-        fullWidth 
-        mt="xl" 
-        leftSection={<IconCar size={20} />}
-        onClick={onRent}
-      >
-        Rent Now
-      </Button>
+        <Button 
+          variant="light" 
+          color="blue" 
+          fullWidth 
+          mt="md" 
+          radius="md" 
+          onClick={onView}
+          leftSection={<IconCar size="1rem" />}
+        >
+          View Details
+        </Button>
+      </Stack>
     </Card>
   );
 } 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Title, Text, RangeSlider, Select, MultiSelect, Button, Group, Stack } from '@mantine/core';
+import { Card, Text, Select, RangeSlider, Button, Stack } from '@mantine/core';
 import { IconFilter } from '@tabler/icons-react';
 
 export interface FilterOption {
@@ -9,73 +9,63 @@ export interface FilterOption {
 }
 
 export interface FilterConfig {
-  type: 'select' | 'multiSelect' | 'range';
+  id: string;
   label: string;
-  key: string;
+  type: 'select' | 'range' | 'multiSelect';
   options?: FilterOption[];
   min?: number;
   max?: number;
   step?: number;
 }
 
-interface FilterPanelProps {
-  title: string;
-  filters: FilterConfig[];
+export interface FilterPanelProps {
+  config: FilterConfig[];
   values: Record<string, any>;
-  onChange: (key: string, value: any) => void;
+  onChange: (id: string, value: any) => void;
   onReset: () => void;
 }
 
-export function FilterPanel({ title, filters, values, onChange, onReset }: FilterPanelProps) {
+export function FilterPanel({ config, values, onChange, onReset }: FilterPanelProps) {
   return (
-    <Card withBorder padding="lg" radius="md">
-      <Group justify="space-between" mb="md">
-        <Group gap="xs">
-          <IconFilter size={20} />
-          <Title order={3}>{title}</Title>
-        </Group>
-        <Button variant="subtle" onClick={onReset}>
-          Reset
-        </Button>
-      </Group>
-
+    <Card withBorder>
       <Stack gap="md">
-        {filters.map((filter) => (
-          <div key={filter.key}>
+        <Text fw={500} size="lg">
+          <IconFilter size="1rem" style={{ marginRight: '0.5rem' }} />
+          Filters
+        </Text>
+
+        {config.map((filter) => (
+          <div key={filter.id}>
             <Text size="sm" fw={500} mb="xs">
               {filter.label}
             </Text>
 
-            {filter.type === 'select' && filter.options && (
+            {filter.type === 'select' && (
               <Select
-                value={values[filter.key] || ''}
-                onChange={(value) => onChange(filter.key, value)}
-                data={filter.options}
+                data={filter.options || []}
+                value={values[filter.id]}
+                onChange={(value) => onChange(filter.id, value)}
                 clearable
+                placeholder={`Select ${filter.label.toLowerCase()}`}
               />
             )}
 
-            {filter.type === 'multiSelect' && filter.options && (
-              <MultiSelect
-                value={values[filter.key] || []}
-                onChange={(value) => onChange(filter.key, value)}
-                data={filter.options}
-                clearable
-              />
-            )}
-
-            {filter.type === 'range' && filter.min !== undefined && filter.max !== undefined && (
+            {filter.type === 'range' && (
               <RangeSlider
-                value={values[filter.key] || [filter.min, filter.max]}
-                onChange={(value) => onChange(filter.key, value)}
                 min={filter.min}
                 max={filter.max}
-                step={filter.step || 1}
-                label={(value) => `${value}`}
+                step={filter.step}
+                value={values[filter.id]}
+                onChange={(value) => onChange(filter.id, value)}
+                label={(value) => `€${value}`}
               />
             )}
           </div>
         ))}
+
+        <Button variant="light" onClick={onReset}>
+          Reset Filters
+        </Button>
       </Stack>
     </Card>
   );

@@ -1,171 +1,154 @@
 'use client';
 
-import { useState } from 'react';
-import { Container, Grid, Title, Text } from '@mantine/core';
+import { useState, useEffect } from 'react';
+import { Container, Grid, Title, Text, LoadingOverlay } from '@mantine/core';
 import { FilterPanel, FilterConfig } from '@/components/filters/FilterPanel';
 import { CarTile } from '@/components/tiles';
 import { BackToHome } from '@/components/BackToHome';
+import { carsAPI } from '@/services/api';
 import { Car } from '@/types/strapi';
 
 const carFilters: FilterConfig[] = [
   {
+    id: 'priceRange',
     type: 'range',
     label: 'Price Range',
-    key: 'price',
     min: 0,
-    max: 100,
+    max: 200,
     step: 5,
   },
   {
+    id: 'type',
     type: 'select',
-    label: 'Transmission',
-    key: 'transmission',
+    label: 'Type',
     options: [
-      { value: 'automatic', label: 'Automatic' },
-      { value: 'manual', label: 'Manual' },
+      { value: 'rent', label: 'For Rent' },
+      { value: 'sale', label: 'For Sale' },
     ],
   },
   {
-    type: 'range',
-    label: 'Seats',
-    key: 'seats',
-    min: 2,
-    max: 9,
-    step: 1,
-  },
-  {
+    id: 'status',
     type: 'select',
-    label: 'Brand',
-    key: 'brand',
+    label: 'Status',
     options: [
-      { value: 'toyota', label: 'Toyota' },
-      { value: 'volkswagen', label: 'Volkswagen' },
-      { value: 'ford', label: 'Ford' },
-      { value: 'renault', label: 'Renault' },
-      { value: 'seat', label: 'SEAT' },
+      { value: 'available', label: 'Available' },
+      { value: 'reserved', label: 'Reserved' },
+      { value: 'sold', label: 'Sold' },
+      { value: 'maintenance', label: 'Maintenance' },
     ],
   },
 ];
 
-const mockImages = {
-  data: {
-    attributes: {
-      url: "/placeholder.jpg",
-      formats: {
-        thumbnail: { url: "/placeholder-thumb.jpg" },
-        small: { url: "/placeholder-small.jpg" },
-        medium: { url: "/placeholder-medium.jpg" },
-        large: { url: "/placeholder-large.jpg" }
-      }
-    }
-  }
-};
-
 export default function CarsPage() {
-  const [filters, setFilters] = useState<Record<string, any>>({});
-  const [cars, setCars] = useState<Car[]>([
-    {
-      id: 1,
-      attributes: {
-        title: "Economy Car",
-        description: "Perfect for city driving and small trips",
-        images: [mockImages],
-        brand: "Toyota",
-        model: "Yaris",
-        year: 2022,
-        transmission: "Manual",
-        seats: 5,
-        features: "A/C, 5 Seats",
-        price: 25,
-        rating: 4.5,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    },
-    {
-      id: 2,
-      attributes: {
-        title: "SUV",
-        description: "Ideal for mountain trips and family travel",
-        images: [mockImages],
-        brand: "Volkswagen",
-        model: "Tiguan",
-        year: 2023,
-        transmission: "Automatic",
-        seats: 7,
-        features: "A/C, 7 Seats, GPS",
-        price: 45,
-        rating: 4.7,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    },
-    {
-      id: 3,
-      attributes: {
-        title: "Convertible",
-        description: "Enjoy the beautiful weather in style",
-        images: [mockImages],
-        brand: "Ford",
-        model: "Mustang",
-        year: 2023,
-        transmission: "Automatic",
-        seats: 4,
-        features: "A/C, 4 Seats, GPS",
-        price: 55,
-        rating: 4.8,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    }
-  ]);
-  const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState<Record<string, any>>({
+    priceRange: [0, 200],
+    type: '',
+    status: '',
+  });
+  const [cars, setCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFilterChange = (key: string, value: any) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+  const fetchCars = async () => {
+    try {
+      setLoading(true);
+      const response = await carsAPI.getAll();
+      console.log('API Response:', response);
+      setCars(response.data || []);
+      setError(null);
+    } catch (err) {
+      setError('Failed to fetch cars');
+      console.error('Error fetching cars:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCars();
+  }, []);
+
+  const handleFilterChange = (id: string, value: any) => {
+    setFilters((prev) => ({ ...prev, [id]: value }));
   };
 
   const handleFilterReset = () => {
-    setFilters({});
+    setFilters({
+      priceRange: [0, 200],
+      type: '',
+      status: '',
+    });
   };
+
+  // Apply filters to cars
+  const filteredCars = cars.filter((car) => {
+    // Price filter
+    if (filters.priceRange && car.price?.amount > filters.priceRange[1]) {
+      return false;
+    }
+
+    // Type filter
+    if (filters.type && car.type !== filters.type) {
+      return false;
+    }
+
+    // Status filter
+    if (filters.status && car.car_status !== filters.status) {
+      return false;
+    }
+
+    return true;
+  });
 
   return (
     <Container size="xl" py="xl">
       <BackToHome />
-      <Title order={1} mb="xl">Cars</Title>
+      <Title order={1} mb="xl">Cars in Tenerife</Title>
 
       <Grid>
         <Grid.Col span={{ base: 12, md: 3 }}>
           <FilterPanel
-            title="Filters"
-            filters={carFilters}
+            config={carFilters}
             values={filters}
             onChange={handleFilterChange}
             onReset={handleFilterReset}
           />
         </Grid.Col>
-
         <Grid.Col span={{ base: 12, md: 9 }}>
-          <Grid>
-            {cars.map((car) => (
-              <Grid.Col key={car.id} span={{ base: 12, sm: 6, lg: 4 }}>
-                <CarTile
-                  title={car.attributes.title}
-                  description={car.attributes.description}
-                  image={car.attributes.images[0]?.data.attributes.url || '/placeholder.jpg'}
-                  brand={car.attributes.brand}
-                  model={car.attributes.model}
-                  year={car.attributes.year}
-                  transmission={car.attributes.transmission}
-                  seats={car.attributes.seats}
-                  features={car.attributes.features}
-                  price={`€${car.attributes.price}`}
-                  rating={car.attributes.rating}
-                  onRent={() => console.log('Rent car:', car.id)}
-                />
-              </Grid.Col>
-            ))}
-          </Grid>
+          {error ? (
+            <Text c="red" ta="center" py="xl">{error}</Text>
+          ) : (
+            <Grid>
+              {filteredCars.length === 0 ? (
+                <Grid.Col>
+                  <Text ta="center" py="xl">No cars found</Text>
+                </Grid.Col>
+              ) : (
+                filteredCars.map((car) => (
+                  <Grid.Col key={car.id} span={{ base: 12, sm: 6 }}>
+                    <CarTile
+                      title={car.title}
+                      description={car.description || 'No description available'}
+                      image={car.images?.[0]?.url || '/placeholder.jpg'}
+                      type={car.type}
+                      status={car.car_status}
+                      price={`€${car.price?.amount || 0}${car.price?.period === 'day' ? '/day' : ''}`}
+                      specifications={{
+                        brand: car.specifications?.make || 'Unknown',
+                        model: car.specifications?.model || 'Unknown',
+                        year: car.specifications?.year || 0,
+                        fuel_type: car.specifications?.fuel || 'Unknown',
+                        transmission: car.specifications?.transmission || 'Unknown',
+                        seats: car.specifications?.seats || 0,
+                      }}
+                      onView={() => console.log('View car:', car.id)}
+                    />
+                  </Grid.Col>
+                ))
+              )}
+            </Grid>
+          )}
+          <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
         </Grid.Col>
       </Grid>
     </Container>
