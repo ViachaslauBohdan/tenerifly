@@ -2,7 +2,7 @@
 
 import { Card, Image, Text, Badge, Group, Stack, ActionIcon, Rating } from '@mantine/core';
 import { IconBed, IconBath, IconUsers, IconMapPin } from '@tabler/icons-react';
-import { Property } from '@/types/property';
+import { Property } from '@/types/strapi';
 
 interface PropertyTileProps {
   property: Property;
@@ -10,25 +10,12 @@ interface PropertyTileProps {
 }
 
 export function PropertyTile({ property, onBook }: PropertyTileProps) {
-  const { title, description, images, location, specifications, price, features } = property.attributes;
+  const { title, description, images, location, specifications, price, features } = property;
 
   // Get the first image URL with fallbacks
-  const imageUrl = (() => {
-    // Check if the images data is in the transformed format
-    if (Array.isArray(images) && images.length > 0) {
-      return images[0].formats?.medium?.url || images[0].url || '/placeholder.jpg';
-    }
-    
-    // Check if the images data is in the original Strapi format
-    if (images?.data?.[0]?.attributes) {
-      return images.data[0].attributes.formats?.medium?.url || 
-             images.data[0].attributes.url || 
-             '/placeholder.jpg';
-    }
-    
-    // Fallback to placeholder image
-    return '/placeholder.jpg';
-  })();
+  const imageUrl = images?.[0]?.data?.attributes?.formats?.medium?.url || 
+                  images?.[0]?.data?.attributes?.url || 
+                  '/placeholder.jpg';
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
@@ -80,9 +67,9 @@ export function PropertyTile({ property, onBook }: PropertyTileProps) {
 
         <Group justify="space-between" align="center">
           <Group gap="xs">
-            {features.has_pool && <Badge color="blue">Pool</Badge>}
-            {features.has_garden && <Badge color="green">Garden</Badge>}
-            {features.has_air_conditioning && <Badge color="gray">AC</Badge>}
+            {features?.pool && <Badge color="blue">Pool</Badge>}
+            {features?.garden && <Badge color="green">Garden</Badge>}
+            {features?.air_conditioning && <Badge color="gray">AC</Badge>}
           </Group>
           {onBook && (
             <Badge

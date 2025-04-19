@@ -6,7 +6,7 @@ import { FilterPanel, FilterConfig } from '@/components/filters/FilterPanel';
 import { PropertyTile } from '@/components/tiles/PropertyTile';
 import { BackToHome } from '@/components/BackToHome';
 import { propertiesAPI } from '@/services/api';
-import { Property } from '@/types/property';
+import { Property } from '@/types/strapi';
 
 const propertyFilters: FilterConfig[] = [
   {
@@ -64,77 +64,7 @@ export default function AccommodationPage() {
     try {
       setLoading(true);
       const response = await propertiesAPI.getAll();
-      console.log('API Response:', response);
-      
-      // Transform the API response to match our Property type
-      const transformedProperties = response.data.map((item: any) => ({
-        id: item.id,
-        attributes: {
-          title: item.title,
-          description: item.description,
-          type: item.type,
-          property_status: item.property_status,
-          featured: item.featured,
-          category: item.category,
-          price: {
-            amount: item.price?.amount || 0,
-            currency: item.price?.currency || 'EUR',
-            period: item.price?.period || 'total',
-          },
-          specifications: {
-            total_area: item.specifications?.total_area || 0,
-            living_area: item.specifications?.living_area || 0,
-            bedrooms: item.specifications?.bedrooms || 0,
-            bathrooms: item.specifications?.bathrooms || 0,
-            floor: item.specifications?.floor || 0,
-            total_floors: item.specifications?.total_floors || 0,
-            year_built: item.specifications?.year_built || null,
-            parking_spaces: item.specifications?.parking_spaces || 0,
-          },
-          features: {
-            has_pool: item.features?.has_pool || false,
-            has_garden: item.features?.has_garden || false,
-            has_garage: item.features?.has_garage || false,
-            has_terrace: item.features?.has_terrace || false,
-            has_security: item.features?.has_security || false,
-            has_air_conditioning: item.features?.has_air_conditioning || false,
-            has_heating: item.features?.has_heating || false,
-            has_internet: item.features?.has_internet || false,
-            furnished: item.features?.furnished || false,
-            additional_features: item.features?.additional_features || null,
-          },
-          location: {
-            address: item.location?.address || '',
-            city: item.location?.city || '',
-            region: item.location?.region || '',
-            postal_code: item.location?.postal_code || '',
-            latitude: item.location?.latitude || null,
-            longitude: item.location?.longitude || null,
-          },
-          contact: {
-            name: item.contact?.name || '',
-            email: item.contact?.email || '',
-            phone: item.contact?.phone || '',
-            whatsapp: item.contact?.whatsapp || null,
-            telegram: item.contact?.telegram || null,
-            preferred_contact: item.contact?.preferred_contact || 'email',
-          },
-          images: item.images?.map((img: any) => ({
-            url: img.url,
-            formats: {
-              thumbnail: { url: img.formats?.thumbnail?.url || '' },
-              small: { url: img.formats?.small?.url || '' },
-              medium: { url: img.formats?.medium?.url || '' },
-              large: { url: img.formats?.large?.url || '' },
-            },
-          })) || [],
-          createdAt: item.createdAt,
-          updatedAt: item.updatedAt,
-          publishedAt: item.publishedAt,
-        },
-      }));
-      
-      setProperties(transformedProperties);
+      setProperties(response.data);
       setError(null);
     } catch (err) {
       setError('Failed to fetch properties');
@@ -164,22 +94,22 @@ export default function AccommodationPage() {
   // Apply filters to properties
   const filteredProperties = properties.filter((property) => {
     // Price filter
-    if (filters.priceRange && property.attributes.price.amount > filters.priceRange[1]) {
+    if (filters.priceRange && property.price.amount > filters.priceRange[1]) {
       return false;
     }
 
     // Type filter
-    if (filters.type && property.attributes.type !== filters.type) {
+    if (filters.type && property.type !== filters.type) {
       return false;
     }
 
     // Bedrooms filter
-    if (filters.bedrooms && property.attributes.specifications.bedrooms.toString() !== filters.bedrooms) {
+    if (filters.bedrooms && property.specifications.bedrooms.toString() !== filters.bedrooms) {
       return false;
     }
 
     // Location filter
-    if (filters.location && property.attributes.location.city !== filters.location) {
+    if (filters.location && property.location.city !== filters.location) {
       return false;
     }
 
