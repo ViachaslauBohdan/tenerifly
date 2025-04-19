@@ -10,68 +10,65 @@ export interface StrapiResponse<T> {
   };
 }
 
+export interface StrapiImageFormat {
+  url: string;
+}
+
+export interface StrapiImageFormats {
+  thumbnail: StrapiImageFormat;
+  small: StrapiImageFormat;
+  medium: StrapiImageFormat;
+  large: StrapiImageFormat;
+}
+
+export interface StrapiImageAttributes {
+  url: string;
+  formats: StrapiImageFormats;
+}
+
 export interface StrapiImage {
   data: {
-    id: number;
-    attributes: {
-      url: string;
-      formats: {
-        thumbnail: { url: string };
-        small: { url: string };
-        medium: { url: string };
-        large: { url: string };
-      };
-    };
+    attributes: StrapiImageAttributes;
   };
 }
 
-export interface Accommodation {
-  id: number;
-  attributes: {
-    title: string;
-    description: string;
-    price: number;
-    location: string;
-    bedrooms: number;
-    bathrooms: number;
-    maxGuests: number;
-    images: StrapiImage[];
-    amenities: string[];
-    createdAt: string;
-    updatedAt: string;
-  };
+interface StrapiBaseAttributes {
+  title: string;
+  description: string;
+  price: number;
+  images: StrapiImage[];
+  rating: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface Excursion {
-  id: number;
-  attributes: {
-    title: string;
-    description: string;
-    price: number;
-    duration: string;
-    maxGroupSize: number;
-    images: StrapiImage[];
-    included: string[];
-    schedule: string[];
-    createdAt: string;
-    updatedAt: string;
-  };
+export interface ExcursionAttributes extends StrapiBaseAttributes {
+  duration: string;
+  maxGroupSize: number;
 }
 
-export interface Car {
+export interface CarAttributes extends StrapiBaseAttributes {
+  brand: string;
+  model: string;
+  year: number;
+  transmission: string;
+  seats: number;
+  features: string;
+}
+
+export interface AccommodationAttributes extends StrapiBaseAttributes {
+  location: string;
+  bedrooms: number;
+  bathrooms: number;
+  maxGuests: number;
+  amenities: string;
+}
+
+interface StrapiEntity<T> {
   id: number;
-  attributes: {
-    title: string;
-    description: string;
-    price: number;
-    brand: string;
-    model: string;
-    year: number;
-    transmission: string;
-    seats: number;
-    images: StrapiImage[];
-    features: string[];
-    createdAt: string;
-    updatedAt: string;
-  };
-} 
+  attributes: T;
+}
+
+export type Excursion = StrapiEntity<ExcursionAttributes>;
+export type Car = StrapiEntity<CarAttributes>;
+export type Accommodation = StrapiEntity<AccommodationAttributes>; 

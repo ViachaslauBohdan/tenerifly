@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Container, Grid, Title, Text, Card, Image, Group, Badge, Button } from '@mantine/core';
-import { IconBed, IconBath, IconUsers } from '@tabler/icons-react';
+import { Container, Grid, Title, Text } from '@mantine/core';
 import { FilterPanel, FilterConfig } from '@/components/filters/FilterPanel';
+import { AccommodationTile } from '@/components/tiles';
 import { Accommodation } from '@/types/strapi';
-import { api } from '@/lib/api/strapi';
 
 const accommodationFilters: FilterConfig[] = [
   {
@@ -44,10 +43,76 @@ const accommodationFilters: FilterConfig[] = [
   },
 ];
 
+const mockImages = {
+  data: {
+    attributes: {
+      url: "/placeholder.jpg",
+      formats: {
+        thumbnail: { url: "/placeholder-thumb.jpg" },
+        small: { url: "/placeholder-small.jpg" },
+        medium: { url: "/placeholder-medium.jpg" },
+        large: { url: "/placeholder-large.jpg" }
+      }
+    }
+  }
+};
+
 export default function AccommodationPage() {
   const [filters, setFilters] = useState<Record<string, any>>({});
-  const [accommodations, setAccommodations] = useState<Accommodation[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [accommodations, setAccommodations] = useState<Accommodation[]>([
+    {
+      id: 1,
+      attributes: {
+        title: "Beachfront Apartment",
+        description: "Modern apartment with ocean views",
+        images: [mockImages],
+        location: "Los Cristianos",
+        bedrooms: 2,
+        bathrooms: 1,
+        maxGuests: 4,
+        amenities: "WiFi, Pool, Kitchen",
+        price: 80,
+        rating: 4.6,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    },
+    {
+      id: 2,
+      attributes: {
+        title: "Mountain Villa",
+        description: "Spacious villa with mountain views",
+        images: [mockImages],
+        location: "La Orotava",
+        bedrooms: 3,
+        bathrooms: 2,
+        maxGuests: 6,
+        amenities: "WiFi, Garden, Parking",
+        price: 150,
+        rating: 4.8,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    },
+    {
+      id: 3,
+      attributes: {
+        title: "City Studio",
+        description: "Cozy studio in the heart of the city",
+        images: [mockImages],
+        location: "Santa Cruz",
+        bedrooms: 1,
+        bathrooms: 1,
+        maxGuests: 2,
+        amenities: "WiFi, Kitchen",
+        price: 60,
+        rating: 4.4,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    }
+  ]);
+  const [loading, setLoading] = useState(false);
 
   const handleFilterChange = (key: string, value: any) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -76,43 +141,19 @@ export default function AccommodationPage() {
           <Grid>
             {accommodations.map((accommodation) => (
               <Grid.Col key={accommodation.id} span={{ base: 12, sm: 6, lg: 4 }}>
-                <Card withBorder padding="lg" radius="md">
-                  <Card.Section>
-                    <Image
-                      src={accommodation.attributes.images[0]?.data.attributes.url || '/placeholder.jpg'}
-                      height={200}
-                      alt={accommodation.attributes.title}
-                    />
-                  </Card.Section>
-
-                  <Group justify="space-between" mt="md">
-                    <Text size="lg" fw={500}>{accommodation.attributes.title}</Text>
-                    <Badge size="lg">€{accommodation.attributes.price}/night</Badge>
-                  </Group>
-
-                  <Text size="sm" c="dimmed" mt="sm">
-                    {accommodation.attributes.location}
-                  </Text>
-
-                  <Group mt="md" gap="xs">
-                    <IconBed size={16} />
-                    <Text size="sm">{accommodation.attributes.bedrooms} beds</Text>
-                  </Group>
-
-                  <Group mt="xs" gap="xs">
-                    <IconBath size={16} />
-                    <Text size="sm">{accommodation.attributes.bathrooms} baths</Text>
-                  </Group>
-
-                  <Group mt="xs" gap="xs">
-                    <IconUsers size={16} />
-                    <Text size="sm">Up to {accommodation.attributes.maxGuests} guests</Text>
-                  </Group>
-
-                  <Button fullWidth mt="xl">
-                    View Details
-                  </Button>
-                </Card>
+                <AccommodationTile
+                  title={accommodation.attributes.title}
+                  description={accommodation.attributes.description}
+                  image={accommodation.attributes.images[0]?.data.attributes.url || '/placeholder.jpg'}
+                  location={accommodation.attributes.location}
+                  bedrooms={accommodation.attributes.bedrooms}
+                  bathrooms={accommodation.attributes.bathrooms}
+                  maxGuests={accommodation.attributes.maxGuests}
+                  amenities={accommodation.attributes.amenities}
+                  price={`€${accommodation.attributes.price}`}
+                  rating={accommodation.attributes.rating}
+                  onView={() => console.log('View accommodation:', accommodation.id)}
+                />
               </Grid.Col>
             ))}
           </Grid>

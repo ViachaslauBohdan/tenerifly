@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Container, Grid, Title, Text, Card, Image, Group, Badge, Button } from '@mantine/core';
-import { IconClock, IconUsers, IconCurrencyEuro } from '@tabler/icons-react';
+import { Container, Grid, Title, Text } from '@mantine/core';
 import { FilterPanel, FilterConfig } from '@/components/filters/FilterPanel';
+import { ExcursionTile } from '@/components/tiles';
 import { Excursion } from '@/types/strapi';
-import { api } from '@/lib/api/strapi';
 
 const excursionFilters: FilterConfig[] = [
   {
@@ -36,10 +35,67 @@ const excursionFilters: FilterConfig[] = [
   },
 ];
 
+const mockImages = {
+  data: {
+    attributes: {
+      url: "/placeholder.jpg",
+      formats: {
+        thumbnail: { url: "/placeholder-thumb.jpg" },
+        small: { url: "/placeholder-small.jpg" },
+        medium: { url: "/placeholder-medium.jpg" },
+        large: { url: "/placeholder-large.jpg" }
+      }
+    }
+  }
+};
+
 export default function ExcursionsPage() {
   const [filters, setFilters] = useState<Record<string, any>>({});
-  const [excursions, setExcursions] = useState<Excursion[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [excursions, setExcursions] = useState<Excursion[]>([
+    {
+      id: 1,
+      attributes: {
+        title: "Teide National Park",
+        description: "Visit Spain's highest peak and enjoy breathtaking views",
+        images: [mockImages],
+        duration: "8 hours",
+        maxGroupSize: 8,
+        price: 45,
+        rating: 4.8,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    },
+    {
+      id: 2,
+      attributes: {
+        title: "Whale Watching",
+        description: "Watch whales and dolphins in their natural habitat",
+        images: [mockImages],
+        duration: "4 hours",
+        maxGroupSize: 12,
+        price: 35,
+        rating: 4.9,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    },
+    {
+      id: 3,
+      attributes: {
+        title: "Loro Parque",
+        description: "Visit one of Europe's best zoological parks",
+        images: [mockImages],
+        duration: "6 hours",
+        maxGroupSize: 15,
+        price: 40,
+        rating: 4.7,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    }
+  ]);
+  const [loading, setLoading] = useState(false);
 
   const handleFilterChange = (key: string, value: any) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -68,38 +124,16 @@ export default function ExcursionsPage() {
           <Grid>
             {excursions.map((excursion) => (
               <Grid.Col key={excursion.id} span={{ base: 12, sm: 6, lg: 4 }}>
-                <Card withBorder padding="lg" radius="md">
-                  <Card.Section>
-                    <Image
-                      src={excursion.attributes.images[0]?.data.attributes.url || '/placeholder.jpg'}
-                      height={200}
-                      alt={excursion.attributes.title}
-                    />
-                  </Card.Section>
-
-                  <Group justify="space-between" mt="md">
-                    <Text size="lg" fw={500}>{excursion.attributes.title}</Text>
-                    <Badge size="lg">€{excursion.attributes.price}</Badge>
-                  </Group>
-
-                  <Text size="sm" c="dimmed" mt="sm" lineClamp={2}>
-                    {excursion.attributes.description}
-                  </Text>
-
-                  <Group mt="md" gap="xs">
-                    <IconClock size={16} />
-                    <Text size="sm">{excursion.attributes.duration}</Text>
-                  </Group>
-
-                  <Group mt="xs" gap="xs">
-                    <IconUsers size={16} />
-                    <Text size="sm">Max {excursion.attributes.maxGroupSize} people</Text>
-                  </Group>
-
-                  <Button fullWidth mt="xl">
-                    Book Now
-                  </Button>
-                </Card>
+                <ExcursionTile
+                  title={excursion.attributes.title}
+                  description={excursion.attributes.description}
+                  image={excursion.attributes.images[0]?.data.attributes.url || '/placeholder.jpg'}
+                  duration={excursion.attributes.duration}
+                  groupSize={`Max ${excursion.attributes.maxGroupSize} people`}
+                  price={`€${excursion.attributes.price}`}
+                  rating={excursion.attributes.rating}
+                  onBook={() => console.log('Book excursion:', excursion.id)}
+                />
               </Grid.Col>
             ))}
           </Grid>
