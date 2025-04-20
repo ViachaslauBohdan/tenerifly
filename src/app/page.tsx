@@ -706,20 +706,20 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Map Section */}
+      {/* Map Section 
       <section style={{ padding: '80px 0' }}>
         <Container size="xl">
           <Title order={2} mb="xl">{t.map}</Title>
           <Card withBorder p="xl" radius="md">
             <div style={{ height: '500px', backgroundColor: '#f8f9fa' }}>
-              {/* Map component will be added here */}
               <Text c="dimmed" ta="center" pt="xl">Map coming soon</Text>
             </div>
           </Card>
         </Container>
       </section>
+      */}
 
-      {/* Reviews Section */}
+      {/* Reviews Section 
       <section style={{ padding: '80px 0', backgroundColor: '#f8f9fa' }}>
         <Container size="xl">
           <Title order={2} mb="xl">{t.reviews}</Title>
@@ -731,12 +731,12 @@ export default function Home() {
             align="start"
             slidesToScroll={1}
           >
-            {/* Review cards will be added here */}
           </Carousel>
         </Container>
       </section>
+      */}
 
-      {/* Blog Section */}
+      {/* Blog Section
       <section style={{ padding: '80px 0' }}>
         <Container size="xl">
           <Title order={2} mb="xl">{t.blog.title}</Title>
@@ -754,10 +754,11 @@ export default function Home() {
                 {t.blog.description}
               </Text>
             </Card>
-            {/* Add more blog cards */}
           </SimpleGrid>
         </Container>
       </section>
+      */}
+      
 
       {/* CTA Section */}
       <section style={{ padding: '80px 0', backgroundColor: '#f8f9fa' }}>
