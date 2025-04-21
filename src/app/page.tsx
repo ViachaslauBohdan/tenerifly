@@ -93,7 +93,7 @@ const translations = {
         {
           title: "Teide National Park",
           description: "Visit Spain's highest peak and enjoy breathtaking views",
-          image: "/excursions/teide.jpg",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227161/roques_de_garcia_pl_61b31e3ebb.webp",
           duration: "8 hours",
           groupSize: "Max 8 people",
           price: "€45",
@@ -102,7 +102,7 @@ const translations = {
         {
           title: "Whale Watching",
           description: "Watch whales and dolphins in their natural habitat",
-          image: "/excursions/whale.jpg",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227091/new_File_2_980bf647f4.avif",
           duration: "4 hours",
           groupSize: "Max 12 people",
           price: "€35",
@@ -111,7 +111,7 @@ const translations = {
         {
           title: "Loro Parque",
           description: "Visit one of Europe's best zoological parks",
-          image: "/excursions/loro.jpg",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227219/G_1cf1604009.webp",
           duration: "6 hours",
           groupSize: "Max 15 people",
           price: "€40",
