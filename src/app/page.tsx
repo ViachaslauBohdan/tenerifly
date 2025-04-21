@@ -7,6 +7,7 @@ import { Carousel } from '@mantine/carousel';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
+import { openWhatsApp } from '@/utils/whatsapp';
 
 const translations = {
   en: {
@@ -76,11 +77,6 @@ const translations = {
       title: "Don't know where to start?",
       subtitle: "Get a personal selection!",
       button: "Write on WhatsApp"
-    },
-    footer: {
-      description: "Your guide to Tenerife",
-      contacts: "Contacts",
-      social: "Social Media"
     },
     excursions: {
       title: "Popular Excursions",
@@ -179,31 +175,36 @@ const translations = {
         {
           title: "Beachfront Apartment",
           description: "Modern apartment with ocean views",
-          image: "/accommodation/beach.jpg",
-          price: "€80/night",
-          location: "Los Cristianos",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745236816/olivia_0bd8b39b42.jpg",
+          price: "€70/night",
+          location: "Los Gigantes",
           amenities: "WiFi, Pool, Kitchen",
           rating: 4.6
         },
         {
           title: "Mountain Villa",
           description: "Spacious villa with mountain views",
-          image: "/accommodation/villa.jpg",
-          price: "€150/night",
-          location: "La Orotava",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745237011/olivia3_f4dcd69705.jpg",
+          price: "€65/night",
+          location: "Los Gigantes",
           amenities: "WiFi, Garden, Parking",
           rating: 4.8
         },
         {
           title: "City Studio",
           description: "Cozy studio in the heart of the city",
-          image: "/accommodation/studio.jpg",
-          price: "€60/night",
-          location: "Santa Cruz",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745236495/c8293dae_fe52_4cbd_87fa_f655c029a84f_49d613ad9c.avif",
+          price: "€70/night",
+          location: "Los Gigantes",
           amenities: "WiFi, Kitchen",
           rating: 4.4
         }
       ]
+    },
+    footer: {
+      description: "Your guide to Tenerife",
+      contacts: "Contacts",
+      social: "Social Media"
     }
   },
   pl: {
@@ -617,7 +618,12 @@ export default function Home() {
                   <Text size="sm">{t.excursions.price}: {excursion.price}</Text>
                 </Group>
 
-                <Button fullWidth mt="xl" leftSection={<IconMap size={20} />}>
+                <Button
+                  variant="filled"
+                  size="md"
+                  fullWidth
+                  mt="md"
+                >
                   {t.excursions.bookNow}
                 </Button>
               </Card>
@@ -671,7 +677,12 @@ export default function Home() {
                   <Text size="sm">{car.price}</Text>
                 </Group>
 
-                <Button fullWidth mt="xl" leftSection={<IconCar size={20} />}>
+                <Button
+                  variant="filled"
+                  size="md"
+                  fullWidth
+                  mt="md"
+                >
                   {t.cars.bookNow}
                 </Button>
               </Card>

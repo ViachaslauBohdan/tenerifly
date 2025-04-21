@@ -1,15 +1,15 @@
 'use client';
 
-import { Card, Image, Text, Badge, Group, Stack, ActionIcon, Rating } from '@mantine/core';
+import { Card, Image, Text, Badge, Group, Stack, ActionIcon, Button } from '@mantine/core';
 import { IconBed, IconBath, IconUsers, IconMapPin } from '@tabler/icons-react';
 import { Property } from '@/types/strapi';
+import { openWhatsApp } from '@/utils/whatsapp';
 
 interface PropertyTileProps {
   property: Property;
-  onBook?: (id: number) => void;
 }
 
-export function PropertyTile({ property, onBook }: PropertyTileProps) {
+export function PropertyTile({ property }: PropertyTileProps) {
   const { title, description, images, location, specifications, price, features } = property;
 
   // Get the first image URL with fallbacks
@@ -71,16 +71,17 @@ export function PropertyTile({ property, onBook }: PropertyTileProps) {
             {features?.garden && <Badge color="green">Garden</Badge>}
             {features?.air_conditioning && <Badge color="gray">AC</Badge>}
           </Group>
-          {onBook && (
-            <Badge
-              color="blue"
-              variant="light"
-              style={{ cursor: 'pointer' }}
-              onClick={() => onBook(property.id)}
+          <Group justify="space-between" mt="md">
+            <Text fw={500} size="lg">
+              {String(property.price)}
+            </Text>
+            <Button 
+              variant="filled"
+              onClick={() => openWhatsApp(`Hi! I'm interested in booking the property: ${property.title}`)}
             >
               Book Now
-            </Badge>
-          )}
+            </Button>
+          </Group>
         </Group>
       </Stack>
     </Card>
