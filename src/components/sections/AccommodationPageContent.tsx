@@ -90,6 +90,7 @@ export function AccommodationPageContent({ properties }: AccommodationPageConten
                   <Grid.Col key={property.id} span={{ base: 12, sm: 6 }}>
                     <article>
                       <PropertyTile
+                        key={property.id}
                         property={property}
                         onBook={(id) => console.log('Book property:', id)}
                       />

@@ -7,9 +7,10 @@ import { openWhatsApp } from '@/utils/whatsapp';
 
 interface PropertyTileProps {
   property: Property;
+  onBook?: (id: number) => void;
 }
 
-export function PropertyTile({ property }: PropertyTileProps) {
+export function PropertyTile({ property, onBook }: PropertyTileProps) {
   const { title, description, images, location, specifications, price, features } = property;
 
   // Get the first image URL with fallbacks
@@ -75,12 +76,16 @@ export function PropertyTile({ property }: PropertyTileProps) {
             <Text fw={500} size="lg">
               {String(property.price)}
             </Text>
-            <Button 
-              variant="filled"
-              onClick={() => openWhatsApp(`Hi! I'm interested in booking the property: ${property.title}`)}
-            >
-              Book Now
-            </Button>
+            {onBook && (
+              <Button
+                variant="filled"
+                mt="md"
+                fullWidth
+                onClick={() => onBook(property.id)}
+              >
+                Book Now
+              </Button>
+            )}
           </Group>
         </Group>
       </Stack>

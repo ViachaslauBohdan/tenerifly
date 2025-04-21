@@ -22,6 +22,7 @@ export function PropertiesSection({ properties }: PropertiesSectionProps) {
         {properties.map((property) => (
           <Grid.Col key={property.id} span={{ base: 12, sm: 6, md: 4 }}>
             <PropertyTile
+              key={property.id}
               property={property}
               onBook={(id) => console.log('Book property:', id)}
             />
