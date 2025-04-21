@@ -129,29 +129,43 @@ const translations = {
         {
           title: "Economy Car",
           description: "Perfect for city driving and small trips",
-          image: "/cars/economy.jpg",
-          price: "€25/day",
-          transmission: "Manual",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227677/IMG_8291_695e2c4b89.jpg",
+          price: "€30/day",
+          transmission: "Automatic",
           features: "A/C, 5 Seats",
           rating: 4.5
         },
         {
-          title: "SUV",
-          description: "Ideal for mountain trips and family travel",
-          image: "/cars/suv.jpg",
-          price: "€45/day",
+          title: "Toyota Yaris 2018",
+          description: "Efficient city car with low fuel consumption. Perfect for city trips and exploring the island. Compact and easy to maneuver.",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227679/IMG_8305_da139a78e5.jpg",
+          price: "€30/day",
           transmission: "Automatic",
-          features: "A/C, 7 Seats, GPS",
-          rating: 4.7
+          features: "A/C, 5 Seats, Bluetooth, USB, ECO Mode",
+          specifications: {
+            year: 2018,
+            fuel: "Petrol",
+            engine: "1.5L",
+            consumption: "5.2L/100km",
+            trunk: "286L"
+          },
+          rating: 4.6
         },
         {
-          title: "Convertible",
-          description: "Enjoy the beautiful weather in style",
-          image: "/cars/convertible.jpg",
-          price: "€55/day",
+          title: "Renault Clio",
+          description: "Compact and fuel-efficient city car with modern features. Perfect for both city driving and exploring the island.",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227680/IMG_8306_042adfadab.jpg",
+          price: "€30/day",
           transmission: "Automatic",
-          features: "A/C, 4 Seats, GPS",
-          rating: 4.8
+          features: "A/C, 5 Seats, Bluetooth, USB, ECO Mode",
+          specifications: {
+            year: 2021,
+            fuel: "Petrol",
+            engine: "1.0L",
+            consumption: "4.8L/100km",
+            trunk: "391L"
+          },
+          rating: 4.7
         }
       ]
     },
@@ -312,29 +326,43 @@ const translations = {
         {
           title: "Samochód Ekonomiczny",
           description: "Idealny do jazdy w mieście i krótkich wycieczek",
-          image: "/cars/economy.jpg",
-          price: "€25/dzień",
-          transmission: "Manualna",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227677/IMG_8291_695e2c4b89.jpg",
+          price: "€30/dzień",
+          transmission: "Automatyczna",
           features: "Klimatyzacja, 5 miejsc",
           rating: 4.5
         },
         {
-          title: "SUV",
-          description: "Idealny do wycieczek górskich i podróży rodzinnych",
-          image: "/cars/suv.jpg",
-          price: "€45/dzień",
+          title: "Toyota Yaris 2018",
+          description: "Ekonomiczny samochód miejski z niskim zużyciem paliwa. Idealny do podróży po mieście i zwiedzania wyspy. Kompaktowy i zwrotny.",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227679/IMG_8305_da139a78e5.jpg",
+          price: "€35/dzień",
           transmission: "Automatyczna",
-          features: "Klimatyzacja, 7 miejsc, GPS",
-          rating: 4.7
+          features: "Klimatyzacja, 5 miejsc, Bluetooth, USB, Tryb ECO",
+          specifications: {
+            year: 2018,
+            fuel: "Benzyna",
+            engine: "1.5L",
+            consumption: "5.2L/100km",
+            trunk: "286L"
+          },
+          rating: 4.6
         },
         {
-          title: "Convertible",
-          description: "Ciesz się pięknym klimatem w stylu",
-          image: "/cars/convertible.jpg",
-          price: "€55/dzień",
+          title: "Renault Clio",
+          description: "Kompaktowy i ekonomiczny samochód miejski z nowoczesnymi funkcjami. Idealny zarówno do jazdy po mieście, jak i zwiedzania wyspy.",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227680/IMG_8306_042adfadab.jpg",
+          price: "€40/dzień",
           transmission: "Automatyczna",
-          features: "Klimatyzacja, 4 miejsca, GPS",
-          rating: 4.8
+          features: "Klimatyzacja, 5 miejsc, Bluetooth, USB, Tryb ECO",
+          specifications: {
+            year: 2021,
+            fuel: "Benzyna",
+            engine: "1.0L",
+            consumption: "4.8L/100km",
+            trunk: "391L"
+          },
+          rating: 4.7
         }
       ]
     },
