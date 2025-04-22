@@ -291,7 +291,7 @@ const translations = {
         {
           title: "Park Narodowy Teide",
           description: "Odwiedź najwyższy szczyt Hiszpanii i podziwiaj zapierające dech w piersiach widoki",
-          image: "/excursions/teide.jpg",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227161/roques_de_garcia_pl_61b31e3ebb.webp",
           duration: "8 godzin",
           groupSize: "Max 8 osób",
           price: "45€",
@@ -300,7 +300,7 @@ const translations = {
         {
           title: "Obserwacja wielorybów",
           description: "Podziwiaj wieloryby i delfiny w ich naturalnym środowisku",
-          image: "/excursions/whale.jpg",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227091/new_File_2_980bf647f4.avif",
           duration: "4 godziny",
           groupSize: "Max 12 osób",
           price: "35€",
@@ -309,7 +309,7 @@ const translations = {
         {
           title: "Loro Parque",
           description: "Odwiedź jeden z najlepszych ogrodów zoologicznych w Europie",
-          image: "/excursions/loro.jpg",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745227219/G_1cf1604009.webp",
           duration: "6 godzin",
           groupSize: "Max 15 osób",
           price: "40€",
@@ -377,7 +377,7 @@ const translations = {
         {
           title: "Apartament Oceanfrontowy",
           description: "Nowoczesny apartament z widokiem na ocean",
-          image: "/accommodation/beach.jpg",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745236816/olivia_0bd8b39b42.jpg",
           price: "€80/noc",
           location: "Los Cristianos",
           amenities: "WiFi, Basen, Kuchnia",
@@ -386,7 +386,7 @@ const translations = {
         {
           title: "Villa Górska",
           description: "Przestronna vila z widokiem na góry",
-          image: "/accommodation/villa.jpg",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745237011/olivia3_f4dcd69705.jpg",
           price: "€150/noc",
           location: "La Orotava",
           amenities: "WiFi, Ogród, Parking",
@@ -395,7 +395,7 @@ const translations = {
         {
           title: "Studio w Centrum",
           description: "Cudne studio w sercu miasta",
-          image: "/accommodation/studio.jpg",
+          image: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745236495/c8293dae_fe52_4cbd_87fa_f655c029a84f_49d613ad9c.avif",
           price: "€60/noc",
           location: "Santa Cruz",
           amenities: "WiFi, Kuchnia",
