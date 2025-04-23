@@ -623,6 +623,10 @@ export default function Home() {
                   size="md"
                   fullWidth
                   mt="md"
+                  onClick={() => openWhatsApp('excursion', {
+                    title: excursion.title,
+                    price: excursion.price
+                  }, language)}
                 >
                   {t.excursions.bookNow}
                 </Button>
@@ -682,6 +686,10 @@ export default function Home() {
                   size="md"
                   fullWidth
                   mt="md"
+                  onClick={() => openWhatsApp('car', {
+                    title: car.title,
+                    price: car.price
+                  }, language)}
                 >
                   {t.cars.bookNow}
                 </Button>
@@ -736,7 +744,16 @@ export default function Home() {
                   <Text size="sm">{place.price}</Text>
                 </Group>
 
-                <Button fullWidth mt="xl" leftSection={<IconHome size={20} />}>
+                <Button
+                  variant="filled"
+                  size="md"
+                  fullWidth
+                  mt="md"
+                  onClick={() => openWhatsApp('accommodation', {
+                    title: place.title,
+                    price: place.price
+                  }, language)}
+                >
                   {t.accommodation.bookNow}
                 </Button>
               </Card>
