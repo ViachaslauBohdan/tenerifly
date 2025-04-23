@@ -1,8 +1,8 @@
 'use client';
 
-import { Container, Title, Text, Tabs, Button, Group, Card, Image, SimpleGrid, rem, Grid, Avatar, Badge, Select, Stack, NumberInput } from '@mantine/core';
+import { Container, Title, Text, Tabs, Button, Group, Card, Image, SimpleGrid, rem, Grid, Avatar, Badge, Select, Stack, NumberInput, ActionIcon } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { IconHome, IconCar, IconMap, IconPlane, IconStar, IconHeart, IconLocation, IconPhone, IconMail, IconLanguage, IconClock, IconUsers, IconCurrencyEuro } from '@tabler/icons-react';
+import { IconHome, IconCar, IconMap, IconPlane, IconStar, IconHeart, IconLocation, IconPhone, IconMail, IconLanguage, IconClock, IconUsers, IconCurrencyEuro, IconBrandWhatsapp } from '@tabler/icons-react';
 import { Carousel } from '@mantine/carousel';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -834,6 +834,19 @@ export default function Home() {
           </Card>
         </Container>
       </section>
+
+      {/* Floating WhatsApp Button */}
+      <ActionIcon
+        className={styles.whatsappButton}
+        size={60}
+        variant="filled"
+        onClick={() => openWhatsApp('general', {
+          title: '',
+          price: ''
+        }, language)}
+      >
+        <IconBrandWhatsapp size={32} />
+      </ActionIcon>
 
       {/* Footer */}
       <footer style={{ padding: '80px 0', backgroundColor: '#1a1b1e' }}>

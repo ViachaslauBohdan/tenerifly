@@ -1,5 +1,5 @@
 export const openWhatsApp = (
-  itemType: 'excursion' | 'car' | 'accommodation', 
+  itemType: 'excursion' | 'car' | 'accommodation' | 'general', 
   details: { title: string; price?: string },
   language: 'en' | 'pl' = 'en'
 ) => {
@@ -9,12 +9,14 @@ export const openWhatsApp = (
     en: {
       excursion: `Hi! I'm interested in the excursion "${details.title}" for ${details.price}`,
       car: `Hi! I'd like to rent a car "${details.title}" for ${details.price}`,
-      accommodation: `Hi! I'm interested in the accommodation "${details.title}" for ${details.price}`
+      accommodation: `Hi! I'm interested in the accommodation "${details.title}" for ${details.price}`,
+      general: `Hi! I'd like to learn more about your services in Tenerife`
     },
     pl: {
       excursion: `Dzień dobry! Interesuje mnie wycieczka "${details.title}" za ${details.price}`,
       car: `Dzień dobry! Chciałbym wynająć samochód "${details.title}" za ${details.price}`,
-      accommodation: `Dzień dobry! Interesuje mnie zakwaterowanie "${details.title}" za ${details.price}`
+      accommodation: `Dzień dobry! Interesuje mnie zakwaterowanie "${details.title}" za ${details.price}`,
+      general: `Dzień dobry! Chciałbym dowiedzieć się więcej o Waszych usługach na Teneryfie`
     }
   };
   
