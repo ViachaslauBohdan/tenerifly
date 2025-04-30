@@ -835,19 +835,6 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Floating WhatsApp Button */}
-      <ActionIcon
-        className={styles.whatsappButton}
-        size={60}
-        variant="filled"
-        onClick={() => openWhatsApp('general', {
-          title: '',
-          price: ''
-        }, language)}
-      >
-        <IconBrandWhatsapp size={32} />
-      </ActionIcon>
-
       {/* Footer */}
       <footer style={{ padding: '80px 0', backgroundColor: '#1a1b1e' }}>
         <Container size="xl">

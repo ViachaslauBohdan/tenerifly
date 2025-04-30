@@ -5,6 +5,7 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import { ColorSchemeScript } from '@mantine/core';
 import { MantineProvider } from '@/components/providers/MantineProvider';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
         <MantineProvider>
           {children}
+          <WhatsAppButton />
         </MantineProvider>
       </body>
     </html>
