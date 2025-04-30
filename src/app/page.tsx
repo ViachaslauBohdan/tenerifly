@@ -453,105 +453,115 @@ export default function Home() {
             {t.hero.subtitle}
           </Text>
           
-          <Card withBorder p="xl" radius="md" style={{ maxWidth: 800 }}>
-            <Tabs defaultValue="excursions" value={activeTab} onChange={(value) => value && setActiveTab(value)}>
-              <Tabs.List grow>
-                <Tabs.Tab value="excursions" leftSection={<IconMap size={20} />}>
-                  {t.hero.tabs.excursions}
+          <Card className={styles.searchForm} shadow="sm">
+            <Tabs defaultValue="accommodation" value={activeTab} onChange={(value) => value && setActiveTab(value)}>
+              <Tabs.List>
+                <Tabs.Tab value="accommodation">
+                  {t.hero.tabs.accommodation}
                 </Tabs.Tab>
-                <Tabs.Tab value="cars" leftSection={<IconCar size={20} />}>
+                <Tabs.Tab value="cars">
                   {t.hero.tabs.cars}
                 </Tabs.Tab>
-                <Tabs.Tab value="accommodation" leftSection={<IconHome size={20} />}>
-                  {t.hero.tabs.accommodation}
+                <Tabs.Tab value="excursions">
+                  {t.hero.tabs.excursions}
                 </Tabs.Tab>
               </Tabs.List>
 
-              <Tabs.Panel value="excursions" pt="xl">
-                <Grid>
-                  <Grid.Col span={4}>
-                    <Select
-                      label={t.hero.excursions.type}
-                      data={t.hero.excursions.types}
-                      value={excursionType}
-                      onChange={(value) => setExcursionType(value || 'all')}
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={4}>
-                    <DatePickerInput
-                      label={t.hero.excursions.date}
-                      value={excursionDate}
-                      onChange={setExcursionDate}
-                      minDate={new Date()}
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={4}>
-                    <NumberInput
-                      label={t.hero.excursions.people}
-                      value={excursionPeople}
-                      onChange={(val) => setExcursionPeople(Number(val))}
-                      min={1}
-                      max={20}
-                    />
-                  </Grid.Col>
-                </Grid>
-              </Tabs.Panel>
+              <div className={styles.searchForm}>
+                <Tabs.Panel value="accommodation" pt="lg">
+                  <Grid>
+                    <Grid.Col span={{ base: 12, md: 3 }}>
+                      <Select
+                        label={t.hero.accommodation.type}
+                        placeholder="Select type"
+                        data={t.hero.accommodation.types}
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 6 }}>
+                      <DatePickerInput
+                        type="range"
+                        label={`${t.hero.accommodation.checkin} - ${t.hero.accommodation.checkout}`}
+                        placeholder="Select dates"
+                        value={dates}
+                        onChange={setDates}
+                        minDate={new Date()}
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 3 }}>
+                      <NumberInput
+                        label={t.hero.accommodation.guests}
+                        placeholder="Guests"
+                        value={guests}
+                        onChange={(val) => setGuests(Number(val))}
+                        min={1}
+                        max={10}
+                      />
+                    </Grid.Col>
+                  </Grid>
+                </Tabs.Panel>
 
-              <Tabs.Panel value="cars" pt="xl">
-                <Grid>
-                  <Grid.Col span={4}>
-                    <Select
-                      label={t.hero.cars.type}
-                      data={t.hero.cars.types}
-                      value={carType}
-                      onChange={(value) => setCarType(value || 'all')}
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={8}>
-                    <DatePickerInput
-                      type="range"
-                      label={`${t.hero.cars.pickup} - ${t.hero.cars.dropoff}`}
-                      value={dates}
-                      onChange={setDates}
-                      minDate={new Date()}
-                    />
-                  </Grid.Col>
-                </Grid>
-              </Tabs.Panel>
+                <Tabs.Panel value="cars" pt="lg">
+                  <Grid>
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                      <Select
+                        label={t.hero.cars.type}
+                        placeholder="Select car type"
+                        data={t.hero.cars.types}
+                        value={carType}
+                        onChange={(value) => setCarType(value || 'all')}
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 8 }}>
+                      <DatePickerInput
+                        type="range"
+                        label={`${t.hero.cars.pickup} - ${t.hero.cars.dropoff}`}
+                        placeholder="Select dates"
+                        value={dates}
+                        onChange={setDates}
+                        minDate={new Date()}
+                      />
+                    </Grid.Col>
+                  </Grid>
+                </Tabs.Panel>
 
-              <Tabs.Panel value="accommodation" pt="xl">
-                <Grid>
-                  <Grid.Col span={4}>
-                    <Select
-                      label={t.hero.accommodation.type}
-                      data={t.hero.accommodation.types}
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={4}>
-                    <DatePickerInput
-                      type="range"
-                      label={`${t.hero.accommodation.checkin} - ${t.hero.accommodation.checkout}`}
-                      value={dates}
-                      onChange={setDates}
-                      minDate={new Date()}
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={4}>
-                    <NumberInput
-                      label={t.hero.accommodation.guests}
-                      value={guests}
-                      onChange={(val) => setGuests(Number(val))}
-                      min={1}
-                      max={10}
-                    />
-                  </Grid.Col>
-                </Grid>
-              </Tabs.Panel>
+                <Tabs.Panel value="excursions" pt="lg">
+                  <Grid>
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                      <Select
+                        label={t.hero.excursions.type}
+                        placeholder="Select type"
+                        data={t.hero.excursions.types}
+                        value={excursionType}
+                        onChange={(value) => setExcursionType(value || 'all')}
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                      <DatePickerInput
+                        label={t.hero.excursions.date}
+                        placeholder="Select date"
+                        value={excursionDate}
+                        onChange={setExcursionDate}
+                        minDate={new Date()}
+                      />
+                    </Grid.Col>
+                    <Grid.Col span={{ base: 12, md: 4 }}>
+                      <NumberInput
+                        label={t.hero.excursions.people}
+                        placeholder="Number of people"
+                        value={excursionPeople}
+                        onChange={(val) => setExcursionPeople(Number(val))}
+                        min={1}
+                        max={20}
+                      />
+                    </Grid.Col>
+                  </Grid>
+                </Tabs.Panel>
+              </div>
               
               <Button 
+                className={styles.searchButton}
                 fullWidth 
-                size="lg" 
-                mt="xl"
+                mt="lg"
                 onClick={() => {
                   switch (activeTab) {
                     case 'excursions':
