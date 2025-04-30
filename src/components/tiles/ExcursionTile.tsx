@@ -1,5 +1,6 @@
 import { Card, Image, Text, Badge, Group, Button, Stack } from '@mantine/core';
-import { IconClock, IconLanguage } from '@tabler/icons-react';
+import { IconClock, IconLanguage, IconBrandWhatsapp } from '@tabler/icons-react';
+import { openWhatsApp } from '@/utils/whatsapp';
 
 export interface ExcursionTileProps {
   title: string;
@@ -60,9 +61,30 @@ export function ExcursionTile({
           <Text size="sm">{getLanguageLabel(language)}</Text>
         </Group>
 
-        <Button variant="light" color="blue" fullWidth mt="md" radius="md" onClick={onView}>
-          View Details
-        </Button>
+        <Group grow mt="md">
+          <Button 
+            variant="light" 
+            color="blue"
+            radius="md" 
+            onClick={onView}
+          >
+            View Details
+          </Button>
+          <Button
+            variant="filled"
+            color="green"
+            radius="md"
+            onClick={() => openWhatsApp('excursion', {
+              title,
+              duration,
+              price,
+              language: getLanguageLabel(language)
+            })}
+            leftSection={<IconBrandWhatsapp size="1rem" />}
+          >
+            Book Now
+          </Button>
+        </Group>
       </Stack>
     </Card>
   );

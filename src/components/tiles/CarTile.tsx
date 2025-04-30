@@ -1,5 +1,6 @@
 import { Card, Image, Text, Badge, Group, Button, Stack } from '@mantine/core';
-import { IconCar, IconGasStation, IconGauge, IconUsers } from '@tabler/icons-react';
+import { IconCar, IconGasStation, IconGauge, IconUsers, IconBrandWhatsapp } from '@tabler/icons-react';
+import { openWhatsApp } from '@/utils/whatsapp';
 
 export interface CarTileProps {
   title: string;
@@ -38,6 +39,9 @@ export function CarTile({
     };
     return colors[status];
   };
+
+  // Format price to show "From €X/day"
+  const formattedPrice = price.startsWith('€') ? `From ${price}/day` : `From €${price}/day`;
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
@@ -82,22 +86,38 @@ export function CarTile({
           <Badge color={getStatusColor(status)} variant="light">
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </Badge>
-          <Badge color="blue" variant="filled">
-            {price}
+          <Badge color="blue" variant="filled" size="lg">
+            {formattedPrice}
           </Badge>
         </Group>
 
-        <Button 
-          variant="light" 
-          color="blue" 
-          fullWidth 
-          mt="md" 
-          radius="md" 
-          onClick={onView}
-          leftSection={<IconCar size="1rem" />}
-        >
-          View Details
-        </Button>
+        <Group grow mt="md">
+          <Button 
+            variant="light" 
+            color="blue"
+            radius="md" 
+            onClick={onView}
+            leftSection={<IconCar size="1rem" />}
+          >
+            View Details
+          </Button>
+          {status === 'available' && (
+            <Button
+              variant="filled"
+              color="green"
+              radius="md"
+              onClick={() => openWhatsApp('car', {
+                title,
+                brand: specifications.brand,
+                model: specifications.model,
+                price: formattedPrice
+              })}
+              leftSection={<IconBrandWhatsapp size="1rem" />}
+            >
+              Book Now
+            </Button>
+          )}
+        </Group>
       </Stack>
     </Card>
   );
