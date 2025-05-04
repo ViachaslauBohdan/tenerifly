@@ -852,6 +852,9 @@ export default function Home() {
             <Grid.Col span={{ base: 12, md: 4 }}>
               <Title order={3} c="white" mb="md">Tenerifly.io</Title>
               <Text c="dimmed">{t.footer.description}</Text>
+              <Text size="sm" c="dimmed" mt="md">
+                © {new Date().getFullYear()} Tenerifly. All rights reserved.
+              </Text>
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 4 }}>
               <Title order={4} c="white" mb="md">{t.footer.contacts}</Title>
