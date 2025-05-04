@@ -43,6 +43,12 @@ export const metadata: Metadata = {
     images: ["https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg"],
   },
   metadataBase: new URL("https://tenerifly.io"),
+  other: {
+    "telegram:channel": "@tenerifly",
+    "telegram:site": "@tenerifly",
+    "telegram:creator": "@tenerifly",
+    "telegram:image": "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
+  },
 };
 
 export default function RootLayout({
