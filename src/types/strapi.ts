@@ -280,7 +280,17 @@ export interface Property {
   title: string;
   slug: string | null;
   description: string;
-  images: StrapiImage[];
+  images: {
+    id: number;
+    url: string;
+    formats?: {
+      thumbnail?: {
+        url: string;
+        width: number;
+        height: number;
+      };
+    };
+  }[];
   type: 'rent' | 'sale';
   property_status: 'available' | 'reserved' | 'sold' | 'under_contract';
   featured: boolean;

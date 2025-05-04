@@ -11,20 +11,23 @@ interface PropertyTileProps {
 }
 
 export function PropertyTile({ property, onBook }: PropertyTileProps) {
-  const { title, description, images, location, specifications, price, features } = property;
+  const { id, title, description, images, location, specifications, price, features, contact } = property;
 
-  // Get the first image URL with fallbacks
-  const imageUrl = images?.[0]?.data?.attributes?.formats?.medium?.url || 
-                  images?.[0]?.data?.attributes?.url || 
-                  '/placeholder.jpg';
+  const handleBook = () => {
+   
+    // Open WhatsApp in a new tab
+    const whatsappUrl = `https://wa.me/34656641433?text=${encodeURIComponent(`Hi! I'm interested in the accommodation "[Property ID: ${id}] ${title}" for €${price?.amount || 0}/${price?.period || 'night'}`)}`;
+    window.open(whatsappUrl, '_blank');
+  };
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
       <Card.Section>
         <Image
-          src={imageUrl}
+          src={property.images?.[0]?.url || '/placeholder.jpg'}
           height={200}
           alt={title}
+          fallbackSrc="/placeholder.jpg"
         />
       </Card.Section>
 
@@ -34,7 +37,7 @@ export function PropertyTile({ property, onBook }: PropertyTileProps) {
             {title}
           </Text>
           <Badge color="blue" variant="light">
-            €{price.amount}/{price.period}
+            €{price?.amount || 0}/{price?.period || 'night'}
           </Badge>
         </Group>
 
@@ -43,26 +46,26 @@ export function PropertyTile({ property, onBook }: PropertyTileProps) {
             <IconMapPin size="1rem" />
           </ActionIcon>
           <Text size="sm" c="dimmed">
-            {location.address}
+            {location?.address || 'Address not specified'}
           </Text>
         </Group>
 
         <Text size="sm" c="dimmed" lineClamp={2}>
-          {description}
+          {description || 'No description available'}
         </Text>
 
         <Group gap="lg">
           <Group gap="xs">
             <IconBed size="1rem" />
-            <Text size="sm">{specifications.bedrooms} beds</Text>
+            <Text size="sm">{specifications?.bedrooms || 0} beds</Text>
           </Group>
           <Group gap="xs">
             <IconBath size="1rem" />
-            <Text size="sm">{specifications.bathrooms} baths</Text>
+            <Text size="sm">{specifications?.bathrooms || 0} baths</Text>
           </Group>
           <Group gap="xs">
             <IconUsers size="1rem" />
-            <Text size="sm">{specifications.total_floors} guests</Text>
+            <Text size="sm">Floor {specifications?.floor || 0}/{specifications?.total_floors || 0}</Text>
           </Group>
         </Group>
 
@@ -72,21 +75,14 @@ export function PropertyTile({ property, onBook }: PropertyTileProps) {
             {features?.garden && <Badge color="green">Garden</Badge>}
             {features?.air_conditioning && <Badge color="gray">AC</Badge>}
           </Group>
-          <Group justify="space-between" mt="md">
-            <Text fw={500} size="lg">
-              {String(property.price)}
-            </Text>
-            {onBook && (
-              <Button
-                variant="filled"
-                mt="md"
-                fullWidth
-                onClick={() => onBook(property.id)}
-              >
-                Book Now
-              </Button>
-            )}
-          </Group>
+          <Button
+            variant="filled"
+            mt="md"
+            fullWidth
+            onClick={handleBook}
+          >
+            Book Now
+          </Button>
         </Group>
       </Stack>
     </Card>
