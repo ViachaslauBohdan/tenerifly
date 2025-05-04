@@ -1,6 +1,6 @@
 'use client';
 
-import { Container, Title, Text, Tabs, Button, Group, Card, Image, SimpleGrid, rem, Grid, Avatar, Badge, Select, Stack, NumberInput, ActionIcon } from '@mantine/core';
+import { Container, Title, Text, Tabs, Button, Group, Card, Image, SimpleGrid, rem, Grid, Avatar, Badge, Select, Stack, NumberInput, ActionIcon, Anchor } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { IconHome, IconCar, IconMap, IconPlane, IconStar, IconHeart, IconLocation, IconPhone, IconMail, IconLanguage, IconClock, IconUsers, IconCurrencyEuro, IconBrandWhatsapp } from '@tabler/icons-react';
 import { Carousel } from '@mantine/carousel';
@@ -849,7 +849,7 @@ export default function Home() {
       <footer style={{ padding: '80px 0', backgroundColor: '#1a1b1e' }}>
         <Container size="xl">
           <Grid>
-            <Grid.Col span={{ base: 12, md: 4 }}>
+            <Grid.Col span={{ base: 12, md: 3 }}>
               <Title order={3} c="white" mb="md">Tenerifly.io</Title>
               <Text c="dimmed">{t.footer.description}</Text>
               <Text size="sm" c="dimmed" mt="md">
@@ -857,6 +857,23 @@ export default function Home() {
               </Text>
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 4 }}>
+              <Title order={4} c="white" mb="md">Our Services</Title>
+              <Stack gap="xs">
+                <Anchor href="/cars" underline="never" c="dimmed">
+                  <Text size="sm">Airport Transfers</Text>
+                </Anchor>
+                <Anchor href="/excursions" underline="never" c="dimmed">
+                  <Text size="sm">Excursions & Tours</Text>
+                </Anchor>
+                <Anchor href="/accommodation" underline="never" c="dimmed">
+                  <Text size="sm">Property Rental & Sales</Text>
+                </Anchor>
+                <Anchor href="/cars" underline="never" c="dimmed">
+                  <Text size="sm">Car Rental Services</Text>
+                </Anchor>
+              </Stack>
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 3 }}>
               <Title order={4} c="white" mb="md">{t.footer.contacts}</Title>
               <Group>
                 <IconPhone size={20} />
@@ -865,12 +882,6 @@ export default function Home() {
               <Group mt="md">
                 <IconMail size={20} />
                 <Text c="dimmed">info@tenerifly.io</Text>
-              </Group>
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 4 }}>
-              <Title order={4} c="white" mb="md">{t.footer.social}</Title>
-              <Group>
-                {/* Add social media icons */}
               </Group>
             </Grid.Col>
           </Grid>
