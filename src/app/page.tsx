@@ -873,16 +873,12 @@ export default function Home() {
                 </Anchor>
               </Stack>
             </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 3 }}>
+            <Grid.Col span={{ base: 12, md: 4 }}>
               <Title order={4} c="white" mb="md">{t.footer.contacts}</Title>
-              <Group>
-                <IconPhone size={20} />
-                <Text c="dimmed">+34656641433</Text>
-              </Group>
-              <Group mt="md">
-                <IconMail size={20} />
-                <Text c="dimmed">info@tenerifly.io</Text>
-              </Group>
+              <Stack gap="xs">
+                <Text size="sm" c="dimmed">+34656641433</Text>
+                <Text size="sm" c="dimmed">info@tenerifly.io</Text>
+              </Stack>
             </Grid.Col>
           </Grid>
         </Container>
