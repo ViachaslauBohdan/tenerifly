@@ -31,7 +31,19 @@ export const openWhatsApp = (
     }
   };
   
-  const encodedMessage = encodeURIComponent(messages[language][itemType]);
+  // Get ref_code from localStorage if present
+  let refCode = '';
+  if (typeof window !== 'undefined') {
+    refCode = localStorage.getItem('ref_code') || '';
+  }
+
+  // Append ref_code to the message if it exists
+  let message = messages[language][itemType];
+  if (refCode) {
+    message += ` (ref: ${refCode})`;
+  }
+
+  const encodedMessage = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
   window.open(whatsappUrl, '_blank');
 }; 
