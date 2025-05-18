@@ -8,6 +8,7 @@ import { BackToHome } from '@/components/BackToHome';
 import { propertiesAPI } from '@/services/api';
 import { Property } from '@/types/strapi';
 
+
 const propertyFilters: FilterConfig[] = [
   {
     id: 'priceRange',
