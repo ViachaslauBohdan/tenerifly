@@ -50,6 +50,7 @@ export interface StrapiEntity<T> {
   attributes: T;
 }
 
+// Общие компоненты
 interface Location {
   id: number;
   address: string;
@@ -77,6 +78,7 @@ interface Contact {
   preferred_contact: string;
 }
 
+// Изображения для Tour
 interface TourImage {
   id: number;
   documentId: string;
@@ -105,6 +107,7 @@ interface TourImage {
   publishedAt: string;
 }
 
+// Обновленный интерфейс Tour с дополнительными полями для фильтров
 export interface Tour {
   id: number;
   documentId: string;
@@ -118,11 +121,23 @@ export interface Tour {
   location: Location;
   price: Price;
   contact: Contact;
+  
+  // Дополнительные поля для фильтров
+  difficulty_level?: 'easy' | 'moderate' | 'hard';
+  category?: string;
+  max_participants?: number;
+  min_age?: number;
+  includes_transport?: boolean;
+  includes_food?: boolean;
+  suitable_for_children?: boolean;
+  guide_languages?: string[];
+  
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
 }
 
+// Спецификации автомобиля
 interface CarSpecifications {
   id: number;
   make: string;
@@ -140,6 +155,7 @@ interface CarSpecifications {
   drive_type: string | null;
 }
 
+// Характеристики автомобиля
 interface CarFeatures {
   id: number;
   air_conditioning: boolean;
@@ -151,6 +167,7 @@ interface CarFeatures {
   additional_features: string[];
 }
 
+// Условия аренды автомобиля
 interface CarRentalTerms {
   id: number;
   min_rental_period: number;
@@ -160,6 +177,7 @@ interface CarRentalTerms {
   additional_terms: string[];
 }
 
+// Условия продажи автомобиля
 interface CarSaleTerms {
   id: number;
   warranty_included: boolean;
@@ -169,6 +187,7 @@ interface CarSaleTerms {
   additional_terms: string[];
 }
 
+// Изображения автомобиля
 interface CarImage {
   id: number;
   documentId: string;
@@ -204,6 +223,7 @@ interface CarImage {
   publishedAt: string;
 }
 
+// Интерфейс автомобиля
 export interface Car {
   id: number;
   documentId: string;
@@ -226,6 +246,7 @@ export interface Car {
   publishedAt: string;
 }
 
+// Спецификации недвижимости
 interface PropertySpecifications {
   id: number;
   total_area: number;
@@ -239,6 +260,7 @@ interface PropertySpecifications {
   furnished: boolean;
 }
 
+// Характеристики недвижимости
 interface PropertyFeatures {
   id: number;
   air_conditioning: boolean;
@@ -256,6 +278,7 @@ interface PropertyFeatures {
   additional_features: string[];
 }
 
+// Условия аренды недвижимости
 interface PropertyRentalTerms {
   id: number;
   min_rental_period: number;
@@ -266,6 +289,7 @@ interface PropertyRentalTerms {
   additional_terms: string[];
 }
 
+// Условия продажи недвижимости
 interface PropertySaleTerms {
   id: number;
   ownership_type: string;
@@ -275,6 +299,7 @@ interface PropertySaleTerms {
   additional_terms: string[];
 }
 
+// Интерфейс недвижимости
 export interface Property {
   id: number;
   title: string;
@@ -305,4 +330,37 @@ export interface Property {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-} 
+}
+
+// Интерфейс для блога
+export interface BlogPost {
+  id: number;
+  documentId: string;
+  title: string;
+  slug: string;
+  description: string;
+  content: string;
+  featured_image: TourImage | null;
+  author: {
+    id: number;
+    name: string;
+    avatar?: TourImage;
+  };
+  category: {
+    id: number;
+    name: string;
+    slug: string;
+  };
+  tags: string[];
+  published_date: string;
+  reading_time: number;
+  featured: boolean;
+  seo: {
+    metaTitle?: string;
+    metaDescription?: string;
+    keywords?: string[];
+  };
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}

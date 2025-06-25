@@ -1,242 +1,15 @@
-import { FilterConfig } from '@/components/filters/FilterPanel';
-
-// Фильтры для недвижимости
-export const propertyFilters: FilterConfig[] = [
-  {
-    id: 'priceRange',
-    type: 'range',
-    label: 'Цена',
-    min: 0,
-    max: 500000,
-    step: 10000,
-  },
-  {
-    id: 'location',
-    type: 'select',
-    label: 'Локация',
-    options: [
-      { value: 'santa_cruz', label: 'Санта-Круз' },
-      { value: 'los_cristianos', label: 'Лос-Кристианос' },
-      { value: 'costa_adeje', label: 'Коста-Адехе' },
-      { value: 'playa_americas', label: 'Плайя-де-лас-Америкас' },
-      { value: 'puerto_cruz', label: 'Пуэрто-де-ла-Круз' },
-      { value: 'candelaria', label: 'Канделария' },
-      { value: 'los_gigantes', label: 'Лос-Хигантес' },
-    ],
-  },
-  {
-    id: 'propertyType',
-    type: 'select',
-    label: 'Тип недвижимости',
-    options: [
-      { value: 'apartment', label: 'Квартира' },
-      { value: 'house', label: 'Дом' },
-      { value: 'villa', label: 'Вилла' },
-      { value: 'penthouse', label: 'Пентхаус' },
-      { value: 'studio', label: 'Студия' },
-      { value: 'commercial', label: 'Коммерческая' },
-      { value: 'land', label: 'Участок' },
-    ],
-  },
-  {
-    id: 'bedrooms',
-    type: 'select',
-    label: 'Количество комнат',
-    options: [
-      { value: '0', label: 'Студия' },
-      { value: '1', label: '1 комната' },
-      { value: '2', label: '2 комнаты' },
-      { value: '3', label: '3 комнаты' },
-      { value: '4', label: '4 комнаты' },
-      { value: '5+', label: '5+ комнат' },
-    ],
-  },
-  {
-    id: 'area',
-    type: 'range',
-    label: 'Площадь (м²)',
-    min: 20,
-    max: 500,
-    step: 10,
-  },
-  {
-    id: 'floor',
-    type: 'range',
-    label: 'Этаж',
-    min: 0,
-    max: 20,
-    step: 1,
-  },
-  {
-    id: 'yearBuilt',
-    type: 'range',
-    label: 'Год постройки',
-    min: 1950,
-    max: 2025,
-    step: 1,
-  },
-  {
-    id: 'condition',
-    type: 'select',
-    label: 'Состояние',
-    options: [
-      { value: 'needs_renovation', label: 'Требует ремонта' },
-      { value: 'good', label: 'Готово к проживанию' },
-      { value: 'excellent', label: 'Отличное' },
-      { value: 'new', label: 'Новое' },
-    ],
-  },
-  {
-    id: 'balcony',
-    type: 'select',
-    label: 'Балкон/Терраса',
-    options: [
-      { value: 'balcony', label: 'Балкон' },
-      { value: 'terrace', label: 'Терраса' },
-      { value: 'garden', label: 'Сад' },
-    ],
-  },
-  {
-    id: 'parking',
-    type: 'select',
-    label: 'Парковка',
-    options: [
-      { value: 'garage', label: 'Гараж' },
-      { value: 'parking_space', label: 'Парковочное место' },
-      { value: 'street', label: 'Уличная парковка' },
-    ],
-  },
-  {
-    id: 'furnished',
-    type: 'select',
-    label: 'Меблировка',
-    options: [
-      { value: 'yes', label: 'Да' },
-      { value: 'no', label: 'Нет' },
-      { value: 'partial', label: 'Частично' },
-    ],
-  },
-];
-
-// Фильтры для автомобилей
-export const carFilters: FilterConfig[] = [
-  {
-    id: 'priceRange',
-    type: 'range',
-    label: 'Цена (за день)',
-    min: 0,
-    max: 200,
-    step: 5,
-  },
-  {
-    id: 'make',
-    type: 'select',
-    label: 'Марка',
-    options: [
-      { value: 'toyota', label: 'Toyota' },
-      { value: 'volkswagen', label: 'Volkswagen' },
-      { value: 'renault', label: 'Renault' },
-      { value: 'seat', label: 'Seat' },
-      { value: 'opel', label: 'Opel' },
-      { value: 'mercedes', label: 'Mercedes-Benz' },
-      { value: 'bmw', label: 'BMW' },
-      { value: 'audi', label: 'Audi' },
-      { value: 'mini', label: 'Mini' },
-      { value: 'mazda', label: 'Mazda' },
-      { value: 'nissan', label: 'Nissan' },
-      { value: 'fiat', label: 'Fiat' },
-      { value: 'kia', label: 'Kia' },
-      { value: 'dacia', label: 'Dacia' },
-    ],
-  },
-  {
-    id: 'year',
-    type: 'range',
-    label: 'Год выпуска',
-    min: 2015,
-    max: 2025,
-    step: 1,
-  },
-  {
-    id: 'mileage',
-    type: 'range',
-    label: 'Пробег (км)',
-    min: 0,
-    max: 200000,
-    step: 10000,
-  },
-  {
-    id: 'fuel',
-    type: 'select',
-    label: 'Тип топлива',
-    options: [
-      { value: 'petrol', label: 'Бензин' },
-      { value: 'diesel', label: 'Дизель' },
-      { value: 'hybrid', label: 'Гибрид' },
-      { value: 'electric', label: 'Электрический' },
-      { value: 'lpg', label: 'Газ' },
-    ],
-  },
-  {
-    id: 'transmission',
-    type: 'select',
-    label: 'Коробка передач',
-    options: [
-      { value: 'manual', label: 'Механическая' },
-      { value: 'automatic', label: 'Автоматическая' },
-      { value: 'semi-automatic', label: 'Полуавтоматическая' },
-    ],
-  },
-  {
-    id: 'bodyType',
-    type: 'select',
-    label: 'Тип кузова',
-    options: [
-      { value: 'sedan', label: 'Седан' },
-      { value: 'hatchback', label: 'Хэтчбек' },
-      { value: 'suv', label: 'Внедорожник' },
-      { value: 'van', label: 'Фургон' },
-      { value: 'coupe', label: 'Купе' },
-      { value: 'convertible', label: 'Кабриолет' },
-      { value: 'wagon', label: 'Универсал' },
-    ],
-  },
-  {
-    id: 'seats',
-    type: 'select',
-    label: 'Количество мест',
-    options: [
-      { value: '2', label: '2 места' },
-      { value: '4', label: '4 места' },
-      { value: '5', label: '5 мест' },
-      { value: '7', label: '7 мест' },
-      { value: '9', label: '9 мест' },
-    ],
-  },
-  {
-    id: 'doors',
-    type: 'select',
-    label: 'Количество дверей',
-    options: [
-      { value: '3', label: '3 двери' },
-      { value: '5', label: '5 дверей' },
-    ],
-  },
-  {
-    id: 'features',
-    type: 'multiSelect',
-    label: 'Дополнительные опции',
-    options: [
-      { value: 'air_conditioning', label: 'Кондиционер' },
-      { value: 'backup_camera', label: 'Камера заднего вида' },
-      { value: 'multimedia', label: 'Мультимедийная система' },
-      { value: 'navigation', label: 'Навигация' },
-      { value: 'bluetooth', label: 'Bluetooth' },
-      { value: 'cruise_control', label: 'Круиз-контроль' },
-      { value: 'parking_sensors', label: 'Парктроник' },
-    ],
-  },
-];
+export interface FilterConfig {
+  id: string;
+  type: 'select' | 'multiselect' | 'range' | 'checkbox' | 'number';
+  label: string;
+  placeholder?: string;
+  options?: { value: string; label: string }[];
+  category?: 'basic' | 'advanced';
+  min?: number;
+  max?: number;
+  step?: number;
+  marks?: { value: number; label: string }[]; // Добавлено для RangeSlider
+}
 
 // Фильтры для экскурсий
 export const excursionFilters: FilterConfig[] = [
@@ -244,116 +17,268 @@ export const excursionFilters: FilterConfig[] = [
     id: 'priceRange',
     type: 'range',
     label: 'Цена',
+    category: 'basic',
     min: 0,
     max: 200,
     step: 5,
-  },
-  {
-    id: 'location',
-    type: 'select',
-    label: 'Локация',
-    options: [
-      { value: 'teide', label: 'Тейде' },
-      { value: 'anaga', label: 'Анага' },
-      { value: 'masca', label: 'Маска' },
-      { value: 'los_gigantes', label: 'Лос-Хигантес' },
-      { value: 'santa_cruz', label: 'Санта-Круз' },
-      { value: 'puerto_cruz', label: 'Пуэрто-де-ла-Круз' },
-      { value: 'la_gomera', label: 'Ла-Гомера' },
-    ],
-  },
-  {
-    id: 'category',
-    type: 'select',
-    label: 'Тип развлечения',
-    options: [
-      { value: 'boat_trip', label: 'Прогулка на катере' },
-      { value: 'hiking', label: 'Пешая экскурсия' },
-      { value: 'jeep_safari', label: 'Джип-сафари' },
-      { value: 'museum', label: 'Музей' },
-      { value: 'aquapark', label: 'Аквапарк' },
-      { value: 'cultural', label: 'Культурная' },
-      { value: 'nature', label: 'Природная' },
-      { value: 'adventure', label: 'Приключенческая' },
-      { value: 'family', label: 'Семейная' },
-    ],
+    marks: [
+      { value: 0, label: '0€' },
+      { value: 50, label: '50€' },
+      { value: 100, label: '100€' },
+      { value: 150, label: '150€' },
+      { value: 200, label: '200€' }
+    ]
   },
   {
     id: 'duration',
     type: 'select',
     label: 'Продолжительность',
+    category: 'basic',
     options: [
-      { value: '1-3h', label: '1-3 часа' },
-      { value: '4-6h', label: '4-6 часов' },
-      { value: '7-8h', label: '7-8 часов' },
-      { value: 'full_day', label: 'Полный день' },
-      { value: 'multi_day', label: 'Несколько дней' },
-    ],
+      { value: 'half-day', label: 'Полдня (до 4 часов)' },
+      { value: 'full-day', label: 'Полный день (4-8 часов)' },
+      { value: 'multi-day', label: 'Несколько дней' }
+    ]
   },
   {
-    id: 'difficulty',
-    type: 'select',
-    label: 'Уровень сложности',
+    id: 'type',
+    type: 'multiselect',
+    label: 'Тип развлечения',
+    category: 'basic',
     options: [
-      { value: 'easy', label: 'Легкий' },
-      { value: 'moderate', label: 'Средний' },
-      { value: 'hard', label: 'Сложный' },
-    ],
+      { value: 'sightseeing', label: 'Осмотр достопримечательностей' },
+      { value: 'adventure', label: 'Приключения' },
+      { value: 'nature', label: 'Природа' },
+      { value: 'cultural', label: 'Культурные' },
+      { value: 'water-sports', label: 'Водные виды спорта' },
+      { value: 'food-wine', label: 'Еда и вино' }
+    ]
+  },
+  {
+    id: 'language',
+    type: 'select',
+    label: 'Язык гида',
+    category: 'advanced',
+    options: [
+      { value: 'russian', label: 'Русский' },
+      { value: 'english', label: 'Английский' },
+      { value: 'spanish', label: 'Испанский' },
+      { value: 'german', label: 'Немецкий' },
+      { value: 'french', label: 'Французский' }
+    ]
   },
   {
     id: 'groupSize',
-    type: 'select',
-    label: 'Размер группы',
-    options: [
-      { value: 'individual', label: 'Индивидуально' },
-      { value: 'small', label: 'Малая группа (до 8 чел.)' },
-      { value: 'medium', label: 'Средняя группа (до 15 чел.)' },
-      { value: 'large', label: 'Большая группа (до 30 чел.)' },
-    ],
-  },
-  {
-    id: 'guideLanguage',
-    type: 'select',
-    label: 'Язык гида',
-    options: [
-      { value: 'ru', label: 'Русский' },
-      { value: 'en', label: 'Английский' },
-      { value: 'es', label: 'Испанский' },
-      { value: 'de', label: 'Немецкий' },
-      { value: 'fr', label: 'Французский' },
-      { value: 'pl', label: 'Польский' },
-    ],
-  },
-  {
-    id: 'suitableFor',
-    type: 'multiSelect',
-    label: 'Подходит для',
-    options: [
-      { value: 'children', label: 'Детей' },
-      { value: 'families', label: 'Семей' },
-      { value: 'couples', label: 'Пар' },
-      { value: 'seniors', label: 'Пожилых' },
-      { value: 'extreme', label: 'Любителей экстрима' },
-    ],
-  },
-  {
-    id: 'includes',
-    type: 'multiSelect',
-    label: 'Включено',
-    options: [
-      { value: 'transport', label: 'Транспорт' },
-      { value: 'food', label: 'Питание' },
-      { value: 'tickets', label: 'Билеты' },
-      { value: 'guide', label: 'Гид' },
-      { value: 'equipment', label: 'Оборудование' },
-    ],
-  },
-  {
-    id: 'minAge',
     type: 'range',
-    label: 'Минимальный возраст',
-    min: 0,
-    max: 18,
+    label: 'Размер группы',
+    category: 'advanced',
+    min: 1,
+    max: 20,
     step: 1,
+    marks: [
+      { value: 1, label: '1' },
+      { value: 5, label: '5' },
+      { value: 10, label: '10' },
+      { value: 15, label: '15' },
+      { value: 20, label: '20' }
+    ]
   },
+  {
+    id: 'includesTransport',
+    type: 'checkbox',
+    label: 'Включен трансфер',
+    category: 'advanced'
+  },
+  {
+    id: 'includesMeals',
+    type: 'checkbox',
+    label: 'Включены обеды',
+    category: 'advanced'
+  },
+  {
+    id: 'location',
+    type: 'multiselect',
+    label: 'Район',
+    category: 'advanced',
+    options: [
+      { value: 'south', label: 'Южная часть' },
+      { value: 'north', label: 'Северная часть' },
+      { value: 'central', label: 'Центральная часть' },
+      { value: 'teide', label: 'Национальный парк Тейде' },
+      { value: 'anaga', label: 'Горы Анага' },
+      { value: 'coast', label: 'Побережье' }
+    ]
+  }
+];
+
+// Фильтры для автомобилей
+export const carFilters: FilterConfig[] = [
+  {
+    id: 'priceRange',
+    type: 'range',
+    label: 'Цена за день',
+    category: 'basic',
+    min: 15,
+    max: 150,
+    step: 5,
+    marks: [
+      { value: 15, label: '15€' },
+      { value: 50, label: '50€' },
+      { value: 100, label: '100€' },
+      { value: 150, label: '150€' }
+    ]
+  },
+  {
+    id: 'carType',
+    type: 'select',
+    label: 'Тип автомобиля',
+    category: 'basic',
+    options: [
+      { value: 'economy', label: 'Эконом' },
+      { value: 'compact', label: 'Компактный' },
+      { value: 'intermediate', label: 'Средний' },
+      { value: 'standard', label: 'Стандартный' },
+      { value: 'suv', label: 'Внедорожник' },
+      { value: 'luxury', label: 'Премиум' }
+    ]
+  },
+  {
+    id: 'transmission',
+    type: 'select',
+    label: 'Коробка передач',
+    category: 'basic',
+    options: [
+      { value: 'manual', label: 'Механическая' },
+      { value: 'automatic', label: 'Автоматическая' }
+    ]
+  },
+  {
+    id: 'fuelType',
+    type: 'select',
+    label: 'Тип топлива',
+    category: 'advanced',
+    options: [
+      { value: 'petrol', label: 'Бензин' },
+      { value: 'diesel', label: 'Дизель' },
+      { value: 'electric', label: 'Электро' },
+      { value: 'hybrid', label: 'Гибрид' }
+    ]
+  },
+  {
+    id: 'seats',
+    type: 'select',
+    label: 'Количество мест',
+    category: 'advanced',
+    options: [
+      { value: '2', label: '2 места' },
+      { value: '4', label: '4 места' },
+      { value: '5', label: '5 мест' },
+      { value: '7', label: '7 мест' },
+      { value: '9', label: '9 мест' }
+    ]
+  },
+  {
+    id: 'features',
+    type: 'multiselect',
+    label: 'Дополнительные опции',
+    category: 'advanced',
+    options: [
+      { value: 'gps', label: 'GPS навигация' },
+      { value: 'child-seat', label: 'Детское кресло' },
+      { value: 'wifi', label: 'Wi-Fi' },
+      { value: 'bluetooth', label: 'Bluetooth' },
+      { value: 'usb', label: 'USB порты' },
+      { value: 'roof-rack', label: 'Багажник на крыше' }
+    ]
+  }
+];
+
+// Фильтры для недвижимости
+export const propertyFilters: FilterConfig[] = [
+  {
+    id: 'priceRange',
+    type: 'range',
+    label: 'Цена за ночь',
+    category: 'basic',
+    min: 20,
+    max: 500,
+    step: 10,
+    marks: [
+      { value: 20, label: '20€' },
+      { value: 100, label: '100€' },
+      { value: 250, label: '250€' },
+      { value: 500, label: '500€' }
+    ]
+  },
+  {
+    id: 'propertyType',
+    type: 'select',
+    label: 'Тип жилья',
+    category: 'basic',
+    options: [
+      { value: 'apartment', label: 'Квартира' },
+      { value: 'villa', label: 'Вилла' },
+      { value: 'house', label: 'Дом' },
+      { value: 'studio', label: 'Студия' },
+      { value: 'hotel', label: 'Отель' }
+    ]
+  },
+  {
+    id: 'bedrooms',
+    type: 'select',
+    label: 'Количество спален',
+    category: 'basic',
+    options: [
+      { value: '1', label: '1 спальня' },
+      { value: '2', label: '2 спальни' },
+      { value: '3', label: '3 спальни' },
+      { value: '4', label: '4 спальни' },
+      { value: '5+', label: '5+ спален' }
+    ]
+  },
+  {
+    id: 'guests',
+    type: 'range',
+    label: 'Количество гостей',
+    category: 'advanced',
+    min: 1,
+    max: 12,
+    step: 1,
+    marks: [
+      { value: 1, label: '1' },
+      { value: 4, label: '4' },
+      { value: 8, label: '8' },
+      { value: 12, label: '12' }
+    ]
+  },
+  {
+    id: 'amenities',
+    type: 'multiselect',
+    label: 'Удобства',
+    category: 'advanced',
+    options: [
+      { value: 'pool', label: 'Бассейн' },
+      { value: 'wifi', label: 'Wi-Fi' },
+      { value: 'parking', label: 'Парковка' },
+      { value: 'kitchen', label: 'Кухня' },
+      { value: 'balcony', label: 'Балкон/Терраса' },
+      { value: 'sea-view', label: 'Вид на море' },
+      { value: 'air-conditioning', label: 'Кондиционер' },
+      { value: 'washing-machine', label: 'Стиральная машина' }
+    ]
+  },
+  {
+    id: 'location',
+    type: 'multiselect',
+    label: 'Район',
+    category: 'advanced',
+    options: [
+      { value: 'playa-americas', label: 'Плайя де лас Америкас' },
+      { value: 'costa-adeje', label: 'Коста Адехе' },
+      { value: 'los-cristianos', label: 'Лос Кристианос' },
+      { value: 'puerto-cruz', label: 'Пуэрто де ла Крус' },
+      { value: 'santa-cruz', label: 'Санта-Крус' },
+      { value: 'la-laguna', label: 'Ла Лагуна' }
+    ]
+  }
 ];

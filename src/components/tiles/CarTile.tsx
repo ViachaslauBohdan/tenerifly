@@ -1,5 +1,5 @@
 import { Card, Image, Text, Badge, Group, Button, Stack } from '@mantine/core';
-import { IconCar, IconGasStation, IconGauge, IconUsers, IconBrandWhatsapp } from '@tabler/icons-react';
+import { IconCar, IconGasStation, IconGauge, IconUsers, IconBrandWhatsapp, IconEye } from '@tabler/icons-react';
 import { openWhatsApp } from '@/utils/whatsapp';
 import { Locale } from '@/types/locale';
 
@@ -20,6 +20,7 @@ export interface CarTileProps {
   };
   onView: () => void;
   currentLocale?: Locale; 
+  onViewDetails?: () => void;
 }
 
 export function CarTile({
@@ -31,7 +32,8 @@ export function CarTile({
   price,
   specifications,
   onView,
-  currentLocale = 'en'
+  currentLocale = 'en',
+  onViewDetails
 }: CarTileProps) {
   const getStatusColor = (status: CarTileProps['status']) => {
     const colors: Record<CarTileProps['status'], string> = {
@@ -43,7 +45,25 @@ export function CarTile({
     return colors[status];
   };
 
-  const formattedPrice = price.startsWith('€') ? `From ${price}/day` : `From €${price}/day`;
+  const getStatusLabel = (status: CarTileProps['status']) => {
+    const labels: Record<CarTileProps['status'], string> = {
+      available: 'Доступен',
+      reserved: 'Забронирован',
+      sold: 'Продан',
+      maintenance: 'На обслуживании',
+    };
+    return labels[status];
+  };
+
+  const formattedPrice = price.startsWith('€') ? price : `€${price}`;
+
+  const handleViewDetails = () => {
+    if (onViewDetails) {
+      onViewDetails();
+    } else {
+      onView(); // Fallback to existing onView
+    }
+  };
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
@@ -80,13 +100,13 @@ export function CarTile({
           </Group>
           <Group gap="xs">
             <IconUsers size="1rem" />
-            <Text size="sm">{specifications.seats} seats</Text>
+            <Text size="sm">{specifications.seats} мест</Text>
           </Group>
         </Group>
 
         <Group justify="space-between" mt="md">
           <Badge color={getStatusColor(status)} variant="light">
-            {status.charAt(0).toUpperCase() + status.slice(1)}
+            {getStatusLabel(status)}
           </Badge>
           <Badge color="blue" variant="filled" size="lg">
             {formattedPrice}
@@ -98,10 +118,10 @@ export function CarTile({
             variant="light" 
             color="blue"
             radius="md" 
-            onClick={onView}
-            leftSection={<IconCar size="1rem" />}
+            onClick={handleViewDetails}
+            leftSection={<IconEye size="1rem" />}
           >
-            View Details
+            Подробнее
           </Button>
           {status === 'available' && (
             <Button
@@ -116,7 +136,7 @@ export function CarTile({
               }, currentLocale)}
               leftSection={<IconBrandWhatsapp size="1rem" />}
             >
-              Book Now
+              Забронировать
             </Button>
           )}
         </Group>

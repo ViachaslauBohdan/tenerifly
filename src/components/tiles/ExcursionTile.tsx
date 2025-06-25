@@ -1,17 +1,21 @@
 import { Card, Image, Text, Badge, Group, Button, Stack } from '@mantine/core';
-import { IconClock, IconLanguage, IconBrandWhatsapp } from '@tabler/icons-react';
+import { IconClock, IconLanguage, IconBrandWhatsapp, IconEye } from '@tabler/icons-react';
 import { openWhatsApp } from '@/utils/whatsapp';
 import { Locale } from '@/types/locale';
+import { PriceDisplay } from '@/components/PriceDisplay';
+import { StrapiPrice } from '@/utils/currency';
 
 export interface ExcursionTileProps {
   title: string;
   description: string;
   image: string;
   duration: string;
-  price: string;
+  price: string; // Fallback price as string
   language: 'RU' | 'EN' | 'ES';
   onView: () => void;
   currentLocale?: Locale; 
+  onViewDetails?: () => void;
+  strapiPrice?: StrapiPrice | null; // Новое поле для Strapi цены
 }
 
 export function ExcursionTile({
@@ -22,15 +26,25 @@ export function ExcursionTile({
   price,
   language,
   onView,
-  currentLocale = 'en'
+  currentLocale = 'en',
+  onViewDetails,
+  strapiPrice
 }: ExcursionTileProps) {
   const getLanguageLabel = (lang: 'RU' | 'EN' | 'ES') => {
     const labels = {
-      RU: 'Russian',
+      RU: 'Русский',
       EN: 'English',
-      ES: 'Spanish',
+      ES: 'Español',
     };
     return labels[lang];
+  };
+
+  const handleViewDetails = () => {
+    if (onViewDetails) {
+      onViewDetails();
+    } else {
+      onView(); // Fallback to existing onView
+    }
   };
 
   return (
@@ -55,7 +69,17 @@ export function ExcursionTile({
             <Text size="sm">{duration}</Text>
           </Group>
           <Badge color="blue" variant="light">
-            {price}
+            {strapiPrice ? (
+              <PriceDisplay 
+                price={strapiPrice} 
+                locale={currentLocale}
+                size="sm"
+                weight={600}
+                color="blue"
+              />
+            ) : (
+              price
+            )}
           </Badge>
         </Group>
 
@@ -69,9 +93,10 @@ export function ExcursionTile({
             variant="light" 
             color="blue"
             radius="md" 
-            onClick={onView}
+            onClick={handleViewDetails}
+            leftSection={<IconEye size="1rem" />}
           >
-            View Details
+            Подробнее
           </Button>
           <Button
             variant="filled"
@@ -80,12 +105,12 @@ export function ExcursionTile({
             onClick={() => openWhatsApp('excursion', {
               title,
               duration,
-              price,
+              price: strapiPrice ? 'Цена уточняется' : price, // Для WhatsApp используем простую строку
               language: getLanguageLabel(language)
             }, currentLocale)}
             leftSection={<IconBrandWhatsapp size="1rem" />}
           >
-            Book Now
+            Забронировать
           </Button>
         </Group>
       </Stack>
