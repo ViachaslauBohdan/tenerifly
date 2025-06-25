@@ -1,6 +1,7 @@
 import { Card, Image, Text, Badge, Group, Button, Stack } from '@mantine/core';
 import { IconCar, IconGasStation, IconGauge, IconUsers, IconBrandWhatsapp } from '@tabler/icons-react';
 import { openWhatsApp } from '@/utils/whatsapp';
+import { Locale } from '@/types/locale';
 
 export interface CarTileProps {
   title: string;
@@ -18,6 +19,7 @@ export interface CarTileProps {
     seats: number;
   };
   onView: () => void;
+  currentLocale?: Locale; 
 }
 
 export function CarTile({
@@ -29,6 +31,7 @@ export function CarTile({
   price,
   specifications,
   onView,
+  currentLocale = 'en'
 }: CarTileProps) {
   const getStatusColor = (status: CarTileProps['status']) => {
     const colors: Record<CarTileProps['status'], string> = {
@@ -40,7 +43,6 @@ export function CarTile({
     return colors[status];
   };
 
-  // Format price to show "From €X/day"
   const formattedPrice = price.startsWith('€') ? `From ${price}/day` : `From €${price}/day`;
 
   return (
@@ -111,7 +113,7 @@ export function CarTile({
                 brand: specifications.brand,
                 model: specifications.model,
                 price: formattedPrice
-              })}
+              }, currentLocale)}
               leftSection={<IconBrandWhatsapp size="1rem" />}
             >
               Book Now
@@ -121,4 +123,4 @@ export function CarTile({
       </Stack>
     </Card>
   );
-} 
+}

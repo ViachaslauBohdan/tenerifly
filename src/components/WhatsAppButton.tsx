@@ -4,14 +4,21 @@ import React from 'react';
 import { ActionIcon, Tooltip } from '@mantine/core';
 import { IconBrandWhatsapp } from '@tabler/icons-react';
 import { openWhatsApp } from '@/utils/whatsapp';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function WhatsAppButton() {
+  const { locale, t } = useTranslation();
+  
   const handleClick = () => {
-    openWhatsApp('general', { title: 'Tenerifly Services' });
+    openWhatsApp('general', { title: 'Tenerifly Services' }, locale);
   };
 
   return (
-    <Tooltip label="Contact us on WhatsApp">
+    <Tooltip label={locale === 'en' ? "Contact us on WhatsApp" : 
+                   locale === 'pl' ? "Skontaktuj się z nami przez WhatsApp" :
+                   locale === 'fr' ? "Contactez-nous sur WhatsApp" :
+                   locale === 'ru' ? "Свяжитесь с нами в WhatsApp" :
+                   locale === 'uk' ? "Зв'яжіться з нами в WhatsApp" : "Contact us on WhatsApp"}>
       <ActionIcon
         variant="filled"
         color="green"
@@ -42,4 +49,4 @@ export function WhatsAppButton() {
       </ActionIcon>
     </Tooltip>
   );
-} 
+}

@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    ignoreDuringBuilds: true, // We'll handle ESLint separately
+    ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['localhost', 'tenerifly.com', 'res.cloudinary.com'], // Add your image domains here
+    domains: ['localhost', 'tenerifly.com', 'res.cloudinary.com'],
   },
 };
 
-module.exports = nextConfig; 
+module.exports = nextConfig;
