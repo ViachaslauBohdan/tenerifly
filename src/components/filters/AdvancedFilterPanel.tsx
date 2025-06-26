@@ -20,6 +20,7 @@ import {
 } from '@mantine/core';
 import { IconFilter, IconChevronDown, IconRefresh, IconCheck } from '@tabler/icons-react';
 import { FilterConfig } from '@/config/filters';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export interface AdvancedFilterPanelProps {
   config: FilterConfig[];
@@ -39,6 +40,7 @@ export function AdvancedFilterPanel({
   loading = false 
 }: AdvancedFilterPanelProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const { t, locale } = useTranslation();
 
   const basicFilters = config.filter(filter => filter.category === 'basic' || !filter.category);
   const advancedFilters = config.filter(filter => filter.category === 'advanced');
@@ -52,6 +54,23 @@ export function AdvancedFilterPanel({
     if (typeof value === 'number') return true;
     return false;
   });
+
+  // Функция для получения символа валюты по локали
+  const getCurrencySymbol = () => {
+    const symbols = {
+      en: '€',
+      pl: 'zł', 
+      fr: '€',
+      ru: '₽',
+      uk: '$'
+    };
+    return symbols[locale] || '€';
+  };
+
+  // Функция для форматирования меток на слайдере цен
+  const formatPriceLabel = (value: number) => {
+    return `${getCurrencySymbol()}${value}`;
+  };
 
   const renderFilter = (filter: FilterConfig) => {
     const value = values[filter.id];
@@ -105,7 +124,7 @@ export function AdvancedFilterPanel({
                   fontSize: rem(14),
                   color: '#374151',
                   borderRadius: 0,
-                  '&[data-selected="true"]': {
+                  '&[data-selected]': {
                     backgroundColor: '#dbeafe !important',
                     color: '#1e40af !important',
                     fontWeight: 500
@@ -134,6 +153,7 @@ export function AdvancedFilterPanel({
               searchable
               size="md"
               radius="md"
+              maxDropdownHeight={280}
               styles={{
                 input: {
                   backgroundColor: '#f9fafb',
@@ -154,21 +174,17 @@ export function AdvancedFilterPanel({
                   boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
                 },
                 option: {
-                  padding: `${rem(12)} ${rem(16)}`,
-                  fontSize: rem(14),
+                  padding: `${rem(10)} ${rem(14)}`,
+                  fontSize: rem(13),
                   color: '#374151',
-                  '&[data-selected="true"]': {
+                  lineHeight: '1.4',
+                  '&[data-selected]': {
                     backgroundColor: '#dbeafe !important',
                     color: '#1e40af !important'
                   },
                   '&:hover': {
                     backgroundColor: '#f3f4f6 !important'
                   }
-                },
-                pill: {
-                  backgroundColor: '#dbeafe',
-                  color: '#1e40af',
-                  border: '1px solid #93c5fd'
                 }
               }}
             />
@@ -176,6 +192,12 @@ export function AdvancedFilterPanel({
         );
 
       case 'range':
+        // Создаем метки с правильной валютой
+        const marks = filter.marks?.map(mark => ({
+          value: mark.value,
+          label: formatPriceLabel(mark.value)
+        })) || [];
+
         return (
           <Box key={filter.id}>
             <Group justify="space-between" mb="xs">
@@ -183,7 +205,7 @@ export function AdvancedFilterPanel({
                 {filter.label}
               </Text>
               <Text size="xs" c="gray.6">
-                {value ? `${value[0]} - ${value[1]}` : `${filter.min} - ${filter.max}`}
+                {value ? `${formatPriceLabel(value[0])} - ${formatPriceLabel(value[1])}` : `${formatPriceLabel(filter.min || 0)} - ${formatPriceLabel(filter.max || 100)}`}
               </Text>
             </Group>
             <Box px="md" py="lg">
@@ -193,7 +215,7 @@ export function AdvancedFilterPanel({
                 min={filter.min || 1}
                 max={filter.max || 100}
                 step={filter.step || 1}
-                marks={filter.marks}
+                marks={marks}
                 size="md"
                 radius="xl"
                 color="blue"
