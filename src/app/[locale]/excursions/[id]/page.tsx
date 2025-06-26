@@ -38,6 +38,22 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { openWhatsApp } from '@/utils/whatsapp';
 import { Locale } from '@/types/locale';
 
+// Генерация статических параметров для ISR
+export async function generateStaticParams() {
+  const locales = ['en', 'pl', 'fr', 'ru', 'uk'];
+  const excursionIds = ['1', '2', '3']; // Основные экскурсии
+  
+  return locales.flatMap(locale => 
+    excursionIds.map(id => ({
+      locale: locale as Locale,
+      id
+    }))
+  );
+}
+
+// Настройка revalidate для ISR
+export const revalidate = 3600; // Обновление каждый час
+
 interface ExcursionDetailsProps {
   params: Promise<{ locale: Locale; id: string }>;
 }
@@ -132,6 +148,14 @@ export default function ExcursionDetailsPage({ params }: ExcursionDetailsProps) 
   }
 
   const excursion = mockExcursionData;
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString(currentLocale === 'ru' ? 'ru-RU' : 'en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
     <Container size="xl" py="xl">
@@ -346,7 +370,7 @@ export default function ExcursionDetailsPage({ params }: ExcursionDetailsProps) 
                 <Text fw={500}>Next Available Dates:</Text>
                 {excursion.nextAvailableDates.map((date, index) => (
                   <Badge key={index} variant="light" fullWidth>
-                    {new Date(date).toLocaleDateString()}
+                    {formatDate(date)}
                   </Badge>
                 ))}
               </Stack>

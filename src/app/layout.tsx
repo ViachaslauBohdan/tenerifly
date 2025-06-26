@@ -18,6 +18,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// ISR настройки для layout
+export const revalidate = 86400; // Обновление каждые 24 часа для основного layout
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
@@ -109,6 +112,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
           rel="stylesheet"
         />
+        <link rel="preload" href="https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg" as="image" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
         <MantineProvider>

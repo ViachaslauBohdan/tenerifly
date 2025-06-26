@@ -7,6 +7,20 @@ import { BackToHome } from '@/components/BackToHome';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Locale } from '@/types/locale';
 
+// Генерация статических параметров для ISR
+export async function generateStaticParams() {
+  return [
+    { locale: 'en' },
+    { locale: 'pl' },
+    { locale: 'fr' },
+    { locale: 'ru' },
+    { locale: 'uk' },
+  ];
+}
+
+// Настройка revalidate для ISR
+export const revalidate = 7200; // Обновление каждые 2 часа для блога
+
 interface BlogPost {
   id: number;
   title: string;

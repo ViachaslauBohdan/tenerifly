@@ -8,7 +8,7 @@ export interface FilterConfig {
   min?: number;
   max?: number;
   step?: number;
-  marks?: { value: number; label: string }[]; // Добавлено для RangeSlider
+  marks?: { value: number; label: string }[]; // Для RangeSlider
 }
 
 // Фильтры для экскурсий
@@ -22,11 +22,11 @@ export const excursionFilters: FilterConfig[] = [
     max: 200,
     step: 5,
     marks: [
-      { value: 0, label: '0' },
-      { value: 50, label: '50' },
-      { value: 100, label: '100' },
-      { value: 150, label: '150' },
-      { value: 200, label: '200' }
+      { value: 0, label: '0€' },
+      { value: 50, label: '50€' },
+      { value: 100, label: '100€' },
+      { value: 150, label: '150€' },
+      { value: 200, label: '200€' }
     ]
   },
   {
@@ -122,10 +122,10 @@ export const carFilters: FilterConfig[] = [
     max: 150,
     step: 5,
     marks: [
-      { value: 15, label: '15' },
-      { value: 50, label: '50' },
-      { value: 100, label: '100' },
-      { value: 150, label: '150' }
+      { value: 15, label: '15€' },
+      { value: 50, label: '50€' },
+      { value: 100, label: '100€' },
+      { value: 150, label: '150€' }
     ]
   },
   {
@@ -204,10 +204,10 @@ export const propertyFilters: FilterConfig[] = [
     max: 500,
     step: 10,
     marks: [
-      { value: 20, label: '20' },
-      { value: 100, label: '100' },
-      { value: 250, label: '250' },
-      { value: 500, label: '500' }
+      { value: 20, label: '20€' },
+      { value: 100, label: '100€' },
+      { value: 250, label: '250€' },
+      { value: 500, label: '500€' }
     ]
   },
   {
