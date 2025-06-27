@@ -4,8 +4,10 @@ import { openWhatsApp } from '@/utils/whatsapp';
 import { Locale } from '@/types/locale';
 import { PriceDisplay } from '@/components/PriceDisplay';
 import { StrapiPrice } from '@/utils/currency';
+import { useRouter } from 'next/navigation';
 
 export interface ExcursionTileProps {
+  id?: number; // Добавляем ID для навигации
   title: string;
   description: string;
   image: string;
@@ -19,6 +21,7 @@ export interface ExcursionTileProps {
 }
 
 export function ExcursionTile({
+  id,
   title,
   description,
   image,
@@ -30,6 +33,8 @@ export function ExcursionTile({
   onViewDetails,
   strapiPrice
 }: ExcursionTileProps) {
+  const router = useRouter();
+  
   const getLanguageLabel = (lang: 'RU' | 'EN' | 'ES') => {
     const labels = {
       RU: 'Русский',
@@ -40,7 +45,10 @@ export function ExcursionTile({
   };
 
   const handleViewDetails = () => {
-    if (onViewDetails) {
+    if (id) {
+      // Навигация на детальную страницу
+      router.push(`/${currentLocale}/excursions/${id}`);
+    } else if (onViewDetails) {
       onViewDetails();
     } else {
       onView(); // Fallback to existing onView

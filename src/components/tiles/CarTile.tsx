@@ -2,8 +2,10 @@ import { Card, Image, Text, Badge, Group, Button, Stack } from '@mantine/core';
 import { IconCar, IconGasStation, IconGauge, IconUsers, IconBrandWhatsapp, IconEye } from '@tabler/icons-react';
 import { openWhatsApp } from '@/utils/whatsapp';
 import { Locale } from '@/types/locale';
+import { useRouter } from 'next/navigation';
 
 export interface CarTileProps {
+  id?: number; // Добавляем ID для навигации
   title: string;
   description: string;
   image: string;
@@ -24,6 +26,7 @@ export interface CarTileProps {
 }
 
 export function CarTile({
+  id,
   title,
   description,
   image,
@@ -35,6 +38,8 @@ export function CarTile({
   currentLocale = 'en',
   onViewDetails
 }: CarTileProps) {
+  const router = useRouter();
+  
   const getStatusColor = (status: CarTileProps['status']) => {
     const colors: Record<CarTileProps['status'], string> = {
       available: 'green',
@@ -58,7 +63,10 @@ export function CarTile({
   const formattedPrice = price.startsWith('€') ? price : `€${price}`;
 
   const handleViewDetails = () => {
-    if (onViewDetails) {
+    if (id) {
+      // Навигация на детальную страницу
+      router.push(`/${currentLocale}/cars/${id}`);
+    } else if (onViewDetails) {
       onViewDetails();
     } else {
       onView(); // Fallback to existing onView

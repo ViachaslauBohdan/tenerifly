@@ -11,6 +11,7 @@ import { openWhatsApp } from '@/utils/whatsapp';
 import { useTranslation } from '@/hooks/useTranslation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { Locale } from '@/types/locale';
+import { IconEye } from '@tabler/icons-react';
 
 interface LocalePageClientProps {
   params: Promise<{ locale: Locale }>;
@@ -286,7 +287,7 @@ export function LocalePageClient({ params }: LocalePageClientProps) {
             <Title order={2}>{t.sections.excursions.title}</Title>
             <Text size="lg" c="dimmed">{t.sections.excursions.subtitle}</Text>
           </Stack>
-          
+
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="xl">
             {excursions.map((excursion, index) => (
               <Card key={index} withBorder padding="xl" radius="md">
@@ -297,45 +298,54 @@ export function LocalePageClient({ params }: LocalePageClientProps) {
                     alt={excursion.title}
                   />
                 </Card.Section>
-
+            
                 <Group justify="space-between" mt="md">
                   <Text size="lg" fw={500}>{excursion.title}</Text>
                   <Badge leftSection={<IconStar size={14} />} color="yellow">
                     {excursion.rating}
                   </Badge>
                 </Group>
-
+            
                 <Text size="sm" c="dimmed" mt="sm">
                   {excursion.description}
                 </Text>
-
+            
                 <Group mt="md" gap="xs">
                   <IconClock size={16} />
                   <Text size="sm">{t.sections.excursions.duration}: {excursion.duration}</Text>
                 </Group>
-
+            
                 <Group mt="xs" gap="xs">
                   <IconUsers size={16} />
                   <Text size="sm">{t.sections.excursions.groupSize}: {excursion.groupSize}</Text>
                 </Group>
-
+            
                 <Group mt="xs" gap="xs">
                   <IconCurrencyEuro size={16} />
                   <Text size="sm">{t.sections.excursions.price}: {excursion.price}</Text>
                 </Group>
-
-                <Button
-                  variant="filled"
-                  size="md"
-                  fullWidth
-                  mt="md"
-                  onClick={() => openWhatsApp('excursion', {
-                    title: excursion.title,
-                    price: excursion.price
-                  }, currentLocale)}
-                >
-                  {t.common.bookNow}
-                </Button>
+            
+                <Group grow mt="md">
+                  <Button 
+                    variant="light" 
+                    color="blue"
+                    radius="md" 
+                    onClick={() => router.push(`/${currentLocale}/excursions/${index + 1}`)}
+                    leftSection={<IconEye size="1rem" />}
+                  >
+                    Подробнее
+                  </Button>
+                  <Button
+                    variant="filled"
+                    size="md"
+                    onClick={() => openWhatsApp('excursion', {
+                      title: excursion.title,
+                      price: excursion.price
+                    }, currentLocale)}
+                  >
+                    {t.common.bookNow}
+                  </Button>
+                </Group>
               </Card>
             ))}
           </SimpleGrid>

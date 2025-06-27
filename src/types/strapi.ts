@@ -89,9 +89,16 @@ interface TourImage {
   height: number;
   formats: {
     thumbnail?: {
+      ext: string;
       url: string;
+      hash: string;
+      mime: string;
+      name: string;
+      path: string | null;
+      size: number;
       width: number;
       height: number;
+      sizeInBytes: number;
     };
   };
   hash: string;
@@ -106,7 +113,6 @@ interface TourImage {
   updatedAt: string;
   publishedAt: string;
 }
-
 // Обновленный интерфейс Tour с дополнительными полями для фильтров
 export interface Tour {
   id: number;
@@ -121,22 +127,25 @@ export interface Tour {
   location: Location;
   price: Price;
   contact: Contact;
-  
-  // Дополнительные поля для фильтров
   difficulty_level?: 'easy' | 'moderate' | 'hard';
   category?: string;
   max_participants?: number;
   min_age?: number;
   includes_transport?: boolean;
   includes_food?: boolean;
+  includes_tickets?: boolean;
   suitable_for_children?: boolean;
   guide_languages?: string[];
-  
+  rating?: number;
+  reviews_count?: number;
+  highlights?: string[];
+  what_to_bring?: string[];
+  meeting_point?: string;
+  cancellation_policy?: string;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
 }
-
 // Спецификации автомобиля
 interface CarSpecifications {
   id: number;
@@ -217,7 +226,7 @@ interface CarImage {
   url: string;
   previewUrl: string | null;
   provider: string;
-  provider_metadata: any | null;
+  provider_metadata: Record<string, any>;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
@@ -281,6 +290,8 @@ interface PropertyFeatures {
 // Условия аренды недвижимости
 interface PropertyRentalTerms {
   id: number;
+  minimum_stay: number;  
+  maximum_stay?: number; 
   min_rental_period: number;
   deposit_amount: number;
   pets_allowed: boolean;
@@ -292,11 +303,14 @@ interface PropertyRentalTerms {
 // Условия продажи недвижимости
 interface PropertySaleTerms {
   id: number;
+  legal_info?: string; 
+  additional_terms?: string; 
   ownership_type: string;
   tax_amount: number;
   hoa_fees: number;
   financing_available: boolean;
-  additional_terms: string[];
+  mortgage_available?: boolean;
+  payment_methods?: any;
 }
 
 // Интерфейс недвижимости
@@ -310,9 +324,16 @@ export interface Property {
     url: string;
     formats?: {
       thumbnail?: {
+        ext: string;
         url: string;
+        hash: string;
+        mime: string;
+        name: string;
+        path: string | null;
+        size: number;
         width: number;
         height: number;
+        sizeInBytes: number;
       };
     };
   }[];
@@ -339,13 +360,10 @@ export interface BlogPost {
   title: string;
   slug: string;
   description: string;
+  excerpt?: string; 
   content: string;
   featured_image: TourImage | null;
-  author: {
-    id: number;
-    name: string;
-    avatar?: TourImage;
-  };
+  author: string; 
   category: {
     id: number;
     name: string;
@@ -355,6 +373,7 @@ export interface BlogPost {
   published_date: string;
   reading_time: number;
   featured: boolean;
+  is_featured?: boolean; 
   seo: {
     metaTitle?: string;
     metaDescription?: string;

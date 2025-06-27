@@ -14,7 +14,7 @@ body {
 }
 
 /* Улучшенные стили для Mantine компонентов */
-
+&[data-selected="true"]
 /* Карточки */
 .mantine-Card-root {
   transition: all 0.3s ease;
