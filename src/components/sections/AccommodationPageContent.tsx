@@ -12,7 +12,7 @@ import {
   Stack, 
   Text, 
   Button,
-  SimpleGrid,
+  SimpleGrid, 
   Select,
   TextInput,
   NumberInput,
@@ -174,16 +174,16 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
     if (filters.furnished !== null && property.specifications?.furnished !== filters.furnished) {
       return false;
     }
-    if (filters.hasParking !== null && property.features?.garage !== filters.hasParking) {
+    if (filters.hasParking !== null && property.features?.has_garage !== filters.hasParking) {
       return false;
     }
-    if (filters.hasPool !== null && property.features?.pool !== filters.hasPool) {
+    if (filters.hasPool !== null && property.features?.has_pool !== filters.hasPool) {
       return false;
     }
-    if (filters.hasGarden !== null && property.features?.garden !== filters.hasGarden) {
+    if (filters.hasGarden !== null && property.features?.has_garden !== filters.hasGarden) {
       return false;
     }
-    if (filters.hasTerrace !== null && property.features?.terrace !== filters.hasTerrace) {
+    if (filters.hasTerrace !== null && property.features?.has_terrace !== filters.hasTerrace) {
       return false;
     }
     return true;

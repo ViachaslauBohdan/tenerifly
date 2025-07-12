@@ -23,21 +23,28 @@ export function CarsSection({ cars }: CarsSectionProps) {
           <Grid.Col key={car.id} span={{ base: 12, sm: 6 }}>
             <article>
               <CarTile
+                id={car.id}
                 title={car.title}
                 description={car.description || 'No description available'}
                 image={car.images?.[0]?.url || '/placeholder.jpg'}
                 type={car.type}
-                status={car.car_status}
-                price={`€${car.price?.amount || 0}${car.price?.period === 'day' ? '/day' : ''}`}
+                dailyPrice={car.price?.amount || 30} 
                 specifications={{
-                  brand: car.specifications?.make || '',
+                  make: car.specifications?.make || '', 
                   model: car.specifications?.model || '',
                   year: car.specifications?.year || new Date().getFullYear(),
-                  fuel_type: car.specifications?.fuel || '',
+                  fuel: car.specifications?.fuel || '',
                   transmission: car.specifications?.transmission || '',
                   seats: car.specifications?.seats || 0,
                 }}
-                onView={() => console.log('View car:', car.id)}
+                features={{
+                  air_conditioning: car.features?.air_conditioning || false,
+                  navigation: car.features?.navigation || false,
+                  bluetooth: car.features?.bluetooth || false,
+                  backup_camera: car.features?.backup_camera || false,
+                }}
+                onContact={(id: number) => console.log('Связаться по автомобилю:', id)} 
+                currentLocale="ru"
               />
             </article>
           </Grid.Col>

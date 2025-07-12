@@ -1,28 +1,30 @@
-import { Card, Image, Text, Badge, Group, Button, Stack } from '@mantine/core';
-import { IconCar, IconGasStation, IconGauge, IconUsers, IconBrandWhatsapp, IconEye } from '@tabler/icons-react';
-import { openWhatsApp } from '@/utils/whatsapp';
+import { Card, Image, Text, Badge, Button, Group, Stack, rem } from '@mantine/core';
+import { IconCar, IconUsers, IconGasStation, IconSettings, IconPhone } from '@tabler/icons-react';
 import { Locale } from '@/types/locale';
-import { useRouter } from 'next/navigation';
 
-export interface CarTileProps {
-  id?: number; // Добавляем ID для навигации
+interface CarTileProps {
+  id: number;
   title: string;
   description: string;
   image: string;
   type: 'rent' | 'sale';
-  status: 'available' | 'reserved' | 'sold' | 'maintenance';
-  price: string;
+  dailyPrice: number;
   specifications: {
-    brand: string;
+    make: string;
     model: string;
     year: number;
-    fuel_type: string;
+    fuel: string;
     transmission: string;
     seats: number;
   };
-  onView: () => void;
-  currentLocale?: Locale; 
-  onViewDetails?: () => void;
+  features: {
+    air_conditioning: boolean;
+    navigation: boolean;
+    bluetooth: boolean;
+    backup_camera: boolean;
+  };
+  onContact: (id: number) => void;
+  currentLocale: Locale;
 }
 
 export function CarTile({
@@ -31,122 +33,128 @@ export function CarTile({
   description,
   image,
   type,
-  status,
-  price,
+  dailyPrice,
   specifications,
-  onView,
-  currentLocale = 'en',
-  onViewDetails
+  features,
+  onContact,
+  currentLocale
 }: CarTileProps) {
-  const router = useRouter();
-  
-  const getStatusColor = (status: CarTileProps['status']) => {
-    const colors: Record<CarTileProps['status'], string> = {
-      available: 'green',
-      reserved: 'yellow',
-      sold: 'red',
-      maintenance: 'gray',
-    };
-    return colors[status];
-  };
-
-  const getStatusLabel = (status: CarTileProps['status']) => {
-    const labels: Record<CarTileProps['status'], string> = {
-      available: 'Доступен',
-      reserved: 'Забронирован',
-      sold: 'Продан',
-      maintenance: 'На обслуживании',
-    };
-    return labels[status];
-  };
-
-  const formattedPrice = price.startsWith('€') ? price : `€${price}`;
-
-  const handleViewDetails = () => {
-    if (id) {
-      // Навигация на детальную страницу
-      router.push(`/${currentLocale}/cars/${id}`);
-    } else if (onViewDetails) {
-      onViewDetails();
-    } else {
-      onView(); // Fallback to existing onView
+  const typeLabels = {
+    rent: {
+      en: 'For Rent',
+      ru: 'Аренда',
+      pl: 'Do wynajęcia',
+      fr: 'À louer',
+      uk: 'Оренда'
+    },
+    sale: {
+      en: 'For Sale',
+      ru: 'Продажа',
+      pl: 'Na sprzedaż',
+      fr: 'À vendre',
+      uk: 'Продаж'
     }
   };
 
+  const featuresCount = Object.values(features).filter(Boolean).length;
+
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card 
+      shadow="md" 
+      padding="lg" 
+      radius="md" 
+      withBorder
+      className="glass-effect hover-lift"
+      h="100%"
+    >
       <Card.Section>
         <Image
           src={image}
-          height={160}
+          height={200}
           alt={title}
+          fallbackSrc="/placeholder.jpg"
         />
       </Card.Section>
 
-      <Stack mt="md">
-        <Text fw={500} size="lg">{title}</Text>
-        <Group gap="xs">
-          <Text size="sm" c="dimmed">{specifications.brand}</Text>
-          <Text size="sm" c="dimmed">•</Text>
-          <Text size="sm" c="dimmed">{specifications.model}</Text>
-          <Text size="sm" c="dimmed">•</Text>
-          <Text size="sm" c="dimmed">{specifications.year}</Text>
+      <Stack gap="md" mt="md">
+        {/* Заголовок и тип */}
+        <Group justify="space-between" align="flex-start">
+          <Text fw={600} size="lg" lineClamp={2} flex={1}>
+            {title}
+          </Text>
+          <Badge
+            color={type === 'rent' ? 'blue' : 'green'}
+            size="sm"
+          >
+            {typeLabels[type][currentLocale]}
+          </Badge>
         </Group>
 
+        {/* Описание */}
         <Text size="sm" c="dimmed" lineClamp={2}>
           {description}
         </Text>
 
-        <Group justify="space-between" mt="xs">
-          <Group gap="xs">
-            <IconGasStation size="1rem" />
-            <Text size="sm">{specifications.fuel_type}</Text>
+        {/* Характеристики */}
+        <Stack gap="xs">
+          <Group gap="md">
+            <Group gap={4}>
+              <IconCar size={16} />
+              <Text size="xs" c="dimmed">
+                {specifications.make} {specifications.model}
+              </Text>
+            </Group>
+            <Group gap={4}>
+              <IconUsers size={16} />
+              <Text size="xs" c="dimmed">
+                {specifications.seats} мест
+              </Text>
+            </Group>
           </Group>
-          <Group gap="xs">
-            <IconGauge size="1rem" />
-            <Text size="sm">{specifications.transmission}</Text>
+          
+          <Group gap="md">
+            <Group gap={4}>
+              <IconGasStation size={16} />
+              <Text size="xs" c="dimmed">
+                {specifications.fuel}
+              </Text>
+            </Group>
+            <Group gap={4}>
+              <IconSettings size={16} />
+              <Text size="xs" c="dimmed">
+                {specifications.transmission}
+              </Text>
+            </Group>
           </Group>
-          <Group gap="xs">
-            <IconUsers size="1rem" />
-            <Text size="sm">{specifications.seats} мест</Text>
-          </Group>
-        </Group>
+        </Stack>
 
-        <Group justify="space-between" mt="md">
-          <Badge color={getStatusColor(status)} variant="light">
-            {getStatusLabel(status)}
-          </Badge>
-          <Badge color="blue" variant="filled" size="lg">
-            {formattedPrice}
-          </Badge>
-        </Group>
+        {/* Дополнительные возможности */}
+        {featuresCount > 0 && (
+          <Text size="xs" c="blue.6">
+            +{featuresCount} дополнительных опций
+          </Text>
+        )}
 
-        <Group grow mt="md">
-          <Button 
-            variant="light" 
-            color="blue"
-            radius="md" 
-            onClick={handleViewDetails}
-            leftSection={<IconEye size="1rem" />}
+        {/* Цена и кнопка */}
+        <Group justify="space-between" align="center" mt="auto">
+          <Stack gap={0}>
+            <Text size="xl" fw={700} c="blue.6">
+              €{dailyPrice}
+            </Text>
+            <Text size="xs" c="dimmed">
+              за день
+            </Text>
+          </Stack>
+          
+          <Button
+            leftSection={<IconPhone size={16} />}
+            variant="gradient"
+            gradient={{ from: 'blue', to: 'cyan' }}
+            size="sm"
+            onClick={() => onContact(id)}
           >
-            Подробнее
+            Связаться
           </Button>
-          {status === 'available' && (
-            <Button
-              variant="filled"
-              color="green"
-              radius="md"
-              onClick={() => openWhatsApp('car', {
-                title,
-                brand: specifications.brand,
-                model: specifications.model,
-                price: formattedPrice
-              }, currentLocale)}
-              leftSection={<IconBrandWhatsapp size="1rem" />}
-            >
-              Забронировать
-            </Button>
-          )}
         </Group>
       </Stack>
     </Card>

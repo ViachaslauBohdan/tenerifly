@@ -1,107 +1,209 @@
-'use client';
+import { Card, Image, Text, Badge, Group, Button, Stack, ThemeIcon } from '@mantine/core';
+import { 
+  IconBed, 
+  IconBath, 
+  IconRuler, 
+  IconMapPin,
+  IconCar,
+  IconPool,
+  IconTrees,
+  IconBuildingSkyscraper,
+  IconHome2,
+  IconBrandWhatsapp,
+  IconEye 
+} from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
+import { Locale } from '@/types/locale';
 
-import { Card, Image, Text, Badge, Group, Stack, ActionIcon, Button } from '@mantine/core';
-import { IconBed, IconBath, IconUsers, IconMapPin, IconEye, IconBrandWhatsapp } from '@tabler/icons-react';
-import { Property } from '@/types/strapi';
-import { openWhatsApp } from '@/utils/whatsapp';
-
-interface PropertyTileProps {
-  property: Property;
-  onBook?: (id: number) => void;
-  onViewDetails?: (id: number) => void;
+export interface PropertyTileProps {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  type: 'rent' | 'sale';
+  price: string;
+  specifications: {
+    property_type: string;
+    bedrooms: number;
+    bathrooms: number;
+    total_area: number;
+    floor: number;
+    year_built: number;
+  };
+  location: string;
+  features: {
+    has_balcony: boolean;
+    has_terrace: boolean;
+    has_garden: boolean;
+    has_pool: boolean;
+    has_parking: boolean;
+    furnished: boolean;
+  };
+  onContact: (id: number) => void;
+  currentLocale?: Locale;
 }
 
-export function PropertyTile({ property, onBook, onViewDetails }: PropertyTileProps) {
-  const { id, title, description, images, location, specifications, price, features, contact } = property;
+export function PropertyTile({
+  id,
+  title,
+  description,
+  image,
+  type,
+  price,
+  specifications,
+  location,
+  features,
+  onContact,
+  currentLocale = 'en'
+}: PropertyTileProps) {
+  const router = useRouter();
+  
+  const getPropertyTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      apartment: 'Квартира',
+      house: 'Дом',
+      villa: 'Вилла',
+      studio: 'Студия',
+      penthouse: 'Пентхаус',
+      plot: 'Участок',
+      commercial: 'Коммерческая',
+    };
+    return labels[type] || type;
+  };
 
-  const handleBook = () => {
-    // Open WhatsApp in a new tab
-    const whatsappUrl = `https://wa.me/34656641433?text=${encodeURIComponent(`Hi! I'm interested in the accommodation "[Property ID: ${id}] ${title}" for €${price?.amount || 0}/${price?.period || 'night'}`)}`;
-    window.open(whatsappUrl, '_blank');
+  const getTypeColor = (type: PropertyTileProps['type']) => {
+    return type === 'rent' ? 'blue' : 'green';
+  };
+
+  const getTypeLabel = (type: PropertyTileProps['type']) => {
+    return type === 'rent' ? 'Аренда' : 'Продажа';
   };
 
   const handleViewDetails = () => {
-    if (onViewDetails) {
-      onViewDetails(id);
-    } else {
-      // Fallback: открываем детальную страницу
-      window.open(`/accommodation/${id}`, '_self');
-    }
+    router.push(`/${currentLocale}/properties/${id}`);
+  };
+
+  const handleWhatsAppContact = () => {
+    const message = `Привет! Меня интересует недвижимость "${title}" (ID: ${id}). Можете предоставить больше информации?`;
+    const phoneNumber = '+34600000000'; // Замените на реальный номер
+    const whatsappUrl = `https://wa.me/${phoneNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" radius="md" withBorder h="100%">
       <Card.Section>
         <Image
-          src={property.images?.[0]?.url || '/placeholder.jpg'}
+          src={image}
           height={200}
           alt={title}
-          fallbackSrc="/placeholder.jpg"
+          fallbackSrc="/placeholder-property.jpg"
         />
       </Card.Section>
 
-      <Stack mt="md" gap="sm">
+      <Stack gap="sm" mt="md">
+        {/* Заголовок и тип */}
         <Group justify="space-between" align="flex-start">
-          <Text fw={500} size="lg" lineClamp={1}>
+          <Text fw={600} size="lg" lineClamp={2}>
             {title}
           </Text>
-          <Badge color="blue" variant="light" size="lg">
-            €{price?.amount || 0}/{price?.period || 'month'}
+          <Badge variant="light" color={getTypeColor(type)} size="sm">
+            {getTypeLabel(type)}
           </Badge>
         </Group>
 
+        {/* Описание */}
+        <Text size="sm" c="dimmed" lineClamp={3}>
+          {description}
+        </Text>
+
+        {/* Основная информация */}
         <Group gap="xs">
-          <ActionIcon variant="subtle" color="gray" size="sm">
-            <IconMapPin size="1rem" />
-          </ActionIcon>
-          <Text size="sm" c="dimmed">
-            {location?.address || 'Address not specified'}
+          <Group gap={4}>
+            <IconMapPin size={16} color="gray" />
+            <Text size="xs" c="dimmed">{location}</Text>
+          </Group>
+          <Badge variant="outline" size="xs">
+            {getPropertyTypeLabel(specifications.property_type)}
+          </Badge>
+        </Group>
+
+        {/* Характеристики */}
+        <Group justify="space-between">
+          <Group gap="xs">
+            <Group gap={4}>
+              <IconBed size={16} color="gray" />
+              <Text size="xs">{specifications.bedrooms}</Text>
+            </Group>
+            <Group gap={4}>
+              <IconBath size={16} color="gray" />
+              <Text size="xs">{specifications.bathrooms}</Text>
+            </Group>
+            <Group gap={4}>
+              <IconRuler size={16} color="gray" />
+              <Text size="xs">{specifications.total_area}м²</Text>
+            </Group>
+          </Group>
+          {specifications.year_built > 0 && (
+            <Text size="xs" c="dimmed">
+              {specifications.year_built}г.
+            </Text>
+          )}
+        </Group>
+
+        {/* Удобства */}
+        <Group gap="xs">
+          {features.has_balcony && (
+            <ThemeIcon size={20} radius="xl" color="blue" variant="light">
+              <IconBuildingSkyscraper size={12} />
+            </ThemeIcon>
+          )}
+          {features.has_garden && (
+            <ThemeIcon size={20} radius="xl" color="green" variant="light">
+              <IconTrees size={12} />
+            </ThemeIcon>
+          )}
+          {features.has_pool && (
+            <ThemeIcon size={20} radius="xl" color="cyan" variant="light">
+              <IconPool size={12} />
+            </ThemeIcon>
+          )}
+          {features.has_parking && (
+            <ThemeIcon size={20} radius="xl" color="gray" variant="light">
+              <IconCar size={12} />
+            </ThemeIcon>
+          )}
+          {features.furnished && (
+            <ThemeIcon size={20} radius="xl" color="orange" variant="light">
+              <IconHome2 size={12} />
+            </ThemeIcon>
+          )}
+        </Group>
+
+        {/* Цена и кнопки */}
+        <Group justify="space-between" align="center" mt="auto">
+          <Text fw={700} size="xl" c="blue">
+            {price}
+            {type === 'rent' && <Text span size="sm" c="dimmed">/мес</Text>}
           </Text>
         </Group>
 
-        <Text size="sm" c="dimmed" lineClamp={2}>
-          {description || 'No description available'}
-        </Text>
-
-        <Group gap="lg">
-          <Group gap="xs">
-            <IconBed size="1rem" />
-            <Text size="sm">{specifications?.bedrooms || 0} beds</Text>
-          </Group>
-          <Group gap="xs">
-            <IconBath size="1rem" />
-            <Text size="sm">{specifications?.bathrooms || 0} baths</Text>
-          </Group>
-          <Group gap="xs">
-            <IconUsers size="1rem" />
-            <Text size="sm">Floor {specifications?.floor || 0}/{specifications?.total_floors || 0}</Text>
-          </Group>
-        </Group>
-
-        <Group gap="xs" mt="xs">
-          {features?.pool && <Badge color="blue" size="sm">Pool</Badge>}
-          {features?.garden && <Badge color="green" size="sm">Garden</Badge>}
-          {features?.air_conditioning && <Badge color="gray" size="sm">AC</Badge>}
-          {features?.terrace && <Badge color="orange" size="sm">Terrace</Badge>}
-        </Group>
-
-        {/* Кнопки действий */}
-        <Group grow mt="md">
+        <Group grow>
           <Button
-            variant="light"
-            color="blue"
+            variant="outline"
             leftSection={<IconEye size={16} />}
             onClick={handleViewDetails}
+            size="sm"
           >
             Подробнее
           </Button>
           <Button
-            variant="filled"
-            color="green"
             leftSection={<IconBrandWhatsapp size={16} />}
-            onClick={handleBook}
+            onClick={handleWhatsAppContact}
+            size="sm"
+            color="green"
           >
-            Забронировать
+            Связаться
           </Button>
         </Group>
       </Stack>

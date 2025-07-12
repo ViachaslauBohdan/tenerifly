@@ -71,6 +71,13 @@ export interface Translations {
     groupSize: string;
     included: string;
     category: string;
+    // НОВЫЕ КЛЮЧИ ДЛЯ СОРТИРОВКИ
+    newest: string;
+    oldest: string;
+    priceAsc: string;
+    priceDesc: string;
+    yearDesc: string;
+    yearAsc: string;
   };
   common: {
     bookNow: string;
@@ -94,6 +101,11 @@ export interface Translations {
     email: string;
     whatsapp: string;
     backToHome: string;
+    // НОВЫЕ КЛЮЧИ
+    found: string;
+    rental: string;
+    sale: string;
+    type: string;
   };
   sections: {
     excursions: {
@@ -232,7 +244,13 @@ export const translations: Record<Locale, Translations> = {
       difficulty: "Difficulty",
       groupSize: "Group Size",
       included: "Included",
-      category: "Category"
+      category: "Category",
+      newest: "Newest first",
+      oldest: "Oldest first",
+      priceAsc: "Price: Low to High",
+      priceDesc: "Price: High to Low",
+      yearDesc: "Year: Newest first",
+      yearAsc: "Year: Oldest first"
     },
     common: {
       bookNow: "Book Now",
@@ -255,7 +273,11 @@ export const translations: Record<Locale, Translations> = {
       phone: "Phone",
       email: "Email",
       whatsapp: "WhatsApp",
-      backToHome: "Back to Home"
+      backToHome: "Back to Home",
+      found: "Found",
+      rental: "Rental",
+      sale: "Sale",
+      type: "Type"
     },
     sections: {
       excursions: {
@@ -392,7 +414,13 @@ export const translations: Record<Locale, Translations> = {
       difficulty: "Trudność",
       groupSize: "Rozmiar grupy",
       included: "W cenie",
-      category: "Kategoria"
+      category: "Kategoria",
+      newest: "Najnowsze najpierw",
+      oldest: "Najstarsze najpierw",
+      priceAsc: "Cena: od najniższej",
+      priceDesc: "Cena: od najwyższej",
+      yearDesc: "Rok: najnowsze najpierw",
+      yearAsc: "Rok: najstarsze najpierw"
     },
     common: {
       bookNow: "Zarezerwuj",
@@ -415,7 +443,11 @@ export const translations: Record<Locale, Translations> = {
       phone: "Telefon",
       email: "Email",
       whatsapp: "WhatsApp",
-      backToHome: "Powrót do strony głównej"
+      backToHome: "Powrót do strony głównej",
+      found: "Znaleziono",
+      rental: "Wynajem",
+      sale: "Sprzedaż",
+      type: "Typ"
     },
     sections: {
       excursions: {
@@ -552,7 +584,13 @@ export const translations: Record<Locale, Translations> = {
       difficulty: "Difficulté",
       groupSize: "Taille du groupe",
       included: "Inclus",
-      category: "Catégorie"
+      category: "Catégorie",
+      newest: "Plus récents d'abord",
+      oldest: "Plus anciens d'abord",
+      priceAsc: "Prix: croissant",
+      priceDesc: "Prix: décroissant",
+      yearDesc: "Année: récents d'abord",
+      yearAsc: "Année: anciens d'abord"
     },
     common: {
       bookNow: "Réserver maintenant",
@@ -575,7 +613,11 @@ export const translations: Record<Locale, Translations> = {
       phone: "Téléphone",
       email: "Email",
       whatsapp: "WhatsApp",
-      backToHome: "Retour à l'accueil"
+      backToHome: "Retour à l'accueil",
+      found: "Trouvé",
+      rental: "Location",
+      sale: "Vente",
+      type: "Type"
     },
     sections: {
       excursions: {
@@ -712,7 +754,13 @@ export const translations: Record<Locale, Translations> = {
       difficulty: "Сложность",
       groupSize: "Размер группы",
       included: "Включено",
-      category: "Категория"
+      category: "Категория",
+      newest: "Сначала новые",
+      oldest: "Сначала старые",
+      priceAsc: "Цена: по возрастанию",
+      priceDesc: "Цена: по убыванию",
+      yearDesc: "Год: новые первыми",
+      yearAsc: "Год: старые первыми"
     },
     common: {
       bookNow: "Забронировать",
@@ -735,7 +783,11 @@ export const translations: Record<Locale, Translations> = {
       phone: "Телефон",
       email: "Email",
       whatsapp: "WhatsApp",
-      backToHome: "Вернуться на главную"
+      backToHome: "Вернуться на главную",
+      found: "Найдено",
+      rental: "Аренда",
+      sale: "Продажа",
+      type: "Тип"
     },
     sections: {
       excursions: {
@@ -872,7 +924,13 @@ export const translations: Record<Locale, Translations> = {
       difficulty: "Складність",
       groupSize: "Розмір групи",
       included: "Включено",
-      category: "Категорія"
+      category: "Категорія",
+      newest: "Спочатку нові",
+      oldest: "Спочатку старі",
+      priceAsc: "Ціна: за зростанням",
+      priceDesc: "Ціна: за спаданням",
+      yearDesc: "Рік: нові першими",
+      yearAsc: "Рік: старі першими"
     },
     common: {
       bookNow: "Забронювати",
@@ -895,7 +953,11 @@ export const translations: Record<Locale, Translations> = {
       phone: "Телефон",
       email: "Email",
       whatsapp: "WhatsApp",
-      backToHome: "Повернутися на головну"
+      backToHome: "Повернутися на головну",
+      found: "Знайдено",
+      rental: "Оренда",
+      sale: "Продаж",
+      type: "Тип"
     },
     sections: {
       excursions: {

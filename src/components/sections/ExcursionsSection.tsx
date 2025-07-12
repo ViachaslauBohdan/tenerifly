@@ -1,7 +1,7 @@
 'use client';
 
 import { Grid, Text } from '@mantine/core';
-import { ExcursionTile } from '@/components/tiles';
+import { ExcursionTile } from '@/components/tiles/ExcursionTile';
 
 interface ExcursionsSectionProps {
   tours: Array<{
@@ -14,7 +14,7 @@ interface ExcursionsSectionProps {
     language: 'RU' | 'EN' | 'ES';
   }>;
 }
-
+ 
 export function ExcursionsSection({ tours }: ExcursionsSectionProps) {
   return (
     <>

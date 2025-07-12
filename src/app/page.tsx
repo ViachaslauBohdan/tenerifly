@@ -1,14 +1,5 @@
-'use client';
-
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import {LocalePageClient} from './LocalePageClient';
 
 export default function RootPage() {
-  const router = useRouter();
-  
-  useEffect(() => {
-    router.push('/en');
-  }, [router]);
-  
-  return null;
+    return <LocalePageClient />;
 }

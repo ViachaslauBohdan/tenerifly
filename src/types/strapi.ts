@@ -10,6 +10,11 @@ export interface StrapiResponse<T> {
   };
 }
 
+export interface StrapiEntity<T> {
+  id: number;
+  attributes: T;
+}
+
 export interface StrapiImageFormat {
   url: string;
   width: number;
@@ -45,13 +50,8 @@ export interface StrapiBaseAttributes {
   updatedAt: string;
 }
 
-export interface StrapiEntity<T> {
-  id: number;
-  attributes: T;
-}
-
 // Общие компоненты
-interface Location {
+export interface Location {
   id: number;
   address: string;
   city: string;
@@ -61,14 +61,14 @@ interface Location {
   longitude: number | null;
 }
 
-interface Price {
+export interface Price {
   id: number;
   amount: number;
   currency: string;
   period: string;
 }
 
-interface Contact {
+export interface Contact {
   id: number;
   name: string;
   email: string;
@@ -79,7 +79,7 @@ interface Contact {
 }
 
 // Изображения для Tour
-interface TourImage {
+export interface TourImage {
   id: number;
   documentId: string;
   name: string;
@@ -113,13 +113,15 @@ interface TourImage {
   updatedAt: string;
   publishedAt: string;
 }
-// Обновленный интерфейс Tour с дополнительными полями для фильтров
+
+// Интерфейс Tour
 export interface Tour {
   id: number;
   documentId: string;
   title: string;
   slug: string | null;
   description: string;
+  short_description?: string; 
   duration: string;
   language: 'RU' | 'EN' | 'ES';
   available_days: string[] | null;
@@ -142,12 +144,14 @@ export interface Tour {
   what_to_bring?: string[];
   meeting_point?: string;
   cancellation_policy?: string;
+  featured?: boolean; 
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
 }
+
 // Спецификации автомобиля
-interface CarSpecifications {
+export interface CarSpecifications {
   id: number;
   make: string;
   model: string;
@@ -165,7 +169,7 @@ interface CarSpecifications {
 }
 
 // Характеристики автомобиля
-interface CarFeatures {
+export interface CarFeatures {
   id: number;
   air_conditioning: boolean;
   navigation: boolean;
@@ -177,7 +181,7 @@ interface CarFeatures {
 }
 
 // Условия аренды автомобиля
-interface CarRentalTerms {
+export interface CarRentalTerms {
   id: number;
   min_rental_period: number;
   deposit_amount: number;
@@ -187,7 +191,7 @@ interface CarRentalTerms {
 }
 
 // Условия продажи автомобиля
-interface CarSaleTerms {
+export interface CarSaleTerms {
   id: number;
   warranty_included: boolean;
   warranty_duration: number;
@@ -197,7 +201,7 @@ interface CarSaleTerms {
 }
 
 // Изображения автомобиля
-interface CarImage {
+export interface CarImage {
   id: number;
   documentId: string;
   name: string;
@@ -232,6 +236,23 @@ interface CarImage {
   publishedAt: string;
 }
 
+export interface CarRentalPrices {
+  id: number;
+  currency: 'EUR' | 'USD';
+  day_1: number;
+  day_2: number;
+  day_3: number;
+  day_4: number;
+  day_5: number;
+  day_6: number;
+  day_7: number;
+  day_8: number;
+  day_9: number;
+  day_10: number;
+  month: number;
+  year: number;
+}
+
 // Интерфейс автомобиля
 export interface Car {
   id: number;
@@ -239,6 +260,7 @@ export interface Car {
   title: string;
   slug: string | null;
   description: string | null;
+  short_description?: string; 
   type: 'rent' | 'sale';
   car_status: 'available' | 'reserved' | 'sold' | 'maintenance';
   featured: boolean;
@@ -247,6 +269,7 @@ export interface Car {
   features: CarFeatures | null;
   rental_terms: CarRentalTerms | null;
   sale_terms: CarSaleTerms | null;
+  rental_prices?: CarRentalPrices | null; 
   location: Location | null;
   contact: Contact | null;
   images: CarImage[];
@@ -256,7 +279,7 @@ export interface Car {
 }
 
 // Спецификации недвижимости
-interface PropertySpecifications {
+export interface PropertySpecifications {
   id: number;
   total_area: number;
   living_area: number;
@@ -267,28 +290,29 @@ interface PropertySpecifications {
   year_built: number;
   parking_spaces: number;
   furnished: boolean;
+  property_type?: string;
 }
 
 // Характеристики недвижимости
-interface PropertyFeatures {
+export interface PropertyFeatures {
   id: number;
-  air_conditioning: boolean;
-  heating: boolean;
-  internet: boolean;
+  has_air_conditioning: boolean;
+  has_heating: boolean;
+  has_internet: boolean;
   tv: boolean;
   washing_machine: boolean;
   dishwasher: boolean;
-  pool: boolean;
-  garden: boolean;
-  terrace: boolean;
-  garage: boolean;
+  has_pool: boolean;
+  has_garden: boolean;
+  has_terrace: boolean;
+  has_garage: boolean;
   elevator: boolean;
-  security: boolean;
+  has_security: boolean;
   additional_features: string[];
 }
 
 // Условия аренды недвижимости
-interface PropertyRentalTerms {
+export interface PropertyRentalTerms {
   id: number;
   minimum_stay: number;  
   maximum_stay?: number; 
@@ -301,7 +325,7 @@ interface PropertyRentalTerms {
 }
 
 // Условия продажи недвижимости
-interface PropertySaleTerms {
+export interface PropertySaleTerms {
   id: number;
   legal_info?: string; 
   additional_terms?: string; 
@@ -313,13 +337,24 @@ interface PropertySaleTerms {
   payment_methods?: any;
 }
 
-// Интерфейс недвижимости
 export interface Property {
   id: number;
   title: string;
-  slug: string | null;
+  slug?: string | null;
   description: string;
-  images: {
+  short_description?: string;
+  type: 'rent' | 'sale';
+  property_status: 'available' | 'reserved' | 'sold' | 'under_contract';
+  featured?: boolean;
+  category: 'apartment' | 'house' | 'villa' | 'penthouse' | 'studio' | 'commercial' | 'land' | 'building';
+  price: Price;
+  specifications: PropertySpecifications;
+  features?: PropertyFeatures;
+  rental_terms?: PropertyRentalTerms;
+  sale_terms?: PropertySaleTerms;
+  location: Location;
+  contact?: Contact;
+  images: Array<{
     id: number;
     url: string;
     formats?: {
@@ -336,18 +371,7 @@ export interface Property {
         sizeInBytes: number;
       };
     };
-  }[];
-  type: 'rent' | 'sale';
-  property_status: 'available' | 'reserved' | 'sold' | 'under_contract';
-  featured: boolean;
-  category: 'apartment' | 'house' | 'villa' | 'penthouse' | 'studio' | 'commercial' | 'land' | 'building';
-  price: Price;
-  specifications: PropertySpecifications;
-  features?: PropertyFeatures;
-  rental_terms?: PropertyRentalTerms;
-  sale_terms?: PropertySaleTerms;
-  location: Location;
-  contact: Contact;
+  }>;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;

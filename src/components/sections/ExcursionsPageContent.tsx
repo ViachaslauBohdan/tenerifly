@@ -6,8 +6,8 @@ import { ExcursionsGrid } from '@/components/sections/ExcursionsGrid';
 import { BackToHome } from '@/components/BackToHome';
 import { useTranslation } from '@/hooks/useTranslation';
 import { Tour } from '@/types/strapi';
-import { excursionFilters } from '@/config/filters';
-
+import { tourFilters } from '@/config/filters';
+ 
 interface ExcursionsPageContentProps {
   tours: Tour[];
 }
@@ -30,11 +30,10 @@ export function ExcursionsPageContent({ tours }: ExcursionsPageContentProps) {
       <Grid>
         <Grid.Col span={{ base: 12, md: 3 }}>
           <AdvancedFilterPanel
-            config={excursionFilters}
+            filters={tourFilters}
             values={{}}
-            onChange={(id, value) => console.log('Filter changed:', id, value)}
-            onReset={() => console.log('Reset filters')}
-            onApply={() => console.log('Apply filters')}
+            onChange={(values) => console.log('Filters changed:', values)} 
+            onClear={() => console.log('Clear filters')}
           />
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 9 }}>

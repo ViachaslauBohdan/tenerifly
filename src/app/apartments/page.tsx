@@ -2,71 +2,64 @@
 
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
-import CarCard from "./CarCard"
-import CarsFilter from "./CarsFilter"
+import ApartmentCard from "./ApartmentCard"
+import ApartmentsFilter from "./ApartmentsFilter"
 
-// Переводы для всех языков
+// ... (оставляем все переводы и languages как есть)
+
 const translations = {
     en: {
         backToHome: "Back to Home",
-        carsInTenerife: "Cars in Tenerife",
+        apartmentsInTenerife: "Apartments in Tenerife",
         filters: "Filters",
-        brand: "Brand",
-        allBrands: "All brands",
-        model: "Model",
-        allModels: "All models",
-        yearOfManufacture: "Year of manufacture",
+        propertyType: "Property Type",
+        allTypes: "All types",
+        apartment: "Apartment",
+        house: "House",
+        plot: "Plot",
+        studio: "Studio",
+        room: "room",
+        rooms: "rooms",
+        any: "Any",
+        area: "Area (m²)",
         from: "From",
         to: "To",
-        pricePerDay: "Price (€/day)",
-        mileageKm: "Mileage (km)",
-        fuelType: "Fuel type",
-        allTypes: "All types",
-        petrol: "Petrol",
-        diesel: "Diesel",
-        hybrid: "Hybrid",
-        electric: "Electric",
-        transmission: "Transmission",
-        manual: "Manual",
-        automatic: "Automatic",
-        bodyType: "Body type",
-        sedan: "Sedan",
-        hatchback: "Hatchback",
-        wagon: "Wagon",
-        suv: "SUV",
-        convertible: "Convertible",
-        color: "Color",
-        allColors: "All colors",
-        black: "Black",
-        white: "White",
-        blue: "Blue",
-        red: "Red",
-        yellow: "Yellow",
-        silver: "Silver",
-        numberOfDoors: "Number of doors",
-        any: "Any",
-        doors2: "2 doors",
-        doors4: "4 doors",
-        doors5: "5 doors",
-        enginePower: "Engine power (hp)",
+        pricePerMonth: "Price (€/month)",
+        price: "Price (€)",
+        floor: "Floor",
+        yearBuilt: "Year Built",
+        condition: "Condition",
+        needsRepair: "Needs repair",
+        readyToLive: "Ready to live",
+        newProperty: "New property",
         location: "Location",
         allLocations: "All locations",
-        availableFrom: "Available from",
-        additionalOptions: "Additional options",
-        airConditioner: "Air conditioner",
-        rearCamera: "Rear camera",
-        multimediaSystem: "Multimedia system",
+        district: "District",
+        allDistricts: "All districts",
+        features: "Features",
+        balcony: "Balcony",
+        terrace: "Terrace",
+        garden: "Garden",
+        parking: "Parking",
+        furnished: "Furnished",
+        airConditioner: "Air Conditioner",
+        wifi: "WiFi",
+        washingMachine: "Washing Machine",
+        dishwasher: "Dishwasher",
+        pool: "Pool",
+        garage: "Garage",
+        heating: "Heating",
+        internet: "Internet",
+        security: "Security",
         resetFilters: "Reset filters",
         available: "AVAILABLE",
         viewDetails: "View Details",
         bookNow: "Book Now",
-        sportyDescription: "Sporty and stylish compact car for rent in Tenerife!",
+        contact: "Contact",
+        apartmentDescription: "Modern and comfortable apartment in a great location.",
         selectLanguage: "Select Language",
-        tenerifeLocations: {
-            south: "Tenerife South",
-            north: "Tenerife North",
-            center: "Tenerife Center",
-        },
+        sqm: "m²",
+        perMonth: "per month",
         type: "Type",
         rent: "Rent",
         sale: "Sale",
@@ -75,69 +68,59 @@ const translations = {
         reserved: "Reserved",
         rented: "Rented",
         sold: "Sold",
-        parkingSensors: "Parking sensors",
-        bluetooth: "Bluetooth",
     },
     ru: {
         backToHome: "Назад на главную",
-        carsInTenerife: "Автомобили в Тенерифе",
+        apartmentsInTenerife: "Недвижимость в Тенерифе",
         filters: "Фильтры",
-        brand: "Марка",
-        allBrands: "Все марки",
-        model: "Модель",
-        allModels: "Все модели",
-        yearOfManufacture: "Год выпуска",
+        propertyType: "Тип недвижимости",
+        allTypes: "Все типы",
+        apartment: "Квартира",
+        house: "Дом",
+        plot: "Участок",
+        studio: "Студия",
+        room: "комната",
+        rooms: "комнат",
+        any: "Любое",
+        area: "Площадь (м²)",
         from: "От",
         to: "До",
-        pricePerDay: "Цена (€/день)",
-        mileageKm: "Пробег (км)",
-        fuelType: "Тип топлива",
-        allTypes: "Все типы",
-        petrol: "Бензин",
-        diesel: "Дизель",
-        hybrid: "Гибрид",
-        electric: "Электрический",
-        transmission: "Коробка передач",
-        manual: "Механическая",
-        automatic: "Автоматическая",
-        bodyType: "Тип кузова",
-        sedan: "Седан",
-        hatchback: "Хэтчбек",
-        wagon: "Универсал",
-        suv: "Внедорожник",
-        convertible: "Кабриолет",
-        color: "Цвет",
-        allColors: "Все цвета",
-        black: "Черный",
-        white: "Белый",
-        blue: "Синий",
-        red: "Красный",
-        yellow: "Желтый",
-        silver: "Серебристый",
-        numberOfDoors: "Количество дверей",
-        any: "Любое",
-        doors2: "2 двери",
-        doors4: "4 двери",
-        doors5: "5 дверей",
-        enginePower: "Мощность (л.с.)",
+        pricePerMonth: "Цена (€/месяц)",
+        price: "Цена (€)",
+        floor: "Этаж",
+        yearBuilt: "Год постройки",
+        condition: "Состояние",
+        needsRepair: "Требует ремонта",
+        readyToLive: "Готово к проживанию",
+        newProperty: "Новое",
         location: "Локация",
         allLocations: "Все локации",
-        availableFrom: "Доступен с",
-        additionalOptions: "Дополнительные опции",
+        district: "Район",
+        allDistricts: "Все районы",
+        features: "Особенности",
+        balcony: "Балкон",
+        terrace: "Терраса",
+        garden: "Сад",
+        parking: "Парковка",
+        furnished: "Меблирована",
         airConditioner: "Кондиционер",
-        rearCamera: "Камера заднего вида",
-        multimediaSystem: "Мультимедийная система",
+        wifi: "WiFi",
+        washingMachine: "Стиральная машина",
+        dishwasher: "Посудомоечная машина",
+        pool: "Бассейн",
+        garage: "Гараж",
+        heating: "Отопление",
+        internet: "Интернет",
+        security: "Охрана",
         resetFilters: "Сбросить фильтры",
         available: "ДОСТУПЕН",
         viewDetails: "Подробнее",
         bookNow: "Забронировать",
-        sportyDescription: "Спортивный и стильный компактный автомобиль для аренды в Тенерифе!",
+        contact: "Связаться",
+        apartmentDescription: "Современная и комфортная недвижимость в отличном месте.",
         selectLanguage: "Выбрать язык",
-        tenerifeLocations: {
-            south: "Тенерифе Юг",
-            north: "Тенерифе Север",
-            center: "Тенерифе Центр",
-        },
+        sqm: "м²",
+        perMonth: "в месяц",
         type: "Тип",
         rent: "Аренда",
         sale: "Продажа",
@@ -146,69 +129,59 @@ const translations = {
         reserved: "Зарезервирован",
         rented: "Сдан",
         sold: "Продан",
-        parkingSensors: "Датчики парковки",
-        bluetooth: "Bluetooth",
     },
     pl: {
         backToHome: "Powrót do strony głównej",
-        carsInTenerife: "Samochody na Teneryfie",
+        apartmentsInTenerife: "Nieruchomości na Teneryfie",
         filters: "Filtry",
-        brand: "Marka",
-        allBrands: "Wszystkie marki",
-        model: "Model",
-        allModels: "Wszystkie modele",
-        yearOfManufacture: "Rok produkcji",
+        propertyType: "Typ nieruchomości",
+        allTypes: "Wszystkie typy",
+        apartment: "Mieszkanie",
+        house: "Dom",
+        plot: "Działka",
+        studio: "Studio",
+        room: "pokój",
+        rooms: "pokoi",
+        any: "Dowolny",
+        area: "Powierzchnia (m²)",
         from: "Od",
         to: "Do",
-        pricePerDay: "Cena (€/dzień)",
-        mileageKm: "Przebieg (km)",
-        fuelType: "Rodzaj paliwa",
-        allTypes: "Wszystkie typy",
-        petrol: "Benzyna",
-        diesel: "Diesel",
-        hybrid: "Hybryda",
-        electric: "Elektryczny",
-        transmission: "Skrzynia biegów",
-        manual: "Manualna",
-        automatic: "Automatyczna",
-        bodyType: "Typ nadwozia",
-        sedan: "Sedan",
-        hatchback: "Kombi",
-        wagon: "Kombi",
-        suv: "SUV",
-        convertible: "Kabriolet",
-        color: "Kolor",
-        allColors: "Wszystkie kolory",
-        black: "Czarny",
-        white: "Biały",
-        blue: "Niebieski",
-        red: "Czerwony",
-        yellow: "Żółty",
-        silver: "Srebrny",
-        numberOfDoors: "Liczba drzwi",
-        any: "Dowolna",
-        doors2: "2 drzwi",
-        doors4: "4 drzwi",
-        doors5: "5 drzwi",
-        enginePower: "Moc silnika (KM)",
+        pricePerMonth: "Cena (€/miesiąc)",
+        price: "Cena (€)",
+        floor: "Piętro",
+        yearBuilt: "Rok budowy",
+        condition: "Stan",
+        needsRepair: "Wymaga remontu",
+        readyToLive: "Gotowe do zamieszkania",
+        newProperty: "Nowe",
         location: "Lokalizacja",
         allLocations: "Wszystkie lokalizacje",
-        availableFrom: "Dostępny od",
-        additionalOptions: "Dodatkowe opcje",
+        district: "Dzielnica",
+        allDistricts: "Wszystkie dzielnice",
+        features: "Cechy",
+        balcony: "Balkon",
+        terrace: "Taras",
+        garden: "Ogród",
+        parking: "Parking",
+        furnished: "Umeblowane",
         airConditioner: "Klimatyzacja",
-        rearCamera: "Kamera cofania",
-        multimediaSystem: "System multimedialny",
+        wifi: "WiFi",
+        washingMachine: "Pralka",
+        dishwasher: "Zmywarka",
+        pool: "Basen",
+        garage: "Garaż",
+        heating: "Ogrzewanie",
+        internet: "Internet",
+        security: "Ochrona",
         resetFilters: "Resetuj filtry",
         available: "DOSTĘPNY",
         viewDetails: "Zobacz szczegóły",
-        bookNow: "Zarezerwuj teraz",
-        sportyDescription: "Sportowy i stylowy kompaktowy samochód do wynajęcia na Teneryfie!",
+        bookNow: "Zarezerwuj",
+        contact: "Kontakt",
+        apartmentDescription: "Nowoczesna i komfortowa nieruchomość w doskonałej lokalizacji.",
         selectLanguage: "Wybierz język",
-        tenerifeLocations: {
-            south: "Teneryfa Południe",
-            north: "Teneryfa Północ",
-            center: "Teneryfa Centrum",
-        },
+        sqm: "m²",
+        perMonth: "za miesiąc",
         type: "Typ",
         rent: "Wynajem",
         sale: "Sprzedaż",
@@ -217,69 +190,59 @@ const translations = {
         reserved: "Zarezerwowane",
         rented: "Wynajęte",
         sold: "Sprzedane",
-        parkingSensors: "Czujniki parkowania",
-        bluetooth: "Bluetooth",
     },
     fr: {
         backToHome: "Retour à l'accueil",
-        carsInTenerife: "Voitures à Tenerife",
+        apartmentsInTenerife: "Immobilier à Tenerife",
         filters: "Filtres",
-        brand: "Marque",
-        allBrands: "Toutes les marques",
-        model: "Modèle",
-        allModels: "Tous les modèles",
-        yearOfManufacture: "Année de fabrication",
+        propertyType: "Type de propriété",
+        allTypes: "Tous les types",
+        apartment: "Appartement",
+        house: "Maison",
+        plot: "Terrain",
+        studio: "Studio",
+        room: "pièce",
+        rooms: "pièces",
+        any: "N'importe",
+        area: "Surface (m²)",
         from: "De",
         to: "À",
-        pricePerDay: "Prix (€/jour)",
-        mileageKm: "Kilométrage (km)",
-        fuelType: "Type de carburant",
-        allTypes: "Tous les types",
-        petrol: "Essence",
-        diesel: "Diesel",
-        hybrid: "Hybride",
-        electric: "Électrique",
-        transmission: "Transmission",
-        manual: "Manuelle",
-        automatic: "Automatique",
-        bodyType: "Type de carrosserie",
-        sedan: "Berline",
-        hatchback: "Berline compacte",
-        wagon: "Break",
-        suv: "SUV",
-        convertible: "Cabriolet",
-        color: "Couleur",
-        allColors: "Toutes les couleurs",
-        black: "Noir",
-        white: "Blanc",
-        blue: "Bleu",
-        red: "Rouge",
-        yellow: "Jaune",
-        silver: "Argent",
-        numberOfDoors: "Nombre de portes",
-        any: "N'importe",
-        doors2: "2 portes",
-        doors4: "4 portes",
-        doors5: "5 portes",
-        enginePower: "Puissance (ch)",
+        pricePerMonth: "Prix (€/mois)",
+        price: "Prix (€)",
+        floor: "Étage",
+        yearBuilt: "Année de construction",
+        condition: "État",
+        needsRepair: "Nécessite des réparations",
+        readyToLive: "Prêt à vivre",
+        newProperty: "Nouveau",
         location: "Emplacement",
         allLocations: "Tous les emplacements",
-        availableFrom: "Disponible à partir de",
-        additionalOptions: "Options supplémentaires",
+        district: "Quartier",
+        allDistricts: "Tous les quartiers",
+        features: "Caractéristiques",
+        balcony: "Balcon",
+        terrace: "Terrasse",
+        garden: "Jardin",
+        parking: "Parking",
+        furnished: "Meublé",
         airConditioner: "Climatisation",
-        rearCamera: "Caméra de recul",
-        multimediaSystem: "Système multimédia",
+        wifi: "WiFi",
+        washingMachine: "Lave-linge",
+        dishwasher: "Lave-vaisselle",
+        pool: "Piscine",
+        garage: "Garage",
+        heating: "Chauffage",
+        internet: "Internet",
+        security: "Sécurité",
         resetFilters: "Réinitialiser les filtres",
         available: "DISPONIBLE",
         viewDetails: "Voir les détails",
-        bookNow: "Réserver maintenant",
-        sportyDescription: "Voiture compacte sportive et élégante à louer à Tenerife !",
+        bookNow: "Réserver",
+        contact: "Contact",
+        apartmentDescription: "Immobilier moderne et confortable dans un excellent emplacement.",
         selectLanguage: "Choisir la langue",
-        tenerifeLocations: {
-            south: "Tenerife Sud",
-            north: "Tenerife Nord",
-            center: "Tenerife Centre",
-        },
+        sqm: "m²",
+        perMonth: "par mois",
         type: "Type",
         rent: "Location",
         sale: "Vente",
@@ -288,69 +251,59 @@ const translations = {
         reserved: "Réservé",
         rented: "Loué",
         sold: "Vendu",
-        parkingSensors: "Capteurs de stationnement",
-        bluetooth: "Bluetooth",
     },
     uk: {
         backToHome: "Повернутися на головну",
-        carsInTenerife: "Автомобілі на Тенеріфе",
+        apartmentsInTenerife: "Нерухомість на Тенеріфе",
         filters: "Фільтри",
-        brand: "Марка",
-        allBrands: "Всі марки",
-        model: "Модель",
-        allModels: "Всі моделі",
-        yearOfManufacture: "Рік випуску",
+        propertyType: "Тип нерухомості",
+        allTypes: "Всі типи",
+        apartment: "Квартира",
+        house: "Будинок",
+        plot: "Ділянка",
+        studio: "Студія",
+        room: "кімната",
+        rooms: "кімнат",
+        any: "Будь-який",
+        area: "Площа (м²)",
         from: "Від",
         to: "До",
-        pricePerDay: "Ціна (€/день)",
-        mileageKm: "Пробіг (км)",
-        fuelType: "Тип палива",
-        allTypes: "Всі типи",
-        petrol: "Бензин",
-        diesel: "Дизель",
-        hybrid: "Гібрид",
-        electric: "Електричний",
-        transmission: "Коробка передач",
-        manual: "Механічна",
-        automatic: "Автоматична",
-        bodyType: "Тип кузова",
-        sedan: "Седан",
-        hatchback: "Хетчбек",
-        wagon: "Універсал",
-        suv: "Позашляховик",
-        convertible: "Кабріолет",
-        color: "Колір",
-        allColors: "Всі кольори",
-        black: "Чорний",
-        white: "Білий",
-        blue: "Синій",
-        red: "Червоний",
-        yellow: "Жовтий",
-        silver: "Сріблястий",
-        numberOfDoors: "Кількість дверей",
-        any: "Будь-яка",
-        doors2: "2 двері",
-        doors4: "4 двері",
-        doors5: "5 дверей",
-        enginePower: "Потужність (к.с.)",
+        pricePerMonth: "Ціна (€/місяць)",
+        price: "Ціна (€)",
+        floor: "Поверх",
+        yearBuilt: "Рік будівництва",
+        condition: "Стан",
+        needsRepair: "Потребує ремонту",
+        readyToLive: "Готове до проживання",
+        newProperty: "Нове",
         location: "Локація",
         allLocations: "Всі локації",
-        availableFrom: "Доступний з",
-        additionalOptions: "Додаткові опції",
+        district: "Район",
+        allDistricts: "Всі райони",
+        features: "Особливості",
+        balcony: "Балкон",
+        terrace: "Тераса",
+        garden: "Сад",
+        parking: "Парковка",
+        furnished: "Мебльована",
         airConditioner: "Кондиціонер",
-        rearCamera: "Камера заднього виду",
-        multimediaSystem: "Мультимедійна система",
+        wifi: "WiFi",
+        washingMachine: "Пральна машина",
+        dishwasher: "Посудомийна машина",
+        pool: "Басейн",
+        garage: "Гараж",
+        heating: "Опалення",
+        internet: "Інтернет",
+        security: "Охорона",
         resetFilters: "Скинути фільтри",
         available: "ДОСТУПНИЙ",
         viewDetails: "Детальніше",
         bookNow: "Забронювати",
-        sportyDescription: "Спортивний та стільний компактний автомобіль для оренди на Тенеріфе!",
+        contact: "Зв'язатися",
+        apartmentDescription: "Сучасна та комфортна нерухомість у відмінному місці.",
         selectLanguage: "Обрати мову",
-        tenerifeLocations: {
-            south: "Тенеріфе Південь",
-            north: "Тенеріфе Північ",
-            center: "Тенеріфе Центр",
-        },
+        sqm: "м²",
+        perMonth: "за місяць",
         type: "Тип",
         rent: "Оренда",
         sale: "Продаж",
@@ -359,8 +312,6 @@ const translations = {
         reserved: "Зарезервований",
         rented: "Здано",
         sold: "Продано",
-        parkingSensors: "Датчики паркування",
-        bluetooth: "Bluetooth",
     },
 }
 
@@ -373,16 +324,17 @@ const languages = [
     { code: "uk", name: "Українська", flag: "🇺🇦" },
 ]
 
-// Определяем интерфейс для автомобиля
-interface CarData {
+// Определяем интерфейс для недвижимости
+interface PropertyData {
     id: number
     documentId: string
     title: string
     slug: string | null
     description: string
     type: "rent" | "sale"
-    car_status: "available" | "reserved" | "rented" | "sold"
+    property_status: "available" | "reserved" | "rented" | "sold"
     featured: boolean
+    category: string
     createdAt: string
     updatedAt: string
     publishedAt: string
@@ -396,38 +348,40 @@ interface CarData {
             small?: { url: string }
         }
     }>
-    rental_prices?: {
-        day_1: number
-        day_3?: number
-        day_7?: number
-        month: number
+    price?: {
+        amount: number
         currency: string
-    } | null
-    specifications?: {
-        make: string
-        model: string
-        year: number
-        mileage?: number
-        fuel: string
-        transmission: string
-        power: number
-        seats: number
-        doors: number
-        color: string
-        body_type: string
-        drive_type: string
-    } | null
-    features?: {
-        air_conditioning: boolean
-        bluetooth: boolean
-        navigation: boolean
-        parking_sensors: boolean
-        other_features?: string
+        period: string
     } | null
     location?: {
-        city: string
-        region?: string | null
         address: string
+        city: string
+        region: string
+        postal_code: string
+        latitude: number
+        longitude: number
+    } | null
+    features?: {
+        has_pool: boolean
+        has_garden: boolean
+        has_garage: boolean
+        has_terrace: boolean
+        has_security: boolean
+        has_air_conditioning: boolean
+        has_heating: boolean
+        has_internet: boolean
+        furnished: boolean
+        additional_features?: string | null
+    } | null
+    specifications?: {
+        total_area: number
+        living_area: number
+        bedrooms: number
+        bathrooms: number
+        floor: number
+        total_floors: number
+        year_built?: number | null
+        parking_spaces?: number | null
     } | null
     contact?: {
         name: string
@@ -439,37 +393,39 @@ interface CarData {
     } | null
 }
 
-export default function CarsPage() {
+export default function ApartmentsPage() {
     const [language, setLanguage] = useState<"en" | "ru" | "pl" | "fr" | "uk">("en")
     const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false)
     const [filters, setFilters] = useState({
-        brand: "",
-        model: "",
-        yearFrom: "",
-        yearTo: "",
+        propertyType: "",
+        rooms: "",
+        areaFrom: "",
+        areaTo: "",
         priceFrom: "",
         priceTo: "",
-        mileageFrom: "",
-        mileageTo: "",
-        fuel: "",
-        transmission: "",
-        bodyType: "",
-        color: "",
-        doors: "",
-        powerFrom: "",
-        powerTo: "",
-        location: "",
-        availableFrom: "",
+        floorFrom: "",
+        floorTo: "",
+        yearBuiltFrom: "",
+        yearBuiltTo: "",
+        condition: "",
+        city: "",
+        district: "",
+        balcony: false,
+        terrace: false,
+        garden: false,
+        parking: false,
+        furnished: false,
         airConditioner: false,
-        rearCamera: false,
-        multimedia: false,
+        wifi: false,
+        washingMachine: false,
+        dishwasher: false,
         type: "",
-        carStatus: "",
+        propertyStatus: "",
     })
 
-    // Состояния для всех и отфильтрованных автомобилей
-    const [allCars, setAllCars] = useState<CarData[]>([])
-    const [filteredCars, setFilteredCars] = useState<CarData[]>([])
+    // Состояния для всех и отфильтрованных апартаментов
+    const [allApartments, setAllApartments] = useState<PropertyData[]>([])
+    const [filteredApartments, setFilteredApartments] = useState<PropertyData[]>([])
     const [initialLoadComplete, setInitialLoadComplete] = useState(false)
 
     // Функция для создания заголовков с авторизацией
@@ -481,14 +437,14 @@ export default function CarsPage() {
         }
     }
 
-    // Загружаем все машины только один раз при первой загрузке
+    // Загружаем все апартаменты только один раз при первой загрузке
     useEffect(() => {
-        const loadAllCars = async () => {
+        const loadAllApartments = async () => {
             try {
-                const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
+                const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
                 console.log('Page API URL:', apiUrl)
 
-                const response = await fetch(`${apiUrl}/api/cars/?populate=*`, {
+                const response = await fetch(`${apiUrl}/api/properties/?populate=*`, {
                     headers: getAuthHeaders()
                 })
 
@@ -499,17 +455,17 @@ export default function CarsPage() {
                 const data = await response.json()
 
                 if (data.data) {
-                    setAllCars(data.data)
-                    setFilteredCars(data.data) // Изначально показываем все
+                    setAllApartments(data.data)
+                    setFilteredApartments(data.data) // Изначально показываем все
                 }
             } catch (error) {
-                console.error('Error loading cars:', error)
+                console.error('Error loading properties:', error)
             } finally {
                 setInitialLoadComplete(true)
             }
         }
 
-        loadAllCars()
+        loadAllApartments()
     }, [])
 
     const t = translations[language]
@@ -533,28 +489,30 @@ export default function CarsPage() {
     // Мемоизированная функция сброса фильтров
     const resetFilters = useCallback(() => {
         setFilters({
-            brand: "",
-            model: "",
-            yearFrom: "",
-            yearTo: "",
+            propertyType: "",
+            rooms: "",
+            areaFrom: "",
+            areaTo: "",
             priceFrom: "",
             priceTo: "",
-            mileageFrom: "",
-            mileageTo: "",
-            fuel: "",
-            transmission: "",
-            bodyType: "",
-            color: "",
-            doors: "",
-            powerFrom: "",
-            powerTo: "",
-            location: "",
-            availableFrom: "",
+            floorFrom: "",
+            floorTo: "",
+            yearBuiltFrom: "",
+            yearBuiltTo: "",
+            condition: "",
+            city: "",
+            district: "",
+            balcony: false,
+            terrace: false,
+            garden: false,
+            parking: false,
+            furnished: false,
             airConditioner: false,
-            rearCamera: false,
-            multimedia: false,
+            wifi: false,
+            washingMachine: false,
+            dishwasher: false,
             type: "",
-            carStatus: "",
+            propertyStatus: "",
         })
     }, [])
 
@@ -563,9 +521,9 @@ export default function CarsPage() {
         setFilters((prev) => ({ ...prev, [key]: value }))
     }, [])
 
-    // Мемоизированная функция обновления отфильтрованных автомобилей
-    const handleCarsUpdate = useCallback((updatedCars: CarData[]) => {
-        setFilteredCars(updatedCars)
+    // Мемоизированная функция обновления отфильтрованных апартаментов
+    const handleApartmentsUpdate = useCallback((updatedApartments: PropertyData[]) => {
+        setFilteredApartments(updatedApartments)
     }, [])
 
     return (
@@ -636,32 +594,32 @@ export default function CarsPage() {
 
                 {/* Page Title */}
                 <div className="mb-6">
-                    <h1 className="text-3xl font-bold text-gray-900">{t.carsInTenerife}</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">{t.apartmentsInTenerife}</h1>
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Filters Sidebar - передаем все автомобили в компонент фильтра */}
-                    <CarsFilter
+                    {/* Filters Sidebar - передаем все апартаменты в компонент фильтра */}
+                    <ApartmentsFilter
                         filters={filters}
                         onFilterChange={handleFilterChange}
                         onResetFilters={resetFilters}
-                        onCarsUpdate={handleCarsUpdate}
+                        onApartmentsUpdate={handleApartmentsUpdate}
                         translations={t}
-                        allCars={allCars}
+                        allApartments={allApartments}
                     />
 
-                    {/* Cars Grid - показываем отфильтрованные автомобили */}
+                    {/* Apartments Grid - показываем отфильтрованные апартаменты */}
                     <div className="flex-1">
                         {initialLoadComplete ? (
-                            <CarCard
+                            <ApartmentCard
                                 translations={t}
                                 language={language}
-                                cars={filteredCars}
+                                apartments={filteredApartments}
                             />
                         ) : (
                             <div className="flex justify-center items-center h-64">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                                <span className="ml-3 text-gray-600">Загрузка автомобилей...</span>
+                                <span className="ml-3 text-gray-600">Загрузка недвижимости...</span>
                             </div>
                         )}
                     </div>

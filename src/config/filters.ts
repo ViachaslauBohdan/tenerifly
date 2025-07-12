@@ -1,145 +1,144 @@
 export interface FilterConfig {
-  id: string;
-  type: 'select' | 'multiselect' | 'range' | 'checkbox' | 'number' | 'date';
+  key: string;
+  type: 'select' | 'multiselect' | 'range' | 'date' | 'boolean' | 'text';
   label: string;
-  placeholder?: string;
-  options?: { value: string; label: string }[];
-  category?: 'basic' | 'advanced';
+  options?: { value: string | number; label: string }[];
   min?: number;
   max?: number;
   step?: number;
-  marks?: { value: number; label: string }[]; // Для RangeSlider
+  placeholder?: string;
 }
 
-// 🏠 Фильтры для недвижимости согласно ТЗ
+// Фильтры для недвижимости
 export const propertyFilters: FilterConfig[] = [
-  // Основные фильтры
   {
-    id: 'priceRange',
-    type: 'range',
-    label: 'Цена',
-    category: 'basic',
-    min: 0,
-    max: 10000,
-    step: 100,
-    marks: [
-      { value: 0, label: '0€' },
-      { value: 2500, label: '2.5k€' },
-      { value: 5000, label: '5k€' },
-      { value: 7500, label: '7.5k€' },
-      { value: 10000, label: '10k€' }
-    ]
-  },
-  {
-    id: 'type',
+    key: 'location.city',
     type: 'select',
-    label: 'Тип сделки',
-    category: 'basic',
+    label: 'Город',
     options: [
-      { value: 'rent', label: 'Аренда' },
-      { value: 'sale', label: 'Продажа' }
+      { value: 'santa-cruz', label: 'Санта-Крус-де-Тенерифе' },
+      { value: 'puerto-cruz', label: 'Пуэрто-де-ла-Крус' },
+      { value: 'la-laguna', label: 'Ла-Лагуна' },
+      { value: 'adeje', label: 'Адехе' },
+      { value: 'arona', label: 'Арона' },
+      { value: 'los-cristianos', label: 'Лос-Кристианос' },
+      { value: 'playa-americas', label: 'Плайя-де-лас-Америкас' },
+      { value: 'costa-adeje', label: 'Коста-Адехе' }
+    ]
+  },
+    {
+    key: 'location.region',
+    type: 'select',
+    label: 'Район',
+    options: [
+      { value: 'norte', label: 'Север' },
+      { value: 'sur', label: 'Юг' },
+      { value: 'este', label: 'Восток' },
+      { value: 'oeste', label: 'Запад' },
+      { value: 'centro', label: 'Центр' }
     ]
   },
   {
-    id: 'category',
+    key: 'location.postal_code',
     type: 'select',
+    label: 'Почтовый индекс',
+    options: [
+      { value: '38001', label: '38001 - Санта-Крус центр' },
+      { value: '38400', label: '38400 - Пуэрто-де-ла-Крус' },
+      { value: '38600', label: '38600 - Гранадилья' },
+      { value: '38660', label: '38660 - Адехе' },
+      { value: '38650', label: '38650 - Арона' }
+    ]
+  },
+  {
+    key: 'specifications.property_type',
+    type: 'select', 
     label: 'Тип недвижимости',
-    category: 'basic',
     options: [
       { value: 'apartment', label: 'Квартира' },
       { value: 'house', label: 'Дом' },
       { value: 'villa', label: 'Вилла' },
-      { value: 'penthouse', label: 'Пентхаус' },
       { value: 'studio', label: 'Студия' },
-      { value: 'commercial', label: 'Коммерческая' },
-      { value: 'land', label: 'Участок' },
-      { value: 'building', label: 'Здание' }
+      { value: 'penthouse', label: 'Пентхаус' },
+      { value: 'plot', label: 'Участок' }
     ]
   },
   {
-    id: 'bedrooms',
+    key: 'specifications.bedrooms',
     type: 'select',
     label: 'Количество комнат',
-    category: 'basic',
     options: [
-      { value: '1', label: '1 комната' },
-      { value: '2', label: '2 комнаты' },
-      { value: '3', label: '3 комнаты' },
-      { value: '4', label: '4 комнаты' },
-      { value: '5+', label: '5+ комнат' }
-    ]
-  },
-
-  // Дополнительные фильтры
-  {
-    id: 'location',
-    type: 'multiselect',
-    label: 'Локация',
-    category: 'advanced',
-    options: [
-      { value: 'santa-cruz', label: 'Санта-Крус де Тенерифе' },
-      { value: 'la-laguna', label: 'Ла Лагуна' },
-      { value: 'puerto-cruz', label: 'Пуэрто де ла Крус' },
-      { value: 'costa-adeje', label: 'Коста Адехе' },
-      { value: 'playa-americas', label: 'Плайя де лас Америкас' },
-      { value: 'los-cristianos', label: 'Лос Кристианос' },
-      { value: 'los-gigantes', label: 'Лос Хигантес' },
-      { value: 'candelaria', label: 'Канделария' }
+      { value: 0, label: 'Студия' },
+      { value: 1, label: '1 комната' },
+      { value: 2, label: '2 комнаты' },
+      { value: 3, label: '3 комнаты' },
+      { value: 4, label: '4 комнаты' },
+      { value: 5, label: '5+ комнат' }
     ]
   },
   {
-    id: 'area',
+    key: 'specifications.total_area',
     type: 'range',
     label: 'Площадь (м²)',
-    category: 'advanced',
     min: 20,
     max: 500,
-    step: 10,
-    marks: [
-      { value: 20, label: '20м²' },
-      { value: 100, label: '100м²' },
-      { value: 200, label: '200м²' },
-      { value: 350, label: '350м²' },
-      { value: 500, label: '500м²' }
-    ]
+    step: 10
   },
-  {
-    id: 'floor',
+    {
+    key: 'specifications.floor',
     type: 'range',
     label: 'Этаж',
-    category: 'advanced',
     min: 0,
-    max: 20,
-    step: 1,
-    marks: [
-      { value: 0, label: '0' },
-      { value: 5, label: '5' },
-      { value: 10, label: '10' },
-      { value: 15, label: '15' },
-      { value: 20, label: '20' }
-    ]
+    max: 30,
+    step: 1
   },
   {
-    id: 'yearBuilt',
+    key: 'specifications.year_built',
     type: 'range',
     label: 'Год постройки',
-    category: 'advanced',
-    min: 1950,
+    min: 1980,
     max: 2025,
-    step: 5,
-    marks: [
-      { value: 1950, label: '1950' },
-      { value: 1980, label: '1980' },
-      { value: 2000, label: '2000' },
-      { value: 2015, label: '2015' },
-      { value: 2025, label: '2025' }
+    step: 1
+  },
+  {
+    key: 'specifications.condition',
+    type: 'select',
+    label: 'Состояние недвижимости',
+    options: [
+      { value: 'needs_renovation', label: 'Требует ремонта' },
+      { value: 'ready_to_live', label: 'Готово к проживанию' },
+      { value: 'new', label: 'Новое' },
+      { value: 'excellent', label: 'Отличное' }
     ]
   },
   {
-    id: 'condition',
+    key: 'price.amount',
+    type: 'range',
+    label: 'Цена (€)',
+    min: 50000,
+    max: 2000000,
+    step: 10000
+  },
+  {
+    key: 'specifications.floor',
+    type: 'range',
+    label: 'Этаж',
+    min: 0,
+    max: 30,
+    step: 1
+  },
+  {
+    key: 'specifications.year_built',
+    type: 'range',
+    label: 'Год постройки',
+    min: 1980,
+    max: 2025,
+    step: 1
+  },
+  {
+    key: 'specifications.condition',
     type: 'select',
-    label: 'Состояние недвижимости',
-    category: 'advanced',
+    label: 'Состояние',
     options: [
       { value: 'needs_renovation', label: 'Требует ремонта' },
       { value: 'good', label: 'Хорошее' },
@@ -148,149 +147,119 @@ export const propertyFilters: FilterConfig[] = [
     ]
   },
   {
-    id: 'amenities',
-    type: 'multiselect',
-    label: 'Удобства',
-    category: 'advanced',
-    options: [
-      { value: 'balcony', label: 'Балкон/Терраса' },
-      { value: 'garden', label: 'Сад' },
-      { value: 'pool', label: 'Бассейн' },
-      { value: 'garage', label: 'Гараж/Парковка' },
-      { value: 'air_conditioning', label: 'Кондиционер' },
-      { value: 'heating', label: 'Отопление' },
-      { value: 'internet', label: 'Интернет' },
-      { value: 'security', label: 'Охрана' },
-      { value: 'elevator', label: 'Лифт' }
-    ]
+    key: 'features.has_balcony',
+    type: 'boolean',
+    label: 'Балкон'
   },
   {
-    id: 'furnished',
-    type: 'checkbox',
-    label: 'Меблированное',
-    category: 'advanced'
+    key: 'features.has_terrace', 
+    type: 'boolean',
+    label: 'Терраса'
   },
   {
-    id: 'availableFrom',
+    key: 'features.has_garden',
+    type: 'boolean',
+    label: 'Сад'
+  },
+  {
+    key: 'features.has_parking',
+    type: 'boolean',
+    label: 'Парковка'
+  },
+  {
+    key: 'features.has_garage',
+    type: 'boolean',
+    label: 'Гараж'
+  },
+  {
+    key: 'specifications.furnished',
+    type: 'boolean',
+    label: 'Меблированная'
+  },
+  {
+    key: 'specifications.available_from',
     type: 'date',
-    label: 'Доступность с',
-    category: 'advanced'
+    label: 'Доступна с'
   }
 ];
 
-// 🚗 Фильтры для автомобилей согласно ТЗ
+// Фильтры для автомобилей
 export const carFilters: FilterConfig[] = [
-  // Основные фильтры
   {
-    id: 'priceRange',
-    type: 'range',
-    label: 'Цена',
-    category: 'basic',
-    min: 15,
-    max: 200,
-    step: 5,
-    marks: [
-      { value: 15, label: '15€' },
-      { value: 50, label: '50€' },
-      { value: 100, label: '100€' },
-      { value: 150, label: '150€' },
-      { value: 200, label: '200€' }
-    ]
-  },
-  {
-    id: 'type',
+    key: 'specifications.make',
     type: 'select',
-    label: 'Тип сделки',
-    category: 'basic',
-    options: [
-      { value: 'rent', label: 'Аренда' },
-      { value: 'sale', label: 'Продажа' }
-    ]
-  },
-  {
-    id: 'make',
-    type: 'multiselect',
     label: 'Марка',
-    category: 'basic',
     options: [
       { value: 'toyota', label: 'Toyota' },
       { value: 'volkswagen', label: 'Volkswagen' },
-      { value: 'bmw', label: 'BMW' },
+      { value: 'ford', label: 'Ford' },
       { value: 'mercedes', label: 'Mercedes-Benz' },
+      { value: 'bmw', label: 'BMW' },
       { value: 'audi', label: 'Audi' },
-      { value: 'seat', label: 'Seat' },
-      { value: 'opel', label: 'Opel' },
-      { value: 'fiat', label: 'Fiat' },
       { value: 'nissan', label: 'Nissan' },
+      { value: 'hyundai', label: 'Hyundai' },
       { value: 'kia', label: 'Kia' },
-      { value: 'mazda', label: 'Mazda' },
-      { value: 'mini', label: 'Mini' },
-      { value: 'dacia', label: 'Dacia' }
+      { value: 'peugeot', label: 'Peugeot' },
+      { value: 'renault', label: 'Renault' },
+      { value: 'seat', label: 'SEAT' }
     ]
   },
   {
-    id: 'transmission',
+    key: 'specifications.model',
+    type: 'text',
+    label: 'Модель',
+    placeholder: 'Введите модель'
+  },
+  {
+    key: 'specifications.year',
+    type: 'range',
+    label: 'Год выпуска',
+    min: 2010,
+    max: 2025,
+    step: 1
+  },
+  {
+    key: 'price.amount',
+    type: 'range',
+    label: 'Цена (€)',
+    min: 15,
+    max: 200,
+    step: 5
+  },
+  {
+    key: 'specifications.mileage',
+    type: 'range',
+    label: 'Пробег (км)',
+    min: 0,
+    max: 300000,
+    step: 5000
+  },
+  {
+    key: 'specifications.fuel',
     type: 'select',
-    label: 'Коробка передач',
-    category: 'basic',
+    label: 'Тип топлива',
+    options: [
+      { value: 'petrol', label: 'Бензин' },
+      { value: 'diesel', label: 'Дизель' },
+      { value: 'hybrid', label: 'Гибрид' },
+      { value: 'electric', label: 'Электро' },
+      { value: 'lpg', label: 'ГБО' }
+    ]
+  },
+  {
+    key: 'specifications.transmission',
+    type: 'select',
+    label: 'КПП',
     options: [
       { value: 'manual', label: 'Механическая' },
       { value: 'automatic', label: 'Автоматическая' },
       { value: 'semi-automatic', label: 'Полуавтоматическая' }
     ]
   },
-
-  // Дополнительные фильтры
   {
-    id: 'yearRange',
-    type: 'range',
-    label: 'Год выпуска',
-    category: 'advanced',
-    min: 2015,
-    max: 2025,
-    step: 1,
-    marks: [
-      { value: 2015, label: '2015' },
-      { value: 2018, label: '2018' },
-      { value: 2021, label: '2021' },
-      { value: 2024, label: '2024' },
-      { value: 2025, label: '2025' }
-    ]
-  },
-  {
-    id: 'mileage',
-    type: 'range',
-    label: 'Пробег (км)',
-    category: 'advanced',
-    min: 0,
-    max: 200000,
-    step: 10000,
-    marks: [
-      { value: 0, label: '0' },
-      { value: 50000, label: '50к' },
-      { value: 100000, label: '100к' },
-      { value: 150000, label: '150к' },
-      { value: 200000, label: '200к' }
-    ]
-  },
-  {
-    id: 'fuel',
-    type: 'multiselect',
-    label: 'Тип топлива',
-    category: 'advanced',
-    options: [
-      { value: 'petrol', label: 'Бензин' },
-      { value: 'diesel', label: 'Дизель' },
-      { value: 'hybrid', label: 'Гибрид' },
-      { value: 'electric', label: 'Электрический' },
-      { value: 'lpg', label: 'Газ (LPG)' }
-    ]
-  },
-  {
-    id: 'bodyType',
-    type: 'multiselect',
+    key: 'specifications.body_type',
+    type: 'select',
     label: 'Тип кузова',
-    category: 'advanced',
     options: [
       { value: 'sedan', label: 'Седан' },
       { value: 'hatchback', label: 'Хэтчбек' },
@@ -298,209 +267,619 @@ export const carFilters: FilterConfig[] = [
       { value: 'van', label: 'Фургон' },
       { value: 'coupe', label: 'Купе' },
       { value: 'convertible', label: 'Кабриолет' },
-      { value: 'wagon', label: 'Универсал' }
+      { value: 'wagon', label: 'Универсал' },
+      { value: 'pickup', label: 'Пикап' },
+      { value: 'minivan', label: 'Минивэн' }
     ]
   },
   {
-    id: 'seats',
+    key: 'specifications.color',
     type: 'select',
-    label: 'Количество мест',
-    category: 'advanced',
+    label: 'Цвет',
     options: [
-      { value: '2', label: '2 места' },
-      { value: '4', label: '4 места' },
-      { value: '5', label: '5 мест' },
-      { value: '7', label: '7 мест' },
-      { value: '9', label: '9+ мест' }
+      { value: 'white', label: 'Белый' },
+      { value: 'black', label: 'Черный' },
+      { value: 'silver', label: 'Серебристый' },
+      { value: 'gray', label: 'Серый' },
+      { value: 'red', label: 'Красный' },
+      { value: 'blue', label: 'Синий' },
+      { value: 'green', label: 'Зеленый' },
+      { value: 'yellow', label: 'Желтый' },
+      { value: 'brown', label: 'Коричневый' }
     ]
   },
   {
-    id: 'doors',
+    key: 'specifications.doors',
     type: 'select',
     label: 'Количество дверей',
-    category: 'advanced',
     options: [
-      { value: '3', label: '3 двери' },
-      { value: '5', label: '5 дверей' }
+      { value: 2, label: '2 двери' },
+      { value: 3, label: '3 двери' },
+      { value: 4, label: '4 двери' },
+      { value: 5, label: '5 дверей' }
     ]
   },
   {
-    id: 'features',
-    type: 'multiselect',
-    label: 'Дополнительные опции',
-    category: 'advanced',
+    key: 'specifications.power',
+    type: 'range',
+    label: 'Мощность (л.с.)',
+    min: 50,
+    max: 500,
+    step: 10
+  },
+  {
+    key: 'location.city',
+    type: 'select',
+    label: 'Локация',
     options: [
-      { value: 'air_conditioning', label: 'Кондиционер' },
-      { value: 'navigation', label: 'Навигация' },
-      { value: 'bluetooth', label: 'Bluetooth' },
-      { value: 'parking_sensors', label: 'Парктроники' },
-      { value: 'backup_camera', label: 'Камера заднего вида' },
-      { value: 'cruise_control', label: 'Круиз-контроль' },
-      { value: 'usb_ports', label: 'USB порты' },
-      { value: 'roof_rack', label: 'Багажник на крыше' }
+      { value: 'santa-cruz', label: 'Санта-Крус-де-Тенерифе' },
+      { value: 'puerto-cruz', label: 'Пуэрто-де-ла-Крус' },
+      { value: 'la-laguna', label: 'Ла-Лагуна' },
+      { value: 'adeje', label: 'Адехе' },
+      { value: 'arona', label: 'Арона' }
     ]
   },
   {
-    id: 'location',
+    key: 'available_from',
+    type: 'date',
+    label: 'Доступна с'
+  },
+  {
+    key: 'features.air_conditioning',
+    type: 'boolean',
+    label: 'Кондиционер'
+  },
+  {
+    key: 'features.backup_camera',
+    type: 'boolean',
+    label: 'Камера заднего вида'
+  },
+  {
+    key: 'features.multimedia_system',
+    type: 'boolean',
+    label: 'Мультимедийная система'
+  },
+  {
+    key: 'specifications.make',
+    type: 'select',
+    label: 'Марка',
+    options: [
+      { value: 'toyota', label: 'Toyota' },
+      { value: 'volkswagen', label: 'Volkswagen' },
+      { value: 'ford', label: 'Ford' },
+      { value: 'mercedes', label: 'Mercedes-Benz' },
+      { value: 'bmw', label: 'BMW' },
+      { value: 'audi', label: 'Audi' },
+      // НОВЫЕ марки согласно ТЗ:
+      { value: 'nissan', label: 'Nissan' },
+      { value: 'hyundai', label: 'Hyundai' },
+      { value: 'kia', label: 'Kia' },
+      { value: 'opel', label: 'Opel' },
+      { value: 'peugeot', label: 'Peugeot' },
+      { value: 'renault', label: 'Renault' },
+      { value: 'citroen', label: 'Citroën' },
+      { value: 'seat', label: 'SEAT' },
+      { value: 'skoda', label: 'Škoda' }
+    ]
+  },
+   {
+    key: 'specifications.model',
+    type: 'select',
+    label: 'Модель',
+    options: [
+      // Toyota
+      { value: 'corolla', label: 'Corolla' },
+      { value: 'yaris', label: 'Yaris' },
+      { value: 'rav4', label: 'RAV4' },
+      { value: 'camry', label: 'Camry' },
+      // Volkswagen
+      { value: 'golf', label: 'Golf' },
+      { value: 'polo', label: 'Polo' },
+      { value: 'passat', label: 'Passat' },
+      { value: 'tiguan', label: 'Tiguan' },
+      // Mercedes
+      { value: 'c-class', label: 'C-Class' },
+      { value: 'e-class', label: 'E-Class' },
+      { value: 'a-class', label: 'A-Class' },
+      { value: 'glc', label: 'GLC' }
+    ]
+  },
+  {
+    key: 'specifications.year',
+    type: 'range',
+    label: 'Год выпуска',
+    min: 2010,
+    max: 2025,
+    step: 1
+  },
+  {
+    key: 'rental_prices.day_1',
+    type: 'range',
+    label: 'Цена аренды за день (€)',
+    min: 15,
+    max: 200,
+    step: 5
+  },
+  {
+    key: 'specifications.mileage',
+    type: 'range',
+    label: 'Пробег (км)',
+    min: 0,
+    max: 300000,
+    step: 5000
+  },
+  {
+    key: 'specifications.fuel',
+    type: 'select',
+    label: 'Тип топлива',
+    options: [
+      { value: 'petrol', label: 'Бензин' },
+      { value: 'diesel', label: 'Дизель' },
+      { value: 'hybrid', label: 'Гибрид' },
+      { value: 'electric', label: 'Электрический' }
+    ]
+  },
+  {
+    key: 'specifications.transmission',
+    type: 'select',
+    label: 'Коробка передач',
+    options: [
+      { value: 'manual', label: 'Механическая' },
+      { value: 'automatic', label: 'Автоматическая' }
+    ]
+  },
+  {
+    key: 'specifications.body_type',
+    type: 'select',
+    label: 'Тип кузова',
+    options: [
+      { value: 'sedan', label: 'Седан' },
+      { value: 'hatchback', label: 'Хэтчбек' },
+      { value: 'wagon', label: 'Универсал' },
+      { value: 'suv', label: 'Внедорожник' },
+      { value: 'crossover', label: 'Кроссовер' },
+      { value: 'coupe', label: 'Купе' },
+      { value: 'convertible', label: 'Кабриолет' },
+      { value: 'minivan', label: 'Минивэн' }
+    ]
+  },
+  {
+    key: 'specifications.color',
+    type: 'select',
+    label: 'Цвет',
+    options: [
+      { value: 'white', label: 'Белый' },
+      { value: 'black', label: 'Черный' },
+      { value: 'silver', label: 'Серебристый' },
+      { value: 'gray', label: 'Серый' },
+      { value: 'red', label: 'Красный' },
+      { value: 'blue', label: 'Синий' },
+      { value: 'green', label: 'Зеленый' },
+      { value: 'yellow', label: 'Желтый' }
+    ]
+  },
+  {
+    key: 'specifications.doors',
+    type: 'select',
+    label: 'Количество дверей',
+    options: [
+      { value: 3, label: '3 двери' },
+      { value: 4, label: '4 двери' },
+      { value: 5, label: '5 дверей' }
+    ]
+  },
+  {
+    key: 'specifications.power',
+    type: 'range',
+    label: 'Мощность двигателя (л.с.)',
+    min: 70,
+    max: 500,
+    step: 10
+  },
+  {
+    key: 'location.city',
     type: 'select',
     label: 'Локация автомобиля',
-    category: 'advanced',
     options: [
-      { value: 'los-gigantes', label: 'Лос Хигантес' },
-      { value: 'costa-adeje', label: 'Коста Адехе' },
-      { value: 'playa-americas', label: 'Плайя де лас Америкас' },
-      { value: 'santa-cruz', label: 'Санта-Крус' },
-      { value: 'puerto-cruz', label: 'Пуэрто де ла Крус' }
+      { value: 'santa-cruz', label: 'Санта-Крус-де-Тенерифе' },
+      { value: 'puerto-cruz', label: 'Пуэрто-де-ла-Крус' },
+      { value: 'la-laguna', label: 'Ла-Лагуна' },
+      { value: 'adeje', label: 'Адехе' },
+      { value: 'arona', label: 'Арона' },
+      { value: 'airport', label: 'Аэропорт Тенерифе' }
     ]
+  },
+  {
+    key: 'specifications.available_from',
+    type: 'date',
+    label: 'Доступна с'
+  },
+  // Характеристики авто согласно ТЗ
+  {
+    key: 'features.air_conditioning',
+    type: 'boolean',
+    label: 'Кондиционер'
+  },
+  {
+    key: 'features.backup_camera',
+    type: 'boolean',
+    label: 'Камера заднего вида'
+  },
+  {
+    key: 'features.bluetooth',
+    type: 'boolean',
+    label: 'Мультимедийная система'
+  },
+  {
+    key: 'features.navigation',
+    type: 'boolean',
+    label: 'Навигация'
+  },
+  {
+    key: 'features.cruise_control',
+    type: 'boolean',
+    label: 'Круиз-контроль'
   }
 ];
 
-// 🏞️ Фильтры для экскурсий согласно ТЗ
-export const excursionFilters: FilterConfig[] = [
-  // Основные фильтры
+// Фильтры для экскурсий
+export const tourFilters: FilterConfig[] = [
+  // Существующие фильтры 
   {
-    id: 'priceRange',
-    type: 'range',
-    label: 'Цена',
-    category: 'basic',
-    min: 0,
-    max: 200,
-    step: 5,
-    marks: [
-      { value: 0, label: '0€' },
-      { value: 50, label: '50€' },
-      { value: 100, label: '100€' },
-      { value: 150, label: '150€' },
-      { value: 200, label: '200€' }
+    key: 'location.city',
+    type: 'select',
+    label: 'Город',
+    options: [
+      { value: 'santa-cruz', label: 'Санта-Крус-де-Тенерифе' },
+      { value: 'puerto-cruz', label: 'Пуэрто-де-ла-Крус' },
+      { value: 'la-laguna', label: 'Ла-Лагуна' },
+      { value: 'adeje', label: 'Адехе' },
+      { value: 'arona', label: 'Арона' },
+      { value: 'teide', label: 'Национальный парк Тейде' },
+      { value: 'masca', label: 'Маска' },
+      { value: 'garachico', label: 'Гарачико' },
+      { value: 'candelaria', label: 'Канделария' },
+      { value: 'icod', label: 'Икод-де-лос-Винос' }
     ]
   },
   {
-    id: 'category',
-    type: 'multiselect',
+    key: 'location.region',
+    type: 'select',
+    label: 'Регион',
+    options: [
+      { value: 'norte', label: 'Север острова' },
+      { value: 'sur', label: 'Юг острова' },
+      { value: 'este', label: 'Восток острова' },
+      { value: 'oeste', label: 'Запад острова' },
+      { value: 'centro', label: 'Центр острова' }
+    ]
+  },
+  {
+    key: 'category',
+    type: 'select',
     label: 'Тип развлечения',
-    category: 'basic',
     options: [
       { value: 'boat_trip', label: 'Прогулка на катере' },
-      { value: 'hiking', label: 'Пешая экскурсия' },
+      { value: 'walking_tour', label: 'Пешая экскурсия' },
       { value: 'jeep_safari', label: 'Джип-сафари' },
       { value: 'museum', label: 'Музей' },
       { value: 'aquapark', label: 'Аквапарк' },
-      { value: 'cultural', label: 'Культурные' },
-      { value: 'nature', label: 'Природа' },
+      { value: 'whale_watching', label: 'Наблюдение за китами' },
+      { value: 'diving', label: 'Дайвинг' },
+      { value: 'hiking', label: 'Пешие походы' },
+      { value: 'cultural', label: 'Культурные туры' },
       { value: 'adventure', label: 'Приключения' },
-      { value: 'family', label: 'Семейные' }
+      { value: 'food_tour', label: 'Гастрономические туры' }
     ]
   },
   {
-    id: 'duration',
-    type: 'multiselect',
-    label: 'Продолжительность',
-    category: 'basic',
-    options: [
-      { value: '2h', label: '2 часа' },
-      { value: '4h', label: '4 часа' },
-      { value: '6h', label: '6 часов' },
-      { value: '8h', label: 'Полный день (8 часов)' },
-      { value: 'multiday', label: 'Несколько дней' }
-    ]
-  },
-
-  // Дополнительные фильтры
-  {
-    id: 'location',
-    type: 'multiselect',
-    label: 'Локация',
-    category: 'advanced',
-    options: [
-      { value: 'teide', label: 'Национальный парк Тейде' },
-      { value: 'los-gigantes', label: 'Лос Хигантес' },
-      { value: 'masca', label: 'Маска' },
-      { value: 'anaga', label: 'Горы Анага' },
-      { value: 'puerto-cruz', label: 'Пуэрто де ла Крус' },
-      { value: 'santa-cruz', label: 'Санта-Крус' },
-      { value: 'la-gomera', label: 'Ла Гомера' },
-      { value: 'coast', label: 'Побережье' }
-    ]
+    key: 'price.amount',
+    type: 'range',
+    label: 'Цена (€)',
+    min: 10,
+    max: 500,
+    step: 10
   },
   {
-    id: 'language',
+    key: 'duration_hours',
+    type: 'range',
+    label: 'Продолжительность (часы)',
+    min: 1,
+    max: 72,
+    step: 1
+  },
+  {
+    key: 'available_dates',
+    type: 'date',
+    label: 'Доступные даты'
+  },
+  {
+    key: 'guide_languages',
     type: 'multiselect',
     label: 'Язык гида',
-    category: 'advanced',
     options: [
       { value: 'ru', label: 'Русский' },
       { value: 'en', label: 'Английский' },
       { value: 'es', label: 'Испанский' },
       { value: 'de', label: 'Немецкий' },
       { value: 'fr', label: 'Французский' },
-      { value: 'pl', label: 'Польский' }
+      { value: 'it', label: 'Итальянский' }
     ]
   },
   {
-    id: 'difficulty',
+    key: 'suitable_for_children',
+    type: 'boolean',
+    label: 'Подходит для детей'
+  },
+  {
+    key: 'family_friendly',
+    type: 'boolean',
+    label: 'Семейные'
+  },
+  {
+    key: 'extreme',
+    type: 'boolean',
+    label: 'Экстремальные'
+  },
+  {
+    key: 'group_type',
+    type: 'select',
+    label: 'Количество участников',
+    options: [
+      { value: 'individual', label: 'Индивидуально' },
+      { value: 'small_group', label: 'Малая группа (2-6 чел.)' },
+      { value: 'group', label: 'Группа (7-15 чел.)' },
+      { value: 'large_group', label: 'Большая группа (16+ чел.)' }
+    ]
+  },
+  {
+    key: 'includes_transport',
+    type: 'boolean',
+    label: 'Включён транспорт'
+  },
+  {
+    key: 'includes_food',
+    type: 'boolean',
+    label: 'Включено питание'
+  },
+  {
+    key: 'includes_tickets',
+    type: 'boolean',
+    label: 'Включены билеты'
+  },
+  {
+    key: 'difficulty_level',
     type: 'select',
     label: 'Уровень сложности',
-    category: 'advanced',
     options: [
-      { value: 'easy', label: 'Легкий' },
+      { value: 'easy', label: 'Лёгкий' },
       { value: 'moderate', label: 'Средний' },
       { value: 'hard', label: 'Сложный' }
     ]
   },
   {
-    id: 'groupSize',
+    key: 'rating',
     type: 'range',
-    label: 'Размер группы',
-    category: 'advanced',
+    label: 'Минимальный рейтинг',
     min: 1,
-    max: 30,
-    step: 1,
-    marks: [
-      { value: 1, label: '1' },
-      { value: 8, label: '8' },
-      { value: 15, label: '15' },
-      { value: 25, label: '25' },
-      { value: 30, label: '30' }
-    ]
-  },
-  {
-    id: 'included',
-    type: 'multiselect',
-    label: 'Включено',
-    category: 'advanced',
-    options: [
-      { value: 'transport', label: 'Транспорт' },
-      { value: 'food', label: 'Питание' },
-      { value: 'tickets', label: 'Билеты' },
-      { value: 'guide', label: 'Гид' },
-      { value: 'equipment', label: 'Оборудование' }
-    ]
-  },
-  {
-    id: 'suitable_for',
-    type: 'multiselect',
-    label: 'Подходит для',
-    category: 'advanced',
-    options: [
-      { value: 'children', label: 'Детей' },
-      { value: 'families', label: 'Семей' },
-      { value: 'couples', label: 'Пар' },
-      { value: 'groups', label: 'Групп' },
-      { value: 'solo', label: 'Индивидуально' }
-    ]
-  },
-  {
-    id: 'min_age',
-    type: 'number',
-    label: 'Минимальный возраст',
-    category: 'advanced',
-    min: 0,
-    max: 18
-  },
-  {
-    id: 'extreme',
-    type: 'checkbox',
-    label: 'Экстремальные',
-    category: 'advanced'
+    max: 5,
+    step: 0.5
   }
 ];
+
+// Объединенные фильтры для главной страницы (максимальное количество параметров)
+export const mainPageFilters: FilterConfig[] = [
+  // Общие фильтры
+  {
+    key: 'type',
+    type: 'select',
+    label: 'Категория',
+    options: [
+      { value: 'property', label: 'Недвижимость' },
+      { value: 'car', label: 'Автомобили' },
+      { value: 'tour', label: 'Экскурсии' }
+    ]
+  },
+  {
+    key: 'location.city',
+    type: 'select',
+    label: 'Город',
+    options: [
+      { value: 'santa-cruz', label: 'Санта-Крус-де-Тенерифе' },
+      { value: 'puerto-cruz', label: 'Пуэрто-де-ла-Крус' },
+      { value: 'la-laguna', label: 'Ла-Лагуна' },
+      { value: 'adeje', label: 'Адехе' },
+      { value: 'arona', label: 'Арона' },
+      { value: 'los-cristianos', label: 'Лос-Кристианос' },
+      { value: 'playa-americas', label: 'Плайя-де-лас-Америкас' },
+      { value: 'costa-adeje', label: 'Коста-Адехе' },
+      { value: 'teide', label: 'Национальный парк Тейде' },
+      { value: 'masca', label: 'Маска' },
+      { value: 'garachico', label: 'Гарачико' },
+      { value: 'candelaria', label: 'Канделария' },
+      { value: 'icod', label: 'Икод-де-лос-Винос' }
+    ]
+  },
+  {
+    key: 'price.amount',
+    type: 'range',
+    label: 'Цена (€)',
+    min: 10,
+    max: 2000000,
+    step: 10
+  },
+  {
+    key: 'featured',
+    type: 'boolean',
+    label: 'Только рекомендуемые'
+  },
+  
+  // Фильтры для недвижимости
+  {
+    key: 'property.specifications.property_type',
+    type: 'select',
+    label: 'Тип недвижимости',
+    options: [
+      { value: 'apartment', label: 'Квартира' },
+      { value: 'house', label: 'Дом' },
+      { value: 'villa', label: 'Вилла' },
+      { value: 'studio', label: 'Студия' },
+      { value: 'penthouse', label: 'Пентхаус' },
+      { value: 'plot', label: 'Участок' }
+    ]
+  },
+  {
+    key: 'property.specifications.bedrooms',
+    type: 'select',
+    label: 'Комнаты',
+    options: [
+      { value: 0, label: 'Студия' },
+      { value: 1, label: '1 комната' },
+      { value: 2, label: '2 комнаты' },
+      { value: 3, label: '3 комнаты' },
+      { value: 4, label: '4+ комнат' }
+    ]
+  },
+  {
+    key: 'property.specifications.total_area',
+    type: 'range',
+    label: 'Площадь (м²)',
+    min: 20,
+    max: 500,
+    step: 10
+  },
+  
+  // Фильтры для автомобилей  
+  {
+    key: 'car.specifications.make',
+    type: 'select',
+    label: 'Марка авто',
+    options: [
+      { value: 'toyota', label: 'Toyota' },
+      { value: 'volkswagen', label: 'Volkswagen' },
+      { value: 'ford', label: 'Ford' },
+      { value: 'mercedes', label: 'Mercedes-Benz' },
+      { value: 'bmw', label: 'BMW' },
+      { value: 'audi', label: 'Audi' }
+    ]
+  },
+  {
+    key: 'car.specifications.fuel',
+    type: 'select',
+    label: 'Топливо',
+    options: [
+      { value: 'petrol', label: 'Бензин' },
+      { value: 'diesel', label: 'Дизель' },
+      { value: 'hybrid', label: 'Гибрид' },
+      { value: 'electric', label: 'Электро' }
+    ]
+  },
+  {
+    key: 'car.specifications.transmission',
+    type: 'select',
+    label: 'КПП',
+    options: [
+      { value: 'manual', label: 'Механическая' },
+      { value: 'automatic', label: 'Автоматическая' }
+    ]
+  },
+  
+  // Фильтры для экскурсий
+  {
+    key: 'tour.category',
+    type: 'select',
+    label: 'Тип экскурсии',
+    options: [
+      { value: 'boat_trip', label: 'Прогулка на катере' },
+      { value: 'walking_tour', label: 'Пешая экскурсия' },
+      { value: 'jeep_safari', label: 'Джип-сафари' },
+      { value: 'museum', label: 'Музей' },
+      { value: 'aquapark', label: 'Аквапарк' },
+      { value: 'adventure', label: 'Приключения' },
+      { value: 'cultural', label: 'Культурные туры' }
+    ]
+  },
+  {
+    key: 'tour.difficulty_level',
+    type: 'select',
+    label: 'Сложность',
+    options: [
+      { value: 'easy', label: 'Лёгкий' },
+      { value: 'moderate', label: 'Средний' },
+      { value: 'hard', label: 'Сложный' }
+    ]
+  },
+  {
+    key: 'tour.suitable_for_children',
+    type: 'boolean',
+    label: 'Для детей'
+  },
+  {
+    key: 'tour.includes_transport',
+    type: 'boolean',
+    label: 'С транспортом'
+  }
+];
+
+// Функция для получения фильтров по типу контента
+export function getFiltersByType(type: 'property' | 'car' | 'tour' | 'main'): FilterConfig[] {
+  switch (type) {
+    case 'property':
+      return propertyFilters;
+    case 'car':
+      return carFilters;
+    case 'tour':
+      return tourFilters;
+    case 'main':
+      return mainPageFilters;
+    default:
+      return [];
+  }
+}
+
+// Функция для валидации значения фильтра
+export function validateFilterValue(filter: FilterConfig, value: any): boolean {
+  if (value === null || value === undefined) return true;
+  
+  switch (filter.type) {
+    case 'range':
+      return Array.isArray(value) && value.length === 2 && 
+             typeof value[0] === 'number' && typeof value[1] === 'number';
+    case 'multiselect':
+      return Array.isArray(value);
+    case 'boolean':
+      return typeof value === 'boolean';
+    case 'date':
+      return typeof value === 'string' || value instanceof Date;
+    case 'select':
+    case 'text':
+      return typeof value === 'string' || typeof value === 'number';
+    default:
+      return true;
+  }
+}
+
+// Функция для очистки недопустимых значений фильтров
+export function sanitizeFilters(filters: FilterConfig[], values: Record<string, any>): Record<string, any> {
+  const sanitized: Record<string, any> = {};
+  
+  Object.entries(values).forEach(([key, value]) => {
+    const filter = filters.find(f => f.key === key);
+    if (filter && validateFilterValue(filter, value)) {
+      sanitized[key] = value;
+    }
+  });
+  
+  return sanitized;
+}
+
+// Экспорт по умолчанию
+export default {
+  propertyFilters,
+  carFilters,
+  tourFilters,
+  mainPageFilters,
+  getFiltersByType,
+  validateFilterValue,
+  sanitizeFilters
+};
