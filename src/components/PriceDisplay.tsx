@@ -23,7 +23,17 @@ export function PriceDisplay({
   const { convertedPrice, isLoading, error } = useConvertedPrice(price, locale);
 
   if (!price) {
-    return <Text size={size} fw={weight} c="gray.5">Цена не указана</Text>;
+    const notSpecifiedText = {
+      en: 'Price not specified',
+      ru: 'Цена не указана',
+      pl: 'Cena nie określona',
+      fr: 'Prix non spécifié',
+      uk: 'Ціна не вказана'
+    };
+    
+    return <Text size={size} fw={weight} c="gray.5">
+      {notSpecifiedText[locale] || notSpecifiedText.en}
+    </Text>;
   }
 
   if (isLoading) {

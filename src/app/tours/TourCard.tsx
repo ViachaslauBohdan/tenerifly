@@ -3,6 +3,94 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
+const getFoundText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: 'Found',
+    ru: 'Найдено',
+    pl: 'Znaleziono',
+    fr: 'Trouvé',
+    uk: 'Знайдено'
+  };
+  return texts[locale] || texts.en;
+};
+
+const getToursText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: 'excursions',
+    ru: 'экскурсий',
+    pl: 'wycieczek',
+    fr: 'excursions',
+    uk: 'екскурсій'
+  };
+  return texts[locale] || texts.en;
+};
+
+const getFilterActiveText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: '🔍 Filter active',
+    ru: '🔍 Фильтр активен',
+    pl: '🔍 Filtr aktywny',
+    fr: '🔍 Filtre actif',
+    uk: '🔍 Фільтр активний'
+  };
+  return texts[locale] || texts.en;
+};
+
+const getNoToursText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: 'No tours matching the selected filters',
+    ru: 'Нет экскурсий, соответствующих выбранным фильтрам',
+    pl: 'Brak wycieczek odpowiadających wybranym filtrom',
+    fr: 'Aucune excursion correspondant aux filtres sélectionnés',
+    uk: 'Немає екскурсій, що відповідають обраним фільтрам'
+  };
+  return texts[locale] || texts.en;
+};
+
+const getTryChangeFiltersText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: 'Try changing filter parameters',
+    ru: 'Попробуйте изменить параметры фильтрации',
+    pl: 'Spróbuj zmienić parametry filtrowania',
+    fr: 'Essayez de modifier les paramètres de filtrage',
+    uk: 'Спробуйте змінити параметри фільтрації'
+  };
+  return texts[locale] || texts.en;
+};
+
+const getNoToursAvailableText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: 'No tours available',
+    ru: 'Экскурсии недоступны',
+    pl: 'Brak dostępnych wycieczek',
+    fr: 'Aucune excursion disponible',
+    uk: 'Екскурсії недоступні'
+  };
+  return texts[locale] || texts.en;
+};
+
+const getGuideText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: 'Guide',
+    ru: 'Гид',
+    pl: 'Przewodnik',
+    fr: 'Guide',
+    uk: 'Гід'
+  };
+  return texts[locale] || texts.en;
+};
+
+const getErrorLoadingText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: 'Error loading tours',
+    ru: 'Ошибка загрузки экскурсий',
+    pl: 'Błąd ładowania wycieczek',
+    fr: 'Erreur lors du chargement des excursions',
+    uk: 'Помилка завантаження екскурсій'
+  };
+  return texts[locale] || texts.en;
+};
+
 interface TourData {
     id: number
     documentId: string
@@ -237,7 +325,7 @@ const TourCard = ({ translations, language, tours: filteredTours }: TourCardProp
     if (error) {
         return (
             <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-                <div className="text-red-600 mb-2">Error loading tours</div>
+                <div className="text-red-600 mb-2">{getErrorLoadingText(language)}</div>
                 <div className="text-red-500 text-sm">{error}</div>
             </div>
         )
@@ -248,13 +336,13 @@ const TourCard = ({ translations, language, tours: filteredTours }: TourCardProp
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
                 <div className="text-gray-500 text-lg mb-2">
                     {filteredTours !== undefined ?
-                        "Нет экскурсий, соответствующих выбранным фильтрам" :
-                        "No tours available"
+                        getNoToursText(language) :
+                        getNoToursAvailableText(language)
                     }
                 </div>
                 {filteredTours !== undefined && (
                     <div className="text-gray-400 text-sm">
-                        Попробуйте изменить параметры фильтрации
+                        {getTryChangeFiltersText(language)}
                     </div>
                 )}
             </div>
@@ -266,11 +354,11 @@ const TourCard = ({ translations, language, tours: filteredTours }: TourCardProp
             {/* Счетчик результатов */}
             <div className="flex items-center justify-between">
                 <div className="text-gray-600">
-                    Найдено экскурсий: <span className="font-semibold text-gray-900">{tours.length}</span>
+                    {getFoundText(language)}: <span className="font-semibold text-gray-900">{tours.length}</span> {getToursText(language)}
                 </div>
                 {filteredTours !== undefined && (
                     <div className="text-sm text-blue-600">
-                        🔍 Фильтр активен
+                        {getFilterActiveText(language)}
                     </div>
                 )}
             </div>
@@ -349,7 +437,7 @@ const TourCard = ({ translations, language, tours: filteredTours }: TourCardProp
                                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                                         />
                                     </svg>
-                                    {tour.contact?.name || "Гид"}
+                                    {tour.contact?.name || getGuideText(language)}
                                 </div>
                             </div>
 

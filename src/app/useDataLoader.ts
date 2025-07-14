@@ -4,6 +4,98 @@ import { useState, useEffect } from 'react';
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk";
 
+// Добавить эту функцию в начало файла useDataLoader.ts
+const getLocalizedText = (language: LanguageCode, textKey: string): string => {
+  const texts: Record<string, Record<string, string>> = {
+    max: {
+      en: 'Max',
+      ru: 'Макс',
+      pl: 'Maks',
+      fr: 'Max',
+      uk: 'Макс'
+    },
+    people: {
+      en: 'people',
+      ru: 'человек',
+      pl: 'osób',
+      fr: 'personnes',
+      uk: 'осіб'
+    },
+    day: {
+      en: 'day',
+      ru: 'день',
+      pl: 'dzień',
+      fr: 'jour',
+      uk: 'день'
+    },
+    seats: {
+      en: 'seats',
+      ru: 'мест',
+      pl: 'miejsc',
+      fr: 'places',
+      uk: 'місць'
+    },
+    automatic: {
+      en: 'Automatic',
+      ru: 'Автомат',
+      pl: 'Automatyczna',
+      fr: 'Automatique',
+      uk: 'Автомат'
+    },
+    manual: {
+      en: 'Manual',
+      ru: 'Механика',
+      pl: 'Manualna',
+      fr: 'Manuelle',
+      uk: 'Механіка'
+    },
+    airConditioning: {
+      en: 'AC',
+      ru: 'Кондиционер',
+      pl: 'Klimatyzacja',
+      fr: 'Climatisation',
+      uk: 'Кондиціонер'
+    },
+    bedrooms: {
+      en: 'bedrooms',
+      ru: 'спальни',
+      pl: 'sypialnie',
+      fr: 'chambres',
+      uk: 'спальні'
+    },
+    bathrooms: {
+      en: 'bathrooms',
+      ru: 'ванные',
+      pl: 'łazienki',
+      fr: 'salles de bain',
+      uk: 'ванні'
+    },
+    minRead: {
+      en: 'min read',
+      ru: 'мин чтения',
+      pl: 'min czytania',
+      fr: 'min de lecture',
+      uk: 'хв читання'
+    },
+    night: {
+      en: 'night',
+      ru: 'ночь',
+      pl: 'noc',
+      fr: 'nuit',
+      uk: 'ніч'
+    },
+    month: {
+      en: 'month',
+      ru: 'месяц',
+      pl: 'miesiąc',
+      fr: 'mois',
+      uk: 'місяць'
+    }
+  };
+  
+  return texts[textKey]?.[language] || texts[textKey]?.['en'] || '';
+};
+
 // Функция для API запросов
 const fetchFromStrapi = async (endpoint: string) => {
     const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app';
@@ -86,7 +178,7 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
                         duration: tour.duration || '3 hours',
                         price: `€${tour.price?.amount || tour.cost || tour.pricing?.amount || 50}`,
                         rating: 4.8,
-                        groupSize: `${language === 'en' ? 'Max' : 'Макс'} ${tour.maxGroupSize || tour.max_group_size || 20} ${language === 'en' ? 'people' : 'человек'}`,
+                        groupSize: `${getLocalizedText(language, 'max')} ${tour.maxGroupSize || tour.max_group_size || 20} ${getLocalizedText(language, 'people')}`,
                         image: getImageUrl(tour)
                     }));
                     setExcursions(transformedTours);
@@ -100,13 +192,13 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
                         title: car.title || `${car.specifications?.make || 'Car'} ${car.specifications?.model || ''}`.trim(),
                         description: car.description || 'Reliable car for your journey',
                         image: getImageUrl(car),
-                        price: `€${car.rental_prices?.day_1 || 30}/${language === 'en' ? 'day' : 'день'}`,
+                        price: `€${car.rental_prices?.day_1 || 30}/${getLocalizedText(language, 'day')}`,
                         transmission: car.specifications?.transmission === 'automatic'
-                            ? (language === 'en' ? 'Automatic' : 'Автомат')
-                            : (language === 'en' ? 'Manual' : 'Механика'),
+                            ? getLocalizedText(language, 'automatic')
+                            : getLocalizedText(language, 'manual'),
                         features: [
-                            car.features?.air_conditioning && (language === 'en' ? 'AC' : 'Кондиционер'),
-                            `${car.specifications?.seats || 5} ${language === 'en' ? 'seats' : 'мест'}`,
+                            car.features?.air_conditioning && getLocalizedText(language, 'airConditioning'),
+                            `${car.specifications?.seats || 5} ${getLocalizedText(language, 'seats')}`,
                             car.features?.bluetooth && 'Bluetooth',
                             car.specifications?.fuel,
                             car.specifications?.year && `${car.specifications.year}`
@@ -130,14 +222,14 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
                         description: property.description || 'Beautiful accommodation in Tenerife',
                         image: getImageUrl(property),
                         price: `€${property.price?.amount || 0}/${property.type === 'rent'
-                            ? (language === 'en' ? 'month' : 'месяц')
-                            : (language === 'en' ? 'night' : 'ночь')}`,
+                            ? getLocalizedText(language, 'month')
+                            : getLocalizedText(language, 'night')}`,
                         location: property.location?.city || 'Tenerife',
                         amenities: [
                             'WiFi',
-                            language === 'en' ? 'AC' : 'Кондиционер',
-                            property.specifications?.bedrooms && `${property.specifications.bedrooms} ${language === 'en' ? 'bedrooms' : 'спальни'}`,
-                            property.specifications?.bathrooms && `${property.specifications.bathrooms} ${language === 'en' ? 'bathrooms' : 'ванные'}`
+                            getLocalizedText(language, 'airConditioning'),
+                            property.specifications?.bedrooms && `${property.specifications.bedrooms} ${getLocalizedText(language, 'bedrooms')}`,
+                            property.specifications?.bathrooms && `${property.specifications.bathrooms} ${getLocalizedText(language, 'bathrooms')}`
                         ].filter(Boolean).join(', '),
                         rating: 4.5
                     }));
@@ -153,7 +245,7 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
                         description: blog.excerpt || blog.description || 'Interesting article about Tenerife',
                         image: getImageUrl(blog),
                         author: blog.author || 'Admin',
-                        readTime: `${blog.readTime || blog.read_time || 5} ${language === 'en' ? 'min read' : 'мин чтения'}`,
+                        readTime: `${blog.readTime || blog.read_time || 5} ${getLocalizedText(language, 'minRead')}`,
                         publishedDate: blog.publishedAt ? new Date(blog.publishedAt).toLocaleDateString() : new Date().toLocaleDateString(),
                         rating: 4.7
                     }));
