@@ -218,7 +218,8 @@ export default function BlogsPage() {
             setError(null)
 
             try {
-                const response = await fetch(`http://localhost:1337/api/blog-posts?populate=*&locale=${language}`)
+                const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
+                const response = await fetch(`${apiUrl}/api/blog-posts?populate=*&locale=${language}`)
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`)
@@ -280,9 +281,11 @@ export default function BlogsPage() {
         if (post.featured_image) {
             // Используем medium размер если доступен, иначе оригинал
             if (post.featured_image.formats?.medium?.url) {
-                return `http://localhost:1337${post.featured_image.formats.medium.url}`
+                const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
+                return `${apiUrl}${post.featured_image.formats.medium.url}`
             }
-            return `http://localhost:1337${post.featured_image.url}`
+            const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
+            return `${apiUrl}${post.featured_image.url}`
         }
         return "/placeholder.svg?height=200&width=300"
     }

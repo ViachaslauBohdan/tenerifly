@@ -226,7 +226,8 @@ export default function BlogDetailPage() {
             setError(null)
 
             try {
-                const response = await fetch(`http://localhost:1337/api/blog-posts/${documentId}?populate=*`)
+                const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
+                const response = await fetch(`${apiUrl}/api/blog-posts/${documentId}?populate=*`)
 
                 if (!response.ok) {
                     if (response.status === 404) {
@@ -260,7 +261,8 @@ export default function BlogDetailPage() {
     // Загрузка похожих постов
     const fetchRelatedPosts = async (category: string | null) => {
         try {
-            let url = 'http://localhost:1337/api/blog-posts?populate=*&pagination[limit]=3'
+            const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
+            let url = `${apiUrl}/api/blog-posts?populate=*&pagination[limit]=3`
 
             // Если есть категория, ищем посты из той же категории
             if (category) {
@@ -319,13 +321,14 @@ export default function BlogDetailPage() {
     const getImageUrl = (post: BlogPost) => {
         if (post.featured_image && post.featured_image.url) {
             // Используем large размер если доступен, иначе medium, потом original
+            const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
             if (post.featured_image.formats?.large?.url) {
-                return `http://localhost:1337${post.featured_image.formats.large.url}`
+                return `${apiUrl}${post.featured_image.formats.large.url}`
             }
             if (post.featured_image.formats?.medium?.url) {
-                return `http://localhost:1337${post.featured_image.formats.medium.url}`
+                return `${apiUrl}${post.featured_image.formats.medium.url}`
             }
-            return `http://localhost:1337${post.featured_image.url}`
+            return `${apiUrl}${post.featured_image.url}`
         }
 
         return `https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop&auto=format&q=80`
