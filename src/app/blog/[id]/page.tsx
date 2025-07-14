@@ -392,7 +392,7 @@ export default function BlogDetailPage() {
                         {error === 'Blog post not found' ? t.blogNotFound : t.errorLoading}
                     </h1>
                     {error && <p className="text-red-600 mb-4">{error}</p>}
-                    <Link href="/blogs" className="text-blue-600 hover:text-blue-800 font-medium">
+                    <Link href="../" className="text-blue-600 hover:text-blue-800 font-medium">
                         {t.backToBlogs}
                     </Link>
                 </div>
@@ -405,7 +405,7 @@ export default function BlogDetailPage() {
             <div className="max-w-7xl mx-auto px-4 py-6">
                 {/* Header with Language Switcher */}
                 <div className="flex justify-between items-center mb-6">
-                    <Link href="/blogs" className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm transition-colors">
+                    <Link href="../" className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm transition-colors">
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
