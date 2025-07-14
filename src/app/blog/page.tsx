@@ -279,12 +279,11 @@ export default function BlogsPage() {
 
     const getImageUrl = (post: BlogPost) => {
         if (post.featured_image) {
+            const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
             // Используем medium размер если доступен, иначе оригинал
             if (post.featured_image.formats?.medium?.url) {
-                const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
                 return `${apiUrl}${post.featured_image.formats.medium.url}`
             }
-            const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
             return `${apiUrl}${post.featured_image.url}`
         }
         return "/placeholder.svg?height=200&width=300"
@@ -528,7 +527,7 @@ export default function BlogsPage() {
                                         {/* Action Buttons */}
                                         <div className="flex gap-3">
                                             <Link
-                                                href={`./${post.documentId}`}
+                                                href={`/blogs/${post.documentId}`}
                                                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors flex items-center justify-center font-medium"
                                             >
                                                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

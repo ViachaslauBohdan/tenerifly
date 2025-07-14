@@ -320,8 +320,8 @@ export default function BlogDetailPage() {
 
     const getImageUrl = (post: BlogPost) => {
         if (post.featured_image && post.featured_image.url) {
-            // Используем large размер если доступен, иначе medium, потом original
             const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
+            // Используем large размер если доступен, иначе medium, потом original
             if (post.featured_image.formats?.large?.url) {
                 return `${apiUrl}${post.featured_image.formats.large.url}`
             }
@@ -405,7 +405,7 @@ export default function BlogDetailPage() {
             <div className="max-w-7xl mx-auto px-4 py-6">
                 {/* Header with Language Switcher */}
                 <div className="flex justify-between items-center mb-6">
-                    <Link href="../" className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm transition-colors">
+                    <Link href="/blogs" className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm transition-colors">
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
@@ -611,7 +611,7 @@ export default function BlogDetailPage() {
                                         {relatedPosts.map((post) => (
                                             <Link
                                                 key={post.id}
-                                                href={`/blog/${post.documentId}`}
+                                                href={`/blogs/${post.documentId}`}
                                                 className="block group"
                                             >
                                                 <div className="flex gap-3">
