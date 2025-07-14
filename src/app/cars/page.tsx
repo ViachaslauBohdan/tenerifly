@@ -364,6 +364,17 @@ const translations = {
     },
 }
 
+const getLoadingCarsText = (language: string) => {
+  const texts: Record<string, string> = {
+    en: 'Loading cars...',
+    ru: 'Загрузка автомобилей...',
+    pl: 'Ładowanie samochodów...',
+    fr: 'Chargement des voitures...',
+    uk: 'Завантаження автомобілів...'
+  };
+  return texts[language] || texts.en;
+};
+
 // Языки с флагами
 const languages = [
     { code: "en", name: "English", flag: "🇬🇧" },
@@ -661,7 +672,7 @@ export default function CarsPage() {
                         ) : (
                             <div className="flex justify-center items-center h-64">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                                <span className="ml-3 text-gray-600">Загрузка автомобилей...</span>
+                                <span className="ml-3 text-gray-600">{getLoadingCarsText(language)}</span>
                             </div>
                         )}
                     </div>
