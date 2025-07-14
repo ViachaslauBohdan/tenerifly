@@ -218,7 +218,7 @@ export default function BlogsPage() {
             setError(null)
 
             try {
-                const response = await fetch('http://localhost:1337/api/blog-posts/?populate=*')
+                const response = await fetch('http://localhost:1337/api/blogs/?populate=*')
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`)
@@ -525,7 +525,7 @@ export default function BlogsPage() {
                                         {/* Action Buttons */}
                                         <div className="flex gap-3">
                                             <Link
-                                                href={`/blogs/${post.documentId}`}
+                                                href={`/blog/${post.documentId}`}
                                                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors flex items-center justify-center font-medium"
                                             >
                                                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

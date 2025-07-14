@@ -165,7 +165,7 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
                     fetchFromStrapi('/tours/?populate=*&pagination[pageSize]=3'),
                     fetchFromStrapi('/cars/?populate=*&pagination[pageSize]=3'),
                     fetchFromStrapi('/properties/?populate=*&pagination[pageSize]=3'),
-                    fetchFromStrapi('/blogs/?populate=*&pagination[pageSize]=3')
+                    fetchFromStrapi('/blog-posts/?populate=*&pagination[pageSize]=3')
                 ]);
 
                 // Обработка туров

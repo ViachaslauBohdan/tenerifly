@@ -226,7 +226,7 @@ export default function BlogDetailPage() {
             setError(null)
 
             try {
-                const response = await fetch(`http://localhost:1337/api/blog-posts/${documentId}?populate=*`)
+                const response = await fetch(`http://localhost:1337/api/blogs/${documentId}?populate=*`)
 
                 if (!response.ok) {
                     if (response.status === 404) {
@@ -608,7 +608,7 @@ export default function BlogDetailPage() {
                                         {relatedPosts.map((post) => (
                                             <Link
                                                 key={post.id}
-                                                href={`/blogs/${post.documentId}`}
+                                                href={`/blog/${post.documentId}`}
                                                 className="block group"
                                             >
                                                 <div className="flex gap-3">
