@@ -286,7 +286,7 @@ export default function BlogsPage() {
             }
             return `${apiUrl}${post.featured_image.url}`
         }
-        return "/placeholder.svg?height=200&width=300"
+        return "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop&auto=format&q=80"
     }
 
     const getTags = (tagsString: string | null) => {
@@ -527,7 +527,7 @@ export default function BlogsPage() {
                                         {/* Action Buttons */}
                                         <div className="flex gap-3">
                                             <Link
-                                                href={`/blogs/${post.documentId}`}
+                                                href={`/blog/${post.documentId}`}
                                                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors flex items-center justify-center font-medium"
                                             >
                                                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
