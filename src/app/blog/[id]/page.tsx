@@ -226,7 +226,7 @@ export default function BlogDetailPage() {
             setError(null)
 
             try {
-                const response = await fetch(`http://localhost:1337/api/blogs/${documentId}?populate=*`)
+                const response = await fetch(`http://localhost:1337/api/blog-posts/${documentId}?populate=*`)
 
                 if (!response.ok) {
                     if (response.status === 404) {

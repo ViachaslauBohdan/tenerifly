@@ -218,7 +218,7 @@ export default function BlogsPage() {
             setError(null)
 
             try {
-                const response = await fetch('http://localhost:1337/api/blogs/?populate=*')
+                const response = await fetch(`http://localhost:1337/api/blog-posts?populate=*&locale=${language}`)
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`)
