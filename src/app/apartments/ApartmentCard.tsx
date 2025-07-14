@@ -103,6 +103,28 @@ interface ApartmentCardProps {
     apartments?: PropertyData[]
 }
 
+const getFoundPropertiesText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: 'Found properties',
+    ru: 'Найдено объектов',
+    pl: 'Znaleziono nieruchomości',
+    fr: 'Propriétés trouvées',
+    uk: 'Знайдено об\'єктів'
+  };
+  return texts[locale] || texts.en;
+};
+
+const getFilterActiveText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: '🔍 Filter active',
+    ru: '🔍 Фильтр активен',
+    pl: '🔍 Filtr aktywny',
+    fr: '🔍 Filtre actif',
+    uk: '🔍 Фільтр активний'
+  };
+  return texts[locale] || texts.en;
+};
+
 const ApartmentCard = ({ translations, language, apartments: providedApartments }: ApartmentCardProps) => {
     const [apartments, setApartments] = useState<PropertyData[]>([])
     const [loading, setLoading] = useState(true)
@@ -370,11 +392,11 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
             {/* Счетчик результатов */}
             <div className="flex items-center justify-between">
                 <div className="text-gray-600">
-                    Найдено объектов: <span className="font-semibold text-gray-900">{apartments.length}</span>
+                    {getFoundPropertiesText(language)}: <span className="font-semibold text-gray-900">{apartments.length}</span>
                 </div>
                 {providedApartments !== undefined && (
                     <div className="text-sm text-blue-600">
-                        🔍 Фильтр активен
+                        {getFilterActiveText(language)}
                     </div>
                 )}
             </div>

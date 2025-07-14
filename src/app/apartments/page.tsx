@@ -315,6 +315,17 @@ const translations = {
     },
 }
 
+const getLoadingPropertiesText = (language: string) => {
+  const texts: Record<string, string> = {
+    en: 'Loading properties...',
+    ru: 'Загрузка недвижимости...',
+    pl: 'Ładowanie nieruchomości...',
+    fr: 'Chargement des propriétés...',
+    uk: 'Завантаження нерухомості...'
+  };
+  return texts[language] || texts.en;
+};
+
 // Языки с флагами
 const languages = [
     { code: "en", name: "English", flag: "🇬🇧" },
@@ -619,7 +630,7 @@ export default function ApartmentsPage() {
                         ) : (
                             <div className="flex justify-center items-center h-64">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                                <span className="ml-3 text-gray-600">Загрузка недвижимости...</span>
+                                <span className="ml-3 text-gray-600">{getLoadingPropertiesText(language)}</span>
                             </div>
                         )}
                     </div>

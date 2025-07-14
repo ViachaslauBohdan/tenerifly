@@ -80,6 +80,28 @@ interface CarCardProps {
     cars?: CarData[] // Добавляем пропс для отфильтрованных машин
 }
 
+const getFoundCarsText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: 'Found cars',
+    ru: 'Найдено автомобилей',
+    pl: 'Znaleziono samochodów',
+    fr: 'Voitures trouvées',
+    uk: 'Знайдено автомобілів'
+  };
+  return texts[locale] || texts.en;
+};
+
+const getFilterActiveText = (locale: string): string => {
+  const texts: Record<string, string> = {
+    en: '🔍 Filter active',
+    ru: '🔍 Фильтр активен',
+    pl: '🔍 Filtr aktywny',
+    fr: '🔍 Filtre actif',
+    uk: '🔍 Фільтр активний'
+  };
+  return texts[locale] || texts.en;
+};
+
 const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) => {
     const [cars, setCars] = useState<CarData[]>([])
     const [loading, setLoading] = useState(true)
@@ -364,11 +386,11 @@ const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) =
             {/* Счетчик результатов */}
             <div className="flex items-center justify-between">
                 <div className="text-gray-600">
-                    Найдено автомобилей: <span className="font-semibold text-gray-900">{cars.length}</span>
+                    {getFoundCarsText(language)}: <span className="font-semibold text-gray-900">{cars.length}</span>
                 </div>
                 {filteredCars !== undefined && (
                     <div className="text-sm text-blue-600">
-                        🔍 Фильтр активен
+                        {getFilterActiveText(language)}
                     </div>
                 )}
             </div>

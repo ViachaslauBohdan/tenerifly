@@ -10,6 +10,29 @@ interface ClassicCarsPageClientProps {
   params: Promise<{ locale: Locale }>;
 }
 
+const getLoadingText = (locale: Locale): string => {
+  const texts = {
+    en: 'Loading cars...',
+    ru: 'Загрузка автомобилей...',
+    pl: 'Ładowanie samochodów...',
+    fr: 'Chargement des voitures...',
+    uk: 'Завантаження автомобілів...'
+  };
+  return texts[locale] || texts.en;
+};
+
+
+const getResetFiltersText = (locale: Locale): string => {
+  const texts = {
+    en: 'Reset filters',
+    ru: 'Сбросить фильтры',
+    pl: 'Resetuj filtry',
+    fr: 'Réinitialiser les filtres',
+    uk: 'Скинути фільтри'
+  };
+  return texts[locale] || texts.en;
+};
+
 export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
   const [mounted, setMounted] = useState(false);
   const [currentLocale, setCurrentLocale] = useState<Locale>('en');
@@ -145,8 +168,15 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
         setTotalPages(1);
       }
     } catch (err) {
-      console.error('Ошибка загрузки автомобилей:', err);
-      setError('Не удалось загрузить автомобили. Попробуйте позже.');
+      console.error('Error loading cars:', err);
+      const errorText = {
+        en: 'Failed to load cars. Please try again later.',
+        ru: 'Не удалось загрузить автомобили. Попробуйте позже.',
+        pl: 'Nie udało się załadować samochodów. Spróbuj ponownie później.',
+        fr: 'Impossible de charger les voitures. Veuillez réessayer plus tard.',
+        uk: 'Не вдалося завантажити автомобілі. Спробуйте пізніше.'
+      };
+      setError(errorText[currentLocale] || errorText.en);
       setCars([]);
     } finally {
       setLoading(false);
@@ -598,7 +628,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
             className="reset-filters-btn"
             onClick={handleResetFilters}
           >
-            Сбросить фильтры
+            {getResetFiltersText(currentLocale)}
           </button>
         </div>
 
@@ -610,7 +640,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
               padding: '40px',
               color: '#666'
             }}>
-              Загрузка автомобилей...
+              {getLoadingText(currentLocale)}
             </div>
           )}
 
