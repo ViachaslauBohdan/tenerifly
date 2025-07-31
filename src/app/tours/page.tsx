@@ -489,6 +489,10 @@ export default function ToursPage() {
     const [tours, setTours] = useState<Tour[]>([])
     const [initialLoadComplete, setInitialLoadComplete] = useState(false)
 
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1)
+    const [itemsPerPage] = useState(12) // Show 12 tours per page
+
     // Функция для создания заголовков с авторизацией
     const getAuthHeaders = () => {
         const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN
@@ -573,6 +577,31 @@ export default function ToursPage() {
     // Теперь функция принимает правильный тип
     const handleToursUpdate = (updatedTours: Tour[]) => {
         setTours(updatedTours)
+        setCurrentPage(1) // Reset to first page when filters change
+    }
+
+    // Pagination logic
+    const totalPages = Math.ceil(tours.length / itemsPerPage)
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const currentTours = tours.slice(startIndex, endIndex)
+
+    // Pagination handlers
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            handlePageChange(currentPage - 1)
+        }
+    }
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages) {
+            handlePageChange(currentPage + 1)
+        }
     }
 
     return (
@@ -657,11 +686,97 @@ export default function ToursPage() {
                     {/* Tours Grid */}
                     <div className="flex-1">
                         {initialLoadComplete ? (
-                            <TourCard
-                                translations={t}
-                                language={language}
-                                tours={tours}
-                            />
+                            <>
+                                <TourCard
+                                    translations={t}
+                                    language={language}
+                                    tours={currentTours}
+                                />
+
+                                {/* Pagination */}
+                                {totalPages > 1 && (
+                                    <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                        {/* Results info */}
+                                        <div className="text-sm text-gray-600">
+                                            {language === "en" ? `Showing ${startIndex + 1}-${Math.min(endIndex, tours.length)} of ${tours.length} tours` :
+                                                language === "ru" ? `Показано ${startIndex + 1}-${Math.min(endIndex, tours.length)} из ${tours.length} экскурсий` :
+                                                    language === "pl" ? `Pokazano ${startIndex + 1}-${Math.min(endIndex, tours.length)} z ${tours.length} wycieczek` :
+                                                        language === "fr" ? `Affichage de ${startIndex + 1}-${Math.min(endIndex, tours.length)} sur ${tours.length} excursions` :
+                                                            `Показано ${startIndex + 1}-${Math.min(endIndex, tours.length)} з ${tours.length} екскурсій`}
+                                        </div>
+
+                                        {/* Pagination controls */}
+                                        <div className="flex items-center gap-2">
+                                            {/* Previous button */}
+                                            <button
+                                                onClick={handlePreviousPage}
+                                                disabled={currentPage === 1}
+                                                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            >
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                                </svg>
+                                                {language === "en" ? "Previous" :
+                                                    language === "ru" ? "Назад" :
+                                                        language === "pl" ? "Poprzednia" :
+                                                            language === "fr" ? "Précédent" :
+                                                                "Попередня"}
+                                            </button>
+
+                                            {/* Page numbers */}
+                                            <div className="flex items-center gap-1">
+                                                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                                                    let pageNumber: number
+
+                                                    if (totalPages <= 5) {
+                                                        pageNumber = i + 1
+                                                    } else if (currentPage <= 3) {
+                                                        pageNumber = i + 1
+                                                    } else if (currentPage >= totalPages - 2) {
+                                                        pageNumber = totalPages - 4 + i
+                                                    } else {
+                                                        pageNumber = currentPage - 2 + i
+                                                    }
+
+                                                    return (
+                                                        <button
+                                                            key={pageNumber}
+                                                            onClick={() => handlePageChange(pageNumber)}
+                                                            className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${currentPage === pageNumber
+                                                                    ? "bg-blue-600 text-white"
+                                                                    : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+                                                                }`}
+                                                        >
+                                                            {pageNumber}
+                                                        </button>
+                                                    )
+                                                })}
+
+                                                {/* Show ellipsis if there are more pages */}
+                                                {totalPages > 5 && currentPage < totalPages - 2 && (
+                                                    <span className="px-2 text-gray-500">...</span>
+                                                )}
+                                            </div>
+
+                                            {/* Next button */}
+                                            <button
+                                                onClick={handleNextPage}
+                                                disabled={currentPage === totalPages}
+                                                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                            >
+                                                {language === "en" ? "Next" :
+                                                    language === "ru" ? "Вперед" :
+                                                        language === "pl" ? "Następna" :
+                                                            language === "fr" ? "Suivant" :
+                                                                "Наступна"}
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
                         ) : (
                             <div className="flex justify-center items-center h-64">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
