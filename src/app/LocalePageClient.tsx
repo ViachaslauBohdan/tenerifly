@@ -580,7 +580,6 @@ export function LocalePageClient() {
   const [showAdvancedAccommodation, setShowAdvancedAccommodation] = useState(false)
   const [showAdvancedCars, setShowAdvancedCars] = useState(false)
   const [showAdvancedTours, setShowAdvancedTours] = useState(false)
-  const [personalizedRequest, setPersonalizedRequest] = useState('')
 
   const t = translations[language]
   const currentLanguage = languages.find((lang) => lang.code === language)
@@ -1727,42 +1726,7 @@ export function LocalePageClient() {
         </div>
       </section>
 
-      {/* Personalized Request Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-12 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {t.personalizedRequest?.title || "Have a personalized request?"}
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
-              {t.personalizedRequest?.subtitle || "Text us your specific needs and we'll help you find the perfect solution"}
-            </p>
-            <div className="max-w-4xl mx-auto mb-8">
-              <textarea
-                value={personalizedRequest}
-                onChange={(e) => setPersonalizedRequest(e.target.value)}
-                placeholder={t.personalizedRequest?.placeholder || "Tell us about your requirements, dates, preferences, or any special requests..."}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                rows={8}
-              />
-            </div>
-            <button
-              onClick={() => {
-                if (personalizedRequest.trim()) {
-                  const message = encodeURIComponent(`Personalized Request:\n\n${personalizedRequest}`)
-                  window.open(`https://wa.me/34656641433?text=${message}`, '_blank')
-                  setPersonalizedRequest('')
-                }
-              }}
-              disabled={!personalizedRequest.trim()}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors text-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
-            >
-              <Phone className="w-5 h-5" />
-              {t.personalizedRequest?.button || "Send Request"}
-            </button>
-          </div>
-        </div>
-      </section>
+
 
       {/* CTA секция */}
       <section className="py-20 bg-gray-100">
@@ -1770,15 +1734,17 @@ export function LocalePageClient() {
           <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">{t.cta.title}</h2>
             <p className="text-lg text-gray-600 mb-8">{t.cta.subtitle}</p>
-            <a
-              href="https://wa.me/34656641433"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => openBookingModal("accommodation", {
+                title: "",
+                price: undefined,
+                currency: undefined
+              })}
               className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors text-lg"
             >
               <Phone className="w-5 h-5" />
               {t.cta.button}
-            </a>
+            </button>
           </div>
         </div>
       </section>
