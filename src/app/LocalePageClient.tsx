@@ -1381,6 +1381,166 @@ export function LocalePageClient() {
         </div>
       </section>
 
+      {/* Секция недвижимости */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center mb-16">
+            <div className="text-center flex-1">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.sections.accommodation.title}</h2>
+              <p className="text-xl text-gray-600">{t.sections.accommodation.subtitle}</p>
+            </div>
+            <button
+              onClick={() => router.push("/apartments")}
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
+            >
+              {t.sections.accommodation.viewAll}
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {dataLoading ? (
+            <EmptyState type="loading" />
+          ) : accommodation.length === 0 ? (
+            <EmptyState type="empty" />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {accommodation.map((place, index) => (
+                <div
+                  key={place.id || index}
+                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="aspect-video relative overflow-hidden">
+                    <img
+                      src={place.image || "/placeholder.svg"}
+                      alt={place.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900">{place.title}</h3>
+                      <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
+                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                        <span className="text-sm font-medium text-yellow-700">{place.rating}</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{place.description}</p>
+                    <div className="space-y-2 mb-6">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <MapPin className="w-4 h-4" />
+                        <span>
+                          {t.sections.accommodation.location}: {place.location}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Home className="w-4 h-4" />
+                        <span>
+                          {t.sections.accommodation.amenities}: {place.amenities}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Euro className="w-4 h-4" />
+                        <span>{place.price}</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() =>
+                        openBookingModal("accommodation", {
+                          title: place.title,
+                          price: place.price
+                        })
+                      }
+                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      {t.common.bookNow}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Секция автомобилей */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center mb-16">
+            <div className="text-center flex-1">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.sections.cars.title}</h2>
+              <p className="text-xl text-gray-600">{t.sections.cars.subtitle}</p>
+            </div>
+            <button
+              onClick={() => router.push("/cars")}
+              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
+            >
+              {t.sections.cars.viewAll}
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {dataLoading ? (
+            <EmptyState type="loading" />
+          ) : cars.length === 0 ? (
+            <EmptyState type="empty" />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {cars.map((car, index) => (
+                <div
+                  key={car.id || index}
+                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="aspect-video relative overflow-hidden">
+                    <img src={car.image || "/placeholder.svg"} alt={car.title} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900">{car.title}</h3>
+                      <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
+                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                        <span className="text-sm font-medium text-yellow-700">{car.rating}</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{car.description}</p>
+                    <div className="space-y-2 mb-6">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Car className="w-4 h-4" />
+                        <span>
+                          {t.sections.cars.transmission}: {car.transmission}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Home className="w-4 h-4" />
+                        <span>
+                          {t.sections.cars.features}: {car.features}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Euro className="w-4 h-4" />
+                        <span>{car.price}</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() =>
+                        openBookingModal("car", {
+                          title: car.title,
+                          price: car.price,
+                          brand: car.brand,
+                          model: car.model
+                        })
+                      }
+                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      {t.common.bookNow}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Секция экскурсий */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
@@ -1474,166 +1634,6 @@ export function LocalePageClient() {
                   </div>
                 ))
               })()}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Секция автомобилей */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center mb-16">
-            <div className="text-center flex-1">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.sections.cars.title}</h2>
-              <p className="text-xl text-gray-600">{t.sections.cars.subtitle}</p>
-            </div>
-            <button
-              onClick={() => router.push("/cars")}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
-            >
-              {t.sections.cars.viewAll}
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {dataLoading ? (
-            <EmptyState type="loading" />
-          ) : cars.length === 0 ? (
-            <EmptyState type="empty" />
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {cars.map((car, index) => (
-                <div
-                  key={car.id || index}
-                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                >
-                  <div className="aspect-video relative overflow-hidden">
-                    <img src={car.image || "/placeholder.svg"} alt={car.title} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">{car.title}</h3>
-                      <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium text-yellow-700">{car.rating}</span>
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{car.description}</p>
-                    <div className="space-y-2 mb-6">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Car className="w-4 h-4" />
-                        <span>
-                          {t.sections.cars.transmission}: {car.transmission}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Home className="w-4 h-4" />
-                        <span>
-                          {t.sections.cars.features}: {car.features}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Euro className="w-4 h-4" />
-                        <span>{car.price}</span>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() =>
-                        openBookingModal("car", {
-                          title: car.title,
-                          price: car.price,
-                          brand: car.brand,
-                          model: car.model
-                        })
-                      }
-                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      {t.common.bookNow}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Секция недвижимости */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center mb-16">
-            <div className="text-center flex-1">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.sections.accommodation.title}</h2>
-              <p className="text-xl text-gray-600">{t.sections.accommodation.subtitle}</p>
-            </div>
-            <button
-              onClick={() => router.push("/apartments")}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
-            >
-              {t.sections.accommodation.viewAll}
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {dataLoading ? (
-            <EmptyState type="loading" />
-          ) : accommodation.length === 0 ? (
-            <EmptyState type="empty" />
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {accommodation.map((place, index) => (
-                <div
-                  key={place.id || index}
-                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                >
-                  <div className="aspect-video relative overflow-hidden">
-                    <img
-                      src={place.image || "/placeholder.svg"}
-                      alt={place.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">{place.title}</h3>
-                      <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium text-yellow-700">{place.rating}</span>
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{place.description}</p>
-                    <div className="space-y-2 mb-6">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <MapPin className="w-4 h-4" />
-                        <span>
-                          {t.sections.accommodation.location}: {place.location}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Home className="w-4 h-4" />
-                        <span>
-                          {t.sections.accommodation.amenities}: {place.amenities}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Euro className="w-4 h-4" />
-                        <span>{place.price}</span>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() =>
-                        openBookingModal("accommodation", {
-                          title: place.title,
-                          price: place.price
-                        })
-                      }
-                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      {t.common.bookNow}
-                    </button>
-                  </div>
-                </div>
-              ))}
             </div>
           )}
         </div>
