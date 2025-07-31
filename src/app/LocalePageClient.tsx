@@ -589,11 +589,45 @@ export function LocalePageClient() {
   const EmptyState = ({ type }: { type: "loading" | "error" | "empty" }) => {
     if (type === "loading") {
       return (
-        <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
-          <div className="flex items-center justify-center mb-4">
-            <Wifi className="w-8 h-8 text-blue-500 animate-pulse" />
-          </div>
-          <p className="text-lg text-gray-600">{t.common.loading}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {[1, 2, 3].map((index) => (
+            <div
+              key={index}
+              className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg animate-pulse"
+            >
+              {/* Image skeleton */}
+              <div className="aspect-video bg-gray-200"></div>
+              <div className="p-6">
+                {/* Title and rating skeleton */}
+                <div className="flex justify-between items-start mb-4">
+                  <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-6 bg-gray-200 rounded w-12"></div>
+                </div>
+                {/* Description skeleton */}
+                <div className="space-y-2 mb-4">
+                  <div className="h-4 bg-gray-200 rounded w-full"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                </div>
+                {/* Details skeleton */}
+                <div className="space-y-2 mb-6">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+                  </div>
+                </div>
+                {/* Button skeleton */}
+                <div className="h-10 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          ))}
         </div>
       )
     }
