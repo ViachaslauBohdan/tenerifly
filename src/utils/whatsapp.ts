@@ -11,13 +11,30 @@ interface WhatsAppDetails {
   language?: string;
 }
 
+interface BookingDetails extends WhatsAppDetails {
+  startDate?: string;
+  endDate?: string;
+  comments?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  email?: string;
+  whatsapp?: string;
+  telegram?: string;
+}
+
 export const openWhatsApp = (
-  itemType: 'excursion' | 'car' | 'accommodation' | 'general', 
+  itemType: 'excursion' | 'car' | 'accommodation' | 'general',
   details: WhatsAppDetails,
-  language: Locale = 'en' 
+  language: Locale = 'en'
 ) => {
+  // Check if we're in the browser
+  if (typeof window === 'undefined') {
+    return;
+  }
+
   const phoneNumber = '+34656641433';
-  
+
   const messages = {
     en: {
       excursion: `Hi! I'm interested in the excursion "${details.title}" (${details.duration}, ${details.language}) for ${details.price}`,
@@ -50,7 +67,7 @@ export const openWhatsApp = (
       general: `Привіт! Я хотів би дізнатися більше про ваші послуги на Тенеріфе`
     }
   };
-  
+
   let refCode = '';
   if (typeof window !== 'undefined') {
     refCode = localStorage.getItem('ref_code') || '';
@@ -59,6 +76,95 @@ export const openWhatsApp = (
   let message = messages[language][itemType];
   if (refCode) {
     message += ` (ref: ${refCode})`;
+  }
+
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+  window.open(whatsappUrl, '_blank');
+}
+
+export const openBookingWhatsApp = (
+  itemType: 'excursion' | 'car' | 'accommodation',
+  details: BookingDetails,
+  language: Locale = 'en'
+) => {
+  // Check if we're in the browser
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const phoneNumber = '+34656641433';
+
+  const bookingMessages = {
+    en: {
+      accommodation: `Hi! I would like to book "${details.title}" for ${details.price}`,
+      car: `Hi! I would like to book the car ${details.brand} ${details.model} "${details.title}" for ${details.price}`,
+      excursion: `Hi! I would like to book the excursion "${details.title}" (${details.duration}, ${details.language}) for ${details.price}`
+    },
+    pl: {
+      accommodation: `Dzień dobry! Chciałbym zarezerwować "${details.title}" za ${details.price}`,
+      car: `Dzień dobry! Chciałbym zarezerwować samochód ${details.brand} ${details.model} "${details.title}" za ${details.price}`,
+      excursion: `Dzień dobry! Chciałbym zarezerwować wycieczkę "${details.title}" (${details.duration}, ${details.language}) za ${details.price}`
+    },
+    fr: {
+      accommodation: `Bonjour ! Je voudrais réserver "${details.title}" pour ${details.price}`,
+      car: `Bonjour ! Je voudrais réserver la voiture ${details.brand} ${details.model} "${details.title}" pour ${details.price}`,
+      excursion: `Bonjour ! Je voudrais réserver l'excursion "${details.title}" (${details.duration}, ${details.language}) pour ${details.price}`
+    },
+    ru: {
+      accommodation: `Привет! Я хотел бы забронировать "${details.title}" за ${details.price}`,
+      car: `Привет! Я хотел бы забронировать автомобиль ${details.brand} ${details.model} "${details.title}" за ${details.price}`,
+      excursion: `Привет! Я хотел бы забронировать экскурсию "${details.title}" (${details.duration}, ${details.language}) за ${details.price}`
+    },
+    uk: {
+      accommodation: `Привіт! Я хотів би забронювати "${details.title}" за ${details.price}`,
+      car: `Привіт! Я хотів би забронювати автомобіль ${details.brand} ${details.model} "${details.title}" за ${details.price}`,
+      excursion: `Привіт! Я хотів би забронювати екскурсію "${details.title}" (${details.duration}, ${details.language}) за ${details.price}`
+    }
+  };
+
+  let message = bookingMessages[language][itemType];
+
+  // Add contact information if provided
+  if (details.firstName && details.lastName) {
+    message += `\n\nContact Information:`;
+    message += `\nName: ${details.firstName} ${details.lastName}`;
+  }
+
+  if (details.phone) {
+    message += `\nPhone: ${details.phone}`;
+  }
+
+  if (details.email) {
+    message += `\nEmail: ${details.email}`;
+  }
+
+  if (details.whatsapp) {
+    message += `\nWhatsApp: ${details.whatsapp}`;
+  }
+
+  if (details.telegram) {
+    message += `\nTelegram: ${details.telegram}`;
+  }
+
+  // Add dates if provided
+  if (details.startDate && details.endDate) {
+    message += `\n\nDates: ${details.startDate} - ${details.endDate}`;
+  }
+
+  // Add comments if provided
+  if (details.comments) {
+    message += `\n\nComments: ${details.comments}`;
+  }
+
+  // Add referral code if available
+  let refCode = '';
+  if (typeof window !== 'undefined') {
+    refCode = localStorage.getItem('ref_code') || '';
+  }
+
+  if (refCode) {
+    message += `\n\nRef: ${refCode}`;
   }
 
   const encodedMessage = encodeURIComponent(message);

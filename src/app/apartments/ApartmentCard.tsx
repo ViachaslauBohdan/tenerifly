@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import { openBookingWhatsApp } from '@/utils/whatsapp'
+import { SimpleBookingPopup } from '@/components/SimpleBookingPopup'
 
 interface PropertyData {
     id: number
@@ -129,6 +131,8 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
     const [apartments, setApartments] = useState<PropertyData[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+    const [selectedProperty, setSelectedProperty] = useState<PropertyData | null>(null)
 
     // Функция для создания заголовков с авторизацией
     const getAuthHeaders = () => {
@@ -190,6 +194,17 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
     const handleViewDetails = (propertyDocumentId: string) => {
         window.location.href = `/apartments/${propertyDocumentId}`
     }
+
+    const handleBookNow = (property: PropertyData) => {
+        setSelectedProperty(property)
+        setIsBookingModalOpen(true)
+    }
+
+    const handleCloseBookingModal = () => {
+        setIsBookingModalOpen(false)
+        setSelectedProperty(null)
+    }
+
 
     const getImageUrl = (property: PropertyData) => {
         if (property.images && property.images.length > 0) {
@@ -542,6 +557,7 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
                                 </button>
                                 {(property.property_status === 'available' || property.property_status === 'reserved') && (
                                     <button
+                                        onClick={() => handleBookNow(property)}
                                         className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center">
                                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path
@@ -559,6 +575,19 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
                     </div>
                 ))}
             </div>
+
+            {/* Booking Modal */}
+            {selectedProperty && (
+                <SimpleBookingPopup
+                    opened={isBookingModalOpen}
+                    onClose={handleCloseBookingModal}
+                    item={{
+                        name: selectedProperty.title,
+                        price: selectedProperty.price ? `${getCurrency(selectedProperty)} ${getPrice(selectedProperty)}/${translations.perMonth}` : undefined,
+                        currency: selectedProperty.price?.currency
+                    }}
+                />
+            )}
         </div>
     )
 }

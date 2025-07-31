@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import { openBookingWhatsApp } from '@/utils/whatsapp'
+import { SimpleBookingPopup } from '@/components/SimpleBookingPopup'
 
 interface CarData {
     id: number
@@ -106,6 +108,8 @@ const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) =
     const [cars, setCars] = useState<CarData[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+    const [selectedCar, setSelectedCar] = useState<CarData | null>(null)
 
     // Функция для создания заголовков с авторизацией
     const getAuthHeaders = () => {
@@ -162,6 +166,29 @@ const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) =
     const handleViewDetails = (carDocumentId: string) => {
         window.location.href = `/cars/${carDocumentId}`
     }
+
+    const handleOpenBookingModal = (car: CarData) => {
+        setSelectedCar(car)
+        setIsBookingModalOpen(true)
+    }
+
+    const handleCloseBookingModal = () => {
+        setIsBookingModalOpen(false)
+        setSelectedCar(null)
+    }
+
+    const handleBookNow = () => {
+        if (selectedCar) {
+            openBookingWhatsApp('car', {
+                title: selectedCar.title,
+                price: selectedCar.rental_prices ? `${selectedCar.rental_prices.currency} ${selectedCar.rental_prices.day_1}/DAY` : undefined,
+                brand: selectedCar.specifications?.make,
+                model: selectedCar.specifications?.model
+            }, language as any)
+            handleCloseBookingModal()
+        }
+    }
+
 
     const getImageUrl = (car: CarData) => {
         if (car.images && car.images.length > 0) {
@@ -538,6 +565,7 @@ const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) =
                                 </button>
                                 {(car.car_status === 'available' || car.car_status === 'reserved') && (
                                     <button
+                                        onClick={() => handleOpenBookingModal(car)}
                                         className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center">
                                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path
@@ -555,6 +583,19 @@ const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) =
                     </div>
                 ))}
             </div>
+
+            {/* Booking Modal */}
+            {selectedCar && (
+                <SimpleBookingPopup
+                    opened={isBookingModalOpen}
+                    onClose={handleCloseBookingModal}
+                    item={{
+                        name: selectedCar.title,
+                        price: selectedCar.rental_prices ? `${getCurrency(selectedCar)} ${getPrice(selectedCar)}/DAY` : undefined,
+                        currency: selectedCar.rental_prices?.currency
+                    }}
+                />
+            )}
         </div>
     )
 }

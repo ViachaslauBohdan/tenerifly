@@ -24,6 +24,7 @@ import {
   ArrowRight,
 } from "lucide-react"
 import { useDataLoader } from "./useDataLoader"
+import { SimpleBookingPopup } from '@/components/SimpleBookingPopup'
 
 // Переводы для всех языков
 const translations = {
@@ -510,13 +511,7 @@ const languages = [
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk"
 
-// Функция для WhatsApp
-const openWhatsApp = (type: string, item: any, language: string) => {
-  const phone = "+34656641433"
-  const message = `Hello! I would like to book ${type}: ${item.title}. Price: ${item.price}`
-  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
-  window.open(url, "_blank")
-}
+
 
 export function LocalePageClient() {
   const router = useRouter()
@@ -535,11 +530,23 @@ export function LocalePageClient() {
   const [carType, setCarType] = useState("")
   const [activeTab, setActiveTab] = useState("accommodation") // Изменено на accommodation как первый таб
 
+  // State для модального окна бронирования
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+  const [bookingType, setBookingType] = useState<"excursion" | "car" | "accommodation" | "blog">("excursion")
+  const [bookingItem, setBookingItem] = useState<any>(null)
+
   const t = translations[language]
   const currentLanguage = languages.find((lang) => lang.code === language)
 
   // Загрузка данных из нового хука
   const { excursions, cars, accommodation, blogPosts, dataLoading, hasError } = useDataLoader(mounted, language)
+
+  // Функция для открытия модального окна бронирования
+  const openBookingModal = (type: "excursion" | "car" | "accommodation", item: any) => {
+    setBookingType(type)
+    setBookingItem(item)
+    setIsBookingModalOpen(true)
+  }
 
   // Загрузка сохраненного языка из localStorage
   useEffect(() => {
@@ -684,8 +691,8 @@ export function LocalePageClient() {
                     key={key}
                     onClick={() => setActiveTab(key)}
                     className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-200 ${activeTab === key
-                        ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
-                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
+                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
                       }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -1001,14 +1008,12 @@ export function LocalePageClient() {
                         </button>
                         <button
                           onClick={() =>
-                            openWhatsApp(
-                              "excursion",
-                              {
-                                title: excursion.title,
-                                price: excursion.price,
-                              },
-                              language,
-                            )
+                            openBookingModal("excursion", {
+                              title: excursion.title,
+                              price: excursion.price,
+                              duration: excursion.duration,
+                              language: "English"
+                            })
                           }
                           className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                         >
@@ -1084,14 +1089,12 @@ export function LocalePageClient() {
                     </div>
                     <button
                       onClick={() =>
-                        openWhatsApp(
-                          "car",
-                          {
-                            title: car.title,
-                            price: car.price,
-                          },
-                          language,
-                        )
+                        openBookingModal("car", {
+                          title: car.title,
+                          price: car.price,
+                          brand: car.brand,
+                          model: car.model
+                        })
                       }
                       className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
@@ -1169,14 +1172,10 @@ export function LocalePageClient() {
                     </div>
                     <button
                       onClick={() =>
-                        openWhatsApp(
-                          "accommodation",
-                          {
-                            title: place.title,
-                            price: place.price,
-                          },
-                          language,
-                        )
+                        openBookingModal("accommodation", {
+                          title: place.title,
+                          price: place.price
+                        })
                       }
                       className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
@@ -1348,6 +1347,22 @@ export function LocalePageClient() {
       {/* Click outside to close dropdown */}
       {isLanguageDropdownOpen && (
         <div className="fixed inset-0 z-40" onClick={() => setIsLanguageDropdownOpen(false)} />
+      )}
+
+      {/* Модальное окно бронирования */}
+      {bookingItem && (
+        <SimpleBookingPopup
+          opened={isBookingModalOpen}
+          onClose={() => {
+            setIsBookingModalOpen(false)
+            setBookingItem(null)
+          }}
+          item={{
+            name: bookingItem.title,
+            price: bookingItem.price,
+            currency: bookingItem.currency
+          }}
+        />
       )}
     </main>
   )
