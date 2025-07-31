@@ -54,12 +54,12 @@ const translations = {
         resetFilters: "Reset filters",
         available: "AVAILABLE",
         viewDetails: "View Details",
-        bookNow: "Book Now",
+        bookNow: "Book",
         contact: "Contact",
         apartmentDescription: "Modern and comfortable apartment in a great location.",
         selectLanguage: "Select Language",
         sqm: "m²",
-        perMonth: "per month",
+        perMonth: "month",
         type: "Type",
         rent: "Rent",
         sale: "Sale",
@@ -120,7 +120,7 @@ const translations = {
         apartmentDescription: "Современная и комфортная недвижимость в отличном месте.",
         selectLanguage: "Выбрать язык",
         sqm: "м²",
-        perMonth: "в месяц",
+        perMonth: "месяц",
         type: "Тип",
         rent: "Аренда",
         sale: "Продажа",
@@ -181,7 +181,7 @@ const translations = {
         apartmentDescription: "Nowoczesna i komfortowa nieruchomość w doskonałej lokalizacji.",
         selectLanguage: "Wybierz język",
         sqm: "m²",
-        perMonth: "za miesiąc",
+        perMonth: "miesiąc",
         type: "Typ",
         rent: "Wynajem",
         sale: "Sprzedaż",
@@ -242,7 +242,7 @@ const translations = {
         apartmentDescription: "Immobilier moderne et confortable dans un excellent emplacement.",
         selectLanguage: "Choisir la langue",
         sqm: "m²",
-        perMonth: "par mois",
+        perMonth: "mois",
         type: "Type",
         rent: "Location",
         sale: "Vente",
@@ -303,7 +303,7 @@ const translations = {
         apartmentDescription: "Сучасна та комфортна нерухомість у відмінному місці.",
         selectLanguage: "Обрати мову",
         sqm: "м²",
-        perMonth: "за місяць",
+        perMonth: "місяць",
         type: "Тип",
         rent: "Оренда",
         sale: "Продаж",
@@ -316,14 +316,14 @@ const translations = {
 }
 
 const getLoadingPropertiesText = (language: string) => {
-  const texts: Record<string, string> = {
-    en: 'Loading properties...',
-    ru: 'Загрузка недвижимости...',
-    pl: 'Ładowanie nieruchomości...',
-    fr: 'Chargement des propriétés...',
-    uk: 'Завантаження нерухомості...'
-  };
-  return texts[language] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'Loading properties...',
+        ru: 'Загрузка недвижимости...',
+        pl: 'Ładowanie nieruchomości...',
+        fr: 'Chargement des propriétés...',
+        uk: 'Завантаження нерухомості...'
+    };
+    return texts[language] || texts.en;
 };
 
 // Языки с флагами
@@ -558,9 +558,8 @@ export default function ApartmentsPage() {
                             <span className="font-medium text-gray-700 hidden sm:block">{currentLanguage?.name}</span>
                             <span className="font-medium text-gray-700 sm:hidden">{currentLanguage?.code.toUpperCase()}</span>
                             <svg
-                                className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
-                                    isLanguageDropdownOpen ? "rotate-180" : ""
-                                }`}
+                                className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isLanguageDropdownOpen ? "rotate-180" : ""
+                                    }`}
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -580,9 +579,8 @@ export default function ApartmentsPage() {
                                         <button
                                             key={lang.code}
                                             onClick={() => handleLanguageChange(lang.code as "en" | "ru" | "pl" | "fr" | "uk")}
-                                            className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors duration-150 ${
-                                                language === lang.code ? "bg-blue-50 text-blue-700" : "text-gray-700"
-                                            }`}
+                                            className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors duration-150 ${language === lang.code ? "bg-blue-50 text-blue-700" : "text-gray-700"
+                                                }`}
                                         >
                                             <span className="text-lg">{lang.flag}</span>
                                             <span className="font-medium">{lang.name}</span>

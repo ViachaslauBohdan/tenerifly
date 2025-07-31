@@ -16,7 +16,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Состояние фильтров
   const [filters, setFilters] = useState({
     location: '',
@@ -28,7 +28,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
     includesTransport: false,
     includesFood: false
   });
-  
+
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 9;
@@ -45,23 +45,23 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
     try {
       setLoading(true);
       setError(null);
-      
+
       // Максимально упрощенный запрос - только базовые данные
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:1337/api';
       const url = `${API_URL}/tours?locale=${currentLocale}&populate=*`;
-      
+
       const response = await fetch(url);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
+
       if (data?.data) {
         // Применяем фильтры на фронтенде
         let filteredTours = data.data;
-        
+
         // Фильтрация по локации
         if (filters.location) {
           filteredTours = filteredTours.filter((tour: any) => {
@@ -70,12 +70,12 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
             return locationStr.toLowerCase().includes(filters.location.toLowerCase());
           });
         }
-        
+
         // Фильтрация по категории
         if (filters.category) {
           filteredTours = filteredTours.filter((tour: any) => tour.category === filters.category);
         }
-        
+
         // Фильтрация по цене
         if (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) {
           filteredTours = filteredTours.filter((tour: any) => {
@@ -83,40 +83,40 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
             return price >= filters.priceRange[0] && price <= filters.priceRange[1];
           });
         }
-        
+
         // Фильтрация по продолжительности
         if (filters.duration) {
-          filteredTours = filteredTours.filter((tour: any) => 
+          filteredTours = filteredTours.filter((tour: any) =>
             tour.duration?.toLowerCase().includes(filters.duration.toLowerCase())
           );
         }
-        
+
         // Фильтрация по сложности
         if (filters.difficulty) {
           filteredTours = filteredTours.filter((tour: any) => tour.difficulty_level === filters.difficulty);
         }
-        
+
         // Фильтрация для детей
         if (filters.forChildren) {
           filteredTours = filteredTours.filter((tour: any) => tour.suitable_for_children === true);
         }
-        
+
         // Фильтрация по транспорту
         if (filters.includesTransport) {
           filteredTours = filteredTours.filter((tour: any) => tour.includes_transport === true);
         }
-        
+
         // Фильтрация по питанию
         if (filters.includesFood) {
           filteredTours = filteredTours.filter((tour: any) => tour.includes_food === true);
         }
-        
+
         // Пагинация
         const totalCount = filteredTours.length;
         const startIndex = (page - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const paginatedTours = filteredTours.slice(startIndex, endIndex);
-        
+
         setTours(paginatedTours);
         setTotalPages(Math.ceil(totalCount / itemsPerPage));
       } else {
@@ -135,42 +135,42 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
   // Функция для преобразования фильтров в формат API
   const buildApiFilters = useCallback((filterValues: typeof filters) => {
     const apiFilters: Record<string, any> = {};
-    
+
     if (filterValues.location) {
       apiFilters['location.city'] = { $containsi: filterValues.location };
     }
-    
+
     if (filterValues.category) {
       apiFilters.category = { $eq: filterValues.category };
     }
-    
+
     if (filterValues.priceRange[0] > 0 || filterValues.priceRange[1] < 1000) {
       apiFilters['price.amount'] = {
         $gte: filterValues.priceRange[0],
         $lte: filterValues.priceRange[1]
       };
     }
-    
+
     if (filterValues.duration) {
       apiFilters.duration = { $containsi: filterValues.duration };
     }
-    
+
     if (filterValues.difficulty) {
       apiFilters.difficulty_level = { $eq: filterValues.difficulty };
     }
-    
+
     if (filterValues.forChildren) {
       apiFilters.suitable_for_children = { $eq: true };
     }
-    
+
     if (filterValues.includesTransport) {
       apiFilters.includes_transport = { $eq: true };
     }
-    
+
     if (filterValues.includesFood) {
       apiFilters.includes_food = { $eq: true };
     }
-    
+
     return apiFilters;
   }, []);
 
@@ -217,14 +217,14 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
   // Получение URL изображения
   const getImageUrl = (tour: Tour): string => {
     const STRAPI_URL = 'http://127.0.0.1:1337';
-    
+
     if (tour.images && tour.images.length > 0) {
       const image = tour.images[0];
       if (typeof image === 'object' && image.url) {
         return image.url.startsWith('http') ? image.url : `${STRAPI_URL}${image.url}`;
       }
     }
-    
+
     return 'https://via.placeholder.com/350x200/e3f2fd/1976d2?text=Экскурсия';
   };
 
@@ -297,11 +297,11 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
 
   const getContactText = (locale: Locale): string => {
     const texts = {
-      en: 'Contact',
-      ru: 'Связаться',
-      pl: 'Kontakt',
-      fr: 'Contact',
-      uk: 'Зв\'язатися'
+      en: 'Book',
+      ru: 'Бронь',
+      pl: 'Rezerwuj',
+      fr: 'Réserver',
+      uk: 'Бронь'
     };
     return texts[locale] || texts.en;
   };
@@ -329,9 +329,9 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
           ← {getBackText(currentLocale)}
         </a>
         <h1 className="classic-title">{getTitle(currentLocale)}</h1>
-        <p style={{ 
-          fontSize: '18px', 
-          color: '#666', 
+        <p style={{
+          fontSize: '18px',
+          color: '#666',
           marginBottom: '0',
           maxWidth: '600px'
         }}>
@@ -344,7 +344,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
         <div className="classic-filters">
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.73-4.8 5.75-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z"/>
+              <path d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.73-4.8 5.75-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z" />
             </svg>
             Фильтры
           </h3>
@@ -352,7 +352,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
           {/* Локация */}
           <div className="filter-group">
             <label>Локация</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.location}
               onChange={(e) => handleFilterChange('location', e.target.value)}
@@ -370,7 +370,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
           {/* Категория */}
           <div className="filter-group">
             <label>Тип экскурсии</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.category}
               onChange={(e) => handleFilterChange('category', e.target.value)}
@@ -390,7 +390,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
           {/* Продолжительность */}
           <div className="filter-group">
             <label>Продолжительность</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.duration}
               onChange={(e) => handleFilterChange('duration', e.target.value)}
@@ -406,7 +406,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
           {/* Сложность */}
           <div className="filter-group">
             <label>Сложность</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.difficulty}
               onChange={(e) => handleFilterChange('difficulty', e.target.value)}
@@ -470,7 +470,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
           </div>
 
           {/* Кнопка сброса */}
-          <button 
+          <button
             className="reset-filters-btn"
             onClick={handleResetFilters}
           >
@@ -481,8 +481,8 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
         {/* Основной контент */}
         <div>
           {loading && (
-            <div style={{ 
-              textAlign: 'center', 
+            <div style={{
+              textAlign: 'center',
               padding: '40px',
               color: '#666'
             }}>
@@ -491,8 +491,8 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
           )}
 
           {error && (
-            <div style={{ 
-              textAlign: 'center', 
+            <div style={{
+              textAlign: 'center',
               padding: '40px',
               color: '#dc3545',
               backgroundColor: '#f8d7da',
@@ -505,8 +505,8 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
           )}
 
           {!loading && !error && tours.length === 0 && (
-            <div style={{ 
-              textAlign: 'center', 
+            <div style={{
+              textAlign: 'center',
               padding: '40px',
               border: '1px solid #ddd',
               borderRadius: '8px',
@@ -520,8 +520,8 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
 
           {!loading && !error && tours.length > 0 && (
             <>
-              <div style={{ 
-                marginBottom: '20px', 
+              <div style={{
+                marginBottom: '20px',
                 color: '#666',
                 fontSize: '14px'
               }}>
@@ -553,7 +553,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
                       {tour.location?.city && (
                         <div className="classic-card-location">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                           </svg>
                           {tour.location.city}
                         </div>
@@ -561,11 +561,11 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
 
                       {/* Описание */}
                       <div className="classic-card-description">
-                        {typeof tour.short_description === 'string' 
-                          ? tour.short_description 
-                          : typeof tour.description === 'string' 
-                          ? tour.description 
-                          : 'Увлекательная экскурсия по острову'}
+                        {typeof tour.short_description === 'string'
+                          ? tour.short_description
+                          : typeof tour.description === 'string'
+                            ? tour.description
+                            : 'Увлекательная экскурсия по острову'}
                       </div>
 
                       {/* Характеристики */}
@@ -573,7 +573,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
                         {tour.duration && (
                           <div className="classic-card-spec">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
                             </svg>
                             {tour.duration}
                           </div>
@@ -581,7 +581,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
                         {tour.max_participants && (
                           <div className="classic-card-spec">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                             </svg>
                             До {tour.max_participants} чел
                           </div>
@@ -589,10 +589,10 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
                         {tour.difficulty_level && (
                           <div className="classic-card-spec">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                             </svg>
-                            {tour.difficulty_level === 'easy' ? 'Легкая' : 
-                             tour.difficulty_level === 'moderate' ? 'Средняя' : 'Сложная'}
+                            {tour.difficulty_level === 'easy' ? 'Легкая' :
+                              tour.difficulty_level === 'moderate' ? 'Средняя' : 'Сложная'}
                           </div>
                         )}
                       </div>
@@ -660,9 +660,9 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
 
               {/* Пагинация */}
               {totalPages > 1 && (
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'center', 
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
                   alignItems: 'center',
                   gap: '10px',
                   marginTop: '30px'
@@ -681,14 +681,14 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
                   >
                     ← Предыдущая
                   </button>
-                  
-                  <span style={{ 
+
+                  <span style={{
                     padding: '8px 16px',
                     color: '#666'
                   }}>
                     Страница {page} из {totalPages}
                   </span>
-                  
+
                   <button
                     onClick={() => setPage(Math.min(totalPages, page + 1))}
                     disabled={page === totalPages}

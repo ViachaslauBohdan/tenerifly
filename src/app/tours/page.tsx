@@ -68,7 +68,7 @@ const translations = {
         resetFilters: "Reset filters",
         available: "AVAILABLE",
         viewDetails: "View Details",
-        bookNow: "Book Now",
+        bookNow: "Book",
         selectLanguage: "Select Language",
         excitingDescription: "Exciting and unforgettable tour experience in Tenerife!",
         features: {
@@ -385,14 +385,14 @@ const translations = {
 }
 
 const getLoadingToursText = (language: string) => {
-  const texts: Record<string, string> = {
-    en: 'Loading tours...',
-    ru: 'Загрузка экскурсий...',
-    pl: 'Ładowanie wycieczek...',
-    fr: 'Chargement des excursions...',
-    uk: 'Завантаження екскурсій...'
-  };
-  return texts[language] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'Loading tours...',
+        ru: 'Загрузка экскурсий...',
+        pl: 'Ładowanie wycieczek...',
+        fr: 'Chargement des excursions...',
+        uk: 'Завантаження екскурсій...'
+    };
+    return texts[language] || texts.en;
 };
 
 // Языки с флагами
@@ -596,9 +596,8 @@ export default function ToursPage() {
                             <span className="font-medium text-gray-700 hidden sm:block">{currentLanguage?.name}</span>
                             <span className="font-medium text-gray-700 sm:hidden">{currentLanguage?.code.toUpperCase()}</span>
                             <svg
-                                className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
-                                    isLanguageDropdownOpen ? "rotate-180" : ""
-                                }`}
+                                className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isLanguageDropdownOpen ? "rotate-180" : ""
+                                    }`}
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -618,9 +617,8 @@ export default function ToursPage() {
                                         <button
                                             key={lang.code}
                                             onClick={() => handleLanguageChange(lang.code as "en" | "ru" | "pl" | "fr" | "uk")}
-                                            className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors duration-150 ${
-                                                language === lang.code ? "bg-blue-50 text-blue-700" : "text-gray-700"
-                                            }`}
+                                            className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors duration-150 ${language === lang.code ? "bg-blue-50 text-blue-700" : "text-gray-700"
+                                                }`}
                                         >
                                             <span className="text-lg">{lang.flag}</span>
                                             <span className="font-medium">{lang.name}</span>

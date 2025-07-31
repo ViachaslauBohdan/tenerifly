@@ -104,25 +104,25 @@ interface ApartmentCardProps {
 }
 
 const getFoundPropertiesText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: 'Found properties',
-    ru: 'Найдено объектов',
-    pl: 'Znaleziono nieruchomości',
-    fr: 'Propriétés trouvées',
-    uk: 'Знайдено об\'єктів'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'Found properties',
+        ru: 'Найдено объектов',
+        pl: 'Znaleziono nieruchomości',
+        fr: 'Propriétés trouvées',
+        uk: 'Знайдено об\'єктів'
+    };
+    return texts[locale] || texts.en;
 };
 
 const getFilterActiveText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: '🔍 Filter active',
-    ru: '🔍 Фильтр активен',
-    pl: '🔍 Filtr aktywny',
-    fr: '🔍 Filtre actif',
-    uk: '🔍 Фільтр активний'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: '🔍 Filter active',
+        ru: '🔍 Фильтр активен',
+        pl: '🔍 Filtr aktywny',
+        fr: '🔍 Filtre actif',
+        uk: '🔍 Фільтр активний'
+    };
+    return texts[locale] || texts.en;
 };
 
 const ApartmentCard = ({ translations, language, apartments: providedApartments }: ApartmentCardProps) => {
@@ -493,9 +493,8 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
                             {/* Features */}
                             <div className="flex flex-wrap gap-1 mb-4">
                                 {getFeatures(property).slice(0, 3).map((feature, index) => (
-                                    <span key={index} className={`px-2 py-1 rounded-full text-xs ${
-                                        feature === '—' ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-800'
-                                    }`}>
+                                    <span key={index} className={`px-2 py-1 rounded-full text-xs ${feature === '—' ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-800'
+                                        }`}>
                                         {feature}
                                     </span>
                                 ))}
@@ -509,7 +508,7 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
                                 <div className="text-right">
                                     {property.type === 'rent' ? (
                                         <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                                            FROM {getCurrency(property)}{getPrice(property)}/{translations.perMonth}
+                                            FROM {getCurrency(property)} {getPrice(property)}/{translations.perMonth}
                                         </span>
                                     ) : (
                                         <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
@@ -552,10 +551,7 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
                                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                             />
                                         </svg>
-                                        {property.property_status === 'available' ?
-                                            (property.type === 'rent' ? translations.bookNow : translations.contact) :
-                                            translations.contact
-                                        }
+                                        {translations.bookNow}
                                     </button>
                                 )}
                             </div>

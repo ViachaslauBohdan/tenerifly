@@ -253,7 +253,7 @@ export const translations: Record<Locale, Translations> = {
       yearAsc: "Year: Oldest first"
     },
     common: {
-      bookNow: "Book Now",
+      bookNow: "Book",
       viewDetails: "View Details",
       loading: "Loading...",
       noResults: "No results found",
@@ -423,7 +423,7 @@ export const translations: Record<Locale, Translations> = {
       yearAsc: "Rok: najstarsze najpierw"
     },
     common: {
-      bookNow: "Zarezerwuj",
+      bookNow: "Rezerwuj",
       viewDetails: "Zobacz szczegóły",
       loading: "Ładowanie...",
       noResults: "Brak wyników",
@@ -593,7 +593,7 @@ export const translations: Record<Locale, Translations> = {
       yearAsc: "Année: anciens d'abord"
     },
     common: {
-      bookNow: "Réserver maintenant",
+      bookNow: "Réserver",
       viewDetails: "Voir les détails",
       loading: "Chargement...",
       noResults: "Aucun résultat trouvé",
@@ -763,7 +763,7 @@ export const translations: Record<Locale, Translations> = {
       yearAsc: "Год: старые первыми"
     },
     common: {
-      bookNow: "Забронировать",
+      bookNow: "Бронь",
       viewDetails: "Подробнее",
       loading: "Загрузка...",
       noResults: "Результаты не найдены",
@@ -933,7 +933,7 @@ export const translations: Record<Locale, Translations> = {
       yearAsc: "Рік: старі першими"
     },
     common: {
-      bookNow: "Забронювати",
+      bookNow: "Бронь",
       viewDetails: "Детальніше",
       loading: "Завантаження...",
       noResults: "Результати не знайдено",

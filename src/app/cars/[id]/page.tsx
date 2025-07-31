@@ -40,8 +40,8 @@ const translations = {
         perDay: "per day",
         per3Days: "per 3 days",
         perWeek: "per week",
-        perMonth: "per month",
-        bookNow: "Book Now",
+        perMonth: "month",
+        bookNow: "Book",
         contactSeller: "Contact Seller",
         selectLanguage: "Select Language",
         km: "km",
@@ -94,7 +94,7 @@ const translations = {
         perDay: "за день",
         per3Days: "за 3 дня",
         perWeek: "за неделю",
-        perMonth: "за месяц",
+        perMonth: "месяц",
         bookNow: "Забронировать",
         contactSeller: "Связаться с продавцом",
         selectLanguage: "Выбрать язык",
@@ -148,7 +148,7 @@ const translations = {
         perDay: "za dzień",
         per3Days: "za 3 dni",
         perWeek: "za tydzień",
-        perMonth: "za miesiąc",
+        perMonth: "miesiąc",
         bookNow: "Zarezerwuj teraz",
         contactSeller: "Skontaktuj się ze sprzedawcą",
         selectLanguage: "Wybierz język",
@@ -202,7 +202,7 @@ const translations = {
         perDay: "par jour",
         per3Days: "pour 3 jours",
         perWeek: "par semaine",
-        perMonth: "par mois",
+        perMonth: "mois",
         bookNow: "Réserver maintenant",
         contactSeller: "Contacter le vendeur",
         selectLanguage: "Choisir la langue",
@@ -256,7 +256,7 @@ const translations = {
         perDay: "за день",
         per3Days: "за 3 дні",
         perWeek: "за тиждень",
-        perMonth: "за місяць",
+        perMonth: "місяць",
         bookNow: "Забронювати",
         contactSeller: "Зв'язатися з продавцем",
         selectLanguage: "Обрати мову",
@@ -758,7 +758,7 @@ export default function CarDetailPage() {
         return (
             <div className="space-y-3">
                 <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
-                    {car.type === 'rent' ? t.bookNow : t.contactSeller}
+                    {t.bookNow}
                 </button>
             </div>
         )
@@ -785,9 +785,8 @@ export default function CarDetailPage() {
                             <span className="font-medium text-gray-700 hidden sm:block">{currentLanguage?.name}</span>
                             <span className="font-medium text-gray-700 sm:hidden">{currentLanguage?.code.toUpperCase()}</span>
                             <svg
-                                className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
-                                    isLanguageDropdownOpen ? "rotate-180" : ""
-                                }`}
+                                className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isLanguageDropdownOpen ? "rotate-180" : ""
+                                    }`}
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -807,9 +806,8 @@ export default function CarDetailPage() {
                                         <button
                                             key={lang.code}
                                             onClick={() => handleLanguageChange(lang.code)}
-                                            className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors duration-150 ${
-                                                language === lang.code ? "bg-blue-50 text-blue-700" : "text-gray-700"
-                                            }`}
+                                            className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors duration-150 ${language === lang.code ? "bg-blue-50 text-blue-700" : "text-gray-700"
+                                                }`}
                                         >
                                             <span className="text-lg">{lang.flag}</span>
                                             <span className="font-medium">{lang.name}</span>
@@ -869,9 +867,8 @@ export default function CarDetailPage() {
                                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(car.car_status)}`}>
                                     {getStatusText(car.car_status)}
                                 </span>
-                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                    car.type === 'rent' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
-                                }`}>
+                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${car.type === 'rent' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+                                    }`}>
                                     {car.type === 'rent' ? t.rent : t.sale}
                                 </span>
                             </div>

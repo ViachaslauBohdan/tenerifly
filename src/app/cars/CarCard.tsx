@@ -81,25 +81,25 @@ interface CarCardProps {
 }
 
 const getFoundCarsText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: 'Found cars',
-    ru: 'Найдено автомобилей',
-    pl: 'Znaleziono samochodów',
-    fr: 'Voitures trouvées',
-    uk: 'Знайдено автомобілів'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'Found cars',
+        ru: 'Найдено автомобилей',
+        pl: 'Znaleziono samochodów',
+        fr: 'Voitures trouvées',
+        uk: 'Знайдено автомобілів'
+    };
+    return texts[locale] || texts.en;
 };
 
 const getFilterActiveText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: '🔍 Filter active',
-    ru: '🔍 Фильтр активен',
-    pl: '🔍 Filtr aktywny',
-    fr: '🔍 Filtre actif',
-    uk: '🔍 Фільтр активний'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: '🔍 Filter active',
+        ru: '🔍 Фильтр активен',
+        pl: '🔍 Filtr aktywny',
+        fr: '🔍 Filtre actif',
+        uk: '🔍 Фільтр активний'
+    };
+    return texts[locale] || texts.en;
 };
 
 const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) => {
@@ -493,9 +493,8 @@ const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) =
                             {/* Features */}
                             <div className="flex flex-wrap gap-1 mb-4">
                                 {getFeatures(car).slice(0, 3).map((feature, index) => (
-                                    <span key={index} className={`px-2 py-1 rounded-full text-xs ${
-                                        feature === '—' ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-800'
-                                    }`}>
+                                    <span key={index} className={`px-2 py-1 rounded-full text-xs ${feature === '—' ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-800'
+                                        }`}>
                                         {feature}
                                     </span>
                                 ))}
@@ -509,7 +508,7 @@ const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) =
                                 {car.type === 'rent' && (
                                     <div className="text-right">
                                         <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                                            FROM {getCurrency(car)}{getPrice(car)}/DAY
+                                            FROM {getCurrency(car)} {getPrice(car)}/DAY
                                         </span>
                                     </div>
                                 )}
@@ -548,7 +547,7 @@ const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) =
                                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                             />
                                         </svg>
-                                        {car.car_status === 'available' ? translations.bookNow : 'Contact'}
+                                        {translations.bookNow}
                                     </button>
                                 )}
                             </div>

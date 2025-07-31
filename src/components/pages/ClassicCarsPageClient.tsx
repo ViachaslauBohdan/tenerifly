@@ -39,7 +39,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Состояние фильтров
   const [filters, setFilters] = useState({
     make: '',
@@ -55,7 +55,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
     backupCamera: false,
     multimediaSystem: false
   });
-  
+
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 9;
@@ -72,35 +72,35 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Упрощенный запрос без сложных фильтров
       const response = await carsAPI.getAll(currentLocale);
-      
+
       if (response?.data) {
         // Применяем фильтры на фронтенде
         let filteredCars = response.data;
-        
+
         // Фильтрация по марке
         if (filters.make) {
-          filteredCars = filteredCars.filter(car => 
+          filteredCars = filteredCars.filter(car =>
             car.specifications?.make?.toLowerCase().includes(filters.make.toLowerCase())
           );
         }
-        
+
         // Фильтрация по модели
         if (filters.model) {
-          filteredCars = filteredCars.filter(car => 
+          filteredCars = filteredCars.filter(car =>
             car.specifications?.model?.toLowerCase().includes(filters.model.toLowerCase())
           );
         }
-        
+
         // Фильтрация по году
         if (filters.year) {
-          filteredCars = filteredCars.filter(car => 
+          filteredCars = filteredCars.filter(car =>
             car.specifications?.year === parseInt(filters.year)
           );
         }
-        
+
         // Фильтрация по цене
         if (filters.priceRange[0] > 0 || filters.priceRange[1] < 200) {
           filteredCars = filteredCars.filter(car => {
@@ -108,29 +108,29 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
             return price >= filters.priceRange[0] && price <= filters.priceRange[1];
           });
         }
-        
+
         // Фильтрация по топливу
         if (filters.fuelType) {
           filteredCars = filteredCars.filter(car => car.specifications?.fuel === filters.fuelType);
         }
-        
+
         // Фильтрация по коробке передач
         if (filters.transmission) {
           filteredCars = filteredCars.filter(car => car.specifications?.transmission === filters.transmission);
         }
-        
+
         // Фильтрация по типу кузова
         if (filters.bodyType) {
           filteredCars = filteredCars.filter(car => car.specifications?.body_type === filters.bodyType);
         }
-        
+
         // Фильтрация по цвету
         if (filters.color) {
-          filteredCars = filteredCars.filter(car => 
+          filteredCars = filteredCars.filter(car =>
             car.specifications?.color?.toLowerCase().includes(filters.color.toLowerCase())
           );
         }
-        
+
         // Фильтрация по локации
         if (filters.location) {
           filteredCars = filteredCars.filter(car => {
@@ -139,28 +139,28 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
             return locationStr.toLowerCase().includes(filters.location.toLowerCase());
           });
         }
-        
+
         // Фильтрация по кондиционеру
         if (filters.airConditioning) {
           filteredCars = filteredCars.filter(car => car.features?.air_conditioning === true);
         }
-        
+
         // Фильтрация по камере заднего вида
         if (filters.backupCamera) {
           filteredCars = filteredCars.filter(car => car.features?.backup_camera === true);
         }
-        
+
         // Фильтрация по Bluetooth
         if (filters.multimediaSystem) {
           filteredCars = filteredCars.filter(car => car.features?.bluetooth === true);
         }
-        
+
         // Пагинация
         const totalCount = filteredCars.length;
         const startIndex = (page - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const paginatedCars = filteredCars.slice(startIndex, endIndex);
-        
+
         setCars(paginatedCars);
         setTotalPages(Math.ceil(totalCount / itemsPerPage));
       } else {
@@ -186,58 +186,58 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
   // Функция для преобразования фильтров в формат API
   const buildApiFilters = useCallback((filterValues: typeof filters) => {
     const apiFilters: Record<string, any> = {};
-    
+
     if (filterValues.make) {
       apiFilters['specifications.make'] = { $containsi: filterValues.make };
     }
-    
+
     if (filterValues.model) {
       apiFilters['specifications.model'] = { $containsi: filterValues.model };
     }
-    
+
     if (filterValues.year) {
       apiFilters['specifications.year'] = { $eq: parseInt(filterValues.year) };
     }
-    
+
     if (filterValues.priceRange[0] > 0 || filterValues.priceRange[1] < 200) {
       apiFilters['rental_prices.day_1'] = {
         $gte: filterValues.priceRange[0],
         $lte: filterValues.priceRange[1]
       };
     }
-    
+
     if (filterValues.fuelType) {
       apiFilters['specifications.fuel'] = { $eq: filterValues.fuelType };
     }
-    
+
     if (filterValues.transmission) {
       apiFilters['specifications.transmission'] = { $eq: filterValues.transmission };
     }
-    
+
     if (filterValues.bodyType) {
       apiFilters['specifications.body_type'] = { $eq: filterValues.bodyType };
     }
-    
+
     if (filterValues.color) {
       apiFilters['specifications.color'] = { $containsi: filterValues.color };
     }
-    
+
     if (filterValues.location) {
       apiFilters['location'] = { $containsi: filterValues.location };
     }
-    
+
     if (filterValues.airConditioning) {
       apiFilters['features.air_conditioning'] = { $eq: true };
     }
-    
+
     if (filterValues.backupCamera) {
       apiFilters['features.backup_camera'] = { $eq: true };
     }
-    
+
     if (filterValues.multimediaSystem) {
       apiFilters['features.bluetooth'] = { $eq: true };
     }
-    
+
     return apiFilters;
   }, []);
 
@@ -280,7 +280,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
     const make = car.specifications?.make || '';
     const model = car.specifications?.model || '';
     const price = car.rental_prices?.day_1 ? `€${car.rental_prices.day_1}/день` : 'Цена по запросу';
-    
+
     openWhatsApp('car', {
       title: car.title,
       brand: make,
@@ -292,14 +292,14 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
   // Получение URL изображения
   const getImageUrl = (car: Car): string => {
     const STRAPI_URL = 'http://127.0.0.1:1337';
-    
+
     if (car.images && car.images.length > 0) {
       const image = car.images[0];
       if (typeof image === 'object' && image.url) {
         return image.url.startsWith('http') ? image.url : `${STRAPI_URL}${image.url}`;
       }
     }
-    
+
     return 'https://via.placeholder.com/350x200/f8f9fa/999?text=Автомобиль';
   };
 
@@ -372,11 +372,11 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
 
   const getContactText = (locale: Locale): string => {
     const texts = {
-      en: 'Contact',
-      ru: 'Связаться',
-      pl: 'Kontakt',
-      fr: 'Contact',
-      uk: 'Зв\'язатися'
+      en: 'Book',
+      ru: 'Бронь',
+      pl: 'Rezerwuj',
+      fr: 'Réserver',
+      uk: 'Бронь'
     };
     return texts[locale] || texts.en;
   };
@@ -415,9 +415,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           ← {getBackText(currentLocale)}
         </a>
         <h1 className="classic-title">{getTitle(currentLocale)}</h1>
-        <p style={{ 
-          fontSize: '18px', 
-          color: '#666', 
+        <p style={{
+          fontSize: '18px',
+          color: '#666',
           marginBottom: '0',
           maxWidth: '600px'
         }}>
@@ -430,7 +430,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
         <div className="classic-filters">
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.73-4.8 5.75-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z"/>
+              <path d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.73-4.8 5.75-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z" />
             </svg>
             Фильтры
           </h3>
@@ -438,7 +438,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           {/* Марка */}
           <div className="filter-group">
             <label>Марка</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.make}
               onChange={(e) => handleFilterChange('make', e.target.value)}
@@ -471,7 +471,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           {/* Год выпуска */}
           <div className="filter-group">
             <label>Год выпуска</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.year}
               onChange={(e) => handleFilterChange('year', e.target.value)}
@@ -490,7 +490,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           {/* Тип топлива */}
           <div className="filter-group">
             <label>Тип топлива</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.fuelType}
               onChange={(e) => handleFilterChange('fuelType', e.target.value)}
@@ -506,7 +506,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           {/* Коробка передач */}
           <div className="filter-group">
             <label>Коробка передач</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.transmission}
               onChange={(e) => handleFilterChange('transmission', e.target.value)}
@@ -520,7 +520,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           {/* Тип кузова */}
           <div className="filter-group">
             <label>Тип кузова</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.bodyType}
               onChange={(e) => handleFilterChange('bodyType', e.target.value)}
@@ -538,7 +538,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           {/* Цвет */}
           <div className="filter-group">
             <label>Цвет</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.color}
               onChange={(e) => handleFilterChange('color', e.target.value)}
@@ -557,7 +557,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           {/* Локация */}
           <div className="filter-group">
             <label>Локация</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.location}
               onChange={(e) => handleFilterChange('location', e.target.value)}
@@ -624,7 +624,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           </div>
 
           {/* Кнопка сброса */}
-          <button 
+          <button
             className="reset-filters-btn"
             onClick={handleResetFilters}
           >
@@ -635,8 +635,8 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
         {/* Основной контент */}
         <div>
           {loading && (
-            <div style={{ 
-              textAlign: 'center', 
+            <div style={{
+              textAlign: 'center',
               padding: '40px',
               color: '#666'
             }}>
@@ -645,8 +645,8 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           )}
 
           {error && (
-            <div style={{ 
-              textAlign: 'center', 
+            <div style={{
+              textAlign: 'center',
               padding: '40px',
               color: '#dc3545',
               backgroundColor: '#f8d7da',
@@ -659,8 +659,8 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
           )}
 
           {!loading && !error && cars.length === 0 && (
-            <div style={{ 
-              textAlign: 'center', 
+            <div style={{
+              textAlign: 'center',
               padding: '40px',
               border: '1px solid #ddd',
               borderRadius: '8px',
@@ -674,8 +674,8 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
 
           {!loading && !error && cars.length > 0 && (
             <>
-              <div style={{ 
-                marginBottom: '20px', 
+              <div style={{
+                marginBottom: '20px',
                 color: '#666',
                 fontSize: '14px'
               }}>
@@ -711,7 +711,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
                         {car.specifications?.make && (
                           <div className="classic-card-spec">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5S16.67 13 17.5 13s1.5.67 1.5 1.5S18.33 16 17.5 16zM5 11l1.5-4.5h11L19 11H5z"/>
+                              <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5S16.67 13 17.5 13s1.5.67 1.5 1.5S18.33 16 17.5 16zM5 11l1.5-4.5h11L19 11H5z" />
                             </svg>
                             {car.specifications.make}
                           </div>
@@ -719,7 +719,7 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
                         {car.specifications?.year && (
                           <div className="classic-card-spec">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
                             </svg>
                             {car.specifications.year}
                           </div>
@@ -727,23 +727,23 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
                         {car.specifications?.fuel && (
                           <div className="classic-card-spec">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M19.77 7.23l.01-.01-3.72-3.72L15 4.56l2.11 2.11c-.94.36-1.61 1.26-1.61 2.33 0 1.38 1.12 2.5 2.5 2.5.36 0 .69-.08 1-.21v7.21c0 .55-.45 1-1 1s-1-.45-1-1V14c0-1.1-.9-2-2-2h-1V5c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v16h10v-7.5h1.5v5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V9c0-.69-.28-1.32-.73-1.77z"/>
+                              <path d="M19.77 7.23l.01-.01-3.72-3.72L15 4.56l2.11 2.11c-.94.36-1.61 1.26-1.61 2.33 0 1.38 1.12 2.5 2.5 2.5.36 0 .69-.08 1-.21v7.21c0 .55-.45 1-1 1s-1-.45-1-1V14c0-1.1-.9-2-2-2h-1V5c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v16h10v-7.5h1.5v5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V9c0-.69-.28-1.32-.73-1.77z" />
                             </svg>
-                            {car.specifications.fuel === 'petrol' ? 'Бензин' : 
-                             car.specifications.fuel === 'diesel' ? 'Дизель' : 
-                             car.specifications.fuel === 'hybrid' ? 'Гибрид' : 
-                             car.specifications.fuel === 'electric' ? 'Электро' : 
-                             car.specifications.fuel}
+                            {car.specifications.fuel === 'petrol' ? 'Бензин' :
+                              car.specifications.fuel === 'diesel' ? 'Дизель' :
+                                car.specifications.fuel === 'hybrid' ? 'Гибрид' :
+                                  car.specifications.fuel === 'electric' ? 'Электро' :
+                                    car.specifications.fuel}
                           </div>
                         )}
                         {car.specifications?.transmission && (
                           <div className="classic-card-spec">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
                             </svg>
-                            {car.specifications.transmission === 'manual' ? 'МКПП' : 
-                             car.specifications.transmission === 'automatic' ? 'АКПП' : 
-                             car.specifications.transmission}
+                            {car.specifications.transmission === 'manual' ? 'МКПП' :
+                              car.specifications.transmission === 'automatic' ? 'АКПП' :
+                                car.specifications.transmission}
                           </div>
                         )}
                       </div>
@@ -811,9 +811,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
 
               {/* Пагинация */}
               {totalPages > 1 && (
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'center', 
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
                   alignItems: 'center',
                   gap: '10px',
                   marginTop: '30px'
@@ -832,14 +832,14 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
                   >
                     ← Предыдущая
                   </button>
-                  
-                  <span style={{ 
+
+                  <span style={{
                     padding: '8px 16px',
                     color: '#666'
                   }}>
                     Страница {page} из {totalPages}
                   </span>
-                  
+
                   <button
                     onClick={() => setPage(Math.min(totalPages, page + 1))}
                     disabled={page === totalPages}

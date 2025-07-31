@@ -59,10 +59,10 @@ export function CarTile({
   const featuresCount = Object.values(features).filter(Boolean).length;
 
   return (
-    <Card 
-      shadow="md" 
-      padding="lg" 
-      radius="md" 
+    <Card
+      shadow="md"
+      padding="lg"
+      radius="md"
       withBorder
       className="glass-effect hover-lift"
       h="100%"
@@ -111,7 +111,7 @@ export function CarTile({
               </Text>
             </Group>
           </Group>
-          
+
           <Group gap="md">
             <Group gap={4}>
               <IconGasStation size={16} />
@@ -145,7 +145,7 @@ export function CarTile({
               за день
             </Text>
           </Stack>
-          
+
           <Button
             leftSection={<IconPhone size={16} />}
             variant="gradient"
@@ -153,7 +153,7 @@ export function CarTile({
             size="sm"
             onClick={() => onContact(id)}
           >
-            Связаться
+            Book
           </Button>
         </Group>
       </Stack>

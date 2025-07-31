@@ -107,35 +107,35 @@ export function ClassicPropertiesPage({ locale }: ClassicPropertiesPageProps) {
         <div className="classic-filters">
           <h3>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.73-4.8 5.75-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z"/>
+              <path d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.73-4.8 5.75-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z" />
             </svg>
             Filters
           </h3>
 
           <div className="filter-group">
             <label>Price Range</label>
-            <input 
-              type="range" 
-              min="0" 
-              max="500000" 
+            <input
+              type="range"
+              min="0"
+              max="500000"
               className="price-range-slider"
               value={filters.priceRange[1]}
               onChange={(e) => setFilters({
-                ...filters, 
+                ...filters,
                 priceRange: [0, parseInt(e.target.value)]
               })}
             />
-            <div style={{fontSize: '12px', color: '#6c757d', marginTop: '4px'}}>
+            <div style={{ fontSize: '12px', color: '#6c757d', marginTop: '4px' }}>
               €0 - €{filters.priceRange[1].toLocaleString()}
             </div>
           </div>
 
           <div className="filter-group">
             <label>Type</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.type}
-              onChange={(e) => setFilters({...filters, type: e.target.value})}
+              onChange={(e) => setFilters({ ...filters, type: e.target.value })}
             >
               <option value="">Select type</option>
               <option value="apartment">Apartment</option>
@@ -146,10 +146,10 @@ export function ClassicPropertiesPage({ locale }: ClassicPropertiesPageProps) {
 
           <div className="filter-group">
             <label>Bedrooms</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.bedrooms}
-              onChange={(e) => setFilters({...filters, bedrooms: e.target.value})}
+              onChange={(e) => setFilters({ ...filters, bedrooms: e.target.value })}
             >
               <option value="">Select bedrooms</option>
               <option value="1">1 bedroom</option>
@@ -160,10 +160,10 @@ export function ClassicPropertiesPage({ locale }: ClassicPropertiesPageProps) {
 
           <div className="filter-group">
             <label>Location</label>
-            <select 
+            <select
               className="filter-select"
               value={filters.location}
-              onChange={(e) => setFilters({...filters, location: e.target.value})}
+              onChange={(e) => setFilters({ ...filters, location: e.target.value })}
             >
               <option value="">Select location</option>
               <option value="puerto">Puerto de la Cruz</option>
@@ -172,9 +172,9 @@ export function ClassicPropertiesPage({ locale }: ClassicPropertiesPageProps) {
             </select>
           </div>
 
-          <button 
+          <button
             className="reset-filters-btn"
-            onClick={() => setFilters({priceRange: [0, 500000], type: '', bedrooms: '', location: ''})}
+            onClick={() => setFilters({ priceRange: [0, 500000], type: '', bedrooms: '', location: '' })}
           >
             Reset Filters
           </button>
@@ -200,7 +200,7 @@ export function ClassicPropertiesPage({ locale }: ClassicPropertiesPageProps) {
 
                 <div className="classic-card-location">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                   </svg>
                   {property.location}
                 </div>
@@ -212,30 +212,30 @@ export function ClassicPropertiesPage({ locale }: ClassicPropertiesPageProps) {
                 <div className="classic-card-specs">
                   <div className="classic-card-spec">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7 14c1.66 0 3-1.34 3-3S8.66 8 7 8s-3 1.34-3 3 1.34 3 3 3zm0-4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm12-3h-8v8H3V7H1v11h2v3h2v-3h6v3h2v-3h8V7z"/>
+                      <path d="M7 14c1.66 0 3-1.34 3-3S8.66 8 7 8s-3 1.34-3 3 1.34 3 3 3zm0-4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm12-3h-8v8H3V7H1v11h2v3h2v-3h6v3h2v-3h8V7z" />
                     </svg>
                     {property.bedrooms} beds
                   </div>
                   <div className="classic-card-spec">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M8 14c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4zm4-2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                      <path d="M8 14c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4zm4-2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
                     </svg>
                     {property.bathrooms} baths
                   </div>
                   <div className="classic-card-spec">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                     </svg>
                     {property.floor}
                   </div>
                 </div>
 
                 <div className="classic-card-buttons">
-                  <a 
+                  <a
                     href={`/${locale}/accommodation/${property.id}`}
                     className="classic-btn classic-btn-primary"
                   >
-                    Book Now
+                    Book
                   </a>
                 </div>
               </div>

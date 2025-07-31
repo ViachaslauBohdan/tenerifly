@@ -68,10 +68,10 @@ export function TourTile({
   };
 
   return (
-    <Card 
-      shadow="md" 
-      padding="lg" 
-      radius="md" 
+    <Card
+      shadow="md"
+      padding="lg"
+      radius="md"
       withBorder
       className="glass-effect hover-lift"
       h="100%"
@@ -120,7 +120,7 @@ export function TourTile({
               </Text>
             </Group>
           </Group>
-          
+
           {/* Рейтинг */}
           <Group gap={4}>
             <Rating value={rating} readOnly size="xs" />
@@ -164,7 +164,7 @@ export function TourTile({
               за человека
             </Text>
           </Stack>
-          
+
           <Button
             leftSection={<IconPhone size={16} />}
             variant="gradient"
@@ -172,7 +172,7 @@ export function TourTile({
             size="sm"
             onClick={() => onContact(id)}
           >
-            Забронировать
+            Book
           </Button>
         </Group>
       </Stack>

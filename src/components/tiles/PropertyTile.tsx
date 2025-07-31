@@ -1,8 +1,8 @@
 import { Card, Image, Text, Badge, Group, Button, Stack, ThemeIcon } from '@mantine/core';
-import { 
-  IconBed, 
-  IconBath, 
-  IconRuler, 
+import {
+  IconBed,
+  IconBath,
+  IconRuler,
   IconMapPin,
   IconCar,
   IconPool,
@@ -10,7 +10,7 @@ import {
   IconBuildingSkyscraper,
   IconHome2,
   IconBrandWhatsapp,
-  IconEye 
+  IconEye
 } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { Locale } from '@/types/locale';
@@ -57,7 +57,7 @@ export function PropertyTile({
   currentLocale = 'en'
 }: PropertyTileProps) {
   const router = useRouter();
-  
+
   const getPropertyTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
       apartment: 'Квартира',
@@ -203,7 +203,7 @@ export function PropertyTile({
             size="sm"
             color="green"
           >
-            Связаться
+            Book
           </Button>
         </Group>
       </Stack>
