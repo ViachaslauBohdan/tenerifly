@@ -148,6 +148,12 @@ export interface Translations {
     subtitle: string;
     button: string;
   };
+  personalizedRequest: {
+    title: string;
+    subtitle: string;
+    placeholder: string;
+    button: string;
+  };
   footer: {
     description: string;
     contacts: string;
@@ -202,10 +208,11 @@ export const translations: Record<Locale, Translations> = {
         guests: "Guests",
         type: "Property type",
         types: [
-          { value: 'all', label: 'All properties' },
-          { value: 'apartment', label: 'Apartments' },
-          { value: 'villa', label: 'Villas' },
-          { value: 'hotel', label: 'Hotels' }
+          { value: '', label: 'All types' },
+          { value: 'apartment', label: 'Apartment' },
+          { value: 'house', label: 'House' },
+          { value: 'plot', label: 'Plot' },
+          { value: 'studio', label: 'Studio' }
         ]
       }
     },
@@ -320,6 +327,12 @@ export const translations: Record<Locale, Translations> = {
       subtitle: "Get a personal selection!",
       button: "Write on WhatsApp"
     },
+    personalizedRequest: {
+      title: "Have a personalized request?",
+      subtitle: "Text us your specific needs and we'll help you find the perfect solution",
+      placeholder: "Tell us about your requirements, dates, preferences, or any special requests...",
+      button: "Send Request"
+    },
     footer: {
       description: "Your guide to Tenerife",
       contacts: "Contacts",
@@ -372,10 +385,11 @@ export const translations: Record<Locale, Translations> = {
         guests: "Goście",
         type: "Typ zakwaterowania",
         types: [
-          { value: 'all', label: 'Wszystkie obiekty' },
-          { value: 'apartment', label: 'Apartamenty' },
-          { value: 'villa', label: 'Wille' },
-          { value: 'hotel', label: 'Hotele' }
+          { value: '', label: 'Wszystkie typy' },
+          { value: 'apartment', label: 'Apartament' },
+          { value: 'house', label: 'Dom' },
+          { value: 'plot', label: 'Działka' },
+          { value: 'studio', label: 'Studio' }
         ]
       }
     },
@@ -490,6 +504,12 @@ export const translations: Record<Locale, Translations> = {
       subtitle: "Otrzymaj spersonalizowaną ofertę!",
       button: "Napisz na WhatsApp"
     },
+    personalizedRequest: {
+      title: "Masz spersonalizowaną prośbę?",
+      subtitle: "Napisz nam o swoich konkretnych potrzebach, a pomożemy Ci znaleźć idealne rozwiązanie",
+      placeholder: "Opowiedz nam o swoich wymaganiach, datach, preferencjach lub specjalnych prośbach...",
+      button: "Wyślij prośbę"
+    },
     footer: {
       description: "Twój przewodnik po Teneryfie",
       contacts: "Kontakt",
@@ -542,10 +562,11 @@ export const translations: Record<Locale, Translations> = {
         guests: "Invités",
         type: "Type de propriété",
         types: [
-          { value: 'all', label: 'Toutes les propriétés' },
-          { value: 'apartment', label: 'Appartements' },
-          { value: 'villa', label: 'Villas' },
-          { value: 'hotel', label: 'Hôtels' }
+          { value: '', label: 'Tous les types' },
+          { value: 'apartment', label: 'Appartement' },
+          { value: 'house', label: 'Maison' },
+          { value: 'plot', label: 'Terrain' },
+          { value: 'studio', label: 'Studio' }
         ]
       }
     },
@@ -660,6 +681,12 @@ export const translations: Record<Locale, Translations> = {
       subtitle: "Obtenez une sélection personnalisée !",
       button: "Écrire sur WhatsApp"
     },
+    personalizedRequest: {
+      title: "Vous avez une demande personnalisée ?",
+      subtitle: "Écrivez-nous vos besoins spécifiques et nous vous aiderons à trouver la solution parfaite",
+      placeholder: "Parlez-nous de vos exigences, dates, préférences ou demandes spéciales...",
+      button: "Envoyer la demande"
+    },
     footer: {
       description: "Votre guide de Tenerife",
       contacts: "Contacts",
@@ -712,10 +739,11 @@ export const translations: Record<Locale, Translations> = {
         guests: "Гости",
         type: "Тип недвижимости",
         types: [
-          { value: 'all', label: 'Все объекты' },
-          { value: 'apartment', label: 'Квартиры' },
-          { value: 'villa', label: 'Виллы' },
-          { value: 'hotel', label: 'Отели' }
+          { value: '', label: 'Все типы' },
+          { value: 'apartment', label: 'Квартира' },
+          { value: 'house', label: 'Дом' },
+          { value: 'plot', label: 'Участок' },
+          { value: 'studio', label: 'Студия' }
         ]
       }
     },
@@ -882,10 +910,11 @@ export const translations: Record<Locale, Translations> = {
         guests: "Гості",
         type: "Тип нерухомості",
         types: [
-          { value: 'all', label: 'Всі об\'єкти' },
-          { value: 'apartment', label: 'Квартири' },
-          { value: 'villa', label: 'Вілли' },
-          { value: 'hotel', label: 'Готелі' }
+          { value: '', label: 'Всі типи' },
+          { value: 'apartment', label: 'Квартира' },
+          { value: 'house', label: 'Будинок' },
+          { value: 'plot', label: 'Ділянка' },
+          { value: 'studio', label: 'Студія' }
         ]
       }
     },
