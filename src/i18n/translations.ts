@@ -858,6 +858,12 @@ export const translations: Record<Locale, Translations> = {
       subtitle: "Получите персональную подборку!",
       button: "Написать в WhatsApp"
     },
+    personalizedRequest: {
+      title: "У вас есть персональный запрос?",
+      subtitle: "Напишите нам ваши конкретные потребности, и мы поможем найти идеальное решение",
+      placeholder: "Расскажите нам о ваших требованиях, датах, предпочтениях или специальных запросах...",
+      button: "Отправить запрос"
+    },
     footer: {
       description: "Ваш гид по Тенерифе",
       contacts: "Контакты",
@@ -1028,6 +1034,12 @@ export const translations: Record<Locale, Translations> = {
       title: "Не знаєте з чого почати?",
       subtitle: "Отримайте персональну добірку!",
       button: "Написати в WhatsApp"
+    },
+    personalizedRequest: {
+      title: "У вас є персональний запит?",
+      subtitle: "Напишіть нам ваші конкретні потреби, і ми допоможемо знайти ідеальне рішення",
+      placeholder: "Розкажіть нам про ваші вимоги, дати, уподобання або спеціальні запити...",
+      button: "Надіслати запит"
     },
     footer: {
       description: "Ваш гід по Тенеріфе",
