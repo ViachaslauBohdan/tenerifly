@@ -115,6 +115,14 @@ const translations = {
       subtitle: "Contact us for personalized recommendations and bookings",
       button: "Write on WhatsApp",
     },
+    faq: {
+      title: "Frequently Asked Questions",
+      subtitle: "Everything you need to know about booking with us",
+      preBook: {
+        question: "What is the pre-booking process?",
+        answer: "Pre-booking is a convenient way to express your interest in our services. When you submit a pre-book request, our team will check availability for your preferred dates and contact you within 24 hours with confirmation and next steps. This ensures you get the best available options for your travel dates.",
+      },
+    },
     footer: {
       description: "Your trusted partner for unforgettable experiences in Tenerife",
       services: "Our Services",
@@ -207,6 +215,14 @@ const translations = {
       title: "Готовы начать свое приключение?",
       subtitle: "Свяжитесь с нами для персональных рекомендаций и бронирования",
       button: "Написать в WhatsApp",
+    },
+    faq: {
+      title: "Часто задаваемые вопросы",
+      subtitle: "Все, что вам нужно знать о бронировании с нами",
+      preBook: {
+        question: "Что такое процесс предварительного бронирования?",
+        answer: "Предварительное бронирование - это удобный способ выразить интерес к нашим услугам. Когда вы отправляете запрос на предварительное бронирование, наша команда проверит доступность на ваши предпочтительные даты и свяжется с вами в течение 24 часов с подтверждением и следующими шагами. Это гарантирует, что вы получите лучшие доступные варианты для ваших дат путешествия.",
+      },
     },
     footer: {
       description: "Ваш надежный партнер для незабываемых впечатлений на Тенерифе",
@@ -301,6 +317,14 @@ const translations = {
       subtitle: "Skontaktuj się z nami po spersonalizowane rekomendacje i rezerwacje",
       button: "Napisz na WhatsApp",
     },
+    faq: {
+      title: "Często zadawane pytania",
+      subtitle: "Wszystko, co musisz wiedzieć o rezerwacji z nami",
+      preBook: {
+        question: "Na czym polega proces przedwstępnej rezerwacji?",
+        answer: "Przedwstępna rezerwacja to wygodny sposób wyrażenia zainteresowania naszymi usługami. Gdy złożysz wniosek o przedwstępną rezerwację, nasz zespół sprawdzi dostępność na Twoje preferowane daty i skontaktuje się z Tobą w ciągu 24 godzin z potwierdzeniem i kolejnymi krokami. To zapewnia, że otrzymasz najlepsze dostępne opcje dla swoich dat podróży.",
+      },
+    },
     footer: {
       description: "Twój zaufany partner dla niezapomnianych doświadczeń na Teneryfie",
       services: "Nasze usługi",
@@ -393,6 +417,26 @@ const translations = {
       title: "Prêt à commencer votre aventure ?",
       subtitle: "Contactez-nous pour des recommandations personnalisées et des réservations",
       button: "Écrire sur WhatsApp",
+    },
+    faq: {
+      title: "Questions fréquemment posées",
+      subtitle: "Tout ce que vous devez savoir sur la réservation avec nous",
+      preBook: {
+        question: "Quel est le processus de pré-réservation ?",
+        answer: "La Pré-réservation est un moyen pratique d'exprimer votre intérêt pour nos services. Lorsque vous soumettez une demande de pré-réservation, notre équipe vérifiera la disponibilité pour vos dates préférées et vous contactera dans les 24 heures avec confirmation et prochaines étapes. Cela garantit que vous obtenez les meilleures options disponibles pour vos dates de voyage.",
+      },
+      howItWorks: {
+        question: "Comment fonctionne le processus de réservation ?",
+        answer: "1. Soumettez votre demande de pré-réservation avec vos dates préférées et exigences\n2. Notre équipe vérifie la disponibilité et confirme votre demande dans les 24 heures\n3. Nous vous fournissons des informations détaillées et des prix\n4. Confirmez votre réservation et profitez de votre aventure à Tenerife !",
+      },
+      responseTime: {
+        question: "À quelle vitesse répondez-vous ?",
+        answer: "Nous répondons généralement à toutes les demandes de pré-réservation dans les 24 heures. Pour les demandes urgentes, nous visons à vous répondre dans les 2-4 heures pendant les heures de bureau.",
+      },
+      cancellation: {
+        question: "Quelle est votre politique d'annulation ?",
+        answer: "Les politiques d'annulation varient selon le type de service. Nous fournirons des conditions d'annulation spécifiques lors de la confirmation de votre réservation. Généralement, nous offrons des options d'annulation flexibles jusqu'à 48 heures avant votre service programmé.",
+      },
     },
     footer: {
       description: "Votre partenaire de confiance pour des expériences inoubliables à Tenerife",
@@ -487,6 +531,26 @@ const translations = {
       subtitle: "Зв'яжіться з нами для персональних рекомендацій та бронювання",
       button: "Написати в WhatsApp",
     },
+    faq: {
+      title: "Часто задавані питання",
+      subtitle: "Все, що вам потрібно знати про бронювання з нами",
+      preBook: {
+        question: "Що таке процес попереднього бронювання?",
+        answer: "Попереднє бронювання - це зручний спосіб виразити інтерес до наших послуг. Коли ви надсилаєте запит на попереднє бронювання, наша команда перевірить доступність на ваші бажані дати та зв'яжеться з вами протягом 24 годин з підтвердженням та наступними кроками. Це гарантує, що ви отримаєте найкращі доступні варіанти для ваших дат подорожі.",
+      },
+      howItWorks: {
+        question: "Як працює процес бронювання?",
+        answer: "1. Надішліть запит на попереднє бронювання з вашими бажаними датами та вимогами\n2. Наша команда перевірить доступність та підтвердить ваш запит протягом 24 годин\n3. Ми надамо вам детальну інформацію та ціни\n4. Підтвердіть бронювання та насолоджуйтесь пригодою на Тенеріфе!",
+      },
+      responseTime: {
+        question: "Як швидко ви відповідаєте?",
+        answer: "Ми зазвичай відповідаємо на всі запити на попереднє бронювання протягом 24 годин. Для термінових запитів ми прагнемо відповісти вам протягом 2-4 годин у робочі години.",
+      },
+      cancellation: {
+        question: "Яка у вас політика скасування?",
+        answer: "Політика скасування варіюється залежно від типу послуги. Ми надамо конкретні умови скасування при підтвердженні вашого бронювання. Як правило, ми пропонуємо гнучкі варіанти скасування до 48 годин до запланованої послуги.",
+      },
+    },
     footer: {
       description: "Ваш надійний партнер для незабутніх вражень на Тенеріфе",
       services: "Наші послуги",
@@ -566,6 +630,9 @@ export function LocalePageClient() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [bookingType, setBookingType] = useState<"excursion" | "car" | "accommodation" | "blog">("excursion")
   const [bookingItem, setBookingItem] = useState<any>(null)
+
+  // State для FAQ секции
+  const [expandedFaq, setExpandedFaq] = useState<string | null>(null)
 
   // Dynamic filter options extracted from useDataLoader data (same pattern as individual pages)
   const [propertyTypes, setPropertyTypes] = useState<string[]>([])
@@ -1763,6 +1830,34 @@ export function LocalePageClient() {
               <Phone className="w-5 h-5" />
               {t.cta.button}
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ секция */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t.faq.title}</h2>
+            <p className="text-lg text-gray-600">{t.faq.subtitle}</p>
+          </div>
+
+          <div className="space-y-4">
+            {/* Pre-Book FAQ */}
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setExpandedFaq(expandedFaq === 'preBook' ? null : 'preBook')}
+                className="w-full px-6 py-4 text-left bg-white hover:bg-gray-50 transition-colors flex items-center justify-between"
+              >
+                <h3 className="text-lg font-semibold text-gray-900">{t.faq.preBook.question}</h3>
+                <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${expandedFaq === 'preBook' ? 'rotate-180' : ''}`} />
+              </button>
+              {expandedFaq === 'preBook' && (
+                <div className="px-6 pb-4 bg-gray-50">
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">{t.faq.preBook.answer}</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
