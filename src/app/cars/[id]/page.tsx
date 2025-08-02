@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { SimpleBookingPopup } from '@/components/SimpleBookingPopup'
 
 // Переводы для всех языков
 const translations = {
@@ -364,6 +365,7 @@ export default function CarDetailPage() {
     const [car, setCar] = useState<CarData | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
 
     const t = translations[language]
     const currentLanguage = languages.find((lang) => lang.code === language)
@@ -488,6 +490,14 @@ export default function CarDetailPage() {
             if (car.features.parking_sensors) features.push(t.parkingSensors)
         }
         return features
+    }
+
+    const handleOpenBookingModal = () => {
+        setIsBookingModalOpen(true)
+    }
+
+    const handleCloseBookingModal = () => {
+        setIsBookingModalOpen(false)
     }
 
     if (loading) {
@@ -659,7 +669,7 @@ export default function CarDetailPage() {
                     {car.rental_prices.day_1 && (
                         <div className="text-center p-4 bg-gray-50 rounded-lg">
                             <div className="text-2xl font-bold text-blue-600">
-                                {car.rental_prices.currency}{car.rental_prices.day_1}
+                                {car.rental_prices.currency} {car.rental_prices.day_1.toLocaleString()}
                             </div>
                             <div className="text-sm text-gray-600">{t.perDay}</div>
                         </div>
@@ -667,7 +677,7 @@ export default function CarDetailPage() {
                     {car.rental_prices.day_3 && (
                         <div className="text-center p-4 bg-gray-50 rounded-lg">
                             <div className="text-2xl font-bold text-blue-600">
-                                {car.rental_prices.currency}{car.rental_prices.day_3}
+                                {car.rental_prices.currency} {car.rental_prices.day_3.toLocaleString()}
                             </div>
                             <div className="text-sm text-gray-600">{t.per3Days}</div>
                         </div>
@@ -675,7 +685,7 @@ export default function CarDetailPage() {
                     {car.rental_prices.day_7 && (
                         <div className="text-center p-4 bg-gray-50 rounded-lg">
                             <div className="text-2xl font-bold text-blue-600">
-                                {car.rental_prices.currency}{car.rental_prices.day_7}
+                                {car.rental_prices.currency} {car.rental_prices.day_7.toLocaleString()}
                             </div>
                             <div className="text-sm text-gray-600">{t.perWeek}</div>
                         </div>
@@ -683,7 +693,7 @@ export default function CarDetailPage() {
                     {car.rental_prices.month && (
                         <div className="text-center p-4 bg-gray-50 rounded-lg">
                             <div className="text-2xl font-bold text-blue-600">
-                                {car.rental_prices.currency}{car.rental_prices.month}
+                                {car.rental_prices.currency} {car.rental_prices.month.toLocaleString()}
                             </div>
                             <div className="text-sm text-gray-600">{t.perMonth}</div>
                         </div>
@@ -757,7 +767,10 @@ export default function CarDetailPage() {
 
         return (
             <div className="space-y-3">
-                <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                <button
+                    onClick={handleOpenBookingModal}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                >
                     {t.bookNow}
                 </button>
             </div>
@@ -888,6 +901,19 @@ export default function CarDetailPage() {
                 {/* Click outside to close dropdown */}
                 {isLanguageDropdownOpen && (
                     <div className="fixed inset-0 z-40" onClick={() => setIsLanguageDropdownOpen(false)} />
+                )}
+
+                {/* Booking Modal */}
+                {car && (
+                    <SimpleBookingPopup
+                        opened={isBookingModalOpen}
+                        onClose={handleCloseBookingModal}
+                        item={{
+                            name: car.title,
+                            price: car.rental_prices ? `${car.rental_prices.currency} ${car.rental_prices.day_1.toLocaleString()}/day` : undefined,
+                            currency: car.rental_prices?.currency
+                        }}
+                    />
                 )}
             </div>
         </div>

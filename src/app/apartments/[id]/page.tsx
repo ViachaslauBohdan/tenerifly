@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { SimpleBookingPopup } from '@/components/SimpleBookingPopup'
 
 // Переводы для всех языков
 const translations = {
@@ -418,6 +419,7 @@ export default function PropertyDetailPage() {
     const [property, setProperty] = useState<PropertyData | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
 
     const t = translations[language]
     const currentLanguage = languages.find((lang) => lang.code === language)
@@ -546,6 +548,14 @@ export default function PropertyDetailPage() {
 
     const getBooleanText = (value: boolean) => {
         return value ? t.yes : t.no
+    }
+
+    const handleOpenBookingModal = () => {
+        setIsBookingModalOpen(true)
+    }
+
+    const handleCloseBookingModal = () => {
+        setIsBookingModalOpen(false)
     }
 
     if (loading) {
@@ -925,7 +935,7 @@ export default function PropertyDetailPage() {
                             {property.price && (
                                 <div className="mb-6">
                                     <div className="text-3xl font-bold text-gray-900 mb-1">
-                                        {property.price.currency}{property.price.amount}
+                                        {property.price.currency} {property.price.amount.toLocaleString()}
                                     </div>
                                     <div className="text-sm text-gray-600">
                                         {property.type === 'rent' ? `/ ${t.month}` : t.price}
@@ -946,10 +956,7 @@ export default function PropertyDetailPage() {
                                 </div>
                             )}
 
-                            {/* Contact Button */}
-                            <button className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors mb-6">
-                                {t.contact}
-                            </button>
+
 
                             {/* Contact Info */}
                             {property.contact && (
@@ -979,7 +986,10 @@ export default function PropertyDetailPage() {
 
                             {/* Book Now Button */}
                             {property.property_status === 'available' && (
-                                <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                                <button
+                                    onClick={handleOpenBookingModal}
+                                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                                >
                                     {t.bookNow}
                                 </button>
                             )}
@@ -990,6 +1000,19 @@ export default function PropertyDetailPage() {
                 {/* Click outside to close dropdown */}
                 {isLanguageDropdownOpen && (
                     <div className="fixed inset-0 z-40" onClick={() => setIsLanguageDropdownOpen(false)} />
+                )}
+
+                {/* Booking Modal */}
+                {property && (
+                    <SimpleBookingPopup
+                        opened={isBookingModalOpen}
+                        onClose={handleCloseBookingModal}
+                        item={{
+                            name: property.title,
+                            price: property.price ? `${property.price.currency} ${property.price.amount.toLocaleString()}/${property.type === 'rent' ? 'month' : 'night'}` : undefined,
+                            currency: property.price?.currency
+                        }}
+                    />
                 )}
             </div>
         </div>

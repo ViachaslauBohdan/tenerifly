@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { SimpleBookingPopup } from '@/components/SimpleBookingPopup'
 
 interface TourData {
     id: number
@@ -235,6 +236,7 @@ export default function TourDetailPage() {
     const [tour, setTour] = useState<TourData | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
 
     const t = translations[language]
     const currentLanguage = languages.find((lang) => lang.code === language)
@@ -376,6 +378,14 @@ export default function TourDetailPage() {
         const price = getPrice(tour)
         const currency = getCurrency(tour)
         return `${currency} ${price}`
+    }
+
+    const handleOpenBookingModal = () => {
+        setIsBookingModalOpen(true)
+    }
+
+    const handleCloseBookingModal = () => {
+        setIsBookingModalOpen(false)
     }
 
     if (loading) {
@@ -564,7 +574,7 @@ export default function TourDetailPage() {
 
                             {/* Price Display */}
                             <div className="text-center mb-6 p-4 bg-blue-50 rounded-lg">
-                                <div className="text-3xl font-bold text-blue-600">{getPriceText(tour)}</div>
+                                <div className="text-3xl font-bold text-blue-600">{getCurrency(tour)} {getPrice(tour).toLocaleString()}</div>
                                 <div className="text-sm text-gray-600">{tour.price?.period || 'total'}</div>
                             </div>
 
@@ -600,7 +610,10 @@ export default function TourDetailPage() {
                             )}
 
                             {/* Book Now Button */}
-                            <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                            <button
+                                onClick={handleOpenBookingModal}
+                                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                            >
                                 {t.bookNow}
                             </button>
                         </div>
@@ -610,6 +623,19 @@ export default function TourDetailPage() {
                 {/* Click outside to close dropdown */}
                 {isLanguageDropdownOpen && (
                     <div className="fixed inset-0 z-40" onClick={() => setIsLanguageDropdownOpen(false)} />
+                )}
+
+                {/* Booking Modal */}
+                {tour && (
+                    <SimpleBookingPopup
+                        opened={isBookingModalOpen}
+                        onClose={handleCloseBookingModal}
+                        item={{
+                            name: tour.title,
+                            price: tour.price ? `${tour.price.currency} ${tour.price.amount.toLocaleString()}/${tour.price.period || 'total'}` : undefined,
+                            currency: tour.price?.currency
+                        }}
+                    />
                 )}
             </div>
         </div>
