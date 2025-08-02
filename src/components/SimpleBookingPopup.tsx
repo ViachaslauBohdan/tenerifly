@@ -24,6 +24,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
     const [email, setEmail] = useState('');
     const [whatsapp, setWhatsapp] = useState('');
     const [telegram, setTelegram] = useState('');
+    const [preferredContact, setPreferredContact] = useState<string>('');
     const [isSending, setIsSending] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
 
@@ -39,15 +40,16 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             email: 'Email (Optional)',
             whatsapp: 'WhatsApp (Optional)',
             telegram: 'Telegram (Optional)',
-            contactMethod: 'Preferred Contact Method',
+            preferredContact: 'Preferred Contact Method',
             selectDates: 'SELECT DATES (OPTIONAL)',
-            comments: 'Comments',
+            comments: 'Request Description',
             commentsPlaceholder: 'Any special requests or additional information...',
             close: 'Close',
             send: 'Send Booking Request',
             success: 'The agent will respond soon',
             whatsappLabel: 'WhatsApp',
-            telegramLabel: 'Telegram'
+            telegramLabel: 'Telegram',
+            emailLabel: 'Email'
         },
         ru: {
             title: 'Предварительное бронирование',
@@ -60,15 +62,16 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             email: 'Email (Необязательно)',
             whatsapp: 'WhatsApp (Необязательно)',
             telegram: 'Telegram (Необязательно)',
-            contactMethod: 'Предпочтительный способ связи',
+            preferredContact: 'Предпочтительный способ связи',
             selectDates: 'ВЫБРАТЬ ДАТЫ (НЕОБЯЗАТЕЛЬНО)',
-            comments: 'Комментарии',
+            comments: 'Описание запроса',
             commentsPlaceholder: 'Особые пожелания или дополнительная информация...',
             close: 'Закрыть',
             send: 'Отправить заявку на бронирование',
             success: 'Агент ответит в ближайшее время',
             whatsappLabel: 'WhatsApp',
-            telegramLabel: 'Telegram'
+            telegramLabel: 'Telegram',
+            emailLabel: 'Email'
         },
         pl: {
             title: 'Przedwstępna rezerwacja',
@@ -81,15 +84,16 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             email: 'Email (Opcjonalnie)',
             whatsapp: 'WhatsApp (Opcjonalnie)',
             telegram: 'Telegram (Opcjonalnie)',
-            contactMethod: 'Preferowana metoda kontaktu',
+            preferredContact: 'Preferowana metoda kontaktu',
             selectDates: 'WYBIERZ DATY (OPCJONALNIE)',
-            comments: 'Komentarze',
+            comments: 'Opis żądania',
             commentsPlaceholder: 'Specjalne życzenia lub dodatkowe informacje...',
             close: 'Zamknij',
             send: 'Wyślij prośbę o rezerwację',
             success: 'Agent odpowie wkrótce',
             whatsappLabel: 'WhatsApp',
-            telegramLabel: 'Telegram'
+            telegramLabel: 'Telegram',
+            emailLabel: 'Email'
         },
         fr: {
             title: 'Pré-réserver',
@@ -102,15 +106,16 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             email: 'Email (Optionnel)',
             whatsapp: 'WhatsApp (Optionnel)',
             telegram: 'Telegram (Optionnel)',
-            contactMethod: 'Méthode de contact préférée',
+            preferredContact: 'Méthode de contact préférée',
             selectDates: 'SÉLECTIONNER LES DATES (OPTIONNEL)',
-            comments: 'Commentaires',
+            comments: 'Description de la demande',
             commentsPlaceholder: 'Demandes spéciales ou informations supplémentaires...',
             close: 'Fermer',
             send: 'Envoyer la demande de réservation',
             success: 'L\'agent répondra bientôt',
             whatsappLabel: 'WhatsApp',
-            telegramLabel: 'Telegram'
+            telegramLabel: 'Telegram',
+            emailLabel: 'Email'
         },
         uk: {
             title: 'Попереднє бронювання',
@@ -123,15 +128,16 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             email: 'Email (Необов\'язково)',
             whatsapp: 'WhatsApp (Необов\'язково)',
             telegram: 'Telegram (Необов\'язково)',
-            contactMethod: 'Бажаний спосіб зв\'язку',
+            preferredContact: 'Бажаний спосіб зв\'язку',
             selectDates: 'ВИБРАТИ ДАТИ (НЕОБОВ\'ЯЗКОВО)',
-            comments: 'Коментарі',
+            comments: 'Опис запиту',
             commentsPlaceholder: 'Особливі побажання або додаткова інформація...',
             close: 'Закрити',
             send: 'Надіслати заявку на бронювання',
             success: 'Агент відповість найближчим часом',
             whatsappLabel: 'WhatsApp',
-            telegramLabel: 'Telegram'
+            telegramLabel: 'Telegram',
+            emailLabel: 'Email'
         }
     };
 
@@ -154,7 +160,8 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             phone,
             email,
             whatsapp,
-            telegram
+            telegram,
+            preferredContact
         };
 
         openBookingWhatsApp('accommodation', bookingDetails, 'en');
@@ -175,6 +182,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             setEmail('');
             setWhatsapp('');
             setTelegram('');
+            setPreferredContact('');
         }, 2000);
     };
 
@@ -190,14 +198,24 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
                     <Text fw={600} size="lg">{t.title}</Text>
                 </Group>
             }
-            size="md"
+            size="lg"
             centered
+            fullScreen={false}
             styles={{
                 title: { flex: 1 },
-                header: { backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }
+                header: { backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' },
+                body: {
+                    maxHeight: '80vh',
+                    overflowY: 'auto',
+                    padding: '20px'
+                },
+                content: {
+                    maxWidth: '90vw',
+                    width: '600px'
+                }
             }}
         >
-            <Stack gap="lg">
+            <Stack gap="md">
                 {/* Item Info */}
                 <div style={{
                     backgroundColor: '#f7fafc',
@@ -218,13 +236,13 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
 
                 {/* Contact Information */}
                 <div>
-                    <Group gap="xs" mb="md">
+                    <Group gap="xs" mb="sm">
                         <IconUser size={20} color="#3182ce" />
                         <Text size="sm" fw={600} c="#4a5568" tt="uppercase" style={{ letterSpacing: '0.05em' }}>
                             {t.contactInfo}
                         </Text>
                     </Group>
-                    <Stack gap="md">
+                    <Stack gap="sm">
                         <Group grow>
                             <TextInput
                                 leftSection={<IconUser size={16} />}
@@ -276,12 +294,23 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
                             value={telegram}
                             onChange={(e) => setTelegram(e.target.value)}
                         />
+                        <Select
+                            leftSection={<IconMessage size={16} />}
+                            placeholder={t.preferredContact}
+                            value={preferredContact}
+                            onChange={(value) => setPreferredContact(value || '')}
+                            data={[
+                                { value: 'email', label: t.emailLabel },
+                                { value: 'whatsapp', label: t.whatsappLabel },
+                                { value: 'telegram', label: t.telegramLabel }
+                            ]}
+                        />
                     </Stack>
                 </div>
 
                 {/* Date Selection */}
                 <div>
-                    <Group gap="xs" mb="md">
+                    <Group gap="xs" mb="sm">
                         <IconCalendar size={20} color="#3182ce" />
                         <Text size="sm" fw={600} c="#4a5568" tt="uppercase" style={{ letterSpacing: '0.05em' }}>
                             {t.selectDates}
@@ -307,7 +336,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
 
                 {/* Comments */}
                 <div>
-                    <Group gap="xs" mb="md">
+                    <Group gap="xs" mb="sm">
                         <IconMessage size={20} color="#3182ce" />
                         <Text size="sm" fw={600} c="#4a5568" tt="uppercase" style={{ letterSpacing: '0.05em' }}>
                             {t.comments}
@@ -317,7 +346,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
                         placeholder={t.commentsPlaceholder}
                         value={comments}
                         onChange={(e) => setComments(e.target.value)}
-                        rows={3}
+                        rows={2}
                         styles={{
                             input: {
                                 border: '1px solid #e2e8f0',
