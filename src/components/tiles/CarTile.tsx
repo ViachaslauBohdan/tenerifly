@@ -1,9 +1,10 @@
 import { Card, Image, Text, Badge, Button, Group, Stack, rem } from '@mantine/core';
-import { IconCar, IconUsers, IconGasStation, IconSettings, IconPhone } from '@tabler/icons-react';
+import { IconCar, IconUsers, IconGasStation, IconSettings, IconPhone, IconEye } from '@tabler/icons-react';
 import { Locale } from '@/types/locale';
+import { useRouter } from 'next/navigation';
 
 interface CarTileProps {
-  id: number;
+  id: string;
   title: string;
   description: string;
   image: string;
@@ -23,7 +24,7 @@ interface CarTileProps {
     bluetooth: boolean;
     backup_camera: boolean;
   };
-  onContact: (id: number) => void;
+  onContact: (id: string) => void;
   currentLocale: Locale;
 }
 
@@ -39,6 +40,11 @@ export function CarTile({
   onContact,
   currentLocale
 }: CarTileProps) {
+  const router = useRouter();
+
+  const handleViewDetails = () => {
+    router.push(`/cars/${id}`);
+  };
   const typeLabels = {
     rent: {
       en: 'For Rent',
@@ -135,7 +141,7 @@ export function CarTile({
           </Text>
         )}
 
-        {/* Цена и кнопка */}
+        {/* Цена и кнопки */}
         <Group justify="space-between" align="center" mt="auto">
           <Stack gap={0}>
             <Text size="xl" fw={700} c="blue.6">
@@ -145,7 +151,17 @@ export function CarTile({
               за день
             </Text>
           </Stack>
+        </Group>
 
+        <Group grow>
+          <Button
+            variant="outline"
+            leftSection={<IconEye size={16} />}
+            onClick={handleViewDetails}
+            size="sm"
+          >
+            View Details
+          </Button>
           <Button
             leftSection={<IconPhone size={16} />}
             variant="gradient"

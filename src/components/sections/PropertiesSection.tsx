@@ -22,7 +22,7 @@ export function PropertiesSection({ properties }: PropertiesSectionProps) {
         {properties.map((property) => (
           <Grid.Col key={property.id} span={{ base: 12, sm: 6, md: 4 }}>
             <PropertyTile
-              id={property.id}
+              id={property.id.toString()}
               title={property.title}
               description={property.description || 'Описание отсутствует'}
               image={property.images?.[0]?.url || '/placeholder.jpg'}
@@ -45,7 +45,7 @@ export function PropertiesSection({ properties }: PropertiesSectionProps) {
                 has_parking: property.features?.has_garage || false,
                 furnished: property.specifications?.furnished || false,
               }}
-              onContact={(id: number) => console.log('Связаться по недвижимости:', id)}
+              onContact={(id: string) => console.log('Связаться по недвижимости:', id)}
               currentLocale="ru"
             />
           </Grid.Col>

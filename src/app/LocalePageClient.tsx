@@ -1443,17 +1443,26 @@ export function LocalePageClient() {
                         <span>{place.price}</span>
                       </div>
                     </div>
-                    <button
-                      onClick={() =>
-                        openBookingModal("accommodation", {
-                          title: place.title,
-                          price: place.price
-                        })
-                      }
-                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      {t.common.bookNow}
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => router.push(`/apartments/${place.documentId}`)}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                      >
+                        <Eye className="w-4 h-4" />
+                        {language === "en" ? "View Details" : "Подробнее"}
+                      </button>
+                      <button
+                        onClick={() =>
+                          openBookingModal("accommodation", {
+                            title: place.title,
+                            price: place.price
+                          })
+                        }
+                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        {t.common.bookNow}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1520,19 +1529,28 @@ export function LocalePageClient() {
                         <span>{car.price}</span>
                       </div>
                     </div>
-                    <button
-                      onClick={() =>
-                        openBookingModal("car", {
-                          title: car.title,
-                          price: car.price,
-                          brand: car.brand,
-                          model: car.model
-                        })
-                      }
-                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      {t.common.bookNow}
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => router.push(`/cars/${car.documentId}`)}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                      >
+                        <Eye className="w-4 h-4" />
+                        {language === "en" ? "View Details" : "Подробнее"}
+                      </button>
+                      <button
+                        onClick={() =>
+                          openBookingModal("car", {
+                            title: car.title,
+                            price: car.price,
+                            brand: car.brand,
+                            model: car.model
+                          })
+                        }
+                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        {t.common.bookNow}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

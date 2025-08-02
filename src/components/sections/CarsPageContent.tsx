@@ -11,7 +11,7 @@ import { carFilters } from '@/config/filters';
 interface CarsPageContentProps {
   cars: Car[];
 }
- 
+
 export function CarsPageContent({ cars }: CarsPageContentProps) {
   const { t, locale } = useTranslation();
 
@@ -32,7 +32,7 @@ export function CarsPageContent({ cars }: CarsPageContentProps) {
           <AdvancedFilterPanel
             filters={carFilters}
             values={{}}
-            onChange={(values) => console.log('Filters changed:', values)} 
+            onChange={(values) => console.log('Filters changed:', values)}
             onClear={() => console.log('Clear filters')}
           />
         </Grid.Col>
@@ -44,14 +44,14 @@ export function CarsPageContent({ cars }: CarsPageContentProps) {
               {cars.map((car) => (
                 <Grid.Col key={car.id} span={{ base: 12, sm: 6, lg: 4 }}>
                   <CarTile
-                    id={car.id}
+                    id={car.documentId}
                     title={car.title}
                     description={car.description || 'Описание отсутствует'}
                     image={car.images?.[0]?.url || '/placeholder.jpg'}
                     type={car.type}
-                    dailyPrice={car.price?.amount || 30} 
+                    dailyPrice={car.price?.amount || 30}
                     specifications={{
-                      make: car.specifications?.make || '', 
+                      make: car.specifications?.make || '',
                       model: car.specifications?.model || '',
                       year: car.specifications?.year || new Date().getFullYear(),
                       fuel: car.specifications?.fuel || '',
@@ -64,7 +64,7 @@ export function CarsPageContent({ cars }: CarsPageContentProps) {
                       bluetooth: car.features?.bluetooth || false,
                       backup_camera: car.features?.backup_camera || false,
                     }}
-                    onContact={(id: number) => console.log('Связаться по автомобилю:', id)} 
+                    onContact={(id: string) => console.log('Связаться по автомобилю:', id)}
                     currentLocale={locale}
                   />
                 </Grid.Col>

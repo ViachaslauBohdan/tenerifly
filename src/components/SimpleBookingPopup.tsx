@@ -40,8 +40,8 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             email: 'Email (Optional)',
             whatsapp: 'WhatsApp (Optional)',
             telegram: 'Telegram (Optional)',
-            preferredContact: 'Preferred Contact Method',
-            selectDates: 'SELECT DATES (OPTIONAL)',
+            preferredContact: 'Preferred contact',
+            selectDates: 'SELECT DATES',
             comments: 'Request Description',
             commentsPlaceholder: 'Any special requests or additional information...',
             close: 'Close',
@@ -49,7 +49,9 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             success: 'The agent will respond soon',
             whatsappLabel: 'WhatsApp',
             telegramLabel: 'Telegram',
-            emailLabel: 'Email'
+            emailLabel: 'Email',
+            emailError: 'Please enter a valid email address',
+            phoneError: 'Please enter a valid phone number (at least 10 digits)'
         },
         ru: {
             title: 'Предварительное бронирование',
@@ -71,7 +73,9 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             success: 'Агент ответит в ближайшее время',
             whatsappLabel: 'WhatsApp',
             telegramLabel: 'Telegram',
-            emailLabel: 'Email'
+            emailLabel: 'Email',
+            emailError: 'Пожалуйста, введите корректный email адрес',
+            phoneError: 'Пожалуйста, введите корректный номер телефона (минимум 10 цифр)'
         },
         pl: {
             title: 'Przedwstępna rezerwacja',
@@ -93,7 +97,9 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             success: 'Agent odpowie wkrótce',
             whatsappLabel: 'WhatsApp',
             telegramLabel: 'Telegram',
-            emailLabel: 'Email'
+            emailLabel: 'Email',
+            emailError: 'Proszę wprowadzić poprawny adres email',
+            phoneError: 'Proszę wprowadzić poprawny numer telefonu (co najmniej 10 cyfr)'
         },
         fr: {
             title: 'Pré-réserver',
@@ -115,7 +121,9 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             success: 'L\'agent répondra bientôt',
             whatsappLabel: 'WhatsApp',
             telegramLabel: 'Telegram',
-            emailLabel: 'Email'
+            emailLabel: 'Email',
+            emailError: 'Veuillez saisir une adresse email valide',
+            phoneError: 'Veuillez saisir un numéro de téléphone valide (au moins 10 chiffres)'
         },
         uk: {
             title: 'Попереднє бронювання',
@@ -137,56 +145,104 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             success: 'Агент відповість найближчим часом',
             whatsappLabel: 'WhatsApp',
             telegramLabel: 'Telegram',
-            emailLabel: 'Email'
+            emailLabel: 'Email',
+            emailError: 'Будь ласка, введіть коректну email адресу',
+            phoneError: 'Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)'
         }
     };
 
     // Default to English for now - you can add language detection logic
     const t = translations.en;
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (!firstName || !lastName || !phone || !email) return;
 
         setIsSending(true);
 
-        const bookingDetails = {
-            title: item.name,
-            price: item.price,
-            startDate: startDate ? startDate.toLocaleDateString() : undefined,
-            endDate: endDate ? endDate.toLocaleDateString() : undefined,
-            comments,
-            firstName,
-            lastName,
-            phone,
-            email,
-            whatsapp,
-            telegram,
-            preferredContact
-        };
+        // Create email message with all booking details
+        const emailMessage = `
+Новая заявка на бронирование:
 
-        openBookingWhatsApp('accommodation', bookingDetails, 'en');
+${item.name ? `Объект: ${item.name}` : ''}
+${item.price ? `Цена: ${item.currency} ${item.price}` : ''}
 
-        setIsSending(false);
-        setShowSuccess(true);
+Контактная информация:
+Имя: ${firstName}
+Фамилия: ${lastName}
+Телефон: ${phone}
+Email: ${email}
+${whatsapp ? `WhatsApp: ${whatsapp}` : ''}
+${telegram ? `Telegram: ${telegram}` : ''}
+${preferredContact ? `Предпочтительный способ связи: ${preferredContact}` : ''}
 
-        setTimeout(() => {
-            setShowSuccess(false);
-            onClose();
-            // Reset form
-            setStartDate(null);
-            setEndDate(null);
-            setComments('');
-            setFirstName('');
-            setLastName('');
-            setPhone('');
-            setEmail('');
-            setWhatsapp('');
-            setTelegram('');
-            setPreferredContact('');
-        }, 2000);
+${startDate || endDate ? 'Даты:' : ''}
+${startDate ? `Дата начала: ${startDate.toLocaleDateString()}` : ''}
+${endDate ? `Дата окончания: ${endDate.toLocaleDateString()}` : ''}
+
+${comments ? `Дополнительная информация: ${comments}` : ''}
+
+---
+Отправлено с сайта: ${process.env.NEXT_PUBLIC_DOMAIN || 'tenerifly.info.com'}
+        `.trim();
+
+        try {
+            const res = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email, // User's email as "from"
+                    subject: `New Pre-Book request - ${item.name || 'Personalized Request'}`,
+                    message: emailMessage,
+                }),
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                setShowSuccess(true);
+                // Reset form after successful submission
+                setTimeout(() => {
+                    setShowSuccess(false);
+                    onClose();
+                    // Reset form
+                    setStartDate(null);
+                    setEndDate(null);
+                    setComments('');
+                    setFirstName('');
+                    setLastName('');
+                    setPhone('');
+                    setEmail('');
+                    setWhatsapp('');
+                    setTelegram('');
+                    setPreferredContact('');
+                }, 2000);
+            } else {
+                console.error('Failed to send email:', data.error);
+                // You might want to show an error message here
+            }
+        } catch (error) {
+            console.error('Error sending email:', error);
+            // You might want to show an error message here
+        } finally {
+            setIsSending(false);
+        }
     };
 
-    const isFormValid = firstName && lastName && phone && email;
+    // Email validation function
+    const isValidEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    // Phone validation function
+    const isValidPhone = (phone: string) => {
+        // Remove all non-digit characters
+        const cleanPhone = phone.replace(/\D/g, '');
+        // Check if it has at least 10 digits (international standard)
+        return cleanPhone.length >= 10;
+    };
+
+    const isFormValid = firstName && lastName && phone && email && isValidEmail(email) && isValidPhone(phone);
 
     return (
         <Modal
@@ -271,6 +327,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
                             onChange={(e) => setPhone(e.target.value)}
                             required
                             withAsterisk
+                            error={phone && !isValidPhone(phone) ? t.phoneError : undefined}
                         />
                         <TextInput
                             leftSection={<IconMessage size={16} />}
@@ -281,6 +338,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
                             type="email"
                             required
                             withAsterisk
+                            error={email && !isValidEmail(email) ? t.emailError : undefined}
                         />
                         <TextInput
                             leftSection={<IconBrandWhatsapp size={16} />}

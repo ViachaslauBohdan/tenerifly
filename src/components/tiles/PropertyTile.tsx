@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import { Locale } from '@/types/locale';
 
 export interface PropertyTileProps {
-  id: number;
+  id: string;
   title: string;
   description: string;
   image: string;
@@ -39,7 +39,7 @@ export interface PropertyTileProps {
     has_parking: boolean;
     furnished: boolean;
   };
-  onContact: (id: number) => void;
+  onContact: (id: string) => void;
   currentLocale?: Locale;
 }
 
