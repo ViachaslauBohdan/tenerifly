@@ -30,7 +30,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
     const translations = {
         en: {
             title: 'Pre-book',
-            itemName: 'Item',
+            itemName: '',
             price: 'Price',
             contactInfo: 'Contact Information',
             firstName: 'First Name',
@@ -51,7 +51,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
         },
         ru: {
             title: 'Предварительное бронирование',
-            itemName: 'Объект',
+            itemName: '',
             price: 'Цена',
             contactInfo: 'Контактная информация',
             firstName: 'Имя',
@@ -72,7 +72,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
         },
         pl: {
             title: 'Przedwstępna rezerwacja',
-            itemName: 'Obiekt',
+            itemName: '',
             price: 'Cena',
             contactInfo: 'Informacje kontaktowe',
             firstName: 'Imię',
@@ -93,7 +93,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
         },
         fr: {
             title: 'Pré-réserver',
-            itemName: 'Objet',
+            itemName: '',
             price: 'Prix',
             contactInfo: 'Informations de contact',
             firstName: 'Prénom',
@@ -114,7 +114,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
         },
         uk: {
             title: 'Попереднє бронювання',
-            itemName: 'Об\'єкт',
+            itemName: '',
             price: 'Ціна',
             contactInfo: 'Контактна інформація',
             firstName: 'Ім\'я',

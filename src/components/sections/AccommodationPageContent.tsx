@@ -1,29 +1,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  Container, 
-  Title, 
-  Grid, 
-  Card, 
-  Image, 
-  Badge, 
-  Group, 
-  Stack, 
-  Text, 
+import {
+  Container,
+  Title,
+  Grid,
+  Card,
+  Image,
+  Badge,
+  Group,
+  Stack,
+  Text,
   Button,
-  SimpleGrid, 
+  SimpleGrid,
   Select,
   TextInput,
   NumberInput,
   Checkbox,
   Tabs
 } from '@mantine/core';
-import { 
-  IconBed, 
-  IconBath, 
-  IconRuler, 
-  IconMapPin, 
+import {
+  IconBed,
+  IconBath,
+  IconRuler,
+  IconMapPin,
   IconCar,
   IconBrandWhatsapp,
   IconSearch,
@@ -67,7 +67,7 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
-  
+
   const [filters, setFilters] = useState<PropertyFilters>({
     city: '',
     propertyType: '',
@@ -94,7 +94,7 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
   useEffect(() => {
     const fetchProperties = async () => {
       if (!currentLocale) return;
-      
+
       try {
         setLoading(true);
         const response = await propertiesAPI.getAll(currentLocale);
@@ -211,7 +211,7 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
   return (
     <Container size="xl" py="xl">
       <BackToHome />
-      
+
       <Title order={1} mb="xl" ta="center" className="gradient-text">
         Недвижимость на Тенерифе
       </Title>
@@ -234,7 +234,7 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
             placeholder="Город"
             leftSection={<IconMapPin size={16} />}
             value={filters.city}
-            onChange={(e) => setFilters({...filters, city: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, city: e.target.value })}
           />
           <Select
             placeholder="Тип недвижимости"
@@ -248,20 +248,20 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
               { value: 'land', label: 'Участок' },
             ]}
             value={filters.propertyType}
-            onChange={(value) => setFilters({...filters, propertyType: value || ''})}
+            onChange={(value) => setFilters({ ...filters, propertyType: value || '' })}
           />
           <Group grow>
             <NumberInput
               placeholder="Цена от"
               min={0}
               value={filters.minPrice}
-              onChange={(value) => setFilters({...filters, minPrice: typeof value === 'number' ? value : ''})}
+              onChange={(value) => setFilters({ ...filters, minPrice: typeof value === 'number' ? value : '' })}
             />
             <NumberInput
               placeholder="Цена до"
               min={0}
               value={filters.maxPrice}
-              onChange={(value) => setFilters({...filters, maxPrice: typeof value === 'number' ? value : ''})}
+              onChange={(value) => setFilters({ ...filters, maxPrice: typeof value === 'number' ? value : '' })}
             />
           </Group>
         </SimpleGrid>
@@ -284,7 +284,7 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
                     { value: '4', label: '4+ спальни' },
                   ]}
                   value={filters.bedrooms}
-                  onChange={(value) => setFilters({...filters, bedrooms: value || ''})}
+                  onChange={(value) => setFilters({ ...filters, bedrooms: value || '' })}
                 />
                 <Select
                   placeholder="Ванные"
@@ -294,19 +294,19 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
                     { value: '3', label: '3+ ванные' },
                   ]}
                   value={filters.bathrooms}
-                  onChange={(value) => setFilters({...filters, bathrooms: value || ''})}
+                  onChange={(value) => setFilters({ ...filters, bathrooms: value || '' })}
                 />
                 <NumberInput
                   placeholder="Площадь от, м²"
                   min={0}
                   value={filters.minArea}
-                  onChange={(value) => setFilters({...filters, minArea: typeof value === 'number' ? value : ''})}
+                  onChange={(value) => setFilters({ ...filters, minArea: typeof value === 'number' ? value : '' })}
                 />
                 <NumberInput
                   placeholder="Площадь до, м²"
                   min={0}
                   value={filters.maxArea}
-                  onChange={(value) => setFilters({...filters, maxArea: typeof value === 'number' ? value : ''})}
+                  onChange={(value) => setFilters({ ...filters, maxArea: typeof value === 'number' ? value : '' })}
                 />
               </SimpleGrid>
             </Tabs.Panel>
@@ -316,27 +316,27 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
                 <Checkbox
                   label="Меблировано"
                   checked={filters.furnished === true}
-                  onChange={(e) => setFilters({...filters, furnished: e.target.checked ? true : null})}
+                  onChange={(e) => setFilters({ ...filters, furnished: e.target.checked ? true : null })}
                 />
                 <Checkbox
                   label="Парковка"
                   checked={filters.hasParking === true}
-                  onChange={(e) => setFilters({...filters, hasParking: e.target.checked ? true : null})}
+                  onChange={(e) => setFilters({ ...filters, hasParking: e.target.checked ? true : null })}
                 />
                 <Checkbox
                   label="Бассейн"
                   checked={filters.hasPool === true}
-                  onChange={(e) => setFilters({...filters, hasPool: e.target.checked ? true : null})}
+                  onChange={(e) => setFilters({ ...filters, hasPool: e.target.checked ? true : null })}
                 />
                 <Checkbox
                   label="Сад"
                   checked={filters.hasGarden === true}
-                  onChange={(e) => setFilters({...filters, hasGarden: e.target.checked ? true : null})}
+                  onChange={(e) => setFilters({ ...filters, hasGarden: e.target.checked ? true : null })}
                 />
                 <Checkbox
                   label="Терраса"
                   checked={filters.hasTerrace === true}
-                  onChange={(e) => setFilters({...filters, hasTerrace: e.target.checked ? true : null})}
+                  onChange={(e) => setFilters({ ...filters, hasTerrace: e.target.checked ? true : null })}
                 />
               </SimpleGrid>
             </Tabs.Panel>
@@ -405,8 +405,8 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
                     <div>
                       <Text size="xl" fw={700} c="blue" mb="md">
                         €{property.price?.amount || 0}
-                        {property.price?.period === 'month' ? '/мес' : 
-                         property.price?.period === 'day' ? '/день' : ''}
+                        {property.price?.period === 'month' ? '/мес' :
+                          property.price?.period === 'day' ? '/день' : ''}
                       </Text>
 
                       <Group>
@@ -441,7 +441,7 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
       {/* Все объекты */}
       <Title order={2} mb="lg">Все объекты недвижимости</Title>
       <Text mb="md" c="dimmed">Найдено: {filteredProperties.length} объектов</Text>
-      
+
       <Grid>
         {regularProperties.map((property) => (
           <Grid.Col key={property.id} span={{ base: 12, sm: 6, md: 4 }}>
@@ -499,8 +499,8 @@ export function AccommodationPageContent({ params }: AccommodationPageContentPro
                 <div>
                   <Text size="xl" fw={700} c="blue" mb="md">
                     €{property.price?.amount || 0}
-                    {property.price?.period === 'month' ? '/мес' : 
-                     property.price?.period === 'day' ? '/день' : ''}
+                    {property.price?.period === 'month' ? '/мес' :
+                      property.price?.period === 'day' ? '/день' : ''}
                   </Text>
 
                   <Group>

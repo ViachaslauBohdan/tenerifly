@@ -6,94 +6,94 @@ type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk";
 
 // Добавить эту функцию в начало файла useDataLoader.ts
 const getLocalizedText = (language: LanguageCode, textKey: string): string => {
-  const texts: Record<string, Record<string, string>> = {
-    max: {
-      en: 'Max',
-      ru: 'Макс',
-      pl: 'Maks',
-      fr: 'Max',
-      uk: 'Макс'
-    },
-    people: {
-      en: 'people',
-      ru: 'человек',
-      pl: 'osób',
-      fr: 'personnes',
-      uk: 'осіб'
-    },
-    day: {
-      en: 'day',
-      ru: 'день',
-      pl: 'dzień',
-      fr: 'jour',
-      uk: 'день'
-    },
-    seats: {
-      en: 'seats',
-      ru: 'мест',
-      pl: 'miejsc',
-      fr: 'places',
-      uk: 'місць'
-    },
-    automatic: {
-      en: 'Automatic',
-      ru: 'Автомат',
-      pl: 'Automatyczna',
-      fr: 'Automatique',
-      uk: 'Автомат'
-    },
-    manual: {
-      en: 'Manual',
-      ru: 'Механика',
-      pl: 'Manualna',
-      fr: 'Manuelle',
-      uk: 'Механіка'
-    },
-    airConditioning: {
-      en: 'AC',
-      ru: 'Кондиционер',
-      pl: 'Klimatyzacja',
-      fr: 'Climatisation',
-      uk: 'Кондиціонер'
-    },
-    bedrooms: {
-      en: 'bedrooms',
-      ru: 'спальни',
-      pl: 'sypialnie',
-      fr: 'chambres',
-      uk: 'спальні'
-    },
-    bathrooms: {
-      en: 'bathrooms',
-      ru: 'ванные',
-      pl: 'łazienki',
-      fr: 'salles de bain',
-      uk: 'ванні'
-    },
-    minRead: {
-      en: 'min read',
-      ru: 'мин чтения',
-      pl: 'min czytania',
-      fr: 'min de lecture',
-      uk: 'хв читання'
-    },
-    night: {
-      en: 'night',
-      ru: 'ночь',
-      pl: 'noc',
-      fr: 'nuit',
-      uk: 'ніч'
-    },
-    month: {
-      en: 'month',
-      ru: 'месяц',
-      pl: 'miesiąc',
-      fr: 'mois',
-      uk: 'місяць'
-    }
-  };
-  
-  return texts[textKey]?.[language] || texts[textKey]?.['en'] || '';
+    const texts: Record<string, Record<string, string>> = {
+        max: {
+            en: 'Max',
+            ru: 'Макс',
+            pl: 'Maks',
+            fr: 'Max',
+            uk: 'Макс'
+        },
+        people: {
+            en: 'people',
+            ru: 'человек',
+            pl: 'osób',
+            fr: 'personnes',
+            uk: 'осіб'
+        },
+        day: {
+            en: 'day',
+            ru: 'день',
+            pl: 'dzień',
+            fr: 'jour',
+            uk: 'день'
+        },
+        seats: {
+            en: 'seats',
+            ru: 'мест',
+            pl: 'miejsc',
+            fr: 'places',
+            uk: 'місць'
+        },
+        automatic: {
+            en: 'Automatic',
+            ru: 'Автомат',
+            pl: 'Automatyczna',
+            fr: 'Automatique',
+            uk: 'Автомат'
+        },
+        manual: {
+            en: 'Manual',
+            ru: 'Механика',
+            pl: 'Manualna',
+            fr: 'Manuelle',
+            uk: 'Механіка'
+        },
+        airConditioning: {
+            en: 'AC',
+            ru: 'Кондиционер',
+            pl: 'Klimatyzacja',
+            fr: 'Climatisation',
+            uk: 'Кондиціонер'
+        },
+        bedrooms: {
+            en: 'bedrooms',
+            ru: 'спальни',
+            pl: 'sypialnie',
+            fr: 'chambres',
+            uk: 'спальні'
+        },
+        bathrooms: {
+            en: 'bathrooms',
+            ru: 'ванные',
+            pl: 'łazienki',
+            fr: 'salles de bain',
+            uk: 'ванні'
+        },
+        minRead: {
+            en: 'min read',
+            ru: 'мин чтения',
+            pl: 'min czytania',
+            fr: 'min de lecture',
+            uk: 'хв читання'
+        },
+        night: {
+            en: 'night',
+            ru: 'ночь',
+            pl: 'noc',
+            fr: 'nuit',
+            uk: 'ніч'
+        },
+        month: {
+            en: 'month',
+            ru: 'месяц',
+            pl: 'miesiąc',
+            fr: 'mois',
+            uk: 'місяць'
+        }
+    };
+
+    return texts[textKey]?.[language] || texts[textKey]?.['en'] || '';
 };
 
 // Функция для API запросов

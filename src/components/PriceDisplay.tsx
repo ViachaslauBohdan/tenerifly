@@ -12,13 +12,13 @@ interface PriceDisplayProps {
   className?: string;
 }
 
-export function PriceDisplay({ 
-  price, 
-  locale, 
-  size = 'md', 
+export function PriceDisplay({
+  price,
+  locale,
+  size = 'md',
   weight = 600,
   color = 'blue',
-  className 
+  className
 }: PriceDisplayProps) {
   const { convertedPrice, isLoading, error } = useConvertedPrice(price, locale);
 
@@ -30,7 +30,7 @@ export function PriceDisplay({
       fr: 'Prix non spécifié',
       uk: 'Ціна не вказана'
     };
-    
+
     return <Text size={size} fw={weight} c="gray.5">
       {notSpecifiedText[locale] || notSpecifiedText.en}
     </Text>;

@@ -706,8 +706,8 @@ export default function ApartmentsPage() {
                                                             key={pageNumber}
                                                             onClick={() => handlePageChange(pageNumber)}
                                                             className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${currentPage === pageNumber
-                                                                    ? "bg-blue-600 text-white"
-                                                                    : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+                                                                ? "bg-blue-600 text-white"
+                                                                : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 hover:text-gray-700"
                                                                 }`}
                                                         >
                                                             {pageNumber}
