@@ -139,7 +139,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
     const t = translations.en;
 
     const handleSend = () => {
-        if (!firstName || !lastName || !phone) return;
+        if (!firstName || !lastName || !phone || !email) return;
 
         setIsSending(true);
 
@@ -178,7 +178,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
         }, 2000);
     };
 
-    const isFormValid = firstName && lastName && phone;
+    const isFormValid = firstName && lastName && phone && email;
 
     return (
         <Modal
@@ -228,32 +228,41 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
                         <Group grow>
                             <TextInput
                                 leftSection={<IconUser size={16} />}
-                                placeholder={t.firstName}
+                                placeholder="First Name"
+                                label="First Name"
                                 value={firstName}
                                 onChange={(e) => setFirstName(e.target.value)}
                                 required
+                                withAsterisk
                             />
                             <TextInput
                                 leftSection={<IconUser size={16} />}
-                                placeholder={t.lastName}
+                                placeholder="Last Name"
+                                label="Last Name"
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
                                 required
+                                withAsterisk
                             />
                         </Group>
                         <TextInput
                             leftSection={<IconPhone size={16} />}
-                            placeholder={t.phone}
+                            placeholder="Phone Number"
+                            label="Phone Number"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             required
+                            withAsterisk
                         />
                         <TextInput
                             leftSection={<IconMessage size={16} />}
-                            placeholder={t.email}
+                            placeholder="Email"
+                            label="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             type="email"
+                            required
+                            withAsterisk
                         />
                         <TextInput
                             leftSection={<IconBrandWhatsapp size={16} />}
