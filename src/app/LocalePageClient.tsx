@@ -113,7 +113,7 @@ const translations = {
     cta: {
       title: "Ready to Start Your Adventure?",
       subtitle: "Contact us for personalized recommendations and bookings",
-      button: "Write on WhatsApp",
+      button: "Contact us",
     },
     footer: {
       description: "Your trusted partner for unforgettable experiences in Tenerife",
@@ -206,7 +206,7 @@ const translations = {
     cta: {
       title: "Готовы начать свое приключение?",
       subtitle: "Свяжитесь с нами для персональных рекомендаций и бронирования",
-      button: "Написать в WhatsApp",
+      button: "Связаться с нами",
     },
     footer: {
       description: "Ваш надежный партнер для незабываемых впечатлений на Тенерифе",
@@ -299,7 +299,7 @@ const translations = {
     cta: {
       title: "Gotowy na przygodę?",
       subtitle: "Skontaktuj się z nami po spersonalizowane rekomendacje i rezerwacje",
-      button: "Napisz na WhatsApp",
+      button: "Skontaktuj się z nami",
     },
     footer: {
       description: "Twój zaufany partner dla niezapomnianych doświadczeń na Teneryfie",
@@ -392,7 +392,7 @@ const translations = {
     cta: {
       title: "Prêt à commencer votre aventure ?",
       subtitle: "Contactez-nous pour des recommandations personnalisées et des réservations",
-      button: "Écrire sur WhatsApp",
+      button: "Contactez-nous",
     },
     footer: {
       description: "Votre partenaire de confiance pour des expériences inoubliables à Tenerife",
@@ -485,7 +485,7 @@ const translations = {
     cta: {
       title: "Готові почати свою пригоду?",
       subtitle: "Зв'яжіться з нами для персональних рекомендацій та бронювання",
-      button: "Написати в WhatsApp",
+      button: "Зв'язатися з нами",
     },
     footer: {
       description: "Ваш надійний партнер для незабутніх вражень на Тенеріфе",
@@ -1835,6 +1835,7 @@ export function LocalePageClient() {
             currency: bookingItem.currency,
             contactEmail: bookingItem.contact?.email
           }}
+          mode="contact"
         />
       )}
     </main>

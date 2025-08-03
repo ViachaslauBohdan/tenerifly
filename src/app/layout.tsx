@@ -5,7 +5,7 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import { ColorSchemeScript } from '@mantine/core';
 import { MantineProvider } from '@/components/providers/MantineProvider';
-import { WhatsAppButton } from '@/components/WhatsAppButton';
+
 import { ReferralCodeClient } from '@/components/ReferralCodeClient';
 
 const geistSans = Geist({
@@ -30,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
     keywords: [
       "Tenerife accommodation",
-      "Tenerife tours", 
+      "Tenerife tours",
       "Tenerife car rental",
       "Tenerife vacation",
       "Tenerife holiday",
@@ -77,7 +77,7 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: "https://tenerifly.io",
       languages: {
         'en': 'https://tenerifly.io/en',
-        'pl': 'https://tenerifly.io/pl', 
+        'pl': 'https://tenerifly.io/pl',
         'fr': 'https://tenerifly.io/fr',
         'ru': 'https://tenerifly.io/ru',
         'uk': 'https://tenerifly.io/uk',
@@ -118,7 +118,6 @@ export default function RootLayout({
         <MantineProvider>
           <ReferralCodeClient />
           {children}
-          <WhatsAppButton />
         </MantineProvider>
       </body>
     </html>

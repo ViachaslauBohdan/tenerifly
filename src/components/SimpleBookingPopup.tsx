@@ -13,9 +13,10 @@ interface SimpleBookingPopupProps {
         currency?: string;
         contactEmail?: string;
     };
+    mode?: 'contact' | 'booking';
 }
 
-export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopupProps) {
+export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: SimpleBookingPopupProps) {
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
     const [comments, setComments] = useState('');
@@ -29,7 +30,130 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
     const [isSending, setIsSending] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
 
-    const translations = {
+    const contactTranslations = {
+        en: {
+            title: 'Contact',
+            itemName: '',
+            price: 'Price',
+            contactInfo: 'Contact Information',
+            firstName: 'First Name',
+            lastName: 'Last Name',
+            phone: 'Phone Number',
+            email: 'Email (Optional)',
+            whatsapp: 'WhatsApp (Optional)',
+            telegram: 'Telegram (Optional)',
+            preferredContact: 'Preferred contact',
+            selectDates: 'SELECT DATES',
+            comments: 'Request Description',
+            commentsPlaceholder: 'Any special requests or additional information...',
+            close: 'Close',
+            send: 'Send Contact Request',
+            success: 'Thanks for your contact request. Our Tenerifly team will analyze it and respond soon',
+            whatsappLabel: 'WhatsApp',
+            telegramLabel: 'Telegram',
+            emailLabel: 'Email',
+            emailError: 'Please enter a valid email address',
+            phoneError: 'Please enter a valid phone number (at least 10 digits)'
+        },
+        ru: {
+            title: 'Связаться',
+            itemName: '',
+            price: 'Цена',
+            contactInfo: 'Контактная информация',
+            firstName: 'Имя',
+            lastName: 'Фамилия',
+            phone: 'Номер телефона',
+            email: 'Email (Необязательно)',
+            whatsapp: 'WhatsApp (Необязательно)',
+            telegram: 'Telegram (Необязательно)',
+            preferredContact: 'Предпочтительный способ связи',
+            selectDates: 'ВЫБРАТЬ ДАТЫ (НЕОБЯЗАТЕЛЬНО)',
+            comments: 'Описание запроса',
+            commentsPlaceholder: 'Особые пожелания или дополнительная информация...',
+            close: 'Закрыть',
+            send: 'Отправить запрос на связь',
+            success: 'Спасибо за ваш запрос на связь. Наша команда Tenerifly проанализирует его и ответит в ближайшее время',
+            whatsappLabel: 'WhatsApp',
+            telegramLabel: 'Telegram',
+            emailLabel: 'Email',
+            emailError: 'Пожалуйста, введите корректный email адрес',
+            phoneError: 'Пожалуйста, введите корректный номер телефона (минимум 10 цифр)'
+        },
+        pl: {
+            title: 'Kontakt',
+            itemName: '',
+            price: 'Cena',
+            contactInfo: 'Informacje kontaktowe',
+            firstName: 'Imię',
+            lastName: 'Nazwisko',
+            phone: 'Numer telefonu',
+            email: 'Email (Opcjonalnie)',
+            whatsapp: 'WhatsApp (Opcjonalnie)',
+            telegram: 'Telegram (Opcjonalnie)',
+            preferredContact: 'Preferowana metoda kontaktu',
+            selectDates: 'WYBIERZ DATY (OPCJONALNIE)',
+            comments: 'Opis żądania',
+            commentsPlaceholder: 'Specjalne życzenia lub dodatkowe informacje...',
+            close: 'Zamknij',
+            send: 'Wyślij prośbę o kontakt',
+            success: 'Dziękujemy za Twoją prośbę o kontakt. Nasz zespół Tenerifly przeanalizuje ją i odpowie wkrótce',
+            whatsappLabel: 'WhatsApp',
+            telegramLabel: 'Telegram',
+            emailLabel: 'Email',
+            emailError: 'Proszę wprowadzić poprawny adres email',
+            phoneError: 'Proszę wprowadzić poprawny numer telefonu (co najmniej 10 cyfr)'
+        },
+        fr: {
+            title: 'Contact',
+            itemName: '',
+            price: 'Prix',
+            contactInfo: 'Informations de contact',
+            firstName: 'Prénom',
+            lastName: 'Nom de famille',
+            phone: 'Numéro de téléphone',
+            email: 'Email (Optionnel)',
+            whatsapp: 'WhatsApp (Optionnel)',
+            telegram: 'Telegram (Optionnel)',
+            preferredContact: 'Méthode de contact préférée',
+            selectDates: 'SÉLECTIONNER LES DATES (OPTIONNEL)',
+            comments: 'Description de la demande',
+            commentsPlaceholder: 'Demandes spéciales ou informations supplémentaires...',
+            close: 'Fermer',
+            send: 'Envoyer la demande de contact',
+            success: 'Merci pour votre demande de contact. Notre équipe Tenerifly l\'analysera et répondra bientôt',
+            whatsappLabel: 'WhatsApp',
+            telegramLabel: 'Telegram',
+            emailLabel: 'Email',
+            emailError: 'Veuillez saisir une adresse email valide',
+            phoneError: 'Veuillez saisir un numéro de téléphone valide (au moins 10 chiffres)'
+        },
+        uk: {
+            title: 'Зв\'язатися',
+            itemName: '',
+            price: 'Ціна',
+            contactInfo: 'Контактна інформація',
+            firstName: 'Ім\'я',
+            lastName: 'Прізвище',
+            phone: 'Номер телефону',
+            email: 'Email (Необов\'язково)',
+            whatsapp: 'WhatsApp (Необов\'язково)',
+            telegram: 'Telegram (Необов\'язково)',
+            preferredContact: 'Бажаний спосіб зв\'язку',
+            selectDates: 'ВИБРАТИ ДАТИ (НЕОБОВ\'ЯЗКОВО)',
+            comments: 'Опис запиту',
+            commentsPlaceholder: 'Особливі побажання або додаткова інформація...',
+            close: 'Закрити',
+            send: 'Надіслати запит на зв\'язок',
+            success: 'Дякуємо за ваш запит на зв\'язок. Наша команда Tenerifly проаналізує його і відповість найближчим часом',
+            whatsappLabel: 'WhatsApp',
+            telegramLabel: 'Telegram',
+            emailLabel: 'Email',
+            emailError: 'Будь ласка, введіть коректну email адресу',
+            phoneError: 'Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)'
+        }
+    };
+
+    const bookingTranslations = {
         en: {
             title: 'Pre-book',
             itemName: '',
@@ -151,6 +275,9 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             phoneError: 'Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)'
         }
     };
+
+    // Select translations based on mode
+    const translations = mode === 'contact' ? contactTranslations : bookingTranslations;
 
     // Default to English for now - you can add language detection logic
     const t = translations.en;
