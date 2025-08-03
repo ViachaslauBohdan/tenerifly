@@ -584,7 +584,8 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
                     item={{
                         name: selectedProperty.title,
                         price: selectedProperty.price ? `${getCurrency(selectedProperty)} ${getPrice(selectedProperty)}/${translations.perMonth}` : undefined,
-                        currency: selectedProperty.price?.currency
+                        currency: selectedProperty.price?.currency,
+                        contactEmail: selectedProperty.contact?.email
                     }}
                 />
             )}

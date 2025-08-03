@@ -11,6 +11,7 @@ interface SimpleBookingPopupProps {
         name: string;
         price?: string;
         currency?: string;
+        contactEmail?: string;
     };
 }
 
@@ -46,7 +47,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             commentsPlaceholder: 'Any special requests or additional information...',
             close: 'Close',
             send: 'Send Booking Request',
-            success: 'The agent will respond soon',
+            success: 'Thanks for your pre-booking request. Our Tenerifly team will analyze it and respond soon',
             whatsappLabel: 'WhatsApp',
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
@@ -70,7 +71,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             commentsPlaceholder: 'Особые пожелания или дополнительная информация...',
             close: 'Закрыть',
             send: 'Отправить заявку на бронирование',
-            success: 'Агент ответит в ближайшее время',
+            success: 'Спасибо за ваш запрос на предварительное бронирование. Наша команда Tenerifly проанализирует его и ответит в ближайшее время',
             whatsappLabel: 'WhatsApp',
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
@@ -94,7 +95,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             commentsPlaceholder: 'Specjalne życzenia lub dodatkowe informacje...',
             close: 'Zamknij',
             send: 'Wyślij prośbę o rezerwację',
-            success: 'Agent odpowie wkrótce',
+            success: 'Dziękujemy za Twoją prośbę o przedwstępną rezerwację. Nasz zespół Tenerifly przeanalizuje ją i odpowie wkrótce',
             whatsappLabel: 'WhatsApp',
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
@@ -118,7 +119,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             commentsPlaceholder: 'Demandes spéciales ou informations supplémentaires...',
             close: 'Fermer',
             send: 'Envoyer la demande de réservation',
-            success: 'L\'agent répondra bientôt',
+            success: 'Merci pour votre demande de pré-réservation. Notre équipe Tenerifly l\'analysera et répondra bientôt',
             whatsappLabel: 'WhatsApp',
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
@@ -142,7 +143,7 @@ export function SimpleBookingPopup({ opened, onClose, item }: SimpleBookingPopup
             commentsPlaceholder: 'Особливі побажання або додаткова інформація...',
             close: 'Закрити',
             send: 'Надіслати заявку на бронювання',
-            success: 'Агент відповість найближчим часом',
+            success: 'Дякуємо за ваш запит на попереднє бронювання. Наша команда Tenerifly проаналізує його і відповість найближчим часом',
             whatsappLabel: 'WhatsApp',
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
@@ -191,6 +192,7 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     email: email, // User's email as "from"
+                    contactEmail: item.contactEmail, // Property's contact email
                     subject: `New Pre-Book request - ${item.name || 'Personalized Request'}`,
                     message: emailMessage,
                 }),

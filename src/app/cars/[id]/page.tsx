@@ -911,7 +911,8 @@ export default function CarDetailPage() {
                         item={{
                             name: car.title,
                             price: car.rental_prices ? `${car.rental_prices.currency} ${car.rental_prices.day_1.toLocaleString()}/day` : undefined,
-                            currency: car.rental_prices?.currency
+                            currency: car.rental_prices?.currency,
+                            contactEmail: car.contact?.email
                         }}
                     />
                 )}

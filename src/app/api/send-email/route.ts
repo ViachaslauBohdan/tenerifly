@@ -6,14 +6,38 @@ import { NextResponse } from 'next/server'
 export async function POST(req: Request) {
     console.log('=== EMAIL API ROUTE CALLED ===')
 
-    const { email, subject, message } = await req.json()
+    const { email, subject, message, contactEmail } = await req.json()
 
     console.log('📧 RECEIVED DATA:')
     console.log('Email (recipient):', email)
+    console.log('Contact Email:', contactEmail)
     console.log('Subject:', subject)
     console.log('Message:', message)
     console.log('Message length:', message?.length || 0, 'characters')
     console.log('========================')
+
+    // Define recipients - always include main email and contact email if available
+    const defaultRecipient = process.env.NEXT_DEFAULT_EMAIL_RECIPIENT || 'slawandr1@gmail.com'
+    const recipients = [defaultRecipient]
+
+    console.log('📧 RECIPIENTS SETUP:')
+    console.log('   Default recipient (from env):', defaultRecipient)
+    console.log('   User email (from form):', email)
+    console.log('   Contact email (from property):', contactEmail)
+
+    // Add contact email if provided and valid
+    if (contactEmail && contactEmail !== email && contactEmail.includes('@')) {
+        recipients.push(contactEmail)
+        console.log('✅ Added contact email to recipients:', contactEmail)
+    } else {
+        console.log('❌ No valid contact email provided or same as user email')
+    }
+
+    console.log('📧 FINAL RECIPIENTS LIST:')
+    recipients.forEach((recipient, index) => {
+        console.log(`   ${index + 1}. ${recipient}`)
+    })
+    console.log('📧 TOTAL RECIPIENTS:', recipients.length)
 
     // Check if API key is configured
     if (!process.env.NEXT_PUBLIC_RESEND_API_KEY) {
@@ -29,7 +53,7 @@ export async function POST(req: Request) {
         console.log('SENDING EMAIL VIA RESEND...')
         const result = await resend.emails.send({
             from: `${process.env.NEXT_PUBLIC_RESEND_EMAIL}` || 'onboarding@resend.dev',
-            to: 'slawandr1@gmail.com',
+            to: recipients,
             subject,
             html: `<p>${message}</p>`,
         })

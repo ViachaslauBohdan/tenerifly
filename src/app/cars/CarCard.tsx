@@ -592,7 +592,8 @@ const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) =
                     item={{
                         name: selectedCar.title,
                         price: selectedCar.rental_prices ? `${getCurrency(selectedCar)} ${getPrice(selectedCar)}/DAY` : undefined,
-                        currency: selectedCar.rental_prices?.currency
+                        currency: selectedCar.rental_prices?.currency,
+                        contactEmail: selectedCar.contact?.email
                     }}
                 />
             )}

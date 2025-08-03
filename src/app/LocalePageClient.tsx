@@ -1832,7 +1832,8 @@ export function LocalePageClient() {
           item={{
             name: bookingItem.title,
             price: bookingItem.price,
-            currency: bookingItem.currency
+            currency: bookingItem.currency,
+            contactEmail: bookingItem.contact?.email
           }}
         />
       )}

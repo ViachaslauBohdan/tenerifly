@@ -633,7 +633,8 @@ export default function TourDetailPage() {
                         item={{
                             name: tour.title,
                             price: tour.price ? `${tour.price.currency} ${tour.price.amount.toLocaleString()}/${tour.price.period || 'total'}` : undefined,
-                            currency: tour.price?.currency
+                            currency: tour.price?.currency,
+                            contactEmail: tour.contact?.email
                         }}
                     />
                 )}

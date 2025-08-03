@@ -231,7 +231,8 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
                             property.specifications?.bedrooms && `${property.specifications.bedrooms} ${getLocalizedText(language, 'bedrooms')}`,
                             property.specifications?.bathrooms && `${property.specifications.bathrooms} ${getLocalizedText(language, 'bathrooms')}`
                         ].filter(Boolean).join(', '),
-                        rating: 4.5
+                        rating: 4.5,
+                        contact: property.contact // ✅ Added contact field
                     }));
                     setAccommodation(transformedProperties);
                 }

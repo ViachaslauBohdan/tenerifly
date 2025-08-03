@@ -460,6 +460,7 @@ export default function PropertyDetailPage() {
                 }
 
                 const data = await response.json()
+                console.log('Property data:', data)
                 setProperty(data.data)
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Unknown error')
@@ -1010,7 +1011,8 @@ export default function PropertyDetailPage() {
                         item={{
                             name: property.title,
                             price: property.price ? `${property.price.currency} ${property.price.amount.toLocaleString()}/${property.type === 'rent' ? 'month' : 'night'}` : undefined,
-                            currency: property.price?.currency
+                            currency: property.price?.currency,
+                            contactEmail: property.contact?.email
                         }}
                     />
                 )}
