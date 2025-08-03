@@ -578,36 +578,30 @@ export default function TourDetailPage() {
                                 <div className="text-sm text-gray-600">{tour.price?.period || 'total'}</div>
                             </div>
 
-                            {/* Contact Info */}
-                            {tour.contact && (
-                                <div className="space-y-3 mb-6">
-                                    <h3 className="font-semibold text-gray-900">{t.contact}</h3>
-                                    {tour.contact.phone && (
-                                        <div>
-                                            <span className="text-sm text-gray-600">{t.phone}</span>
-                                            <div className="font-medium text-gray-900">{tour.contact.phone}</div>
-                                        </div>
-                                    )}
-                                    {tour.contact.email && (
-                                        <div>
-                                            <span className="text-sm text-gray-600">{t.email}</span>
-                                            <div className="font-medium text-gray-900">{tour.contact.email}</div>
-                                        </div>
-                                    )}
-                                    {tour.contact.whatsapp && (
-                                        <div>
-                                            <span className="text-sm text-gray-600">{t.whatsapp}</span>
-                                            <div className="font-medium text-gray-900">{tour.contact.whatsapp}</div>
-                                        </div>
-                                    )}
-                                    {tour.contact.telegram && (
-                                        <div>
-                                            <span className="text-sm text-gray-600">{t.telegram}</span>
-                                            <div className="font-medium text-gray-900">{tour.contact.telegram}</div>
-                                        </div>
-                                    )}
+                            {/* Tour Highlights */}
+                            <div className="mb-6">
+                                <h3 className="font-semibold text-gray-900 mb-3">Tour Highlights</h3>
+                                <div className="space-y-2">
+                                    <div className="flex items-center text-sm">
+                                        <svg className="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                        </svg>
+                                        <span className="text-gray-700">{getDurationText(tour.duration)}</span>
+                                    </div>
+                                    <div className="flex items-center text-sm">
+                                        <svg className="w-4 h-4 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                        </svg>
+                                        <span className="text-gray-700">{getLanguageText(tour.language)}</span>
+                                    </div>
+                                    <div className="flex items-center text-sm">
+                                        <svg className="w-4 h-4 text-orange-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                        </svg>
+                                        <span className="text-gray-700">{getLocation(tour)}</span>
+                                    </div>
                                 </div>
-                            )}
+                            </div>
 
                             {/* WhatsApp Contact Button */}
                             {tour.contact?.whatsapp && (

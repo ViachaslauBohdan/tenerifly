@@ -70,6 +70,7 @@ const translations = {
         hasHeating: "Heating",
         hasInternet: "Internet",
         furnished: "Furnished",
+        keyAmenities: "Key Amenities",
         errorLoading: "Error loading property",
     },
     ru: {
@@ -133,6 +134,7 @@ const translations = {
         hasHeating: "Отопление",
         hasInternet: "Интернет",
         furnished: "Меблирована",
+        keyAmenities: "Ключевые удобства",
         errorLoading: "Ошибка загрузки недвижимости",
     },
     pl: {
@@ -196,6 +198,7 @@ const translations = {
         hasHeating: "Ogrzewanie",
         hasInternet: "Internet",
         furnished: "Umeblowane",
+        keyAmenities: "Kluczowe udogodnienia",
         errorLoading: "Błąd ładowania nieruchomości",
     },
     fr: {
@@ -259,6 +262,7 @@ const translations = {
         hasHeating: "Chauffage",
         hasInternet: "Internet",
         furnished: "Meublé",
+        keyAmenities: "Équipements principaux",
         errorLoading: "Erreur de chargement de la propriété",
     },
     uk: {
@@ -322,6 +326,7 @@ const translations = {
         hasHeating: "Опалення",
         hasInternet: "Інтернет",
         furnished: "Мебльована",
+        keyAmenities: "Ключові зручності",
         errorLoading: "Помилка завантаження нерухомості",
     },
 }
@@ -959,29 +964,60 @@ export default function PropertyDetailPage() {
 
 
 
-                            {/* Contact Info */}
-                            {property.contact && (
-                                <div className="space-y-3 mb-6">
-                                    <div>
-                                        <span className="text-sm text-gray-600">{t.phone}</span>
-                                        <div className="font-medium text-gray-900">{property.contact.phone}</div>
+                            {/* Key Amenities */}
+                            {property.features && (
+                                <div className="mb-6">
+                                    <h3 className="font-semibold text-gray-900 mb-3">{t.keyAmenities}</h3>
+                                    <div className="space-y-2">
+                                        {property.features.has_pool && (
+                                            <div className="flex items-center text-sm">
+                                                <svg className="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                </svg>
+                                                <span className="text-gray-700">{t.hasPool}</span>
+                                            </div>
+                                        )}
+                                        {property.features.has_garden && (
+                                            <div className="flex items-center text-sm">
+                                                <svg className="w-4 h-4 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                </svg>
+                                                <span className="text-gray-700">{t.hasGarden}</span>
+                                            </div>
+                                        )}
+                                        {property.features.has_terrace && (
+                                            <div className="flex items-center text-sm">
+                                                <svg className="w-4 h-4 text-orange-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                </svg>
+                                                <span className="text-gray-700">{t.hasTerrace}</span>
+                                            </div>
+                                        )}
+                                        {property.features.has_air_conditioning && (
+                                            <div className="flex items-center text-sm">
+                                                <svg className="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                </svg>
+                                                <span className="text-gray-700">{t.hasAirConditioning}</span>
+                                            </div>
+                                        )}
+                                        {property.features.has_internet && (
+                                            <div className="flex items-center text-sm">
+                                                <svg className="w-4 h-4 text-purple-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                </svg>
+                                                <span className="text-gray-700">{t.hasInternet}</span>
+                                            </div>
+                                        )}
+                                        {property.features.furnished && (
+                                            <div className="flex items-center text-sm">
+                                                <svg className="w-4 h-4 text-brown-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                </svg>
+                                                <span className="text-gray-700">{t.furnished}</span>
+                                            </div>
+                                        )}
                                     </div>
-                                    <div>
-                                        <span className="text-sm text-gray-600">{t.email}</span>
-                                        <div className="font-medium text-gray-900">{property.contact.email}</div>
-                                    </div>
-                                    {property.contact.whatsapp && (
-                                        <div>
-                                            <span className="text-sm text-gray-600">{t.whatsapp}</span>
-                                            <div className="font-medium text-gray-900">{property.contact.whatsapp}</div>
-                                        </div>
-                                    )}
-                                    {property.contact.telegram && (
-                                        <div>
-                                            <span className="text-sm text-gray-600">{t.telegram}</span>
-                                            <div className="font-medium text-gray-900">{property.contact.telegram}</div>
-                                        </div>
-                                    )}
                                 </div>
                             )}
 
