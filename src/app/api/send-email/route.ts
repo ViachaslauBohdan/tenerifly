@@ -26,25 +26,25 @@ export async function POST(req: Request) {
     const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY)
 
     try {
-        console.log('📤 SENDING EMAIL VIA RESEND...')
+        console.log('SENDING EMAIL VIA RESEND...')
         const result = await resend.emails.send({
-            from: `bookings@${process.env.NEXT_PUBLIC_RESEND_EMAIL || 'booking.tenerifly.info.com'}`,
+            from: `${process.env.NEXT_PUBLIC_RESEND_EMAIL}` || 'onboarding@resend.dev',
             to: 'slawandr1@gmail.com',
             subject,
             html: `<p>${message}</p>`,
         })
 
         if (result.data && !result.error) {
-            console.log('✅ EMAIL SENT SUCCESSFULLY!')
+            console.log('EMAIL SENT SUCCESSFULLY!')
             console.log('Resend result:', result)
             return NextResponse.json({ success: true })
         } else {
-            console.error('❌ EMAIL SENDING FAILED!')
+            console.error('EMAIL SENDING FAILED!')
             console.error('Resend error:', result.error)
             return NextResponse.json({ success: false, error: result.error }, { status: 500 })
         }
     } catch (err) {
-        console.error('❌ EMAIL SENDING FAILED!')
+        console.error('EMAIL SENDING FAILED!')
         console.error('Error details:', err)
         return NextResponse.json({ success: false }, { status: 500 })
     }
