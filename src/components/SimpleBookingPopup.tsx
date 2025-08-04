@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, Text, Button, Stack, Group, Textarea, TextInput, Select } from '@mantine/core';
+import { Modal, Text, Button, Stack, Group, Textarea, TextInput, Select, Badge, Divider } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
-import { IconMessage, IconSend, IconCalendar, IconHome, IconUser, IconPhone, IconBrandWhatsapp, IconBrandTelegram } from '@tabler/icons-react';
+import { IconMessage, IconSend, IconCalendar, IconHome, IconUser, IconPhone, IconBrandWhatsapp, IconBrandTelegram, IconCheck, IconStar, IconClock, IconMapPin } from '@tabler/icons-react';
 import { openBookingWhatsApp } from '../utils/whatsapp';
 
 interface SimpleBookingPopupProps {
@@ -33,7 +33,7 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
     const contactTranslations = {
         en: {
             title: 'Contact',
-            itemName: '',
+            itemName: 'Property',
             price: 'Price',
             contactInfo: 'Contact Information',
             firstName: 'First Name',
@@ -53,11 +53,14 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
             emailError: 'Please enter a valid email address',
-            phoneError: 'Please enter a valid phone number (at least 10 digits)'
+            phoneError: 'Please enter a valid phone number (at least 10 digits)',
+            premium: 'Premium Service',
+            instantResponse: 'Instant Response',
+            secureBooking: 'Secure Booking'
         },
         ru: {
             title: 'Связаться',
-            itemName: '',
+            itemName: 'Объект',
             price: 'Цена',
             contactInfo: 'Контактная информация',
             firstName: 'Имя',
@@ -77,11 +80,14 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
             emailError: 'Пожалуйста, введите корректный email адрес',
-            phoneError: 'Пожалуйста, введите корректный номер телефона (минимум 10 цифр)'
+            phoneError: 'Пожалуйста, введите корректный номер телефона (минимум 10 цифр)',
+            premium: 'Премиум сервис',
+            instantResponse: 'Мгновенный ответ',
+            secureBooking: 'Безопасное бронирование'
         },
         pl: {
             title: 'Kontakt',
-            itemName: '',
+            itemName: 'Nieruchomość',
             price: 'Cena',
             contactInfo: 'Informacje kontaktowe',
             firstName: 'Imię',
@@ -101,11 +107,14 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
             emailError: 'Proszę wprowadzić poprawny adres email',
-            phoneError: 'Proszę wprowadzić poprawny numer telefonu (co najmniej 10 cyfr)'
+            phoneError: 'Proszę wprowadzić poprawny numer telefonu (co najmniej 10 cyfr)',
+            premium: 'Usługa Premium',
+            instantResponse: 'Natychmiastowa odpowiedź',
+            secureBooking: 'Bezpieczna rezerwacja'
         },
         fr: {
             title: 'Contact',
-            itemName: '',
+            itemName: 'Propriété',
             price: 'Prix',
             contactInfo: 'Informations de contact',
             firstName: 'Prénom',
@@ -125,11 +134,14 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
             emailError: 'Veuillez saisir une adresse email valide',
-            phoneError: 'Veuillez saisir un numéro de téléphone valide (au moins 10 chiffres)'
+            phoneError: 'Veuillez saisir un numéro de téléphone valide (au moins 10 chiffres)',
+            premium: 'Service Premium',
+            instantResponse: 'Réponse Instantanée',
+            secureBooking: 'Réservation Sécurisée'
         },
         uk: {
             title: 'Зв\'язатися',
-            itemName: '',
+            itemName: 'Об\'єкт',
             price: 'Ціна',
             contactInfo: 'Контактна інформація',
             firstName: 'Ім\'я',
@@ -149,14 +161,17 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
             emailError: 'Будь ласка, введіть коректну email адресу',
-            phoneError: 'Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)'
+            phoneError: 'Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)',
+            premium: 'Преміум сервіс',
+            instantResponse: 'Миттєва відповідь',
+            secureBooking: 'Безпечне бронювання'
         }
     };
 
     const bookingTranslations = {
         en: {
             title: 'Pre-book',
-            itemName: '',
+            itemName: 'Property',
             price: 'Price',
             contactInfo: 'Contact Information',
             firstName: 'First Name',
@@ -176,11 +191,14 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
             emailError: 'Please enter a valid email address',
-            phoneError: 'Please enter a valid phone number (at least 10 digits)'
+            phoneError: 'Please enter a valid phone number (at least 10 digits)',
+            premium: 'Premium Service',
+            instantResponse: 'Instant Response',
+            secureBooking: 'Secure Booking'
         },
         ru: {
             title: 'Предварительное бронирование',
-            itemName: '',
+            itemName: 'Объект',
             price: 'Цена',
             contactInfo: 'Контактная информация',
             firstName: 'Имя',
@@ -200,11 +218,14 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
             emailError: 'Пожалуйста, введите корректный email адрес',
-            phoneError: 'Пожалуйста, введите корректный номер телефона (минимум 10 цифр)'
+            phoneError: 'Пожалуйста, введите корректный номер телефона (минимум 10 цифр)',
+            premium: 'Премиум сервис',
+            instantResponse: 'Мгновенный ответ',
+            secureBooking: 'Безопасное бронирование'
         },
         pl: {
             title: 'Przedwstępna rezerwacja',
-            itemName: '',
+            itemName: 'Nieruchomość',
             price: 'Cena',
             contactInfo: 'Informacje kontaktowe',
             firstName: 'Imię',
@@ -224,11 +245,14 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
             emailError: 'Proszę wprowadzić poprawny adres email',
-            phoneError: 'Proszę wprowadzić poprawny numer telefonu (co najmniej 10 cyfr)'
+            phoneError: 'Proszę wprowadzić poprawny numer telefonu (co najmniej 10 cyfr)',
+            premium: 'Usługa Premium',
+            instantResponse: 'Natychmiastowa odpowiedź',
+            secureBooking: 'Bezpieczna rezerwacja'
         },
         fr: {
             title: 'Pré-réserver',
-            itemName: '',
+            itemName: 'Propriété',
             price: 'Prix',
             contactInfo: 'Informations de contact',
             firstName: 'Prénom',
@@ -248,11 +272,14 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
             emailError: 'Veuillez saisir une adresse email valide',
-            phoneError: 'Veuillez saisir un numéro de téléphone valide (au moins 10 chiffres)'
+            phoneError: 'Veuillez saisir un numéro de téléphone valide (au moins 10 chiffres)',
+            premium: 'Service Premium',
+            instantResponse: 'Réponse Instantanée',
+            secureBooking: 'Réservation Sécurisée'
         },
         uk: {
             title: 'Попереднє бронювання',
-            itemName: '',
+            itemName: 'Об\'єкт',
             price: 'Ціна',
             contactInfo: 'Контактна інформація',
             firstName: 'Ім\'я',
@@ -272,7 +299,10 @@ export function SimpleBookingPopup({ opened, onClose, item, mode = 'booking' }: 
             telegramLabel: 'Telegram',
             emailLabel: 'Email',
             emailError: 'Будь ласка, введіть коректну email адресу',
-            phoneError: 'Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)'
+            phoneError: 'Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)',
+            premium: 'Преміум сервіс',
+            instantResponse: 'Миттєва відповідь',
+            secureBooking: 'Безпечне бронювання'
         }
     };
 
@@ -377,209 +407,438 @@ ${comments ? `Дополнительная информация: ${comments}` : 
         <Modal
             opened={opened}
             onClose={onClose}
-            title={
-                <Group gap="xs">
-                    <IconHome size={20} color="#3182ce" />
-                    <Text fw={600} size="lg">{t.title}</Text>
-                </Group>
-            }
-            size="lg"
+            title={null}
+            size="xl"
             centered
             fullScreen={false}
+            withCloseButton={false}
             styles={{
-                title: { flex: 1 },
-                header: { backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' },
                 body: {
-                    maxHeight: '80vh',
-                    overflowY: 'auto',
-                    padding: '20px'
+                    padding: 0,
+                    maxHeight: '90vh',
+                    overflowY: 'auto'
                 },
                 content: {
-                    maxWidth: '90vw',
-                    width: '600px'
+                    maxWidth: '95vw',
+                    width: '700px',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+                    border: '1px solid #e2e8f0'
                 }
             }}
         >
-            <Stack gap="md">
-                {/* Item Info */}
-                <div style={{
-                    backgroundColor: '#f7fafc',
-                    padding: '16px',
-                    borderRadius: '8px',
-                    border: '1px solid #e2e8f0'
-                }}>
-                    <Text size="sm" fw={600} c="#4a5568" tt="uppercase" style={{ letterSpacing: '0.05em' }} mb="xs">
-                        {t.itemName}
-                    </Text>
-                    <Text size="lg" fw={600} c="#1a202c">{item.name}</Text>
-                    {item.price && (
-                        <Text size="md" c="#2d3748" mt="xs">
-                            {item.currency} {item.price}
-                        </Text>
-                    )}
-                </div>
-
-                {/* Contact Information */}
-                <div>
-                    <Group gap="xs" mb="sm">
-                        <IconUser size={20} color="#3182ce" />
-                        <Text size="sm" fw={600} c="#4a5568" tt="uppercase" style={{ letterSpacing: '0.05em' }}>
-                            {t.contactInfo}
-                        </Text>
+            {/* Clean Header */}
+            <div style={{
+                background: '#f8fafc',
+                padding: '24px',
+                borderBottom: '1px solid #e2e8f0'
+            }}>
+                <Group justify="space-between" align="center">
+                    <Group gap="sm">
+                        <IconHome size={24} color="#3182ce" />
+                        <div>
+                            <Text size="xl" fw={600} c="#1a202c">
+                                {t.title}
+                            </Text>
+                            <Text size="sm" c="#64748b">
+                                Complete your booking request
+                            </Text>
+                        </div>
                     </Group>
-                    <Stack gap="sm">
-                        <Group grow>
-                            <TextInput
-                                leftSection={<IconUser size={16} />}
-                                placeholder="First Name"
-                                label="First Name"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                                required
-                                withAsterisk
-                            />
-                            <TextInput
-                                leftSection={<IconUser size={16} />}
-                                placeholder="Last Name"
-                                label="Last Name"
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
-                                required
-                                withAsterisk
-                            />
-                        </Group>
-                        <TextInput
-                            leftSection={<IconPhone size={16} />}
-                            placeholder="Phone Number"
-                            label="Phone Number"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            required
-                            withAsterisk
-                            error={phone && !isValidPhone(phone) ? t.phoneError : undefined}
-                        />
-                        <TextInput
-                            leftSection={<IconMessage size={16} />}
-                            placeholder="Email"
-                            label="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            type="email"
-                            required
-                            withAsterisk
-                            error={email && !isValidEmail(email) ? t.emailError : undefined}
-                        />
-                        <TextInput
-                            leftSection={<IconBrandWhatsapp size={16} />}
-                            placeholder={t.whatsapp}
-                            value={whatsapp}
-                            onChange={(e) => setWhatsapp(e.target.value)}
-                        />
-                        <TextInput
-                            leftSection={<IconBrandTelegram size={16} />}
-                            placeholder={t.telegram}
-                            value={telegram}
-                            onChange={(e) => setTelegram(e.target.value)}
-                        />
-                        <Select
-                            leftSection={<IconMessage size={16} />}
-                            placeholder={t.preferredContact}
-                            value={preferredContact}
-                            onChange={(value) => setPreferredContact(value || '')}
-                            data={[
-                                { value: 'email', label: t.emailLabel },
-                                { value: 'whatsapp', label: t.whatsappLabel },
-                                { value: 'telegram', label: t.telegramLabel }
-                            ]}
-                        />
-                    </Stack>
-                </div>
 
-                {/* Date Selection */}
-                <div>
-                    <Group gap="xs" mb="sm">
-                        <IconCalendar size={20} color="#3182ce" />
-                        <Text size="sm" fw={600} c="#4a5568" tt="uppercase" style={{ letterSpacing: '0.05em' }}>
-                            {t.selectDates}
-                        </Text>
-                    </Group>
-                    <Group grow>
-                        <DateInput
-                            value={startDate}
-                            onChange={setStartDate}
-                            placeholder="Start date"
-                            leftSection={<IconCalendar size={16} />}
-                            clearable
-                        />
-                        <DateInput
-                            value={endDate}
-                            onChange={setEndDate}
-                            placeholder="End date"
-                            leftSection={<IconCalendar size={16} />}
-                            clearable
-                        />
-                    </Group>
-                </div>
-
-                {/* Comments */}
-                <div>
-                    <Group gap="xs" mb="sm">
-                        <IconMessage size={20} color="#3182ce" />
-                        <Text size="sm" fw={600} c="#4a5568" tt="uppercase" style={{ letterSpacing: '0.05em' }}>
-                            {t.comments}
-                        </Text>
-                    </Group>
-                    <Textarea
-                        placeholder={t.commentsPlaceholder}
-                        value={comments}
-                        onChange={(e) => setComments(e.target.value)}
-                        rows={2}
-                        styles={{
-                            input: {
-                                border: '1px solid #e2e8f0',
-                                borderRadius: '6px',
-                                fontSize: '14px'
-                            }
-                        }}
-                    />
-                </div>
-
-                {/* Success Message */}
-                {showSuccess && (
-                    <div style={{
-                        backgroundColor: '#f0fff4',
-                        border: '1px solid #9ae6b4',
-                        borderRadius: '6px',
-                        padding: '12px',
-                        textAlign: 'center'
-                    }}>
-                        <Text c="#22543d" fw={500}>{t.success}</Text>
-                    </div>
-                )}
-
-                {/* Action Buttons */}
-                <Group justify="flex-end" gap="md">
                     <Button
-                        variant="outline"
+                        variant="subtle"
                         onClick={onClose}
-                        disabled={isSending}
-                    >
-                        {t.close}
-                    </Button>
-                    <Button
-                        leftSection={<IconSend size={16} />}
-                        onClick={handleSend}
-                        disabled={!isFormValid || isSending}
-                        loading={isSending}
                         style={{
-                            backgroundColor: '#3182ce',
-                            color: 'white'
+                            background: 'transparent',
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '6px',
+                            width: '32px',
+                            height: '32px',
+                            padding: 0,
+                            minWidth: 'auto',
+                            color: '#64748b'
                         }}
                     >
-                        {t.send}
+                        ✕
                     </Button>
                 </Group>
-            </Stack>
+            </div>
+
+            {/* Main Content */}
+            <div style={{ padding: '24px' }}>
+                <Stack gap="lg">
+                    {/* Item Info Card */}
+                    <div style={{
+                        background: '#f8fafc',
+                        padding: '20px',
+                        borderRadius: '6px',
+                        border: '1px solid #e2e8f0'
+                    }}>
+                        <Group gap="xs" mb="sm">
+                            <IconMapPin size={18} color="#3182ce" />
+                            <Text size="sm" fw={600} c="#4a5568" tt="uppercase" style={{ letterSpacing: '0.05em' }}>
+                                {t.itemName}
+                            </Text>
+                        </Group>
+                        <Text size="lg" fw={600} c="#1a202c" mb="xs">{item.name}</Text>
+                        {item.price && (
+                            <Text size="md" fw={500} c="#3182ce">
+                                {item.price}
+                            </Text>
+                        )}
+                    </div>
+
+                    {/* Contact Information */}
+                    <div>
+                        <Group gap="xs" mb="md">
+                            <IconUser size={18} color="#3182ce" />
+                            <Text size="md" fw={600} c="#1a202c">
+                                {t.contactInfo}
+                            </Text>
+                        </Group>
+
+                        <div style={{
+                            background: 'white',
+                            padding: '20px',
+                            borderRadius: '6px',
+                            border: '1px solid #e2e8f0'
+                        }}>
+                            <Stack gap="md">
+                                <Group grow>
+                                    <TextInput
+                                        leftSection={<IconUser size={16} color="#64748b" />}
+                                        placeholder="First Name"
+                                        label="First Name"
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
+                                        required
+                                        withAsterisk
+                                        styles={{
+                                            input: {
+                                                border: '1px solid #e2e8f0',
+                                                borderRadius: '6px',
+                                                fontSize: '14px',
+                                                transition: 'all 0.2s',
+                                                '&:focus': {
+                                                    borderColor: '#3182ce',
+                                                    boxShadow: '0 0 0 3px rgba(49, 130, 206, 0.1)'
+                                                }
+                                            },
+                                            label: {
+                                                fontWeight: 500,
+                                                color: '#4a5568',
+                                                marginBottom: '6px'
+                                            }
+                                        }}
+                                    />
+                                    <TextInput
+                                        leftSection={<IconUser size={16} color="#64748b" />}
+                                        placeholder="Last Name"
+                                        label="Last Name"
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
+                                        required
+                                        withAsterisk
+                                        styles={{
+                                            input: {
+                                                border: '1px solid #e2e8f0',
+                                                borderRadius: '6px',
+                                                fontSize: '14px',
+                                                transition: 'all 0.2s',
+                                                '&:focus': {
+                                                    borderColor: '#3182ce',
+                                                    boxShadow: '0 0 0 3px rgba(49, 130, 206, 0.1)'
+                                                }
+                                            },
+                                            label: {
+                                                fontWeight: 500,
+                                                color: '#4a5568',
+                                                marginBottom: '6px'
+                                            }
+                                        }}
+                                    />
+                                </Group>
+                                <TextInput
+                                    leftSection={<IconPhone size={16} color="#64748b" />}
+                                    placeholder="Phone Number"
+                                    label="Phone Number"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    required
+                                    withAsterisk
+                                    error={phone && !isValidPhone(phone) ? t.phoneError : undefined}
+                                    styles={{
+                                        input: {
+                                            border: '1px solid #e2e8f0',
+                                            borderRadius: '6px',
+                                            fontSize: '14px',
+                                            transition: 'all 0.2s',
+                                            '&:focus': {
+                                                borderColor: '#3182ce',
+                                                boxShadow: '0 0 0 3px rgba(49, 130, 206, 0.1)'
+                                            }
+                                        },
+                                        label: {
+                                            fontWeight: 500,
+                                            color: '#4a5568',
+                                            marginBottom: '6px'
+                                        }
+                                    }}
+                                />
+                                <TextInput
+                                    leftSection={<IconMessage size={16} color="#64748b" />}
+                                    placeholder="Email"
+                                    label="Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    type="email"
+                                    required
+                                    withAsterisk
+                                    error={email && !isValidEmail(email) ? t.emailError : undefined}
+                                    styles={{
+                                        input: {
+                                            border: '1px solid #e2e8f0',
+                                            borderRadius: '6px',
+                                            fontSize: '14px',
+                                            transition: 'all 0.2s',
+                                            '&:focus': {
+                                                borderColor: '#3182ce',
+                                                boxShadow: '0 0 0 3px rgba(49, 130, 206, 0.1)'
+                                            }
+                                        },
+                                        label: {
+                                            fontWeight: 500,
+                                            color: '#4a5568',
+                                            marginBottom: '6px'
+                                        }
+                                    }}
+                                />
+                                <Group grow>
+                                    <TextInput
+                                        leftSection={<IconBrandWhatsapp size={16} color="#25D366" />}
+                                        placeholder={t.whatsapp}
+                                        value={whatsapp}
+                                        onChange={(e) => setWhatsapp(e.target.value)}
+                                        styles={{
+                                            input: {
+                                                border: '1px solid #e2e8f0',
+                                                borderRadius: '6px',
+                                                fontSize: '14px',
+                                                transition: 'all 0.2s',
+                                                '&:focus': {
+                                                    borderColor: '#25D366',
+                                                    boxShadow: '0 0 0 3px rgba(37, 211, 102, 0.1)'
+                                                }
+                                            }
+                                        }}
+                                    />
+                                    <TextInput
+                                        leftSection={<IconBrandTelegram size={16} color="#0088cc" />}
+                                        placeholder={t.telegram}
+                                        value={telegram}
+                                        onChange={(e) => setTelegram(e.target.value)}
+                                        styles={{
+                                            input: {
+                                                border: '1px solid #e2e8f0',
+                                                borderRadius: '6px',
+                                                fontSize: '14px',
+                                                transition: 'all 0.2s',
+                                                '&:focus': {
+                                                    borderColor: '#0088cc',
+                                                    boxShadow: '0 0 0 3px rgba(0, 136, 204, 0.1)'
+                                                }
+                                            }
+                                        }}
+                                    />
+                                </Group>
+                                <Select
+                                    leftSection={<IconMessage size={16} color="#64748b" />}
+                                    placeholder={t.preferredContact}
+                                    value={preferredContact}
+                                    onChange={(value) => setPreferredContact(value || '')}
+                                    data={[
+                                        { value: 'email', label: t.emailLabel },
+                                        { value: 'whatsapp', label: t.whatsappLabel },
+                                        { value: 'telegram', label: t.telegramLabel }
+                                    ]}
+                                    styles={{
+                                        input: {
+                                            border: '1px solid #e2e8f0',
+                                            borderRadius: '6px',
+                                            fontSize: '14px',
+                                            transition: 'all 0.2s',
+                                            '&:focus': {
+                                                borderColor: '#3182ce',
+                                                boxShadow: '0 0 0 3px rgba(49, 130, 206, 0.1)'
+                                            }
+                                        }
+                                    }}
+                                />
+                            </Stack>
+                        </div>
+                    </div>
+
+                    {/* Date Selection */}
+                    <div>
+                        <Group gap="xs" mb="md">
+                            <IconCalendar size={18} color="#3182ce" />
+                            <Text size="md" fw={600} c="#1a202c">
+                                {t.selectDates}
+                            </Text>
+                        </Group>
+
+                        <div style={{
+                            background: 'white',
+                            padding: '20px',
+                            borderRadius: '6px',
+                            border: '1px solid #e2e8f0'
+                        }}>
+                            <Group grow>
+                                <DateInput
+                                    value={startDate}
+                                    onChange={setStartDate}
+                                    placeholder="Start date"
+                                    leftSection={<IconCalendar size={16} color="#64748b" />}
+                                    clearable
+                                    styles={{
+                                        input: {
+                                            border: '1px solid #e2e8f0',
+                                            borderRadius: '6px',
+                                            fontSize: '14px',
+                                            transition: 'all 0.2s',
+                                            '&:focus': {
+                                                borderColor: '#3182ce',
+                                                boxShadow: '0 0 0 3px rgba(49, 130, 206, 0.1)'
+                                            }
+                                        }
+                                    }}
+                                />
+                                <DateInput
+                                    value={endDate}
+                                    onChange={setEndDate}
+                                    placeholder="End date"
+                                    leftSection={<IconCalendar size={16} color="#64748b" />}
+                                    clearable
+                                    styles={{
+                                        input: {
+                                            border: '1px solid #e2e8f0',
+                                            borderRadius: '6px',
+                                            fontSize: '14px',
+                                            transition: 'all 0.2s',
+                                            '&:focus': {
+                                                borderColor: '#3182ce',
+                                                boxShadow: '0 0 0 3px rgba(49, 130, 206, 0.1)'
+                                            }
+                                        }
+                                    }}
+                                />
+                            </Group>
+                        </div>
+                    </div>
+
+                    {/* Comments */}
+                    <div>
+                        <Group gap="xs" mb="md">
+                            <IconMessage size={18} color="#3182ce" />
+                            <Text size="md" fw={600} c="#1a202c">
+                                {t.comments}
+                            </Text>
+                        </Group>
+
+                        <div style={{
+                            background: 'white',
+                            padding: '20px',
+                            borderRadius: '6px',
+                            border: '1px solid #e2e8f0'
+                        }}>
+                            <Textarea
+                                placeholder={t.commentsPlaceholder}
+                                value={comments}
+                                onChange={(e) => setComments(e.target.value)}
+                                rows={3}
+                                styles={{
+                                    input: {
+                                        border: '1px solid #e2e8f0',
+                                        borderRadius: '6px',
+                                        fontSize: '14px',
+                                        transition: 'all 0.2s',
+                                        resize: 'none',
+                                        '&:focus': {
+                                            borderColor: '#3182ce',
+                                            boxShadow: '0 0 0 3px rgba(49, 130, 206, 0.1)'
+                                        }
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Success Message */}
+                    {showSuccess && (
+                        <div style={{
+                            background: '#f0fff4',
+                            border: '1px solid #9ae6b4',
+                            borderRadius: '6px',
+                            padding: '16px',
+                            textAlign: 'center'
+                        }}>
+                            <Group justify="center" gap="xs" mb="xs">
+                                <IconCheck size={18} color="#25D366" />
+                                <Text c="#22543d" fw={500}>{t.success}</Text>
+                            </Group>
+                        </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <Group justify="space-between" gap="md">
+                        <Button
+                            variant="outline"
+                            onClick={onClose}
+                            disabled={isSending}
+                            size="md"
+                            style={{
+                                border: '1px solid #e2e8f0',
+                                borderRadius: '6px',
+                                fontWeight: 500,
+                                color: '#4a5568',
+                                transition: 'all 0.2s',
+                                '&:hover': {
+                                    borderColor: '#3182ce',
+                                    color: '#3182ce',
+                                    background: 'rgba(49, 130, 206, 0.05)'
+                                }
+                            }}
+                        >
+                            {t.close}
+                        </Button>
+                        <Button
+                            leftSection={<IconSend size={16} />}
+                            onClick={handleSend}
+                            disabled={!isFormValid || isSending}
+                            loading={isSending}
+                            size="md"
+                            style={{
+                                background: '#3182ce',
+                                color: 'white',
+                                borderRadius: '6px',
+                                fontWeight: 500,
+                                border: 'none',
+                                transition: 'all 0.2s',
+                                '&:hover': {
+                                    background: '#2c5aa0'
+                                },
+                                '&:disabled': {
+                                    background: '#cbd5e0'
+                                }
+                            }}
+                        >
+                            {t.send}
+                        </Button>
+                    </Group>
+                </Stack>
+            </div>
         </Modal>
     );
 } 
