@@ -161,7 +161,7 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
                 const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
                 console.log('ApartmentCard API URL:', apiUrl) // Для отладки
 
-                const response = await fetch(`${apiUrl}/api/properties?populate=*`, {
+                const response = await fetch(`${apiUrl}/api/properties?populate=*&pagination[pageSize]=1000`, {
                     headers: getAuthHeaders()
                 })
 
