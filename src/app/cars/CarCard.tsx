@@ -437,6 +437,16 @@ const CarCard = ({ translations, language, cars: filteredCars }: CarCardProps) =
                                 className="object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                                 onClick={() => handleViewDetails(car.documentId)}
                             />
+                            <div className="absolute top-2 right-2 z-10">
+                                <button
+                                    onClick={() => handleViewDetails(car.documentId)}
+                                    className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
+                                >
+                                    <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                         <div className="p-6">
                             <div className="mb-3">

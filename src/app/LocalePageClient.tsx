@@ -928,14 +928,14 @@ export function LocalePageClient() {
             </div>
 
             {/* Form Content */}
-            <div className="p-6">
+            <div className="p-4 sm:p-6 pb-8">
               {/* Accommodation Tab */}
               {activeTab === "accommodation" && (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {/* First row - Basic filters */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.hero.accommodation.type}</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t.hero.accommodation.type}</label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={accommodationFilters.propertyType}
@@ -960,7 +960,7 @@ export function LocalePageClient() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         {t.hero.accommodation.checkin}
                       </label>
                       <input
@@ -971,7 +971,7 @@ export function LocalePageClient() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         {t.hero.accommodation.checkout}
                       </label>
                       <input
@@ -982,7 +982,7 @@ export function LocalePageClient() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         {t.hero.accommodation.guests}
                       </label>
                       <div className="relative">
@@ -1026,9 +1026,9 @@ export function LocalePageClient() {
 
                   {/* Second row - Additional filters (expandable) */}
                   {showAdvancedAccommodation && (
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Rooms</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Rooms</label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={accommodationFilters.rooms}
@@ -1081,7 +1081,7 @@ export function LocalePageClient() {
               {activeTab === "cars" && (
                 <div className="space-y-4">
                   {/* First row - Basic filters */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">{t.hero.cars.type}</label>
                       <select
@@ -1165,7 +1165,7 @@ export function LocalePageClient() {
 
                   {/* Second row - Additional filters (expandable) */}
                   {showAdvancedCars && (
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Brand</label>
                         <select
@@ -1223,7 +1223,7 @@ export function LocalePageClient() {
               {activeTab === "excursions" && (
                 <div className="space-y-4">
                   {/* First row - Basic filters */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">{t.hero.excursions.type}</label>
                       <select
@@ -1315,7 +1315,7 @@ export function LocalePageClient() {
 
                   {/* Second row - Additional filters (expandable) */}
                   {showAdvancedTours && (
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
                         <input
@@ -1413,7 +1413,7 @@ export function LocalePageClient() {
               {activeTab !== "blog" && (
                 <button
                   onClick={handleSearch}
-                  className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-lg shadow-lg hover:shadow-xl"
+                  className="w-full mt-6 mb-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-lg shadow-lg hover:shadow-xl"
                 >
                   <Search className="w-5 h-5" />
                   {t.hero.search}
@@ -1459,6 +1459,16 @@ export function LocalePageClient() {
                       className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                       onClick={() => router.push(`/apartments/${place.documentId}`)}
                     />
+                    <div className="absolute top-2 right-2">
+                      <button
+                        onClick={() => router.push(`/apartments/${place.documentId}`)}
+                        className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
+                      >
+                        <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
@@ -1543,6 +1553,16 @@ export function LocalePageClient() {
                       className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                       onClick={() => router.push(`/cars/${car.documentId}`)}
                     />
+                    <div className="absolute top-2 right-2">
+                      <button
+                        onClick={() => router.push(`/cars/${car.documentId}`)}
+                        className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
+                      >
+                        <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
@@ -1632,6 +1652,16 @@ export function LocalePageClient() {
                         className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                         onClick={() => router.push(`/tours/${excursion.documentId || index + 1}`)}
                       />
+                      <div className="absolute top-2 right-2">
+                        <button
+                          onClick={() => router.push(`/tours/${excursion.documentId || index + 1}`)}
+                          className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
+                        >
+                          <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-4">
@@ -1721,6 +1751,16 @@ export function LocalePageClient() {
                       className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                       onClick={() => router.push(`/blog/${post.documentId || index + 1}`)}
                     />
+                    <div className="absolute top-2 right-2">
+                      <button
+                        onClick={() => router.push(`/blog/${post.documentId || index + 1}`)}
+                        className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
+                      >
+                        <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
