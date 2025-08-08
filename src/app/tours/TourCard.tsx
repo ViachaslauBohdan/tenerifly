@@ -4,91 +4,91 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 
 const getFoundText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: 'Found',
-    ru: 'Найдено',
-    pl: 'Znaleziono',
-    fr: 'Trouvé',
-    uk: 'Знайдено'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'Found',
+        ru: 'Найдено',
+        pl: 'Znaleziono',
+        fr: 'Trouvé',
+        uk: 'Знайдено'
+    };
+    return texts[locale] || texts.en;
 };
 
 const getToursText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: 'excursions',
-    ru: 'экскурсий',
-    pl: 'wycieczek',
-    fr: 'excursions',
-    uk: 'екскурсій'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'excursions',
+        ru: 'экскурсий',
+        pl: 'wycieczek',
+        fr: 'excursions',
+        uk: 'екскурсій'
+    };
+    return texts[locale] || texts.en;
 };
 
 const getFilterActiveText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: '🔍 Filter active',
-    ru: '🔍 Фильтр активен',
-    pl: '🔍 Filtr aktywny',
-    fr: '🔍 Filtre actif',
-    uk: '🔍 Фільтр активний'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: '🔍 Filter active',
+        ru: '🔍 Фильтр активен',
+        pl: '🔍 Filtr aktywny',
+        fr: '🔍 Filtre actif',
+        uk: '🔍 Фільтр активний'
+    };
+    return texts[locale] || texts.en;
 };
 
 const getNoToursText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: 'No tours matching the selected filters',
-    ru: 'Нет экскурсий, соответствующих выбранным фильтрам',
-    pl: 'Brak wycieczek odpowiadających wybranym filtrom',
-    fr: 'Aucune excursion correspondant aux filtres sélectionnés',
-    uk: 'Немає екскурсій, що відповідають обраним фільтрам'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'No tours matching the selected filters',
+        ru: 'Нет экскурсий, соответствующих выбранным фильтрам',
+        pl: 'Brak wycieczek odpowiadających wybranym filtrom',
+        fr: 'Aucune excursion correspondant aux filtres sélectionnés',
+        uk: 'Немає екскурсій, що відповідають обраним фільтрам'
+    };
+    return texts[locale] || texts.en;
 };
 
 const getTryChangeFiltersText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: 'Try changing filter parameters',
-    ru: 'Попробуйте изменить параметры фильтрации',
-    pl: 'Spróbuj zmienić parametry filtrowania',
-    fr: 'Essayez de modifier les paramètres de filtrage',
-    uk: 'Спробуйте змінити параметри фільтрації'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'Try changing filter parameters',
+        ru: 'Попробуйте изменить параметры фильтрации',
+        pl: 'Spróbuj zmienić parametry filtrowania',
+        fr: 'Essayez de modifier les paramètres de filtrage',
+        uk: 'Спробуйте змінити параметри фільтрації'
+    };
+    return texts[locale] || texts.en;
 };
 
 const getNoToursAvailableText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: 'No tours available',
-    ru: 'Экскурсии недоступны',
-    pl: 'Brak dostępnych wycieczek',
-    fr: 'Aucune excursion disponible',
-    uk: 'Екскурсії недоступні'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'No tours available',
+        ru: 'Экскурсии недоступны',
+        pl: 'Brak dostępnych wycieczek',
+        fr: 'Aucune excursion disponible',
+        uk: 'Екскурсії недоступні'
+    };
+    return texts[locale] || texts.en;
 };
 
 const getGuideText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: 'Guide',
-    ru: 'Гид',
-    pl: 'Przewodnik',
-    fr: 'Guide',
-    uk: 'Гід'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'Guide',
+        ru: 'Гид',
+        pl: 'Przewodnik',
+        fr: 'Guide',
+        uk: 'Гід'
+    };
+    return texts[locale] || texts.en;
 };
 
 const getErrorLoadingText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: 'Error loading tours',
-    ru: 'Ошибка загрузки экскурсий',
-    pl: 'Błąd ładowania wycieczek',
-    fr: 'Erreur lors du chargement des excursions',
-    uk: 'Помилка завантаження екскурсій'
-  };
-  return texts[locale] || texts.en;
+    const texts: Record<string, string> = {
+        en: 'Error loading tours',
+        ru: 'Ошибка загрузки экскурсий',
+        pl: 'Błąd ładowania wycieczek',
+        fr: 'Erreur lors du chargement des excursions',
+        uk: 'Помилка завантаження екскурсій'
+    };
+    return texts[locale] || texts.en;
 };
 
 interface TourData {
@@ -375,7 +375,8 @@ const TourCard = ({ translations, language, tours: filteredTours }: TourCardProp
                                 src={getImageUrl(tour)}
                                 alt={tour.title}
                                 fill
-                                className="object-cover"
+                                className="object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                                onClick={() => handleViewDetails(tour.documentId)}
                             />
                         </div>
                         <div className="p-6">
@@ -468,27 +469,7 @@ const TourCard = ({ translations, language, tours: filteredTours }: TourCardProp
 
                             {/* Action Buttons */}
                             <div className="flex gap-3">
-                                <button
-                                    onClick={() => handleViewDetails(tour.documentId)}
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors flex items-center justify-center"
-                                >
-                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                        />
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                        />
-                                    </svg>
-                                    {translations.viewDetails}
-                                </button>
-                                <button className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center">
+                                <button className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center">
                                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path
                                             strokeLinecap="round"

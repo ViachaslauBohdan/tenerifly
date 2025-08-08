@@ -428,7 +428,8 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
                                 src={getImageUrl(property)}
                                 alt={property.title}
                                 fill
-                                className="object-cover"
+                                className="object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                                onClick={() => handleViewDetails(property.documentId)}
                             />
                         </div>
                         <div className="p-6">
@@ -535,30 +536,10 @@ const ApartmentCard = ({ translations, language, apartments: providedApartments 
 
                             {/* Action Buttons */}
                             <div className="flex gap-3">
-                                <button
-                                    onClick={() => handleViewDetails(property.documentId)}
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors flex items-center justify-center"
-                                >
-                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                        />
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                        />
-                                    </svg>
-                                    {translations.viewDetails}
-                                </button>
                                 {(property.property_status === 'available' || property.property_status === 'reserved') && (
                                     <button
                                         onClick={() => handleBookNow(property)}
-                                        className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center">
+                                        className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center">
                                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path
                                                 strokeLinecap="round"

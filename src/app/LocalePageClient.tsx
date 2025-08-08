@@ -1456,7 +1456,8 @@ export function LocalePageClient() {
                     <img
                       src={place.image || "/placeholder.svg"}
                       alt={place.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                      onClick={() => router.push(`/apartments/${place.documentId}`)}
                     />
                   </div>
                   <div className="p-6">
@@ -1488,20 +1489,13 @@ export function LocalePageClient() {
                     </div>
                     <div className="flex gap-3">
                       <button
-                        onClick={() => router.push(`/apartments/${place.documentId}`)}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
-                      >
-                        <Eye className="w-4 h-4" />
-                        {language === "en" ? "View Details" : "Подробнее"}
-                      </button>
-                      <button
                         onClick={() =>
                           openBookingModal("accommodation", {
                             title: place.title,
                             price: place.price
                           })
                         }
-                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
                         {t.common.bookNow}
                       </button>
@@ -1543,7 +1537,12 @@ export function LocalePageClient() {
                   className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                 >
                   <div className="aspect-video relative overflow-hidden">
-                    <img src={car.image || "/placeholder.svg"} alt={car.title} className="w-full h-full object-cover" />
+                    <img
+                      src={car.image || "/placeholder.svg"}
+                      alt={car.title}
+                      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                      onClick={() => router.push(`/cars/${car.documentId}`)}
+                    />
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
@@ -1574,13 +1573,6 @@ export function LocalePageClient() {
                     </div>
                     <div className="flex gap-3">
                       <button
-                        onClick={() => router.push(`/cars/${car.documentId}`)}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
-                      >
-                        <Eye className="w-4 h-4" />
-                        {language === "en" ? "View Details" : "Подробнее"}
-                      </button>
-                      <button
                         onClick={() =>
                           openBookingModal("car", {
                             title: car.title,
@@ -1589,7 +1581,7 @@ export function LocalePageClient() {
                             model: car.model
                           })
                         }
-                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
                         {t.common.bookNow}
                       </button>
@@ -1637,7 +1629,8 @@ export function LocalePageClient() {
                       <img
                         src={excursion.image || "/placeholder.svg"}
                         alt={excursion.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                        onClick={() => router.push(`/tours/${excursion.documentId || index + 1}`)}
                       />
                     </div>
                     <div className="p-6">
@@ -1671,13 +1664,6 @@ export function LocalePageClient() {
                       </div>
                       <div className="flex gap-2">
                         <button
-                          onClick={() => router.push(`/tours/${excursion.documentId || index + 1}`)}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
-                        >
-                          <Eye className="w-4 h-4" />
-                          {language === "en" ? "View Details" : "Подробнее"}
-                        </button>
-                        <button
                           onClick={() =>
                             openBookingModal("excursion", {
                               title: excursion.title,
@@ -1686,7 +1672,7 @@ export function LocalePageClient() {
                               language: "English"
                             })
                           }
-                          className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                          className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                         >
                           {t.common.bookNow}
                         </button>
@@ -1732,7 +1718,8 @@ export function LocalePageClient() {
                     <img
                       src={post.image || "/placeholder.svg"}
                       alt={post.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                      onClick={() => router.push(`/blog/${post.documentId || index + 1}`)}
                     />
                   </div>
                   <div className="p-6">
@@ -1767,14 +1754,7 @@ export function LocalePageClient() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => router.push(`/blog/${post.documentId || index + 1}`)}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
-                      >
-                        <Eye className="w-4 h-4" />
-                        {language === "en" ? "View Details" : "Подробнее"}
-                      </button>
-                      <button
-                        onClick={() => router.push(`/blog/${post.id || index + 1}`)}
-                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
                         {t.common.readMore}
                       </button>
