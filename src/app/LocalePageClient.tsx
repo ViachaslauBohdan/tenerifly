@@ -549,7 +549,7 @@ type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk"
 
 
 
-export function LocalePageClient() {
+export function LocalePageClient({ initialData }: { initialData?: any }) {
   const router = useRouter()
 
   // State для языка

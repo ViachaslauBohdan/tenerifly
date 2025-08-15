@@ -1,1088 +1,155 @@
-"use client"
+import { Metadata } from 'next';
+import { propertiesAPI } from '@/services/api';
 
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { useParams } from "next/navigation"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import { SimpleBookingPopup } from '@/components/SimpleBookingPopup'
+// ISR настройки
+export const revalidate = 1800; // Обновление каждые 30 минут
 
-// Переводы для всех языков
-const translations = {
-    en: {
-        backToProperties: "Back to Properties",
-        available: "AVAILABLE",
-        reserved: "RESERVED",
-        rented: "RENTED",
-        sold: "SOLD",
-        rent: "RENT",
-        sale: "SALE",
-        contact: "Contact",
-        phone: "Phone:",
-        email: "Email:",
-        whatsapp: "WhatsApp:",
-        telegram: "Telegram:",
-        description: "Description",
-        specifications: "Specifications",
-        propertyType: "Property Type",
-        bedrooms: "Bedrooms",
-        bathrooms: "Bathrooms",
-        totalArea: "Total Area",
-        livingArea: "Living Area",
-        floor: "Floor",
-        totalFloors: "Total Floors",
-        yearBuilt: "Year Built",
-        parkingSpaces: "Parking Spaces",
-        location: "Location",
-        address: "Address",
-        city: "City",
-        region: "Region",
-        postalCode: "Postal Code",
-        features: "Features",
-        rentalTerms: "Rental Terms",
-        minimumStay: "Minimum Stay",
-        maximumStay: "Maximum Stay",
-        depositAmount: "Deposit Amount",
-        utilitiesIncluded: "Utilities Included",
-        petsAllowed: "Pets Allowed",
-        smokingAllowed: "Smoking Allowed",
-        additionalTerms: "Additional Terms",
-        price: "Price",
-        bookNow: "Book",
-        selectLanguage: "Select Language",
-        sqm: "m²",
-        apartment: "Apartment",
-        house: "House",
-        plot: "Plot",
-        studio: "Studio",
-        month: "month",
-        months: "months",
-        yes: "Yes",
-        no: "No",
-        loading: "Loading...",
-        notFound: "Property not found",
-        hasPool: "Swimming Pool",
-        hasGarden: "Garden",
-        hasGarage: "Garage",
-        hasTerrace: "Terrace",
-        hasSecurity: "Security",
-        hasAirConditioning: "Air Conditioning",
-        hasHeating: "Heating",
-        hasInternet: "Internet",
-        furnished: "Furnished",
-        keyAmenities: "Key Amenities",
-        errorLoading: "Error loading property",
-    },
-    ru: {
-        backToProperties: "Назад к недвижимости",
-        available: "ДОСТУПЕН",
-        reserved: "ЗАРЕЗЕРВИРОВАН",
-        rented: "СДАН",
-        sold: "ПРОДАН",
-        rent: "АРЕНДА",
-        sale: "ПРОДАЖА",
-        contact: "Связаться",
-        phone: "Телефон:",
-        email: "Email:",
-        whatsapp: "WhatsApp:",
-        telegram: "Telegram:",
-        description: "Описание",
-        specifications: "Характеристики",
-        propertyType: "Тип недвижимости",
-        bedrooms: "Спальни",
-        bathrooms: "Ванные",
-        totalArea: "Общая площадь",
-        livingArea: "Жилая площадь",
-        floor: "Этаж",
-        totalFloors: "Всего этажей",
-        yearBuilt: "Год постройки",
-        parkingSpaces: "Парковочные места",
-        location: "Локация",
-        address: "Адрес",
-        city: "Город",
-        region: "Регион",
-        postalCode: "Почтовый индекс",
-        features: "Особенности",
-        rentalTerms: "Условия аренды",
-        minimumStay: "Минимальный срок",
-        maximumStay: "Максимальный срок",
-        depositAmount: "Размер депозита",
-        utilitiesIncluded: "Коммунальные включены",
-        petsAllowed: "Животные разрешены",
-        smokingAllowed: "Курение разрешено",
-        additionalTerms: "Дополнительные условия",
-        price: "Цена",
-        bookNow: "Забронировать",
-        selectLanguage: "Выбрать язык",
-        sqm: "м²",
-        apartment: "Квартира",
-        house: "Дом",
-        plot: "Участок",
-        studio: "Студия",
-        month: "месяц",
-        months: "месяцев",
-        yes: "Да",
-        no: "Нет",
-        loading: "Загрузка...",
-        notFound: "Недвижимость не найдена",
-        hasPool: "Бассейн",
-        hasGarden: "Сад",
-        hasGarage: "Гараж",
-        hasTerrace: "Терраса",
-        hasSecurity: "Охрана",
-        hasAirConditioning: "Кондиционер",
-        hasHeating: "Отопление",
-        hasInternet: "Интернет",
-        furnished: "Меблирована",
-        keyAmenities: "Ключевые удобства",
-        errorLoading: "Ошибка загрузки недвижимости",
-    },
-    pl: {
-        backToProperties: "Powrót do nieruchomości",
-        available: "DOSTĘPNY",
-        reserved: "ZAREZERWOWANY",
-        rented: "WYNAJĘTY",
-        sold: "SPRZEDANY",
-        rent: "WYNAJEM",
-        sale: "SPRZEDAŻ",
-        contact: "Kontakt",
-        phone: "Telefon:",
-        email: "Email:",
-        whatsapp: "WhatsApp:",
-        telegram: "Telegram:",
-        description: "Opis",
-        specifications: "Specyfikacja",
-        propertyType: "Typ nieruchomości",
-        bedrooms: "Sypialnie",
-        bathrooms: "Łazienki",
-        totalArea: "Powierzchnia całkowita",
-        livingArea: "Powierzchnia mieszkalna",
-        floor: "Piętro",
-        totalFloors: "Łączna liczba pięter",
-        yearBuilt: "Rok budowy",
-        parkingSpaces: "Miejsca parkingowe",
-        location: "Lokalizacja",
-        address: "Adres",
-        city: "Miasto",
-        region: "Region",
-        postalCode: "Kod pocztowy",
-        features: "Cechy",
-        rentalTerms: "Warunki wynajmu",
-        minimumStay: "Minimalny pobyt",
-        maximumStay: "Maksymalny pobyt",
-        depositAmount: "Kwota depozytu",
-        utilitiesIncluded: "Media wliczone",
-        petsAllowed: "Zwierzęta dozwolone",
-        smokingAllowed: "Palenie dozwolone",
-        additionalTerms: "Dodatkowe warunki",
-        price: "Cena",
-        bookNow: "Zarezerwuj",
-        selectLanguage: "Wybierz język",
-        sqm: "m²",
-        apartment: "Mieszkanie",
-        house: "Dom",
-        plot: "Działka",
-        studio: "Studio",
-        month: "miesiąc",
-        months: "miesięcy",
-        yes: "Tak",
-        no: "Nie",
-        loading: "Ładowanie...",
-        notFound: "Nieruchomość nie znaleziona",
-        hasPool: "Basen",
-        hasGarden: "Ogród",
-        hasGarage: "Garaż",
-        hasTerrace: "Taras",
-        hasSecurity: "Ochrona",
-        hasAirConditioning: "Klimatyzacja",
-        hasHeating: "Ogrzewanie",
-        hasInternet: "Internet",
-        furnished: "Umeblowane",
-        keyAmenities: "Kluczowe udogodnienia",
-        errorLoading: "Błąd ładowania nieruchomości",
-    },
-    fr: {
-        backToProperties: "Retour aux propriétés",
-        available: "DISPONIBLE",
-        reserved: "RÉSERVÉ",
-        rented: "LOUÉ",
-        sold: "VENDU",
-        rent: "LOCATION",
-        sale: "VENTE",
-        contact: "Contact",
-        phone: "Téléphone:",
-        email: "Email:",
-        whatsapp: "WhatsApp:",
-        telegram: "Telegram:",
-        description: "Description",
-        specifications: "Spécifications",
-        propertyType: "Type de propriété",
-        bedrooms: "Chambres",
-        bathrooms: "Salles de bain",
-        totalArea: "Surface totale",
-        livingArea: "Surface habitable",
-        floor: "Étage",
-        totalFloors: "Nombre total d'étages",
-        yearBuilt: "Année de construction",
-        parkingSpaces: "Places de parking",
-        location: "Emplacement",
-        address: "Adresse",
-        city: "Ville",
-        region: "Région",
-        postalCode: "Code postal",
-        features: "Caractéristiques",
-        rentalTerms: "Conditions de location",
-        minimumStay: "Séjour minimum",
-        maximumStay: "Séjour maximum",
-        depositAmount: "Montant du dépôt",
-        utilitiesIncluded: "Charges incluses",
-        petsAllowed: "Animaux autorisés",
-        smokingAllowed: "Fumeurs autorisés",
-        additionalTerms: "Conditions supplémentaires",
-        price: "Prix",
-        bookNow: "Réserver",
-        selectLanguage: "Choisir la langue",
-        sqm: "m²",
-        apartment: "Appartement",
-        house: "Maison",
-        plot: "Terrain",
-        studio: "Studio",
-        month: "mois",
-        months: "mois",
-        yes: "Oui",
-        no: "Non",
-        loading: "Chargement...",
-        notFound: "Propriété non trouvée",
-        hasPool: "Piscine",
-        hasGarden: "Jardin",
-        hasGarage: "Garage",
-        hasTerrace: "Terrasse",
-        hasSecurity: "Sécurité",
-        hasAirConditioning: "Climatisation",
-        hasHeating: "Chauffage",
-        hasInternet: "Internet",
-        furnished: "Meublé",
-        keyAmenities: "Équipements principaux",
-        errorLoading: "Erreur de chargement de la propriété",
-    },
-    uk: {
-        backToProperties: "Назад до нерухомості",
-        available: "ДОСТУПНИЙ",
-        reserved: "ЗАРЕЗЕРВОВАНИЙ",
-        rented: "ЗДАНО",
-        sold: "ПРОДАНО",
-        rent: "ОРЕНДА",
-        sale: "ПРОДАЖ",
-        contact: "Зв'язатися",
-        phone: "Телефон:",
-        email: "Email:",
-        whatsapp: "WhatsApp:",
-        telegram: "Telegram:",
-        description: "Опис",
-        specifications: "Характеристики",
-        propertyType: "Тип нерухомості",
-        bedrooms: "Спальні",
-        bathrooms: "Ванні",
-        totalArea: "Загальна площа",
-        livingArea: "Житлова площа",
-        floor: "Поверх",
-        totalFloors: "Всього поверхів",
-        yearBuilt: "Рік будівництва",
-        parkingSpaces: "Паркувальні місця",
-        location: "Локація",
-        address: "Адреса",
-        city: "Місто",
-        region: "Регіон",
-        postalCode: "Поштовий індекс",
-        features: "Особливості",
-        rentalTerms: "Умови оренди",
-        minimumStay: "Мінімальний термін",
-        maximumStay: "Максимальний термін",
-        depositAmount: "Розмір депозиту",
-        utilitiesIncluded: "Комунальні включені",
-        petsAllowed: "Тварини дозволені",
-        smokingAllowed: "Куріння дозволено",
-        additionalTerms: "Додаткові умови",
-        price: "Ціна",
-        bookNow: "Забронювати",
-        selectLanguage: "Обрати мову",
-        sqm: "м²",
-        apartment: "Квартира",
-        house: "Будинок",
-        plot: "Ділянка",
-        studio: "Студія",
-        month: "місяць",
-        months: "місяців",
-        yes: "Так",
-        no: "Ні",
-        loading: "Завантаження...",
-        notFound: "Нерухомість не знайдена",
-        hasPool: "Басейн",
-        hasGarden: "Сад",
-        hasGarage: "Гараж",
-        hasTerrace: "Тераса",
-        hasSecurity: "Охорона",
-        hasAirConditioning: "Кондиціонер",
-        hasHeating: "Опалення",
-        hasInternet: "Інтернет",
-        furnished: "Мебльована",
-        keyAmenities: "Ключові зручності",
-        errorLoading: "Помилка завантаження нерухомості",
-    },
+// Генерация статических путей для всех апартаментов
+export async function generateStaticParams() {
+  try {
+    // Загружаем все апартаменты для получения ID
+    const [enProperties, ruProperties, plProperties, frProperties, ukProperties] = await Promise.all([
+      propertiesAPI.getAll('en', {}, 1, 1000),
+      propertiesAPI.getAll('ru', {}, 1, 1000),
+      propertiesAPI.getAll('pl', {}, 1, 1000),
+      propertiesAPI.getAll('fr', {}, 1, 1000),
+      propertiesAPI.getAll('uk', {}, 1, 1000)
+    ]);
+
+    // Собираем все уникальные ID
+    const allIds = new Set([
+      ...enProperties.data.map((p: any) => p.id.toString()),
+      ...ruProperties.data.map((p: any) => p.id.toString()),
+      ...plProperties.data.map((p: any) => p.id.toString()),
+      ...frProperties.data.map((p: any) => p.id.toString()),
+      ...ukProperties.data.map((p: any) => p.id.toString())
+    ]);
+
+    return Array.from(allIds).map((id) => ({
+      id: id,
+    }));
+  } catch (error) {
+    console.error('Error generating static params for apartments:', error);
+    return [];
+  }
 }
 
-// Языки с флагами
-const languages = [
-    { code: "en", name: "English", flag: "🇬🇧" },
-    { code: "ru", name: "Русский", flag: "🇷🇺" },
-    { code: "pl", name: "Polski", flag: "🇵🇱" },
-    { code: "fr", name: "Français", flag: "🇫🇷" },
-    { code: "uk", name: "Українська", flag: "🇺🇦" },
-]
+// Генерация метаданных для SEO
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  try {
+    // Загружаем данные апартамента для всех языков
+    const [enProperty, ruProperty, plProperty, frProperty, ukProperty] = await Promise.all([
+      propertiesAPI.getById(params.id, 'en'),
+      propertiesAPI.getById(params.id, 'ru'),
+      propertiesAPI.getById(params.id, 'pl'),
+      propertiesAPI.getById(params.id, 'fr'),
+      propertiesAPI.getById(params.id, 'uk')
+    ]);
 
-interface PropertyData {
-    id: number
-    documentId: string
-    title: string
-    slug: string | null
-    description: string
-    type: "rent" | "sale"
-    property_status: "available" | "reserved" | "rented" | "sold"
-    featured: boolean
-    category: string
-    createdAt: string
-    updatedAt: string
-    publishedAt: string
-    images: Array<{
-        id: number
-        url: string
-        formats?: {
-            thumbnail?: { url: string }
-            small?: { url: string }
-        }
-    }>
-    price?: {
-        amount: number
-        currency: string
-        period: string
-    } | null
-    location?: {
-        address: string
-        city: string
-        region: string
-        postal_code: string
-        latitude: number
-        longitude: number
-    } | null
-    features?: {
-        has_pool: boolean
-        has_garden: boolean
-        has_garage: boolean
-        has_terrace: boolean
-        has_security: boolean
-        has_air_conditioning: boolean
-        has_heating: boolean
-        has_internet: boolean
-        furnished: boolean
-        additional_features?: string | null
-    } | null
-    specifications?: {
-        total_area: number
-        living_area: number
-        bedrooms: number
-        bathrooms: number
-        floor: number
-        total_floors: number
-        year_built?: number | null
-        parking_spaces?: number | null
-    } | null
-    rental_terms?: {
-        minimum_stay: number
-        maximum_stay: number
-        deposit_amount: number
-        utilities_included: boolean
-        pets_allowed: boolean
-        smoking_allowed: boolean
-        additional_terms?: string | null
-    } | null
-    sale_terms?: any | null
-    contact?: {
-        name: string
-        email: string
-        phone: string
-        whatsapp?: string
-        telegram?: string
-        preferred_contact: string
-    } | null
-}
+    const property = enProperty.data || ruProperty.data || plProperty.data || frProperty.data || ukProperty.data;
 
-export default function PropertyDetailPage() {
-    const params = useParams()
-    const propertyId = params.id as string
-    const [language, setLanguage] = useState<"en" | "ru" | "pl" | "fr" | "uk">("en")
-    const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false)
-    const [property, setProperty] = useState<PropertyData | null>(null)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
-    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
-
-    const t = translations[language]
-    const currentLanguage = languages.find((lang) => lang.code === language)
-
-    // Функция для создания заголовков с авторизацией
-    const getAuthHeaders = () => {
-        const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN
+    if (!property) {
         return {
-            'Content-Type': 'application/json',
-            ...(token && { 'Authorization': `Bearer ${token}` })
+        title: "Property Not Found | Tenerifly.io",
+        description: "The requested property could not be found.",
+      };
+    }
+
+    const title = property.title || "Accommodation in Tenerife";
+    const description = property.description || "Find your perfect accommodation in Tenerife. Browse apartments, villas, and houses for rent or sale.";
+    const imageUrl = property.images?.[0]?.url || "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg";
+
+    return {
+      title: `${title} - Accommodation in Tenerife | Tenerifly.io`,
+      description: description,
+      keywords: [
+        "Tenerife accommodation",
+        "Tenerife apartments",
+        "Tenerife property rental",
+        "Tenerife vacation rental",
+        "Tenerife holiday home",
+        title
+      ],
+      openGraph: {
+        title: `${title} - Accommodation in Tenerife`,
+        description: description,
+        url: `https://tenerifly.io/apartments/${params.id}`,
+        siteName: "Tenerifly.io",
+        images: [
+          {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: title,
+          },
+        ],
+        locale: "en_US",
+        type: "website",
+      },
+      alternates: {
+        canonical: `https://tenerifly.io/apartments/${params.id}`,
+        languages: {
+          'en': `https://tenerifly.io/en/apartments/${params.id}`,
+          'pl': `https://tenerifly.io/pl/apartments/${params.id}`,
+          'fr': `https://tenerifly.io/fr/apartments/${params.id}`,
+          'ru': `https://tenerifly.io/ru/apartments/${params.id}`,
+          'uk': `https://tenerifly.io/uk/apartments/${params.id}`,
+        },
+      },
+    };
+  } catch (error) {
+    console.error('Error generating metadata for apartment:', error);
+    return {
+      title: "Accommodation in Tenerife | Tenerifly.io",
+      description: "Find your perfect accommodation in Tenerife.",
+    };
+  }
+}
+
+// Предзагрузка данных для SEO
+export async function generateStaticProps({ params }: { params: { id: string } }) {
+  try {
+    // Загружаем данные апартамента для всех языков
+    const [enProperty, ruProperty, plProperty, frProperty, ukProperty] = await Promise.all([
+      propertiesAPI.getById(params.id, 'en'),
+      propertiesAPI.getById(params.id, 'ru'),
+      propertiesAPI.getById(params.id, 'pl'),
+      propertiesAPI.getById(params.id, 'fr'),
+      propertiesAPI.getById(params.id, 'uk')
+    ]);
+
+    return {
+      props: {
+        property: {
+          en: enProperty.data,
+          ru: ruProperty.data,
+          pl: plProperty.data,
+          fr: frProperty.data,
+          uk: ukProperty.data
         }
-    }
-
-    // Загрузка сохраненного языка из localStorage
-    useEffect(() => {
-        const savedLanguage = localStorage.getItem("selectedLanguage")
-        if (savedLanguage && translations[savedLanguage as keyof typeof translations]) {
-            setLanguage(savedLanguage as "en" | "ru" | "pl" | "fr" | "uk")
+      },
+      revalidate: 1800 // ISR каждые 30 минут
+    };
+  } catch (error) {
+    console.error('Error generating static props for apartment:', error);
+    return {
+      props: {
+        property: {
+          en: null,
+          ru: null,
+          pl: null,
+          fr: null,
+          uk: null
         }
-    }, [])
+      },
+      revalidate: 1800
+    };
+  }
+}
 
-    // Загрузка данных недвижимости
-    useEffect(() => {
-        const fetchProperty = async () => {
-            try {
-                setLoading(true)
-                setError(null)
+// Импортируем клиентский компонент
+import ApartmentDetailPageClient from './ApartmentDetailPageClient';
 
-                const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
-                console.log('Property Detail API URL:', apiUrl) // Для отладки
-
-                const response = await fetch(`${apiUrl}/api/properties/${propertyId}?populate=*`, {
-                    headers: getAuthHeaders()
-                })
-
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch property: ${response.status}`)
-                }
-
-                const data = await response.json()
-                console.log('Property data:', data)
-                setProperty(data.data)
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Unknown error')
-                console.error('Error fetching property:', err)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        if (propertyId) {
-            fetchProperty()
-        }
-    }, [propertyId])
-
-    // Сохранение языка в localStorage
-    const handleLanguageChange = (langCode: "en" | "ru" | "pl" | "fr" | "uk") => {
-        setLanguage(langCode)
-        localStorage.setItem("selectedLanguage", langCode)
-        setIsLanguageDropdownOpen(false)
-    }
-
-    const getImageUrl = (imageUrl: string) => {
-        // Если URL уже полный (начинается с http), возвращаем как есть
-        if (imageUrl.startsWith('http')) {
-            return imageUrl
-        }
-        // Если URL относительный, добавляем базовый URL Strapi
-        const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://tenerifly-strapi-production.up.railway.app'
-        return `${apiUrl}${imageUrl}`
-    }
-
-    const getPropertyTypeText = (category: string) => {
-        switch (category) {
-            case "apartment":
-                return t.apartment
-            case "house":
-                return t.house
-            case "plot":
-                return t.plot
-            default:
-                return category
-        }
-    }
-
-    const getStatusText = (status: string) => {
-        switch (status) {
-            case "available":
-                return t.available
-            case "reserved":
-                return t.reserved
-            case "rented":
-                return t.rented
-            case "sold":
-                return t.sold
-            default:
-                return status.toUpperCase()
-        }
-    }
-
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case "available":
-                return "bg-green-100 text-green-800"
-            case "reserved":
-                return "bg-yellow-100 text-yellow-800"
-            case "rented":
-                return "bg-red-100 text-red-800"
-            case "sold":
-                return "bg-gray-100 text-gray-800"
-            default:
-                return "bg-gray-100 text-gray-800"
-        }
-    }
-
-    const getTypeText = (type: string) => {
-        return type === 'rent' ? t.rent : t.sale
-    }
-
-    const getTypeColor = (type: string) => {
-        return type === 'rent' ? "bg-blue-100 text-blue-800" : "bg-purple-100 text-purple-800"
-    }
-
-    const formatStayDuration = (duration: number) => {
-        return `${duration} ${duration === 1 ? t.month : t.months}`
-    }
-
-    const getBooleanText = (value: boolean) => {
-        return value ? t.yes : t.no
-    }
-
-    const handleOpenBookingModal = () => {
-        setIsBookingModalOpen(true)
-    }
-
-    const handleCloseBookingModal = () => {
-        setIsBookingModalOpen(false)
-    }
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <h1 className="text-xl font-semibold text-gray-900">{t.loading}</h1>
-                </div>
-            </div>
-        )
-    }
-
-    if (error || !property) {
-        return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-4">{error || t.notFound}</h1>
-                    <Link href="/apartments" className="text-blue-600 hover:text-blue-800">
-                        {t.backToProperties}
-                    </Link>
-                </div>
-            </div>
-        )
-    }
-
-    return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-7xl mx-auto px-4 py-6">
-                {/* Header with Language Switcher */}
-                <div className="flex justify-between items-center mb-6">
-                    <Link href="/apartments" className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm">
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                        {t.backToProperties}
-                    </Link>
-
-                    <div className="relative">
-                        <button
-                            onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
-                            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                        >
-                            <span className="text-xl">{currentLanguage?.flag}</span>
-                            <span className="font-medium text-gray-700 hidden sm:block">{currentLanguage?.name}</span>
-                            <span className="font-medium text-gray-700 sm:hidden">{currentLanguage?.code.toUpperCase()}</span>
-                            <svg
-                                className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isLanguageDropdownOpen ? "rotate-180" : ""
-                                    }`}
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        {/* Dropdown Menu */}
-                        {isLanguageDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                                <div className="py-2">
-                                    <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                                        {t.selectLanguage}
-                                    </div>
-                                    {languages.map((lang) => (
-                                        <button
-                                            key={lang.code}
-                                            onClick={() => handleLanguageChange(lang.code as "en" | "ru" | "pl" | "fr" | "uk")}
-                                            className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors duration-150 ${language === lang.code ? "bg-blue-50 text-blue-700" : "text-gray-700"
-                                                }`}
-                                        >
-                                            <span className="text-lg">{lang.flag}</span>
-                                            <span className="font-medium">{lang.name}</span>
-                                            {language === lang.code && (
-                                                <svg className="w-4 h-4 ml-auto text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Page Title */}
-                <div className="mb-6">
-                    <h1 className="text-3xl font-bold text-gray-900">{property.title}</h1>
-                </div>
-
-                <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-                    {/* Main Content */}
-                    <div className="xl:col-span-3 order-2 xl:order-1">
-                        {/* Image Gallery with Carousel */}
-                        <div className="mb-8">
-                            {property.images && property.images.length > 0 ? (
-                                <Carousel className="w-full">
-                                    <CarouselContent>
-                                        {property.images.map((image, index) => (
-                                            <CarouselItem key={image.id}>
-                                                <div className="relative">
-                                                    <div className="aspect-video relative bg-gray-100 rounded-lg overflow-hidden">
-                                                        <Image
-                                                            src={getImageUrl(image.url)}
-                                                            alt={`${property.title} - Image ${index + 1}`}
-                                                            fill
-                                                            className="object-cover"
-                                                            priority={index === 0}
-                                                        />
-                                                    </div>
-                                                    {/* Image counter */}
-                                                    <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                                                        {index + 1} / {property.images.length}
-                                                    </div>
-                                                </div>
-                                            </CarouselItem>
-                                        ))}
-                                    </CarouselContent>
-                                    <CarouselPrevious className="left-4 z-10 bg-white/90 hover:bg-white border-2 border-gray-200 shadow-lg" />
-                                    <CarouselNext className="right-4 z-10 bg-white/90 hover:bg-white border-2 border-gray-200 shadow-lg" />
-                                </Carousel>
-                            ) : (
-                                <div className="relative bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center min-h-[400px]">
-                                    <span className="text-gray-400">No images available</span>
-                                </div>
-                            )}
-
-                            {/* Thumbnail grid below carousel */}
-                            {property.images && property.images.length > 1 && (
-                                <div className="mt-4 grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                                    {property.images.slice(0, 8).map((image, index) => (
-                                        <div key={`thumb-${image.id}`} className="aspect-square relative bg-gray-100 rounded-md overflow-hidden cursor-pointer hover:opacity-75 transition-opacity">
-                                            <Image
-                                                src={getImageUrl(image.url)}
-                                                alt={`${property.title} - Thumbnail ${index + 1}`}
-                                                fill
-                                                className="object-cover"
-                                            />
-                                        </div>
-                                    ))}
-                                    {property.images.length > 8 && (
-                                        <div className="aspect-square bg-gray-200 rounded-md flex items-center justify-center">
-                                            <span className="text-sm text-gray-600 font-medium">
-                                                +{property.images.length - 8}
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Description */}
-                        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-                            <h2 className="text-xl font-bold text-gray-900 mb-4">{t.description}</h2>
-                            <p className="text-gray-600 leading-relaxed">{property.description}</p>
-                        </div>
-
-                        {/* Specifications */}
-                        {property.specifications && (
-                            <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-                                <h2 className="text-xl font-bold text-gray-900 mb-4">{t.specifications}</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.propertyType}:</span>
-                                        <span className="font-medium text-gray-900">{getPropertyTypeText(property.category)}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.bedrooms}:</span>
-                                        <span className="font-medium text-gray-900">{property.specifications.bedrooms}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.bathrooms}:</span>
-                                        <span className="font-medium text-gray-900">{property.specifications.bathrooms}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.totalArea}:</span>
-                                        <span className="font-medium text-gray-900">{property.specifications.total_area} {t.sqm}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.livingArea}:</span>
-                                        <span className="font-medium text-gray-900">{property.specifications.living_area} {t.sqm}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.floor}:</span>
-                                        <span className="font-medium text-gray-900">{property.specifications.floor}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.totalFloors}:</span>
-                                        <span className="font-medium text-gray-900">{property.specifications.total_floors}</span>
-                                    </div>
-                                    {property.specifications.year_built && (
-                                        <div className="flex justify-between py-2 border-b border-gray-100">
-                                            <span className="text-gray-600">{t.yearBuilt}:</span>
-                                            <span className="font-medium text-gray-900">{property.specifications.year_built}</span>
-                                        </div>
-                                    )}
-                                    {property.specifications.parking_spaces && (
-                                        <div className="flex justify-between py-2 border-b border-gray-100">
-                                            <span className="text-gray-600">{t.parkingSpaces}:</span>
-                                            <span className="font-medium text-gray-900">{property.specifications.parking_spaces}</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Location */}
-                        {property.location && (
-                            <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-                                <h2 className="text-xl font-bold text-gray-900 mb-4">{t.location}</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.address}:</span>
-                                        <span className="font-medium text-gray-900">{property.location.address}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.city}:</span>
-                                        <span className="font-medium text-gray-900">{property.location.city}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.region}:</span>
-                                        <span className="font-medium text-gray-900">{property.location.region}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.postalCode}:</span>
-                                        <span className="font-medium text-gray-900">{property.location.postal_code}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Features */}
-                        {property.features && (
-                            <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-                                <h2 className="text-xl font-bold text-gray-900 mb-4">{t.features}</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    {property.features.has_pool && (
-                                        <div className="flex items-center">
-                                            <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                            <span className="text-gray-700">{t.hasPool}</span>
-                                        </div>
-                                    )}
-                                    {property.features.has_garden && (
-                                        <div className="flex items-center">
-                                            <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                            <span className="text-gray-700">{t.hasGarden}</span>
-                                        </div>
-                                    )}
-                                    {property.features.has_garage && (
-                                        <div className="flex items-center">
-                                            <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                            <span className="text-gray-700">{t.hasGarage}</span>
-                                        </div>
-                                    )}
-                                    {property.features.has_terrace && (
-                                        <div className="flex items-center">
-                                            <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                            <span className="text-gray-700">{t.hasTerrace}</span>
-                                        </div>
-                                    )}
-                                    {property.features.has_security && (
-                                        <div className="flex items-center">
-                                            <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                            <span className="text-gray-700">{t.hasSecurity}</span>
-                                        </div>
-                                    )}
-                                    {property.features.has_air_conditioning && (
-                                        <div className="flex items-center">
-                                            <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                            <span className="text-gray-700">{t.hasAirConditioning}</span>
-                                        </div>
-                                    )}
-                                    {property.features.has_heating && (
-                                        <div className="flex items-center">
-                                            <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                            <span className="text-gray-700">{t.hasHeating}</span>
-                                        </div>
-                                    )}
-                                    {property.features.has_internet && (
-                                        <div className="flex items-center">
-                                            <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                            <span className="text-gray-700">{t.hasInternet}</span>
-                                        </div>
-                                    )}
-                                    {property.features.furnished && (
-                                        <div className="flex items-center">
-                                            <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                            <span className="text-gray-700">{t.furnished}</span>
-                                        </div>
-                                    )}
-                                </div>
-                                {property.features.additional_features && (
-                                    <div className="mt-4 pt-4 border-t border-gray-100">
-                                        <p className="text-gray-600">{property.features.additional_features}</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Rental Terms */}
-                        {property.rental_terms && property.type === 'rent' && (
-                            <div className="bg-white rounded-lg shadow-sm border p-6">
-                                <h2 className="text-xl font-bold text-gray-900 mb-4">{t.rentalTerms}</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.minimumStay}:</span>
-                                        <span className="font-medium text-gray-900">{formatStayDuration(property.rental_terms.minimum_stay)}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.maximumStay}:</span>
-                                        <span className="font-medium text-gray-900">{formatStayDuration(property.rental_terms.maximum_stay)}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.depositAmount}:</span>
-                                        <span className="font-medium text-gray-900">€{property.rental_terms.deposit_amount}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.utilitiesIncluded}:</span>
-                                        <span className="font-medium text-gray-900">{getBooleanText(property.rental_terms.utilities_included)}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.petsAllowed}:</span>
-                                        <span className="font-medium text-gray-900">{getBooleanText(property.rental_terms.pets_allowed)}</span>
-                                    </div>
-                                    <div className="flex justify-between py-2 border-b border-gray-100">
-                                        <span className="text-gray-600">{t.smokingAllowed}:</span>
-                                        <span className="font-medium text-gray-900">{getBooleanText(property.rental_terms.smoking_allowed)}</span>
-                                    </div>
-                                </div>
-                                {property.rental_terms.additional_terms && (
-                                    <div className="mt-4 pt-4 border-t border-gray-100">
-                                        <h3 className="font-medium text-gray-900 mb-2">{t.additionalTerms}:</h3>
-                                        <p className="text-gray-600">{property.rental_terms.additional_terms}</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Sidebar */}
-                    <div className="xl:col-span-1 order-1 xl:order-2">
-                        <div className="bg-white rounded-lg shadow-sm border p-6 xl:sticky xl:top-6">
-                            {/* Status and Type */}
-                            <div className="flex flex-wrap gap-2 mb-4">
-                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(property.property_status)}`}>
-                                    {getStatusText(property.property_status)}
-                                </span>
-                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(property.type)}`}>
-                                    {getTypeText(property.type)}
-                                </span>
-                            </div>
-
-                            {/* Price */}
-                            {property.price && (
-                                <div className="mb-6">
-                                    <div className="text-3xl font-bold text-gray-900 mb-1">
-                                        {property.price.currency} {property.price.amount.toLocaleString()}
-                                    </div>
-                                    <div className="text-sm text-gray-600">
-                                        {property.type === 'rent' ? `/ ${t.month}` : t.price}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Location */}
-                            {property.location && (
-                                <div className="flex items-center text-gray-600 mb-6">
-                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <span className="text-sm">
-                                        {property.location.city}, {property.location.region}
-                                    </span>
-                                </div>
-                            )}
-
-
-
-                            {/* Key Amenities */}
-                            {property.features && (
-                                <div className="mb-6">
-                                    <h3 className="font-semibold text-gray-900 mb-3">{t.keyAmenities}</h3>
-                                    <div className="space-y-2">
-                                        {property.features.has_pool && (
-                                            <div className="flex items-center text-sm">
-                                                <svg className="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                </svg>
-                                                <span className="text-gray-700">{t.hasPool}</span>
-                                            </div>
-                                        )}
-                                        {property.features.has_garden && (
-                                            <div className="flex items-center text-sm">
-                                                <svg className="w-4 h-4 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                </svg>
-                                                <span className="text-gray-700">{t.hasGarden}</span>
-                                            </div>
-                                        )}
-                                        {property.features.has_terrace && (
-                                            <div className="flex items-center text-sm">
-                                                <svg className="w-4 h-4 text-orange-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                </svg>
-                                                <span className="text-gray-700">{t.hasTerrace}</span>
-                                            </div>
-                                        )}
-                                        {property.features.has_air_conditioning && (
-                                            <div className="flex items-center text-sm">
-                                                <svg className="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                </svg>
-                                                <span className="text-gray-700">{t.hasAirConditioning}</span>
-                                            </div>
-                                        )}
-                                        {property.features.has_internet && (
-                                            <div className="flex items-center text-sm">
-                                                <svg className="w-4 h-4 text-purple-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                </svg>
-                                                <span className="text-gray-700">{t.hasInternet}</span>
-                                            </div>
-                                        )}
-                                        {property.features.furnished && (
-                                            <div className="flex items-center text-sm">
-                                                <svg className="w-4 h-4 text-brown-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                </svg>
-                                                <span className="text-gray-700">{t.furnished}</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* WhatsApp Contact Button */}
-                            {property.contact?.whatsapp && (
-                                <a
-                                    href={`https://wa.me/${property.contact.whatsapp.replace(/\D/g, '')}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center mb-3"
-                                >
-                                    <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488" />
-                                    </svg>
-                                    {t.whatsapp}
-                                </a>
-                            )}
-
-                            {/* Telegram Contact Button */}
-                            {property.contact?.telegram && (
-                                <a
-                                    href={`https://t.me/${property.contact.telegram.replace('@', '')}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-full bg-blue-400 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors flex items-center justify-center mb-3"
-                                >
-                                    <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
-                                    </svg>
-                                    {t.telegram}
-                                </a>
-                            )}
-
-                            {/* Book Now Button */}
-                            {property.property_status === 'available' && (
-                                <button
-                                    onClick={handleOpenBookingModal}
-                                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-                                >
-                                    {t.bookNow}
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Click outside to close dropdown */}
-                {isLanguageDropdownOpen && (
-                    <div className="fixed inset-0 z-40" onClick={() => setIsLanguageDropdownOpen(false)} />
-                )}
-
-                {/* Booking Modal */}
-                {property && (
-                    <SimpleBookingPopup
-                        opened={isBookingModalOpen}
-                        onClose={handleCloseBookingModal}
-                        item={{
-                            name: property.title,
-                            price: property.price ? `${property.price.currency} ${property.price.amount.toLocaleString()}/${property.type === 'rent' ? 'month' : 'night'}` : undefined,
-                            currency: property.price?.currency,
-                            contactEmail: property.contact?.email
-                        }}
-                    />
-                )}
-            </div>
-        </div>
-    )
+export default function ApartmentDetailPage({ property }: { property: any }) {
+  return <ApartmentDetailPageClient property={property} />;
 }

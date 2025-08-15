@@ -207,6 +207,48 @@ export const carsAPI = {
       console.warn('Featured cars API failed:', error);
       return { data: [] };
     }
+  },
+
+  getById: async (id: string | number, locale: string = 'en'): Promise<{ data: any }> => {
+    try {
+      const params = buildFilterParams({
+        locale,
+        populate: 'images,specifications,features,location,contact'
+      });
+      
+      const response = await fetchAPI<{ data: CarLegacy }>(`/cars/${id}?${params}`);
+      
+      const car = response.data;
+      const transformedData = {
+        id: car.id,
+        title: car.attributes.title,
+        slug: car.attributes.slug,
+        description: car.attributes.description,
+        type: car.attributes.type,
+        car_status: car.attributes.car_status,
+        featured: car.attributes.featured,
+        rental_prices: car.attributes.rental_prices,
+        specifications: car.attributes.specifications,
+        features: car.attributes.features,
+        location: car.attributes.location,
+        contact: car.attributes.contact,
+        images: car.attributes.images?.data?.map(img => ({
+          url: img.attributes.url,
+          formats: img.attributes.formats,
+          alternativeText: img.attributes.alternativeText,
+          caption: img.attributes.caption,
+          name: img.attributes.name
+        })) || [],
+        createdAt: car.attributes.createdAt,
+        updatedAt: car.attributes.updatedAt,
+        publishedAt: car.attributes.publishedAt
+      };
+      
+      return { data: transformedData };
+    } catch (error) {
+      console.warn(`Car API failed for id ${id}:`, error);
+      throw new Error('Car not found');
+    }
   }
 };
 
@@ -251,7 +293,6 @@ export const excursionsAPI = {
         minAge: excursion.attributes.minAge,
         // Главное изображение
         image: excursion.attributes.image?.data ? {
-          id: excursion.attributes.image.data.id,
           url: excursion.attributes.image.data.attributes.url,
           formats: excursion.attributes.image.data.attributes.formats,
           alternativeText: excursion.attributes.image.data.attributes.alternativeText,
@@ -260,7 +301,6 @@ export const excursionsAPI = {
         } : null,
         // Галерея изображений
         images: excursion.attributes.gallery?.data?.map(img => ({
-          id: img.id,
           url: img.attributes.url,
           formats: img.attributes.formats,
           alternativeText: img.attributes.alternativeText,
@@ -451,6 +491,75 @@ export const propertiesAPI = {
     } catch (error) {
       console.warn('Featured properties API failed:', error);
       return { data: [] };
+    }
+  },
+
+  getById: async (id: string | number, locale: string = 'en'): Promise<{ data: any }> => {
+    try {
+      const params = buildFilterParams({
+        locale,
+        populate: 'images,price,specifications,features,rental_terms,sale_terms,location,contact'
+      });
+      
+      const response = await fetchAPI<{ data: PropertyLegacy }>(`/properties/${id}?${params}`);
+      
+      const property = response.data;
+      const transformedData = {
+        id: property.id,
+        documentId: property.documentId || property.id,
+        title: property.attributes.title,
+        slug: property.attributes.slug,
+        description: property.attributes.description,
+        type: property.attributes.type,
+        property_status: property.attributes.property_status,
+        category: property.attributes.category,
+        price: {
+          amount: property.attributes.price.amount,
+          currency: property.attributes.price.currency,
+          period: property.attributes.type === 'rent' ? 'month' : 'total'
+        },
+        specifications: {
+          total_area: property.attributes.specifications.total_area,
+          living_area: property.attributes.specifications.living_area,
+          bedrooms: property.attributes.specifications.bedrooms,
+          bathrooms: property.attributes.specifications.bathrooms,
+          floor: property.attributes.specifications.floor,
+          total_floors: property.attributes.specifications.total_floors,
+          year_built: property.attributes.specifications.year_built,
+          parking_spaces: property.attributes.specifications.parking_spaces
+        },
+        features: {
+          has_pool: property.attributes.features?.has_pool,
+          has_garden: property.attributes.features?.has_garden,
+          has_garage: property.attributes.features?.has_garage,
+          has_terrace: property.attributes.features?.has_terrace,
+          has_security: property.attributes.features?.has_security,
+          has_air_conditioning: property.attributes.features?.has_air_conditioning,
+          has_heating: property.attributes.features?.has_heating,
+          has_internet: property.attributes.features?.has_internet,
+          additional_features: property.attributes.features?.additional_features
+        },
+        rental_terms: property.attributes.rental_terms,
+        sale_terms: property.attributes.sale_terms,
+        location: property.attributes.location,
+        contact: property.attributes.contact,
+        images: property.attributes.images?.data?.map(img => ({
+          id: img.id,
+          url: img.attributes.url,
+          formats: img.attributes.formats,
+          alternativeText: img.attributes.alternativeText,
+          caption: img.attributes.caption,
+          name: img.attributes.name
+        })) || [],
+        createdAt: property.attributes.createdAt,
+        updatedAt: property.attributes.updatedAt,
+        publishedAt: property.attributes.publishedAt
+      };
+      
+      return { data: transformedData };
+    } catch (error) {
+      console.warn(`Property API failed for id ${id}:`, error);
+      throw new Error('Property not found');
     }
   }
 };
