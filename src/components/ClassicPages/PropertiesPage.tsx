@@ -88,7 +88,11 @@ export function ClassicPropertiesPage({ locale }: ClassicPropertiesPageProps) {
     const texts = {
       en: 'Back to Home',
       ru: 'Назад на главную',
-      es: 'Volver al inicio'
+      pl: 'Powrót do strony głównej',
+      fr: 'Retour à l\'accueil',
+      uk: 'Назад на головну',
+      de: "Zurück zur Startseite",
+      es: "Volver a la página principal"
     };
     return texts[locale as keyof typeof texts] || texts.en;
   };
