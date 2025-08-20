@@ -2,8 +2,11 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import CarCard from "./CarCard";
 import CarsFilter from "./CarsFilter";
+import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
+import { useFilterSync } from "@/hooks/useFilterSync";
 
 // Переводы для всех языков
 const translations = {
@@ -603,39 +606,81 @@ interface CarData {
 }
 
 export default function CarsPage() {
+  const searchParams = useSearchParams();
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   >("en");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    brand: "",
-    model: "",
-    yearFrom: "",
-    yearTo: "",
-    priceFrom: "",
-    priceTo: "",
-    mileageFrom: "",
-    mileageTo: "",
-    fuel: "",
-    transmission: "",
-    bodyType: "",
-    color: "",
-    doors: "",
-    powerFrom: "",
-    powerTo: "",
-    location: "",
-    availableFrom: "",
-    airConditioner: false,
-    rearCamera: false,
-    multimedia: false,
-    type: "",
-    carStatus: "",
+
+  // Инициализация фильтров из URL параметров
+  const [filters, setFilters] = useState<FilterParams>(() => {
+    if (searchParams) {
+      const urlFilters = parseUrlParams(searchParams);
+      return {
+        brand: (urlFilters.brand as string) || "",
+        model: (urlFilters.model as string) || "",
+        yearFrom: (urlFilters.yearFrom as string) || "",
+        yearTo: (urlFilters.yearTo as string) || "",
+        priceFrom: (urlFilters.priceFrom as string) || "",
+        priceTo: (urlFilters.priceTo as string) || "",
+        mileageFrom: (urlFilters.mileageFrom as string) || "",
+        mileageTo: (urlFilters.mileageTo as string) || "",
+        fuel: (urlFilters.fuel as string) || "",
+        transmission: (urlFilters.transmission as string) || "",
+        bodyType: (urlFilters.bodyType as string) || "",
+        color: (urlFilters.color as string) || "",
+        doors: (urlFilters.doors as string) || "",
+        powerFrom: (urlFilters.powerFrom as string) || "",
+        powerTo: (urlFilters.powerTo as string) || "",
+        location: (urlFilters.location as string) || "",
+        availableFrom: (urlFilters.availableFrom as string) || "",
+        airConditioner: (urlFilters.airConditioner as boolean) || false,
+        rearCamera: (urlFilters.rearCamera as boolean) || false,
+        multimedia: (urlFilters.multimedia as boolean) || false,
+        type: (urlFilters.type as string) || "",
+        carStatus: (urlFilters.carStatus as string) || "",
+      };
+    }
+    return {
+      brand: "",
+      model: "",
+      yearFrom: "",
+      yearTo: "",
+      priceFrom: "",
+      priceTo: "",
+      mileageFrom: "",
+      mileageTo: "",
+      fuel: "",
+      transmission: "",
+      bodyType: "",
+      color: "",
+      doors: "",
+      powerFrom: "",
+      powerTo: "",
+      location: "",
+      availableFrom: "",
+      airConditioner: false,
+      rearCamera: false,
+      multimedia: false,
+      type: "",
+      carStatus: "",
+    };
   });
 
   // Состояния для всех и отфильтрованных автомобилей
   const [allCars, setAllCars] = useState<CarData[]>([]);
   const [filteredCars, setFilteredCars] = useState<CarData[]>([]);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+
+  // Используем хук синхронизации фильтров с URL
+  const {
+    handleFilterChange: handleFilterChangeSync,
+    resetFilters: resetFiltersSync,
+  } = useFilterSync({
+    pageType: "cars",
+    filters,
+    onFiltersChange: setFilters,
+  });
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -888,9 +933,9 @@ export default function CarsPage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filters Sidebar - передаем все автомобили в компонент фильтра */}
           <CarsFilter
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onResetFilters={resetFilters}
+            filters={filters as any}
+            onFilterChange={handleFilterChangeSync}
+            onResetFilters={resetFiltersSync}
             onCarsUpdate={handleCarsUpdate}
             translations={t}
             allCars={allCars}
@@ -947,19 +992,19 @@ export default function CarsPage() {
                             d="M15 19l-7-7 7-7"
                           />
                         </svg>
-                                                 {language === "en"
-                           ? "Previous"
-                           : language === "ru"
-                             ? "Назад"
-                             : language === "pl"
-                               ? "Poprzednia"
-                               : language === "fr"
-                                 ? "Précédent"
-                                 : language === "uk"
-                                   ? "Попередня"
-                                   : language === "de"
-                                     ? "Zurück"
-                                     : "Anterior"}
+                        {language === "en"
+                          ? "Previous"
+                          : language === "ru"
+                            ? "Назад"
+                            : language === "pl"
+                              ? "Poprzednia"
+                              : language === "fr"
+                                ? "Précédent"
+                                : language === "uk"
+                                  ? "Попередня"
+                                  : language === "de"
+                                    ? "Zurück"
+                                    : "Anterior"}
                       </button>
 
                       {/* Page numbers */}
@@ -1007,19 +1052,19 @@ export default function CarsPage() {
                         disabled={currentPage === totalPages}
                         className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
-                                                 {language === "en"
-                           ? "Next"
-                           : language === "ru"
-                             ? "Вперед"
-                             : language === "pl"
-                               ? "Następna"
-                               : language === "fr"
-                                 ? "Suivant"
-                                 : language === "uk"
-                                   ? "Наступна"
-                                   : language === "de"
-                                     ? "Weiter"
-                                     : "Siguiente"}
+                        {language === "en"
+                          ? "Next"
+                          : language === "ru"
+                            ? "Вперед"
+                            : language === "pl"
+                              ? "Następna"
+                              : language === "fr"
+                                ? "Suivant"
+                                : language === "uk"
+                                  ? "Наступна"
+                                  : language === "de"
+                                    ? "Weiter"
+                                    : "Siguiente"}
                         <svg
                           className="w-4 h-4"
                           fill="none"

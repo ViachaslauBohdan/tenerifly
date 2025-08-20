@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import ToursFilter from "./ToursFilter";
 import TourCard from "./TourCard";
+import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
+import { useFilterSync } from "@/hooks/useFilterSync";
 
 // Переводы для всех языков
 const translations = {
@@ -621,30 +624,65 @@ interface Tour {
 }
 
 export default function ToursPage() {
+  const searchParams = useSearchParams();
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   >("en");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    location: "",
-    tourType: "",
-    priceFrom: "",
-    priceTo: "",
-    duration: "",
-    durationType: "hours",
-    availableFrom: "",
-    language: "",
-    category: "",
-    groupSize: "",
-    difficulty: "",
-    rating: "",
-    transport: false,
-    meals: false,
-    tickets: false,
+
+  // Инициализация фильтров из URL параметров
+  const [filters, setFilters] = useState<FilterParams>(() => {
+    if (searchParams) {
+      const urlFilters = parseUrlParams(searchParams);
+      return {
+        location: (urlFilters.location as string) || "",
+        tourType: (urlFilters.tourType as string) || "",
+        priceFrom: (urlFilters.priceFrom as string) || "",
+        priceTo: (urlFilters.priceTo as string) || "",
+        duration: (urlFilters.duration as string) || "",
+        durationType: (urlFilters.durationType as string) || "hours",
+        availableFrom: (urlFilters.availableFrom as string) || "",
+        language: (urlFilters.language as string) || "",
+        category: (urlFilters.category as string) || "",
+        groupSize: (urlFilters.groupSize as string) || "",
+        difficulty: (urlFilters.difficulty as string) || "",
+        rating: (urlFilters.rating as string) || "",
+        transport: (urlFilters.transport as boolean) || false,
+        meals: (urlFilters.meals as boolean) || false,
+        tickets: (urlFilters.tickets as boolean) || false,
+      };
+    }
+    return {
+      location: "",
+      tourType: "",
+      priceFrom: "",
+      priceTo: "",
+      duration: "",
+      durationType: "hours",
+      availableFrom: "",
+      language: "",
+      category: "",
+      groupSize: "",
+      difficulty: "",
+      rating: "",
+      transport: false,
+      meals: false,
+      tickets: false,
+    };
   });
   // Исправляем тип для tours
   const [tours, setTours] = useState<Tour[]>([]);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+
+  // Используем хук синхронизации фильтров с URL
+  const {
+    handleFilterChange: handleFilterChangeSync,
+    resetFilters: resetFiltersSync,
+  } = useFilterSync({
+    pageType: "tours",
+    filters,
+    onFiltersChange: setFilters,
+  });
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -716,27 +754,11 @@ export default function ToursPage() {
   };
 
   const resetFilters = () => {
-    setFilters({
-      location: "",
-      tourType: "",
-      priceFrom: "",
-      priceTo: "",
-      duration: "",
-      durationType: "hours",
-      availableFrom: "",
-      language: "",
-      category: "",
-      groupSize: "",
-      difficulty: "",
-      rating: "",
-      transport: false,
-      meals: false,
-      tickets: false,
-    });
+    resetFiltersSync();
   };
 
   const handleFilterChange = (key: string, value: string | boolean) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    handleFilterChangeSync(key, value);
   };
 
   // Теперь функция принимает правильный тип
@@ -884,7 +906,7 @@ export default function ToursPage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filters Sidebar */}
           <ToursFilter
-            filters={filters}
+            filters={filters as any}
             onFilterChange={handleFilterChange}
             onResetFilters={resetFilters}
             onToursUpdate={handleToursUpdate}

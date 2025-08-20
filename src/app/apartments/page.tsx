@@ -2,8 +2,11 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import ApartmentCard from "./ApartmentCard";
 import ApartmentsFilter from "./ApartmentsFilter";
+import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
+import { useFilterSync } from "@/hooks/useFilterSync";
 
 // ... (оставляем все переводы и languages как есть)
 
@@ -538,35 +541,69 @@ interface PropertyData {
 }
 
 export default function ApartmentsPage() {
+  const searchParams = useSearchParams();
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   >("en");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    propertyType: "",
-    rooms: "",
-    areaFrom: "",
-    areaTo: "",
-    priceFrom: "",
-    priceTo: "",
-    floorFrom: "",
-    floorTo: "",
-    yearBuiltFrom: "",
-    yearBuiltTo: "",
-    condition: "",
-    city: "",
-    district: "",
-    balcony: false,
-    terrace: false,
-    garden: false,
-    parking: false,
-    furnished: false,
-    airConditioner: false,
-    wifi: false,
-    washingMachine: false,
-    dishwasher: false,
-    type: "",
-    propertyStatus: "",
+
+  // Инициализация фильтров из URL параметров
+  const [filters, setFilters] = useState<FilterParams>(() => {
+    if (searchParams) {
+      const urlFilters = parseUrlParams(searchParams);
+      return {
+        propertyType: (urlFilters.propertyType as string) || "",
+        rooms: (urlFilters.rooms as string) || "",
+        areaFrom: (urlFilters.areaFrom as string) || "",
+        areaTo: (urlFilters.areaTo as string) || "",
+        priceFrom: (urlFilters.priceFrom as string) || "",
+        priceTo: (urlFilters.priceTo as string) || "",
+        floorFrom: (urlFilters.floorFrom as string) || "",
+        floorTo: (urlFilters.floorTo as string) || "",
+        yearBuiltFrom: (urlFilters.yearBuiltFrom as string) || "",
+        yearBuiltTo: (urlFilters.yearBuiltTo as string) || "",
+        condition: (urlFilters.condition as string) || "",
+        city: (urlFilters.city as string) || "",
+        district: (urlFilters.district as string) || "",
+        balcony: (urlFilters.balcony as boolean) || false,
+        terrace: (urlFilters.terrace as boolean) || false,
+        garden: (urlFilters.garden as boolean) || false,
+        parking: (urlFilters.parking as boolean) || false,
+        furnished: (urlFilters.furnished as boolean) || false,
+        airConditioner: (urlFilters.airConditioner as boolean) || false,
+        wifi: (urlFilters.wifi as boolean) || false,
+        washingMachine: (urlFilters.washingMachine as boolean) || false,
+        dishwasher: (urlFilters.dishwasher as boolean) || false,
+        type: (urlFilters.type as string) || "",
+        propertyStatus: (urlFilters.propertyStatus as string) || "",
+      };
+    }
+    return {
+      propertyType: "",
+      rooms: "",
+      areaFrom: "",
+      areaTo: "",
+      priceFrom: "",
+      priceTo: "",
+      floorFrom: "",
+      floorTo: "",
+      yearBuiltFrom: "",
+      yearBuiltTo: "",
+      condition: "",
+      city: "",
+      district: "",
+      balcony: false,
+      terrace: false,
+      garden: false,
+      parking: false,
+      furnished: false,
+      airConditioner: false,
+      wifi: false,
+      washingMachine: false,
+      dishwasher: false,
+      type: "",
+      propertyStatus: "",
+    };
   });
 
   // Состояния для всех и отфильтрованных апартаментов
@@ -575,6 +612,16 @@ export default function ApartmentsPage() {
     []
   );
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+
+  // Используем хук синхронизации фильтров с URL
+  const {
+    handleFilterChange: handleFilterChangeSync,
+    resetFilters: resetFiltersSync,
+  } = useFilterSync({
+    pageType: "apartments",
+    filters,
+    onFiltersChange: setFilters,
+  });
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -836,9 +883,9 @@ export default function ApartmentsPage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filters Sidebar - передаем все апартаменты в компонент фильтра */}
           <ApartmentsFilter
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onResetFilters={resetFilters}
+            filters={filters as any}
+            onFilterChange={handleFilterChangeSync}
+            onResetFilters={resetFiltersSync}
             onApartmentsUpdate={handleApartmentsUpdate}
             translations={t}
             allApartments={allApartments}
