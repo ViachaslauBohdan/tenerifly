@@ -16,7 +16,9 @@ const getLoadingText = (locale: Locale): string => {
     ru: 'Загрузка автомобилей...',
     pl: 'Ładowanie samochodów...',
     fr: 'Chargement des voitures...',
-    uk: 'Завантаження автомобілів...'
+    uk: 'Завантаження автомобілів...',
+     de: "Autos werden geladen...",
+    es: "Cargando coches...",
   };
   return texts[locale] || texts.en;
 };
