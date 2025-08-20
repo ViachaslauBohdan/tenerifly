@@ -43,21 +43,27 @@ export function TourTile({
       ru: 'Легкий',
       pl: 'Łatwy',
       fr: 'Facile',
-      uk: 'Легкий'
+      uk: 'Легкий',
+      de: 'Leicht',
+      es: 'Fácil'
     },
     moderate: {
       en: 'Moderate',
       ru: 'Средний',
       pl: 'Średni',
       fr: 'Modéré',
-      uk: 'Середній'
+      uk: 'Середній',
+      de: 'Mittel',
+      es: 'Moderado'
     },
     hard: {
       en: 'Hard',
       ru: 'Сложный',
       pl: 'Trudny',
       fr: 'Difficile',
-      uk: 'Складний'
+      uk: 'Складний',
+      de: 'Schwer',
+      es: 'Difícil'
     }
   };
 

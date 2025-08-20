@@ -16,7 +16,9 @@ const getLoadingText = (locale: Locale): string => {
     ru: 'Загрузка автомобилей...',
     pl: 'Ładowanie samochodów...',
     fr: 'Chargement des voitures...',
-    uk: 'Завантаження автомобілів...'
+    uk: 'Завантаження автомобілів...',
+    de: "Autos werden geladen...",
+    es: "Cargando coches...",
   };
   return texts[locale] || texts.en;
 };
@@ -28,7 +30,9 @@ const getResetFiltersText = (locale: Locale): string => {
     ru: 'Сбросить фильтры',
     pl: 'Resetuj filtry',
     fr: 'Réinitialiser les filtres',
-    uk: 'Скинути фільтри'
+    uk: 'Скинути фільтри',
+    de: "Filter zurücksetzen",
+    es: "Restablecer filtros",
   };
   return texts[locale] || texts.en;
 };
@@ -174,7 +178,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
         ru: 'Не удалось загрузить автомобили. Попробуйте позже.',
         pl: 'Nie udało się załadować samochodów. Spróbuj ponownie później.',
         fr: 'Impossible de charger les voitures. Veuillez réessayer plus tard.',
-        uk: 'Не вдалося завантажити автомобілі. Спробуйте пізніше.'
+        uk: 'Не вдалося завантажити автомобілі. Спробуйте пізніше.',
+        de: "Autos konnten nicht geladen werden. Bitte versuchen Sie es später erneut.",
+        es: "No se pudieron cargar los coches. Por favor, inténtelo de nuevo más tarde."
       };
       setError(errorText[currentLocale] || errorText.en);
       setCars([]);
@@ -310,7 +316,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
       ru: 'Назад на главную',
       pl: 'Powrót do strony głównej',
       fr: 'Retour à l\'accueil',
-      uk: 'Назад на головну'
+      uk: 'Назад на головну',
+      de: "Zurück zur Startseite",
+      es: "Volver a la página principal"
     };
     return texts[locale] || texts.en;
   };
@@ -321,7 +329,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
       ru: 'Аренда автомобилей',
       pl: 'Wynajem samochodów',
       fr: 'Location de voitures',
-      uk: 'Оренда автомобілів'
+      uk: 'Оренда автомобілів',
+      de: "Autovermietung",
+      es: "Alquiler de coches"
     };
     return texts[locale] || texts.en;
   };
@@ -332,7 +342,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
       ru: 'Найдите идеальный автомобиль для вашего приключения на Тенерифе',
       pl: 'Znajdź idealny samochód na swoją przygodę na Teneryfie',
       fr: 'Trouvez la voiture parfaite pour votre aventure à Tenerife',
-      uk: 'Знайдіть ідеальний автомобіль для вашої пригоди на Тенерифе'
+      uk: 'Знайдіть ідеальний автомобіль для вашої пригоди на Тенерифе',
+      de: "Finden Sie den perfekten Wagen für Ihre Tenerife-Abenteuer",
+      es: "Encuentra el coche perfecto para tu aventura en Tenerife"
     };
     return texts[locale] || texts.en;
   };
@@ -343,7 +355,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
       ru: 'Автомобили не найдены',
       pl: 'Nie znaleziono samochodów',
       fr: 'Aucune voiture trouvée',
-      uk: 'Автомобілі не знайдено'
+      uk: 'Автомобілі не знайдено',
+      de: "Keine Autos gefunden",
+      es: "No se encontraron coches"
     };
     return texts[locale] || texts.en;
   };
@@ -354,7 +368,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
       ru: 'Найдено',
       pl: 'Znaleziono',
       fr: 'Trouvé',
-      uk: 'Знайдено'
+      uk: 'Знайдено',
+      de: "Gefunden",
+      es: "Encontrado"
     };
     return texts[locale] || texts.en;
   };
@@ -365,7 +381,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
       ru: 'автомобилей',
       pl: 'samochodów',
       fr: 'voitures',
-      uk: 'автомобілів'
+      uk: 'автомобілів',
+      de: "Autos",
+      es: "Coches"
     };
     return texts[locale] || texts.en;
   };
@@ -376,7 +394,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
       ru: 'Бронь',
       pl: 'Rezerwuj',
       fr: 'Réserver',
-      uk: 'Бронь'
+      uk: 'Бронь',
+      de: "Buchen",
+      es: "Reservar"
     };
     return texts[locale] || texts.en;
   };
@@ -387,7 +407,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
       ru: 'Подробнее',
       pl: 'Zobacz szczegóły',
       fr: 'Voir les détails',
-      uk: 'Детальніше'
+      uk: 'Детальніше',
+      de: "Details ansehen",
+      es: "Ver detalles"
     };
     return texts[locale] || texts.en;
   };
@@ -398,7 +420,9 @@ export function ClassicCarsPageClient({ params }: ClassicCarsPageClientProps) {
       ru: '/день',
       pl: '/dzień',
       fr: '/jour',
-      uk: '/день'
+      uk: '/день',
+      de: "/Tag",
+      es: "/día"
     };
     return texts[locale] || texts.en;
   };
