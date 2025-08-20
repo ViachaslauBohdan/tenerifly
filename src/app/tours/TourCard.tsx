@@ -9,7 +9,9 @@ const getFoundText = (locale: string): string => {
         ru: 'Найдено',
         pl: 'Znaleziono',
         fr: 'Trouvé',
-        uk: 'Знайдено'
+        uk: 'Знайдено',
+        de: 'Gefunden',
+        es: 'Encontrado'
     };
     return texts[locale] || texts.en;
 };
@@ -20,7 +22,9 @@ const getToursText = (locale: string): string => {
         ru: 'экскурсий',
         pl: 'wycieczek',
         fr: 'excursions',
-        uk: 'екскурсій'
+        uk: 'екскурсій',
+        de: 'Touren',
+        es: 'excursiones'
     };
     return texts[locale] || texts.en;
 };
@@ -31,7 +35,9 @@ const getFilterActiveText = (locale: string): string => {
         ru: '🔍 Фильтр активен',
         pl: '🔍 Filtr aktywny',
         fr: '🔍 Filtre actif',
-        uk: '🔍 Фільтр активний'
+        uk: '🔍 Фільтр активний',
+        de: '🔍 Filter aktiv',
+        es: '🔍 Filtro activo'
     };
     return texts[locale] || texts.en;
 };
@@ -42,7 +48,9 @@ const getNoToursText = (locale: string): string => {
         ru: 'Нет экскурсий, соответствующих выбранным фильтрам',
         pl: 'Brak wycieczek odpowiadających wybranym filtrom',
         fr: 'Aucune excursion correspondant aux filtres sélectionnés',
-        uk: 'Немає екскурсій, що відповідають обраним фільтрам'
+        uk: 'Немає екскурсій, що відповідають обраним фільтрам',
+        de: 'Keine Touren entsprechen den ausgewählten Filtern',
+        es: 'No hay excursiones que coincidan con los filtros seleccionados'
     };
     return texts[locale] || texts.en;
 };
@@ -53,7 +61,9 @@ const getTryChangeFiltersText = (locale: string): string => {
         ru: 'Попробуйте изменить параметры фильтрации',
         pl: 'Spróbuj zmienić parametry filtrowania',
         fr: 'Essayez de modifier les paramètres de filtrage',
-        uk: 'Спробуйте змінити параметри фільтрації'
+        uk: 'Спробуйте змінити параметри фільтрації',
+        de: 'Versuchen Sie, die Filterparameter zu ändern',
+        es: 'Intente cambiar los parámetros del filtro'
     };
     return texts[locale] || texts.en;
 };
@@ -64,7 +74,9 @@ const getNoToursAvailableText = (locale: string): string => {
         ru: 'Экскурсии недоступны',
         pl: 'Brak dostępnych wycieczek',
         fr: 'Aucune excursion disponible',
-        uk: 'Екскурсії недоступні'
+        uk: 'Екскурсії недоступні',
+        de: 'Keine Touren verfügbar',
+        es: 'No hay excursiones disponibles'
     };
     return texts[locale] || texts.en;
 };
@@ -75,7 +87,9 @@ const getGuideText = (locale: string): string => {
         ru: 'Гид',
         pl: 'Przewodnik',
         fr: 'Guide',
-        uk: 'Гід'
+        uk: 'Гід',
+        de: 'Reiseführer',
+        es: 'Guía'
     };
     return texts[locale] || texts.en;
 };
@@ -86,7 +100,9 @@ const getErrorLoadingText = (locale: string): string => {
         ru: 'Ошибка загрузки экскурсий',
         pl: 'Błąd ładowania wycieczek',
         fr: 'Erreur lors du chargement des excursions',
-        uk: 'Помилка завантаження екскурсій'
+        uk: 'Помилка завантаження екскурсій',
+        de: 'Fehler beim Laden der Touren',
+        es: 'Error al cargar excursiones'
     };
     return texts[locale] || texts.en;
 };

@@ -28,7 +28,9 @@ export function PriceDisplay({
       ru: 'Цена не указана',
       pl: 'Cena nie określona',
       fr: 'Prix non spécifié',
-      uk: 'Ціна не вказана'
+      uk: 'Ціна не вказана',
+      de: 'Preis nicht angegeben',
+      es: 'Precio no especificado'
     };
 
     return <Text size={size} fw={weight} c="gray.5">

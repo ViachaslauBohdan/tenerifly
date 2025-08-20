@@ -1,4 +1,4 @@
-import { Locale } from '@/types/locale';
+import { Locale } from "@/types/locale";
 
 export interface Translations {
   hero: {
@@ -175,7 +175,7 @@ export const translations: Record<Locale, Translations> = {
       tabs: {
         excursions: "Excursions",
         cars: "Cars",
-        accommodation: "Accommodation"
+        accommodation: "Accommodation",
       },
       excursions: {
         title: "Excursions",
@@ -183,11 +183,11 @@ export const translations: Record<Locale, Translations> = {
         date: "Date",
         people: "Number of people",
         types: [
-          { value: 'all', label: 'All excursions' },
-          { value: 'teide', label: 'Teide National Park' },
-          { value: 'water', label: 'Water activities' },
-          { value: 'culture', label: 'Cultural tours' }
-        ]
+          { value: "all", label: "All excursions" },
+          { value: "teide", label: "Teide National Park" },
+          { value: "water", label: "Water activities" },
+          { value: "culture", label: "Cultural tours" },
+        ],
       },
       cars: {
         title: "Cars",
@@ -195,11 +195,11 @@ export const translations: Record<Locale, Translations> = {
         dropoff: "Drop-off date",
         type: "Car type",
         types: [
-          { value: 'all', label: 'All cars' },
-          { value: 'economy', label: 'Economy' },
-          { value: 'standard', label: 'Standard' },
-          { value: 'premium', label: 'Premium' }
-        ]
+          { value: "all", label: "All cars" },
+          { value: "economy", label: "Economy" },
+          { value: "standard", label: "Standard" },
+          { value: "premium", label: "Premium" },
+        ],
       },
       accommodation: {
         title: "Accommodation",
@@ -208,13 +208,13 @@ export const translations: Record<Locale, Translations> = {
         guests: "Guests",
         type: "Property type",
         types: [
-          { value: '', label: 'All types' },
-          { value: 'apartment', label: 'Apartment' },
-          { value: 'house', label: 'House' },
-          { value: 'plot', label: 'Plot' },
-          { value: 'studio', label: 'Studio' }
-        ]
-      }
+          { value: "", label: "All types" },
+          { value: "apartment", label: "Apartment" },
+          { value: "house", label: "House" },
+          { value: "plot", label: "Plot" },
+          { value: "studio", label: "Studio" },
+        ],
+      },
     },
     navigation: {
       home: "Home",
@@ -222,7 +222,7 @@ export const translations: Record<Locale, Translations> = {
       cars: "Cars",
       accommodation: "Accommodation",
       blog: "Blog",
-      contact: "Contact"
+      contact: "Contact",
     },
     filters: {
       priceRange: "Price Range",
@@ -257,7 +257,7 @@ export const translations: Record<Locale, Translations> = {
       priceAsc: "Price: Low to High",
       priceDesc: "Price: High to Low",
       yearDesc: "Year: Newest first",
-      yearAsc: "Year: Oldest first"
+      yearAsc: "Year: Oldest first",
     },
     common: {
       bookNow: "Book",
@@ -284,7 +284,7 @@ export const translations: Record<Locale, Translations> = {
       found: "Found",
       rental: "Rental",
       sale: "Sale",
-      type: "Type"
+      type: "Type",
     },
     sections: {
       excursions: {
@@ -293,7 +293,7 @@ export const translations: Record<Locale, Translations> = {
         duration: "Duration",
         groupSize: "Group Size",
         price: "Price",
-        language: "Language"
+        language: "Language",
       },
       cars: {
         title: "Car Rental",
@@ -302,7 +302,7 @@ export const translations: Record<Locale, Translations> = {
         transmission: "Transmission",
         fuelType: "Fuel Type",
         seats: "Seats",
-        year: "Year"
+        year: "Year",
       },
       accommodation: {
         title: "Places to Stay",
@@ -311,8 +311,8 @@ export const translations: Record<Locale, Translations> = {
         location: "Location",
         bedrooms: "Bedrooms",
         bathrooms: "Bathrooms",
-        area: "Area"
-      }
+        area: "Area",
+      },
     },
     blog: {
       title: "Tenerife Guide",
@@ -320,18 +320,20 @@ export const translations: Record<Locale, Translations> = {
       publishedOn: "Published on",
       author: "Author",
       tags: "Tags",
-      relatedPosts: "Related Posts"
+      relatedPosts: "Related Posts",
     },
     cta: {
       title: "Don't know where to start?",
       subtitle: "Get a personal selection!",
-      button: "Write on WhatsApp"
+      button: "Write on WhatsApp",
     },
     personalizedRequest: {
       title: "Have a personalized request?",
-      subtitle: "Text us your specific needs and we'll help you find the perfect solution",
-      placeholder: "Tell us about your requirements, dates, preferences, or any special requests...",
-      button: "Send Request"
+      subtitle:
+        "Text us your specific needs and we'll help you find the perfect solution",
+      placeholder:
+        "Tell us about your requirements, dates, preferences, or any special requests...",
+      button: "Send Request",
     },
     footer: {
       description: "Your guide to Tenerife",
@@ -341,8 +343,8 @@ export const translations: Record<Locale, Translations> = {
       quickLinks: "Quick Links",
       aboutUs: "About Us",
       privacyPolicy: "Privacy Policy",
-      termsOfService: "Terms of Service"
-    }
+      termsOfService: "Terms of Service",
+    },
   },
   pl: {
     hero: {
@@ -352,7 +354,7 @@ export const translations: Record<Locale, Translations> = {
       tabs: {
         excursions: "Wycieczki",
         cars: "Samochody",
-        accommodation: "Zakwaterowanie"
+        accommodation: "Zakwaterowanie",
       },
       excursions: {
         title: "Wycieczki",
@@ -360,11 +362,11 @@ export const translations: Record<Locale, Translations> = {
         date: "Data",
         people: "Liczba osób",
         types: [
-          { value: 'all', label: 'Wszystkie wycieczki' },
-          { value: 'teide', label: 'Park Narodowy Teide' },
-          { value: 'water', label: 'Aktywności wodne' },
-          { value: 'culture', label: 'Wycieczki kulturowe' }
-        ]
+          { value: "all", label: "Wszystkie wycieczki" },
+          { value: "teide", label: "Park Narodowy Teide" },
+          { value: "water", label: "Aktywności wodne" },
+          { value: "culture", label: "Wycieczki kulturowe" },
+        ],
       },
       cars: {
         title: "Samochody",
@@ -372,11 +374,11 @@ export const translations: Record<Locale, Translations> = {
         dropoff: "Data zwrotu",
         type: "Typ samochodu",
         types: [
-          { value: 'all', label: 'Wszystkie samochody' },
-          { value: 'economy', label: 'Ekonomiczne' },
-          { value: 'standard', label: 'Standardowe' },
-          { value: 'premium', label: 'Premium' }
-        ]
+          { value: "all", label: "Wszystkie samochody" },
+          { value: "economy", label: "Ekonomiczne" },
+          { value: "standard", label: "Standardowe" },
+          { value: "premium", label: "Premium" },
+        ],
       },
       accommodation: {
         title: "Zakwaterowanie",
@@ -385,13 +387,13 @@ export const translations: Record<Locale, Translations> = {
         guests: "Goście",
         type: "Typ zakwaterowania",
         types: [
-          { value: '', label: 'Wszystkie typy' },
-          { value: 'apartment', label: 'Apartament' },
-          { value: 'house', label: 'Dom' },
-          { value: 'plot', label: 'Działka' },
-          { value: 'studio', label: 'Studio' }
-        ]
-      }
+          { value: "", label: "Wszystkie typy" },
+          { value: "apartment", label: "Apartament" },
+          { value: "house", label: "Dom" },
+          { value: "plot", label: "Działka" },
+          { value: "studio", label: "Studio" },
+        ],
+      },
     },
     navigation: {
       home: "Strona główna",
@@ -399,7 +401,7 @@ export const translations: Record<Locale, Translations> = {
       cars: "Samochody",
       accommodation: "Zakwaterowanie",
       blog: "Blog",
-      contact: "Kontakt"
+      contact: "Kontakt",
     },
     filters: {
       priceRange: "Zakres cen",
@@ -434,7 +436,7 @@ export const translations: Record<Locale, Translations> = {
       priceAsc: "Cena: od najniższej",
       priceDesc: "Cena: od najwyższej",
       yearDesc: "Rok: najnowsze najpierw",
-      yearAsc: "Rok: najstarsze najpierw"
+      yearAsc: "Rok: najstarsze najpierw",
     },
     common: {
       bookNow: "Rezerwuj",
@@ -461,7 +463,7 @@ export const translations: Record<Locale, Translations> = {
       found: "Znaleziono",
       rental: "Wynajem",
       sale: "Sprzedaż",
-      type: "Typ"
+      type: "Typ",
     },
     sections: {
       excursions: {
@@ -470,7 +472,7 @@ export const translations: Record<Locale, Translations> = {
         duration: "Czas trwania",
         groupSize: "Rozmiar grupy",
         price: "Cena",
-        language: "Język"
+        language: "Język",
       },
       cars: {
         title: "Wynajem Samochodów",
@@ -479,7 +481,7 @@ export const translations: Record<Locale, Translations> = {
         transmission: "Skrzynia biegów",
         fuelType: "Rodzaj paliwa",
         seats: "Miejsca",
-        year: "Rok"
+        year: "Rok",
       },
       accommodation: {
         title: "Miejsca do Zamieszkania",
@@ -488,8 +490,8 @@ export const translations: Record<Locale, Translations> = {
         location: "Lokalizacja",
         bedrooms: "Sypialnie",
         bathrooms: "Łazienki",
-        area: "Powierzchnia"
-      }
+        area: "Powierzchnia",
+      },
     },
     blog: {
       title: "Przewodnik po Teneryfie",
@@ -497,18 +499,20 @@ export const translations: Record<Locale, Translations> = {
       publishedOn: "Opublikowano",
       author: "Autor",
       tags: "Tagi",
-      relatedPosts: "Powiązane posty"
+      relatedPosts: "Powiązane posty",
     },
     cta: {
       title: "Nie wiesz od czego zacząć?",
       subtitle: "Otrzymaj spersonalizowaną ofertę!",
-      button: "Napisz na WhatsApp"
+      button: "Napisz na WhatsApp",
     },
     personalizedRequest: {
       title: "Masz spersonalizowaną prośbę?",
-      subtitle: "Napisz nam o swoich konkretnych potrzebach, a pomożemy Ci znaleźć idealne rozwiązanie",
-      placeholder: "Opowiedz nam o swoich wymaganiach, datach, preferencjach lub specjalnych prośbach...",
-      button: "Wyślij prośbę"
+      subtitle:
+        "Napisz nam o swoich konkretnych potrzebach, a pomożemy Ci znaleźć idealne rozwiązanie",
+      placeholder:
+        "Opowiedz nam o swoich wymaganiach, datach, preferencjach lub specjalnych prośbach...",
+      button: "Wyślij prośbę",
     },
     footer: {
       description: "Twój przewodnik po Teneryfie",
@@ -518,18 +522,19 @@ export const translations: Record<Locale, Translations> = {
       quickLinks: "Szybkie linki",
       aboutUs: "O nas",
       privacyPolicy: "Polityka prywatności",
-      termsOfService: "Regulamin"
-    }
+      termsOfService: "Regulamin",
+    },
   },
   fr: {
     hero: {
       title: "Bienvenue à Tenerife",
-      subtitle: "Trouvez un hébergement, des excursions ou une location de voiture",
+      subtitle:
+        "Trouvez un hébergement, des excursions ou une location de voiture",
       search: "Rechercher",
       tabs: {
         excursions: "Excursions",
         cars: "Voitures",
-        accommodation: "Hébergement"
+        accommodation: "Hébergement",
       },
       excursions: {
         title: "Excursions",
@@ -537,11 +542,11 @@ export const translations: Record<Locale, Translations> = {
         date: "Date",
         people: "Nombre de personnes",
         types: [
-          { value: 'all', label: 'Toutes les excursions' },
-          { value: 'teide', label: 'Parc National du Teide' },
-          { value: 'water', label: 'Activités aquatiques' },
-          { value: 'culture', label: 'Visites culturelles' }
-        ]
+          { value: "all", label: "Toutes les excursions" },
+          { value: "teide", label: "Parc National du Teide" },
+          { value: "water", label: "Activités aquatiques" },
+          { value: "culture", label: "Visites culturelles" },
+        ],
       },
       cars: {
         title: "Voitures",
@@ -549,11 +554,11 @@ export const translations: Record<Locale, Translations> = {
         dropoff: "Date de retour",
         type: "Type de voiture",
         types: [
-          { value: 'all', label: 'Toutes les voitures' },
-          { value: 'economy', label: 'Économique' },
-          { value: 'standard', label: 'Standard' },
-          { value: 'premium', label: 'Premium' }
-        ]
+          { value: "all", label: "Toutes les voitures" },
+          { value: "economy", label: "Économique" },
+          { value: "standard", label: "Standard" },
+          { value: "premium", label: "Premium" },
+        ],
       },
       accommodation: {
         title: "Hébergement",
@@ -562,13 +567,13 @@ export const translations: Record<Locale, Translations> = {
         guests: "Invités",
         type: "Type de propriété",
         types: [
-          { value: '', label: 'Tous les types' },
-          { value: 'apartment', label: 'Appartement' },
-          { value: 'house', label: 'Maison' },
-          { value: 'plot', label: 'Terrain' },
-          { value: 'studio', label: 'Studio' }
-        ]
-      }
+          { value: "", label: "Tous les types" },
+          { value: "apartment", label: "Appartement" },
+          { value: "house", label: "Maison" },
+          { value: "plot", label: "Terrain" },
+          { value: "studio", label: "Studio" },
+        ],
+      },
     },
     navigation: {
       home: "Accueil",
@@ -576,7 +581,7 @@ export const translations: Record<Locale, Translations> = {
       cars: "Voitures",
       accommodation: "Hébergement",
       blog: "Blog",
-      contact: "Contact"
+      contact: "Contact",
     },
     filters: {
       priceRange: "Fourchette de prix",
@@ -611,7 +616,7 @@ export const translations: Record<Locale, Translations> = {
       priceAsc: "Prix: croissant",
       priceDesc: "Prix: décroissant",
       yearDesc: "Année: récents d'abord",
-      yearAsc: "Année: anciens d'abord"
+      yearAsc: "Année: anciens d'abord",
     },
     common: {
       bookNow: "Réserver",
@@ -638,7 +643,7 @@ export const translations: Record<Locale, Translations> = {
       found: "Trouvé",
       rental: "Location",
       sale: "Vente",
-      type: "Type"
+      type: "Type",
     },
     sections: {
       excursions: {
@@ -647,7 +652,7 @@ export const translations: Record<Locale, Translations> = {
         duration: "Durée",
         groupSize: "Taille du groupe",
         price: "Prix",
-        language: "Langue"
+        language: "Langue",
       },
       cars: {
         title: "Location de voitures",
@@ -656,7 +661,7 @@ export const translations: Record<Locale, Translations> = {
         transmission: "Transmission",
         fuelType: "Type de carburant",
         seats: "Sièges",
-        year: "Année"
+        year: "Année",
       },
       accommodation: {
         title: "Lieux de séjour",
@@ -665,8 +670,8 @@ export const translations: Record<Locale, Translations> = {
         location: "Localisation",
         bedrooms: "Chambres",
         bathrooms: "Salles de bain",
-        area: "Superficie"
-      }
+        area: "Superficie",
+      },
     },
     blog: {
       title: "Guide de Tenerife",
@@ -674,18 +679,20 @@ export const translations: Record<Locale, Translations> = {
       publishedOn: "Publié le",
       author: "Auteur",
       tags: "Tags",
-      relatedPosts: "Articles connexes"
+      relatedPosts: "Articles connexes",
     },
     cta: {
       title: "Vous ne savez pas par où commencer ?",
       subtitle: "Obtenez une sélection personnalisée !",
-      button: "Écrire sur WhatsApp"
+      button: "Écrire sur WhatsApp",
     },
     personalizedRequest: {
       title: "Vous avez une demande personnalisée ?",
-      subtitle: "Écrivez-nous vos besoins spécifiques et nous vous aiderons à trouver la solution parfaite",
-      placeholder: "Parlez-nous de vos exigences, dates, préférences ou demandes spéciales...",
-      button: "Envoyer la demande"
+      subtitle:
+        "Écrivez-nous vos besoins spécifiques et nous vous aiderons à trouver la solution parfaite",
+      placeholder:
+        "Parlez-nous de vos exigences, dates, préférences ou demandes spéciales...",
+      button: "Envoyer la demande",
     },
     footer: {
       description: "Votre guide de Tenerife",
@@ -695,8 +702,8 @@ export const translations: Record<Locale, Translations> = {
       quickLinks: "Liens rapides",
       aboutUs: "À propos de nous",
       privacyPolicy: "Politique de confidentialité",
-      termsOfService: "Conditions d'utilisation"
-    }
+      termsOfService: "Conditions d'utilisation",
+    },
   },
   ru: {
     hero: {
@@ -706,7 +713,7 @@ export const translations: Record<Locale, Translations> = {
       tabs: {
         excursions: "Экскурсии",
         cars: "Автомобили",
-        accommodation: "Жилье"
+        accommodation: "Жилье",
       },
       excursions: {
         title: "Экскурсии",
@@ -714,11 +721,11 @@ export const translations: Record<Locale, Translations> = {
         date: "Дата",
         people: "Количество человек",
         types: [
-          { value: 'all', label: 'Все экскурсии' },
-          { value: 'teide', label: 'Национальный парк Тейде' },
-          { value: 'water', label: 'Водные развлечения' },
-          { value: 'culture', label: 'Культурные туры' }
-        ]
+          { value: "all", label: "Все экскурсии" },
+          { value: "teide", label: "Национальный парк Тейде" },
+          { value: "water", label: "Водные развлечения" },
+          { value: "culture", label: "Культурные туры" },
+        ],
       },
       cars: {
         title: "Автомобили",
@@ -726,11 +733,11 @@ export const translations: Record<Locale, Translations> = {
         dropoff: "Дата возврата",
         type: "Тип автомобиля",
         types: [
-          { value: 'all', label: 'Все автомобили' },
-          { value: 'economy', label: 'Эконом' },
-          { value: 'standard', label: 'Стандарт' },
-          { value: 'premium', label: 'Премиум' }
-        ]
+          { value: "all", label: "Все автомобили" },
+          { value: "economy", label: "Эконом" },
+          { value: "standard", label: "Стандарт" },
+          { value: "premium", label: "Премиум" },
+        ],
       },
       accommodation: {
         title: "Жилье",
@@ -739,13 +746,13 @@ export const translations: Record<Locale, Translations> = {
         guests: "Гости",
         type: "Тип недвижимости",
         types: [
-          { value: '', label: 'Все типы' },
-          { value: 'apartment', label: 'Квартира' },
-          { value: 'house', label: 'Дом' },
-          { value: 'plot', label: 'Участок' },
-          { value: 'studio', label: 'Студия' }
-        ]
-      }
+          { value: "", label: "Все типы" },
+          { value: "apartment", label: "Квартира" },
+          { value: "house", label: "Дом" },
+          { value: "plot", label: "Участок" },
+          { value: "studio", label: "Студия" },
+        ],
+      },
     },
     navigation: {
       home: "Главная",
@@ -753,7 +760,7 @@ export const translations: Record<Locale, Translations> = {
       cars: "Автомобили",
       accommodation: "Жилье",
       blog: "Блог",
-      contact: "Контакты"
+      contact: "Контакты",
     },
     filters: {
       priceRange: "Диапазон цен",
@@ -788,7 +795,7 @@ export const translations: Record<Locale, Translations> = {
       priceAsc: "Цена: по возрастанию",
       priceDesc: "Цена: по убыванию",
       yearDesc: "Год: новые первыми",
-      yearAsc: "Год: старые первыми"
+      yearAsc: "Год: старые первыми",
     },
     common: {
       bookNow: "Бронь",
@@ -815,7 +822,7 @@ export const translations: Record<Locale, Translations> = {
       found: "Найдено",
       rental: "Аренда",
       sale: "Продажа",
-      type: "Тип"
+      type: "Тип",
     },
     sections: {
       excursions: {
@@ -824,7 +831,7 @@ export const translations: Record<Locale, Translations> = {
         duration: "Продолжительность",
         groupSize: "Размер группы",
         price: "Цена",
-        language: "Язык"
+        language: "Язык",
       },
       cars: {
         title: "Аренда автомобилей",
@@ -833,7 +840,7 @@ export const translations: Record<Locale, Translations> = {
         transmission: "Коробка передач",
         fuelType: "Тип топлива",
         seats: "Места",
-        year: "Год"
+        year: "Год",
       },
       accommodation: {
         title: "Места для проживания",
@@ -842,8 +849,8 @@ export const translations: Record<Locale, Translations> = {
         location: "Местоположение",
         bedrooms: "Спальни",
         bathrooms: "Ванные комнаты",
-        area: "Площадь"
-      }
+        area: "Площадь",
+      },
     },
     blog: {
       title: "Гид по Тенерифе",
@@ -851,18 +858,20 @@ export const translations: Record<Locale, Translations> = {
       publishedOn: "Опубликовано",
       author: "Автор",
       tags: "Теги",
-      relatedPosts: "Похожие статьи"
+      relatedPosts: "Похожие статьи",
     },
     cta: {
       title: "Не знаете с чего начать?",
       subtitle: "Получите персональную подборку!",
-      button: "Написать в WhatsApp"
+      button: "Написать в WhatsApp",
     },
     personalizedRequest: {
       title: "Есть персональный запрос?",
-      subtitle: "Напишите нам о своих конкретных потребностях, и мы поможем найти идеальное решение",
-      placeholder: "Расскажите о своих требованиях, датах, предпочтениях или особых пожеланиях...",
-      button: "Отправить запрос"
+      subtitle:
+        "Напишите нам о своих конкретных потребностях, и мы поможем найти идеальное решение",
+      placeholder:
+        "Расскажите о своих требованиях, датах, предпочтениях или особых пожеланиях...",
+      button: "Отправить запрос",
     },
     footer: {
       description: "Ваш гид по Тенерифе",
@@ -872,8 +881,8 @@ export const translations: Record<Locale, Translations> = {
       quickLinks: "Быстрые ссылки",
       aboutUs: "О нас",
       privacyPolicy: "Политика конфиденциальности",
-      termsOfService: "Условия использования"
-    }
+      termsOfService: "Условия использования",
+    },
   },
   uk: {
     hero: {
@@ -883,7 +892,7 @@ export const translations: Record<Locale, Translations> = {
       tabs: {
         excursions: "Екскурсії",
         cars: "Автомобілі",
-        accommodation: "Житло"
+        accommodation: "Житло",
       },
       excursions: {
         title: "Екскурсії",
@@ -891,11 +900,11 @@ export const translations: Record<Locale, Translations> = {
         date: "Дата",
         people: "Кількість осіб",
         types: [
-          { value: 'all', label: 'Всі екскурсії' },
-          { value: 'teide', label: 'Національний парк Тейде' },
-          { value: 'water', label: 'Водні розваги' },
-          { value: 'culture', label: 'Культурні тури' }
-        ]
+          { value: "all", label: "Всі екскурсії" },
+          { value: "teide", label: "Національний парк Тейде" },
+          { value: "water", label: "Водні розваги" },
+          { value: "culture", label: "Культурні тури" },
+        ],
       },
       cars: {
         title: "Автомобілі",
@@ -903,11 +912,11 @@ export const translations: Record<Locale, Translations> = {
         dropoff: "Дата повернення",
         type: "Тип автомобіля",
         types: [
-          { value: 'all', label: 'Всі автомобілі' },
-          { value: 'economy', label: 'Економ' },
-          { value: 'standard', label: 'Стандарт' },
-          { value: 'premium', label: 'Преміум' }
-        ]
+          { value: "all", label: "Всі автомобілі" },
+          { value: "economy", label: "Економ" },
+          { value: "standard", label: "Стандарт" },
+          { value: "premium", label: "Преміум" },
+        ],
       },
       accommodation: {
         title: "Житло",
@@ -916,13 +925,13 @@ export const translations: Record<Locale, Translations> = {
         guests: "Гості",
         type: "Тип нерухомості",
         types: [
-          { value: '', label: 'Всі типи' },
-          { value: 'apartment', label: 'Квартира' },
-          { value: 'house', label: 'Будинок' },
-          { value: 'plot', label: 'Ділянка' },
-          { value: 'studio', label: 'Студія' }
-        ]
-      }
+          { value: "", label: "Всі типи" },
+          { value: "apartment", label: "Квартира" },
+          { value: "house", label: "Будинок" },
+          { value: "plot", label: "Ділянка" },
+          { value: "studio", label: "Студія" },
+        ],
+      },
     },
     navigation: {
       home: "Головна",
@@ -930,7 +939,7 @@ export const translations: Record<Locale, Translations> = {
       cars: "Автомобілі",
       accommodation: "Житло",
       blog: "Блог",
-      contact: "Контакти"
+      contact: "Контакти",
     },
     filters: {
       priceRange: "Діапазон цін",
@@ -965,7 +974,7 @@ export const translations: Record<Locale, Translations> = {
       priceAsc: "Ціна: за зростанням",
       priceDesc: "Ціна: за спаданням",
       yearDesc: "Рік: нові першими",
-      yearAsc: "Рік: старі першими"
+      yearAsc: "Рік: старі першими",
     },
     common: {
       bookNow: "Бронь",
@@ -992,7 +1001,7 @@ export const translations: Record<Locale, Translations> = {
       found: "Знайдено",
       rental: "Оренда",
       sale: "Продаж",
-      type: "Тип"
+      type: "Тип",
     },
     sections: {
       excursions: {
@@ -1001,7 +1010,7 @@ export const translations: Record<Locale, Translations> = {
         duration: "Тривалість",
         groupSize: "Розмір групи",
         price: "Ціна",
-        language: "Мова"
+        language: "Мова",
       },
       cars: {
         title: "Оренда автомобілів",
@@ -1010,7 +1019,7 @@ export const translations: Record<Locale, Translations> = {
         transmission: "Коробка передач",
         fuelType: "Тип палива",
         seats: "Місця",
-        year: "Рік"
+        year: "Рік",
       },
       accommodation: {
         title: "Місця для проживання",
@@ -1019,8 +1028,8 @@ export const translations: Record<Locale, Translations> = {
         location: "Місцезнаходження",
         bedrooms: "Спальні",
         bathrooms: "Ванні кімнати",
-        area: "Площа"
-      }
+        area: "Площа",
+      },
     },
     blog: {
       title: "Гід по Тенеріфе",
@@ -1028,18 +1037,20 @@ export const translations: Record<Locale, Translations> = {
       publishedOn: "Опубліковано",
       author: "Автор",
       tags: "Теги",
-      relatedPosts: "Схожі статті"
+      relatedPosts: "Схожі статті",
     },
     cta: {
       title: "Не знаєте з чого почати?",
       subtitle: "Отримайте персональну добірку!",
-      button: "Написати в WhatsApp"
+      button: "Написати в WhatsApp",
     },
     personalizedRequest: {
       title: "Є персональний запит?",
-      subtitle: "Напишіть нам про свої конкретні потреби, і ми допоможемо знайти ідеальне рішення",
-      placeholder: "Розкажіть про свої вимоги, дати, уподобання або особливі побажання...",
-      button: "Надіслати запит"
+      subtitle:
+        "Напишіть нам про свої конкретні потреби, і ми допоможемо знайти ідеальне рішення",
+      placeholder:
+        "Розкажіть про свої вимоги, дати, уподобання або особливі побажання...",
+      button: "Надіслати запит",
     },
     footer: {
       description: "Ваш гід по Тенеріфе",
@@ -1049,7 +1060,365 @@ export const translations: Record<Locale, Translations> = {
       quickLinks: "Швидкі посилання",
       aboutUs: "Про нас",
       privacyPolicy: "Політика конфіденційності",
-      termsOfService: "Умови використання"
-    }
-  }
+      termsOfService: "Умови використання",
+    },
+  },
+  de: {
+    hero: {
+      title: "Willkommen auf Teneriffa",
+      subtitle: "Finden Sie Unterkunft, Ausflüge oder Autovermietung",
+      search: "Suchen",
+      tabs: {
+        excursions: "Ausflüge",
+        cars: "Autos",
+        accommodation: "Unterkunft",
+      },
+      excursions: {
+        title: "Ausflüge",
+        type: "Art des Ausflugs",
+        date: "Datum",
+        people: "Anzahl der Personen",
+        types: [
+          { value: "all", label: "Alle Ausflüge" },
+          { value: "teide", label: "Teide Nationalpark" },
+          { value: "water", label: "Wasseraktivitäten" },
+          { value: "culture", label: "Kulturtouren" },
+        ],
+      },
+      cars: {
+        title: "Autos",
+        pickup: "Abholdatum",
+        dropoff: "Rückgabedatum",
+        type: "Autotyp",
+        types: [
+          { value: "all", label: "Alle Autos" },
+          { value: "economy", label: "Wirtschaft" },
+          { value: "standard", label: "Standard" },
+          { value: "premium", label: "Premium" },
+        ],
+      },
+      accommodation: {
+        title: "Unterkunft",
+        checkin: "Check-in",
+        checkout: "Check-out",
+        guests: "Gäste",
+        type: "Immobilientyp",
+        types: [
+          { value: "", label: "Alle Typen" },
+          { value: "apartment", label: "Wohnung" },
+          { value: "house", label: "Haus" },
+          { value: "plot", label: "Grundstück" },
+          { value: "studio", label: "Studio" },
+        ],
+      },
+    },
+    navigation: {
+      home: "Startseite",
+      excursions: "Ausflüge",
+      cars: "Autos",
+      accommodation: "Unterkunft",
+      blog: "Blog",
+      contact: "Kontakt",
+    },
+    filters: {
+      priceRange: "Preisbereich",
+      location: "Standort",
+      type: "Typ",
+      bedrooms: "Schlafzimmer",
+      area: "Fläche (m²)",
+      year: "Baujahr",
+      condition: "Zustand",
+      furnished: "Möbliert",
+      parking: "Parkplatz",
+      availability: "Verfügbar ab",
+      resetFilters: "Filter zurücksetzen",
+      applyFilters: "Filter anwenden",
+      make: "Marke",
+      model: "Modell",
+      mileage: "Kilometerstand (km)",
+      fuel: "Kraftstoffart",
+      transmission: "Getriebe",
+      bodyType: "Karosserietyp",
+      color: "Farbe",
+      doors: "Türen",
+      power: "Motorleistung",
+      duration: "Dauer",
+      language: "Sprache",
+      difficulty: "Schwierigkeit",
+      groupSize: "Gruppengröße",
+      included: "Inklusive",
+      category: "Kategorie",
+      newest: "Neueste zuerst",
+      oldest: "Älteste zuerst",
+      priceAsc: "Preis: aufsteigend",
+      priceDesc: "Preis: absteigend",
+      yearDesc: "Jahr: neueste zuerst",
+      yearAsc: "Jahr: älteste zuerst",
+    },
+    common: {
+      bookNow: "Buchen",
+      viewDetails: "Details anzeigen",
+      loading: "Wird geladen...",
+      noResults: "Keine Ergebnisse gefunden",
+      from: "Von",
+      to: "Bis",
+      perDay: "/Tag",
+      perNight: "/Nacht",
+      per: "pro",
+      currency: "€",
+      date: "Datum",
+      time: "Zeit",
+      guests: "Gäste",
+      rooms: "Zimmer",
+      adults: "Erwachsene",
+      children: "Kinder",
+      contact: "Kontakt",
+      phone: "Telefon",
+      email: "Email",
+      whatsapp: "WhatsApp",
+      backToHome: "Zurück zur Startseite",
+      found: "Gefunden",
+      rental: "Miete",
+      sale: "Verkauf",
+      type: "Typ",
+    },
+    sections: {
+      excursions: {
+        title: "Beliebte Ausflüge",
+        subtitle: "Entdecken Sie das Beste auf Teneriffa",
+        duration: "Dauer",
+        groupSize: "Gruppengröße",
+        price: "Preis",
+        language: "Sprache",
+      },
+      cars: {
+        title: "Autovermietung",
+        subtitle: "Finden Sie das perfekte Auto für Abenteuer auf Teneriffa",
+        features: "Ausstattung",
+        transmission: "Getriebe",
+        fuelType: "Kraftstoffart",
+        seats: "Sitze",
+        year: "Jahr",
+      },
+      accommodation: {
+        title: "Unterkünfte",
+        subtitle: "Finden Sie die perfekte Unterkunft auf Teneriffa",
+        amenities: "Ausstattung",
+        location: "Standort",
+        bedrooms: "Schlafzimmer",
+        bathrooms: "Badezimmer",
+        area: "Fläche",
+      },
+    },
+    blog: {
+      title: "Teneriffa Reiseführer",
+      readMore: "Weiterlesen",
+      publishedOn: "Veröffentlicht am",
+      author: "Autor",
+      tags: "Tags",
+      relatedPosts: "Ähnliche Artikel",
+    },
+    cta: {
+      title: "Wissen Sie nicht, wo Sie anfangen sollen?",
+      subtitle: "Erhalten Sie eine persönliche Auswahl!",
+      button: "In WhatsApp schreiben",
+    },
+    personalizedRequest: {
+      title: "Haben Sie eine persönliche Anfrage?",
+      subtitle:
+        "Schreiben Sie uns über Ihre spezifischen Bedürfnisse und wir helfen Ihnen, die perfekte Lösung zu finden",
+      placeholder:
+        "Erzählen Sie uns von Ihren Anforderungen, Daten, Vorlieben oder besonderen Wünschen...",
+      button: "Anfrage senden",
+    },
+    footer: {
+      description: "Ihr Teneriffa Reiseführer",
+      contacts: "Kontakte",
+      social: "Soziale Medien",
+      services: "Unsere Dienstleistungen",
+      quickLinks: "Schnelllinks",
+      aboutUs: "Über uns",
+      privacyPolicy: "Datenschutzrichtlinie",
+      termsOfService: "Nutzungsbedingungen",
+    },
+  },
+  es: {
+    hero: {
+      title: "Bienvenido a Tenerife",
+      subtitle: "Encuentra alojamiento, excursiones o alquiler de coches",
+      search: "Buscar",
+      tabs: {
+        excursions: "Excursiones",
+        cars: "Coches",
+        accommodation: "Alojamiento",
+      },
+      excursions: {
+        title: "Excursiones",
+        type: "Tipo de excursión",
+        date: "Fecha",
+        people: "Número de personas",
+        types: [
+          { value: "all", label: "Todas las excursiones" },
+          { value: "teide", label: "Parque Nacional del Teide" },
+          { value: "water", label: "Actividades acuáticas" },
+          { value: "culture", label: "Tours culturales" },
+        ],
+      },
+      cars: {
+        title: "Coches",
+        pickup: "Fecha de recogida",
+        dropoff: "Fecha de devolución",
+        type: "Tipo de coche",
+        types: [
+          { value: "all", label: "Todos los coches" },
+          { value: "economy", label: "Económico" },
+          { value: "standard", label: "Estándar" },
+          { value: "premium", label: "Premium" },
+        ],
+      },
+      accommodation: {
+        title: "Alojamiento",
+        checkin: "Check-in",
+        checkout: "Check-out",
+        guests: "Huéspedes",
+        type: "Tipo de propiedad",
+        types: [
+          { value: "", label: "Todos los tipos" },
+          { value: "apartment", label: "Apartamento" },
+          { value: "house", label: "Casa" },
+          { value: "plot", label: "Terreno" },
+          { value: "studio", label: "Estudio" },
+        ],
+      },
+    },
+    navigation: {
+      home: "Inicio",
+      excursions: "Excursiones",
+      cars: "Coches",
+      accommodation: "Alojamiento",
+      blog: "Blog",
+      contact: "Contacto",
+    },
+    filters: {
+      priceRange: "Rango de precio",
+      location: "Ubicación",
+      type: "Tipo",
+      bedrooms: "Dormitorios",
+      area: "Área (m²)",
+      year: "Año de construcción",
+      condition: "Condición",
+      furnished: "Amueblado",
+      parking: "Aparcamiento",
+      availability: "Disponible desde",
+      resetFilters: "Restablecer filtros",
+      applyFilters: "Aplicar filtros",
+      make: "Marca",
+      model: "Modelo",
+      mileage: "Kilometraje (km)",
+      fuel: "Tipo de combustible",
+      transmission: "Transmisión",
+      bodyType: "Tipo de carrocería",
+      color: "Color",
+      doors: "Puertas",
+      power: "Potencia del motor",
+      duration: "Duración",
+      language: "Idioma",
+      difficulty: "Dificultad",
+      groupSize: "Tamaño del grupo",
+      included: "Incluido",
+      category: "Categoría",
+      newest: "Más recientes primero",
+      oldest: "Más antiguos primero",
+      priceAsc: "Precio: ascendente",
+      priceDesc: "Precio: descendente",
+      yearDesc: "Año: más recientes primero",
+      yearAsc: "Año: más antiguos primero",
+    },
+    common: {
+      bookNow: "Reservar",
+      viewDetails: "Ver detalles",
+      loading: "Cargando...",
+      noResults: "No se encontraron resultados",
+      from: "Desde",
+      to: "Hasta",
+      perDay: "/día",
+      perNight: "/noche",
+      per: "por",
+      currency: "€",
+      date: "Fecha",
+      time: "Tiempo",
+      guests: "Huéspedes",
+      rooms: "Habitaciones",
+      adults: "Adultos",
+      children: "Niños",
+      contact: "Contacto",
+      phone: "Teléfono",
+      email: "Email",
+      whatsapp: "WhatsApp",
+      backToHome: "Volver al inicio",
+      found: "Encontrado",
+      rental: "Alquiler",
+      sale: "Venta",
+      type: "Tipo",
+    },
+    sections: {
+      excursions: {
+        title: "Excursiones populares",
+        subtitle: "Descubre lo mejor de Tenerife",
+        duration: "Duración",
+        groupSize: "Tamaño del grupo",
+        price: "Precio",
+        language: "Idioma",
+      },
+      cars: {
+        title: "Alquiler de coches",
+        subtitle: "Encuentra el coche perfecto para aventuras en Tenerife",
+        features: "Características",
+        transmission: "Transmisión",
+        fuelType: "Tipo de combustible",
+        seats: "Asientos",
+        year: "Año",
+      },
+      accommodation: {
+        title: "Alojamientos",
+        subtitle: "Encuentra el alojamiento perfecto en Tenerife",
+        amenities: "Comodidades",
+        location: "Ubicación",
+        bedrooms: "Dormitorios",
+        bathrooms: "Baños",
+        area: "Área",
+      },
+    },
+    blog: {
+      title: "Guía de Tenerife",
+      readMore: "Leer más",
+      publishedOn: "Publicado el",
+      author: "Autor",
+      tags: "Etiquetas",
+      relatedPosts: "Artículos relacionados",
+    },
+    cta: {
+      title: "¿No sabes por dónde empezar?",
+      subtitle: "¡Obtén una selección personalizada!",
+      button: "Escribir en WhatsApp",
+    },
+    personalizedRequest: {
+      title: "¿Tienes una solicitud personalizada?",
+      subtitle:
+        "Escríbenos sobre tus necesidades específicas y te ayudaremos a encontrar la solución perfecta",
+      placeholder:
+        "Cuéntanos sobre tus requisitos, fechas, preferencias o deseos especiales...",
+      button: "Enviar solicitud",
+    },
+    footer: {
+      description: "Tu guía de Tenerife",
+      contacts: "Contactos",
+      social: "Redes sociales",
+      services: "Nuestros servicios",
+      quickLinks: "Enlaces rápidos",
+      aboutUs: "Sobre nosotros",
+      privacyPolicy: "Política de privacidad",
+      termsOfService: "Términos de servicio",
+    },
+  },
 };

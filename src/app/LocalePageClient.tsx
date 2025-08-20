@@ -1,6 +1,6 @@
-"use client"
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   ChevronDown,
   Check,
@@ -22,9 +22,9 @@ import {
   Calendar,
   User,
   ArrowRight,
-} from "lucide-react"
-import { useDataLoader } from "./useDataLoader"
-import { SimpleBookingPopup } from '@/components/SimpleBookingPopup'
+} from "lucide-react";
+import { useDataLoader } from "./useDataLoader";
+import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 
 // Переводы для всех языков
 const translations = {
@@ -107,8 +107,10 @@ const translations = {
       bookNow: "Book",
       readMore: "Read More",
       loading: "Loading our featured experiences...",
-      serverError: "We're experiencing server issues. Please try refreshing the page or contact support.",
-      noData: "Currently updating our featured selections. New options will be available soon!",
+      serverError:
+        "We're experiencing server issues. Please try refreshing the page or contact support.",
+      noData:
+        "Currently updating our featured selections. New options will be available soon!",
     },
     cta: {
       title: "Ready to Start Your Adventure?",
@@ -120,11 +122,13 @@ const translations = {
       subtitle: "Everything you need to know about booking with us",
       preBook: {
         question: "What is the pre-booking process?",
-        answer: "Pre-booking is a convenient way to express your interest in our services. When you submit a pre-book request, our team will check availability for your preferred dates and contact you within 24 hours with confirmation and next steps. This ensures you get the best available options for your travel dates.",
+        answer:
+          "Pre-booking is a convenient way to express your interest in our services. When you submit a pre-book request, our team will check availability for your preferred dates and contact you within 24 hours with confirmation and next steps. This ensures you get the best available options for your travel dates.",
       },
     },
     footer: {
-      description: "Your trusted partner for unforgettable experiences in Tenerife",
+      description:
+        "Your trusted partner for unforgettable experiences in Tenerife",
       services: "Our Services",
       contacts: "Contacts",
     },
@@ -208,7 +212,8 @@ const translations = {
       bookNow: "Забронировать",
       readMore: "Читать далее",
       loading: "Загружаем лучшие предложения...",
-      serverError: "Проблемы с сервером. Попробуйте обновить страницу или свяжитесь с поддержкой.",
+      serverError:
+        "Проблемы с сервером. Попробуйте обновить страницу или свяжитесь с поддержкой.",
       noData: "Обновляем наши рекомендации. Скоро появятся новые варианты!",
     },
     cta: {
@@ -221,11 +226,13 @@ const translations = {
       subtitle: "Все, что вам нужно знать о бронировании с нами",
       preBook: {
         question: "Что такое процесс предварительного бронирования?",
-        answer: "Предварительное бронирование - это удобный способ выразить интерес к нашим услугам. Когда вы отправляете запрос на предварительное бронирование, наша команда проверит доступность на ваши предпочтительные даты и свяжется с вами в течение 24 часов с подтверждением и следующими шагами. Это гарантирует, что вы получите лучшие доступные варианты для ваших дат путешествия.",
+        answer:
+          "Предварительное бронирование - это удобный способ выразить интерес к нашим услугам. Когда вы отправляете запрос на предварительное бронирование, наша команда проверит доступность на ваши предпочтительные даты и свяжется с вами в течение 24 часов с подтверждением и следующими шагами. Это гарантирует, что вы получите лучшие доступные варианты для ваших дат путешествия.",
       },
     },
     footer: {
-      description: "Ваш надежный партнер для незабываемых впечатлений на Тенерифе",
+      description:
+        "Ваш надежный партнер для незабываемых впечатлений на Тенерифе",
       services: "Наши услуги",
       contacts: "Контакты",
     },
@@ -234,7 +241,8 @@ const translations = {
   pl: {
     hero: {
       title: "Odkryj Teneryfę",
-      subtitle: "Twoja brama do niesamowitych doświadczeń na Wyspach Kanaryjskich",
+      subtitle:
+        "Twoja brama do niesamowitych doświadczeń na Wyspach Kanaryjskich",
       tabs: {
         accommodation: "Zakwaterowanie",
         cars: "Samochody",
@@ -276,7 +284,8 @@ const translations = {
     sections: {
       excursions: {
         title: "Popularne wycieczki",
-        subtitle: "Odkryj to, co najlepsze na Teneryfie z naszymi przewodnikami",
+        subtitle:
+          "Odkryj to, co najlepsze na Teneryfie z naszymi przewodnikami",
         duration: "Czas trwania",
         groupSize: "Wielkość grupy",
         price: "Cena",
@@ -309,12 +318,15 @@ const translations = {
       bookNow: "Zarezerwuj teraz",
       readMore: "Czytaj więcej",
       loading: "Ładujemy najlepsze oferty...",
-      serverError: "Problemy z serwerem. Spróbuj odświeżyć stronę lub skontaktuj się z pomocą.",
-      noData: "Aktualizujemy nasze rekomendacje. Nowe opcje wkrótce będą dostępne!",
+      serverError:
+        "Problemy z serwerem. Spróbuj odświeżyć stronę lub skontaktuj się z pomocą.",
+      noData:
+        "Aktualizujemy nasze rekomendacje. Nowe opcje wkrótce będą dostępne!",
     },
     cta: {
       title: "Gotowy na przygodę?",
-      subtitle: "Skontaktuj się z nami po spersonalizowane rekomendacje i rezerwacje",
+      subtitle:
+        "Skontaktuj się z nami po spersonalizowane rekomendacje i rezerwacje",
       button: "Skontaktuj się z nami",
     },
     faq: {
@@ -322,11 +334,13 @@ const translations = {
       subtitle: "Wszystko, co musisz wiedzieć o rezerwacji z nami",
       preBook: {
         question: "Na czym polega proces przedwstępnej rezerwacji?",
-        answer: "Przedwstępna rezerwacja to wygodny sposób wyrażenia zainteresowania naszymi usługami. Gdy złożysz wniosek o przedwstępną rezerwację, nasz zespół sprawdzi dostępność na Twoje preferowane daty i skontaktuje się z Tobą w ciągu 24 godzin z potwierdzeniem i kolejnymi krokami. To zapewnia, że otrzymasz najlepsze dostępne opcje dla swoich dat podróży.",
+        answer:
+          "Przedwstępna rezerwacja to wygodny sposób wyrażenia zainteresowania naszymi usługami. Gdy złożysz wniosek o przedwstępną rezerwację, nasz zespół sprawdzi dostępność na Twoje preferowane daty i skontaktuje się z Tobą w ciągu 24 godzin z potwierdzeniem i kolejnymi krokami. To zapewnia, że otrzymasz najlepsze dostępne opcje dla swoich dat podróży.",
       },
     },
     footer: {
-      description: "Twój zaufany partner dla niezapomnianych doświadczeń na Teneryfie",
+      description:
+        "Twój zaufany partner dla niezapomnianych doświadczeń na Teneryfie",
       services: "Nasze usługi",
       contacts: "Kontakty",
     },
@@ -335,7 +349,8 @@ const translations = {
   fr: {
     hero: {
       title: "Découvrez Tenerife",
-      subtitle: "Votre porte d'entrée vers des expériences incroyables aux îles Canaries",
+      subtitle:
+        "Votre porte d'entrée vers des expériences incroyables aux îles Canaries",
       tabs: {
         accommodation: "Logement",
         cars: "Voitures",
@@ -410,12 +425,15 @@ const translations = {
       bookNow: "Réserver maintenant",
       readMore: "Lire la suite",
       loading: "Chargement de nos meilleures offres...",
-      serverError: "Problèmes de serveur. Essayez de rafraîchir la page ou contactez le support.",
-      noData: "Mise à jour de nos recommandations. De nouvelles options seront bientôt disponibles!",
+      serverError:
+        "Problèmes de serveur. Essayez de rafraîchir la page ou contactez le support.",
+      noData:
+        "Mise à jour de nos recommandations. De nouvelles options seront bientôt disponibles!",
     },
     cta: {
       title: "Prêt à commencer votre aventure ?",
-      subtitle: "Contactez-nous pour des recommandations personnalisées et des réservations",
+      subtitle:
+        "Contactez-nous pour des recommandations personnalisées et des réservations",
       button: "Contactez-nous",
     },
     faq: {
@@ -423,11 +441,13 @@ const translations = {
       subtitle: "Tout ce que vous devez savoir sur la réservation avec nous",
       preBook: {
         question: "Quel est le processus de pré-réservation ?",
-        answer: "La Pré-réservation est un moyen pratique d'exprimer votre intérêt pour nos services. Lorsque vous soumettez une demande de pré-réservation, notre équipe vérifiera la disponibilité pour vos dates préférées et vous contactera dans les 24 heures avec confirmation et prochaines étapes. Cela garantit que vous obtenez les meilleures options disponibles pour vos dates de voyage.",
+        answer:
+          "La Pré-réservation est un moyen pratique d'exprimer votre intérêt pour nos services. Lorsque vous soumettez une demande de pré-réservation, notre équipe vérifiera la disponibilité pour vos dates préférées et vous contactera dans les 24 heures avec confirmation et prochaines étapes. Cela garantit que vous obtenez les meilleures options disponibles pour vos dates de voyage.",
       },
     },
     footer: {
-      description: "Votre partenaire de confiance pour des expériences inoubliables à Tenerife",
+      description:
+        "Votre partenaire de confiance pour des expériences inoubliables à Tenerife",
       services: "Nos services",
       contacts: "Contacts",
     },
@@ -511,8 +531,10 @@ const translations = {
       bookNow: "Забронювати",
       readMore: "Читати далі",
       loading: "Завантажуємо найкращі пропозиції...",
-      serverError: "Проблеми з сервером. Спробуйте оновити сторінку або зв'яжіться з підтримкою.",
-      noData: "Оновлюємо наші рекомендації. Нові варіанти будуть доступні незабаром!",
+      serverError:
+        "Проблеми з сервером. Спробуйте оновити сторінку або зв'яжіться з підтримкою.",
+      noData:
+        "Оновлюємо наші рекомендації. Нові варіанти будуть доступні незабаром!",
     },
     cta: {
       title: "Готові почати свою пригоду?",
@@ -524,7 +546,8 @@ const translations = {
       subtitle: "Все, що вам потрібно знати про бронювання з нами",
       preBook: {
         question: "Що таке процес попереднього бронювання?",
-        answer: "Попереднє бронювання - це зручний спосіб виразити інтерес до наших послуг. Коли ви надсилаєте запит на попереднє бронювання, наша команда перевірить доступність на ваші бажані дати та зв'яжеться з вами протягом 24 годин з підтвердженням та наступними кроками. Це гарантує, що ви отримаєте найкращі доступні варіанти для ваших дат подорожі.",
+        answer:
+          "Попереднє бронювання - це зручний спосіб виразити інтерес до наших послуг. Коли ви надсилаєте запит на попереднє бронювання, наша команда перевірить доступність на ваші бажані дати та зв'яжеться з вами протягом 24 годин з підтвердженням та наступними кроками. Це гарантує, що ви отримаєте найкращі доступні варіанти для ваших дат подорожі.",
       },
     },
     footer: {
@@ -534,7 +557,220 @@ const translations = {
     },
     selectLanguage: "Обрати мову",
   },
-}
+  de: {
+    hero: {
+      title: "Entdecken Sie Teneriffa",
+      subtitle:
+        "Ihr Tor zu erstaunlichen Erlebnissen auf den Kanarischen Inseln",
+      tabs: {
+        accommodation: "Unterkunft",
+        cars: "Autos",
+        excursions: "Touren",
+        blog: "Blog",
+      },
+      accommodation: {
+        type: "Immobilientyp",
+        types: [
+          { value: "apartment", label: "Wohnung" },
+          { value: "villa", label: "Villa" },
+          { value: "house", label: "Haus" },
+        ],
+        checkin: "Check-in",
+        checkout: "Check-out",
+        guests: "Gäste",
+      },
+      cars: {
+        type: "Autotyp",
+        types: [
+          { value: "rent", label: "Mieten" },
+          { value: "sale", label: "Kaufen" },
+        ],
+        pickup: "Abholung",
+        dropoff: "Rückgabe",
+      },
+      excursions: {
+        type: "Exkursionstyp",
+        types: [
+          { value: "nature", label: "Natur" },
+          { value: "cultural", label: "Kultur" },
+          { value: "adventure", label: "Abenteuer" },
+        ],
+        date: "Datum",
+        people: "Personen",
+      },
+      search: "Suchen",
+    },
+    sections: {
+      excursions: {
+        title: "Beliebte Touren",
+        subtitle: "Entdecken Sie das Beste von Teneriffa mit unseren Führern",
+        duration: "Dauer",
+        groupSize: "Gruppengröße",
+        price: "Preis",
+        viewAll: "Alle Touren anzeigen",
+      },
+      cars: {
+        title: "Autovermietung",
+        subtitle: "Erkunden Sie Teneriffa in Ihrem eigenen Tempo",
+        transmission: "Getriebe",
+        features: "Ausstattung",
+        viewAll: "Alle Autos anzeigen",
+      },
+      accommodation: {
+        title: "Unterkunft",
+        subtitle: "Finden Sie Ihren perfekten Aufenthaltsort",
+        location: "Standort",
+        amenities: "Ausstattung",
+        viewAll: "Alle Immobilien anzeigen",
+      },
+      blog: {
+        title: "Neueste Nachrichten & Tipps",
+        subtitle: "Lesen Sie unsere neuesten Artikel über Teneriffa",
+        author: "Autor",
+        readTime: "Lesezeit",
+        publishedDate: "Veröffentlicht",
+        viewAll: "Alle Artikel anzeigen",
+      },
+    },
+    common: {
+      bookNow: "Jetzt buchen",
+      readMore: "Weiterlesen",
+      loading: "Laden unserer besten Angebote...",
+      serverError:
+        "Serverprobleme. Versuchen Sie, die Seite zu aktualisieren oder kontaktieren Sie den Support.",
+      noData:
+        "Aktualisieren unserer Empfehlungen. Neue Optionen werden bald verfügbar sein!",
+    },
+    cta: {
+      title: "Bereit für Ihr Abenteuer?",
+      subtitle:
+        "Kontaktieren Sie uns für personalisierte Empfehlungen und Buchungen",
+      button: "Kontaktieren Sie uns",
+    },
+    faq: {
+      title: "Häufig gestellte Fragen",
+      subtitle: "Alles, was Sie über die Buchung bei uns wissen müssen",
+      preBook: {
+        question: "Was ist der Vorab-Buchungsprozess?",
+        answer:
+          "Die Vorab-Buchung ist eine bequeme Möglichkeit, Ihr Interesse an unseren Dienstleistungen zu bekunden. Wenn Sie eine Vorab-Buchungsanfrage einreichen, prüft unser Team die Verfügbarkeit für Ihre bevorzugten Daten und kontaktiert Sie innerhalb von 24 Stunden mit Bestätigung und nächsten Schritten. Dies stellt sicher, dass Sie die besten verfügbaren Optionen für Ihre Reisedaten erhalten.",
+      },
+    },
+    footer: {
+      description:
+        "Ihr vertrauensvoller Partner für unvergessliche Erlebnisse auf Teneriffa",
+      services: "Unsere Dienstleistungen",
+      contacts: "Kontakte",
+    },
+    selectLanguage: "Sprache auswählen",
+  },
+  es: {
+    hero: {
+      title: "Descubre Tenerife",
+      subtitle:
+        "Tu puerta de entrada a experiencias increíbles en las Islas Canarias",
+      tabs: {
+        accommodation: "Alojamiento",
+        cars: "Coches",
+        excursions: "Excursiones",
+        blog: "Blog",
+      },
+      accommodation: {
+        type: "Tipo de propiedad",
+        types: [
+          { value: "apartment", label: "Apartamento" },
+          { value: "villa", label: "Villa" },
+          { value: "house", label: "Casa" },
+        ],
+        checkin: "Llegada",
+        checkout: "Salida",
+        guests: "Huéspedes",
+      },
+      cars: {
+        type: "Tipo de coche",
+        types: [
+          { value: "rent", label: "Alquiler" },
+          { value: "sale", label: "Venta" },
+        ],
+        pickup: "Recogida",
+        dropoff: "Devolución",
+      },
+      excursions: {
+        type: "Tipo de excursión",
+        types: [
+          { value: "nature", label: "Naturaleza" },
+          { value: "cultural", label: "Cultura" },
+          { value: "adventure", label: "Aventura" },
+        ],
+        date: "Fecha",
+        people: "Personas",
+      },
+      search: "Buscar",
+    },
+    sections: {
+      excursions: {
+        title: "Excursiones populares",
+        subtitle: "Descubre lo mejor de Tenerife con nuestros guías",
+        duration: "Duración",
+        groupSize: "Tamaño del grupo",
+        price: "Precio",
+        viewAll: "Ver todas las excursiones",
+      },
+      cars: {
+        title: "Alquiler de coches",
+        subtitle: "Explora Tenerife a tu ritmo",
+        transmission: "Transmisión",
+        features: "Características",
+        viewAll: "Ver todos los coches",
+      },
+      accommodation: {
+        title: "Alojamiento",
+        subtitle: "Encuentra tu lugar perfecto para quedarte",
+        location: "Ubicación",
+        amenities: "Comodidades",
+        viewAll: "Ver todas las propiedades",
+      },
+      blog: {
+        title: "Últimas noticias y consejos",
+        subtitle: "Lee nuestros últimos artículos sobre Tenerife",
+        author: "Autor",
+        readTime: "Tiempo de lectura",
+        publishedDate: "Publicado",
+        viewAll: "Ver todos los artículos",
+      },
+    },
+    common: {
+      bookNow: "Reservar ahora",
+      readMore: "Leer más",
+      loading: "Cargando nuestras mejores ofertas...",
+      serverError:
+        "Problemas del servidor. Intenta actualizar la página o contacta con soporte.",
+      noData:
+        "Actualizando nuestras recomendaciones. ¡Nuevas opciones estarán disponibles pronto!",
+    },
+    cta: {
+      title: "¿Listo para comenzar tu aventura?",
+      subtitle: "Contáctanos para recomendaciones personalizadas y reservas",
+      button: "Contáctanos",
+    },
+    faq: {
+      title: "Preguntas frecuentes",
+      subtitle: "Todo lo que necesitas saber sobre reservar con nosotros",
+      preBook: {
+        question: "¿Qué es el proceso de reserva anticipada?",
+        answer:
+          "La reserva anticipada es una forma conveniente de expresar tu interés en nuestros servicios. Cuando envías una solicitud de reserva anticipada, nuestro equipo verificará la disponibilidad para tus fechas preferidas y te contactará dentro de 24 horas con confirmación y próximos pasos. Esto garantiza que obtengas las mejores opciones disponibles para tus fechas de viaje.",
+      },
+    },
+    footer: {
+      description:
+        "Tu socio de confianza para experiencias inolvidables en Tenerife",
+      services: "Nuestros servicios",
+      contacts: "Contactos",
+    },
+    selectLanguage: "Seleccionar idioma",
+  },
+};
 
 // Языки с флагами
 const languages = [
@@ -543,30 +779,30 @@ const languages = [
   { code: "pl", name: "Polski", flag: "🇵🇱" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
   { code: "uk", name: "Українська", flag: "🇺🇦" },
-]
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+];
 
-type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk"
-
-
+type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
 
 export function LocalePageClient() {
-  const router = useRouter()
+  const router = useRouter();
 
   // State для языка
-  const [language, setLanguage] = useState<LanguageCode>("en")
-  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false)
+  const [language, setLanguage] = useState<LanguageCode>("en");
+  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
   // State for component
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState(false);
 
   // State for search filters
-  const [activeTab, setActiveTab] = useState("accommodation")
-  const [dates, setDates] = useState(["", ""])
-  const [guests, setGuests] = useState(2)
-  const [carType, setCarType] = useState("")
-  const [excursionType, setExcursionType] = useState("")
-  const [excursionDate, setExcursionDate] = useState("")
-  const [excursionPeople, setExcursionPeople] = useState(2)
+  const [activeTab, setActiveTab] = useState("accommodation");
+  const [dates, setDates] = useState(["", ""]);
+  const [guests, setGuests] = useState(2);
+  const [carType, setCarType] = useState("");
+  const [excursionType, setExcursionType] = useState("");
+  const [excursionDate, setExcursionDate] = useState("");
+  const [excursionPeople, setExcursionPeople] = useState(2);
 
   // Enhanced filter states to sync with individual pages
   const [accommodationFilters, setAccommodationFilters] = useState({
@@ -576,8 +812,8 @@ export function LocalePageClient() {
     priceTo: "",
     city: "",
     district: "",
-    type: "rent" // rent or sale
-  })
+    type: "rent", // rent or sale
+  });
 
   const [carFilters, setCarFilters] = useState({
     brand: "",
@@ -589,8 +825,8 @@ export function LocalePageClient() {
     fuel: "",
     transmission: "",
     location: "",
-    type: "rent" // rent or sale
-  })
+    type: "rent", // rent or sale
+  });
 
   const [excursionFilters, setExcursionFilters] = useState({
     location: "",
@@ -599,183 +835,248 @@ export function LocalePageClient() {
     priceTo: "",
     duration: "",
     language: "",
-    category: ""
-  })
+    category: "",
+  });
 
   // State для модального окна бронирования
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
-  const [bookingType, setBookingType] = useState<"excursion" | "car" | "accommodation" | "blog">("excursion")
-  const [bookingItem, setBookingItem] = useState<any>(null)
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [bookingType, setBookingType] = useState<
+    "excursion" | "car" | "accommodation" | "blog"
+  >("excursion");
+  const [bookingItem, setBookingItem] = useState<any>(null);
 
   // State для FAQ секции
-  const [expandedFaq, setExpandedFaq] = useState<string | null>(null)
+  const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
 
   // Dynamic filter options extracted from useDataLoader data (same pattern as individual pages)
-  const [propertyTypes, setPropertyTypes] = useState<string[]>([])
-  const [carTypes, setCarTypes] = useState<string[]>([])
-  const [carBrands, setCarBrands] = useState<string[]>([])
-  const [carFuels, setCarFuels] = useState<string[]>([])
-  const [carTransmissions, setCarTransmissions] = useState<string[]>([])
-  const [tourLanguages, setTourLanguages] = useState<string[]>([])
-  const [tourDurations, setTourDurations] = useState<string[]>([])
+  const [propertyTypes, setPropertyTypes] = useState<string[]>([]);
+  const [carTypes, setCarTypes] = useState<string[]>([]);
+  const [carBrands, setCarBrands] = useState<string[]>([]);
+  const [carFuels, setCarFuels] = useState<string[]>([]);
+  const [carTransmissions, setCarTransmissions] = useState<string[]>([]);
+  const [tourLanguages, setTourLanguages] = useState<string[]>([]);
+  const [tourDurations, setTourDurations] = useState<string[]>([]);
 
   // Advanced search visibility states
-  const [showAdvancedAccommodation, setShowAdvancedAccommodation] = useState(false)
-  const [showAdvancedCars, setShowAdvancedCars] = useState(false)
-  const [showAdvancedTours, setShowAdvancedTours] = useState(false)
+  const [showAdvancedAccommodation, setShowAdvancedAccommodation] =
+    useState(false);
+  const [showAdvancedCars, setShowAdvancedCars] = useState(false);
+  const [showAdvancedTours, setShowAdvancedTours] = useState(false);
 
-  const t = translations[language]
-  const currentLanguage = languages.find((lang) => lang.code === language)
+  const t = translations[language];
+  const currentLanguage = languages.find((lang) => lang.code === language);
 
   // Загрузка данных из нового хука
-  const { excursions, cars, accommodation, blogPosts, dataLoading, hasError } = useDataLoader(mounted, language)
+  const { excursions, cars, accommodation, blogPosts, dataLoading, hasError } =
+    useDataLoader(mounted, language);
 
   // Function to fetch real property data from Strapi
   const getAuthHeaders = () => {
-    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN
+    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
     return {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }
-  }
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+  };
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
     if (mounted && accommodation && cars && excursions) {
       // Extract property types from accommodation data
-      const propertyTypesArray = [...new Set(accommodation
-        .map((property: any) => property.category)
-        .filter((value: any): value is string => Boolean(value) && typeof value === 'string')
-      )].sort()
+      const propertyTypesArray = [
+        ...new Set(
+          accommodation
+            .map((property: any) => property.category)
+            .filter(
+              (value: any): value is string =>
+                Boolean(value) && typeof value === "string"
+            )
+        ),
+      ].sort();
 
       // Extract car filter options from cars data
-      const carTypesArray = [...new Set(cars
-        .map((car: any) => car.type)
-        .filter((value: any): value is string => Boolean(value) && typeof value === 'string')
-      )].sort()
+      const carTypesArray = [
+        ...new Set(
+          cars
+            .map((car: any) => car.type)
+            .filter(
+              (value: any): value is string =>
+                Boolean(value) && typeof value === "string"
+            )
+        ),
+      ].sort();
 
-      const carBrandsArray = [...new Set(cars
-        .map((car: any) => car.specifications?.make)
-        .filter((value: any): value is string => Boolean(value) && typeof value === 'string')
-      )].sort()
+      const carBrandsArray = [
+        ...new Set(
+          cars
+            .map((car: any) => car.specifications?.make)
+            .filter(
+              (value: any): value is string =>
+                Boolean(value) && typeof value === "string"
+            )
+        ),
+      ].sort();
 
-      const carFuelsArray = [...new Set(cars
-        .map((car: any) => car.specifications?.fuel)
-        .filter((value: any): value is string => Boolean(value) && typeof value === 'string')
-      )].sort()
+      const carFuelsArray = [
+        ...new Set(
+          cars
+            .map((car: any) => car.specifications?.fuel)
+            .filter(
+              (value: any): value is string =>
+                Boolean(value) && typeof value === "string"
+            )
+        ),
+      ].sort();
 
-      const carTransmissionsArray = [...new Set(cars
-        .map((car: any) => car.specifications?.transmission)
-        .filter((value: any): value is string => Boolean(value) && typeof value === 'string')
-      )].sort()
+      const carTransmissionsArray = [
+        ...new Set(
+          cars
+            .map((car: any) => car.specifications?.transmission)
+            .filter(
+              (value: any): value is string =>
+                Boolean(value) && typeof value === "string"
+            )
+        ),
+      ].sort();
 
       // Extract tour filter options from excursions data
-      const tourLanguagesArray = [...new Set(excursions
-        .map((tour: any) => tour.language)
-        .filter((value: any): value is string => Boolean(value) && typeof value === 'string')
-      )].sort()
+      const tourLanguagesArray = [
+        ...new Set(
+          excursions
+            .map((tour: any) => tour.language)
+            .filter(
+              (value: any): value is string =>
+                Boolean(value) && typeof value === "string"
+            )
+        ),
+      ].sort();
 
-      const tourDurationsArray = [...new Set(excursions
-        .map((tour: any) => tour.duration)
-        .filter((value: any): value is string => Boolean(value) && typeof value === 'string')
-      )].sort()
+      const tourDurationsArray = [
+        ...new Set(
+          excursions
+            .map((tour: any) => tour.duration)
+            .filter(
+              (value: any): value is string =>
+                Boolean(value) && typeof value === "string"
+            )
+        ),
+      ].sort();
 
       // Set all filter options (simple string arrays like individual pages)
-      setPropertyTypes(propertyTypesArray)
-      setCarTypes(carTypesArray)
-      setCarBrands(carBrandsArray)
-      setCarFuels(carFuelsArray)
-      setCarTransmissions(carTransmissionsArray)
-      setTourLanguages(tourLanguagesArray)
-      setTourDurations(tourDurationsArray)
+      setPropertyTypes(propertyTypesArray);
+      setCarTypes(carTypesArray);
+      setCarBrands(carBrandsArray);
+      setCarFuels(carFuelsArray);
+      setCarTransmissions(carTransmissionsArray);
+      setTourLanguages(tourLanguagesArray);
+      setTourDurations(tourDurationsArray);
     }
-  }, [mounted, accommodation, cars, excursions])
+  }, [mounted, accommodation, cars, excursions]);
 
   // Функция для открытия модального окна бронирования
-  const openBookingModal = (type: "excursion" | "car" | "accommodation", item: any) => {
-    setBookingType(type)
-    setBookingItem(item)
-    setIsBookingModalOpen(true)
-  }
+  const openBookingModal = (
+    type: "excursion" | "car" | "accommodation",
+    item: any
+  ) => {
+    setBookingType(type);
+    setBookingItem(item);
+    setIsBookingModalOpen(true);
+  };
 
   // Загрузка сохраненного языка из localStorage
   useEffect(() => {
-    setMounted(true)
-    const savedLanguage = localStorage.getItem("selectedLanguage")
+    setMounted(true);
+    const savedLanguage = localStorage.getItem("selectedLanguage");
     if (savedLanguage && translations[savedLanguage as LanguageCode]) {
-      setLanguage(savedLanguage as LanguageCode)
+      setLanguage(savedLanguage as LanguageCode);
     }
-  }, [])
+  }, []);
 
   // Сохранение языка в localStorage
   const handleLanguageChange = (langCode: LanguageCode) => {
-    setLanguage(langCode)
-    localStorage.setItem("selectedLanguage", langCode)
-    setIsLanguageDropdownOpen(false)
-  }
+    setLanguage(langCode);
+    localStorage.setItem("selectedLanguage", langCode);
+    setIsLanguageDropdownOpen(false);
+  };
 
   // Показываем загрузку до инициализации
   if (!mounted) {
-    return null
+    return null;
   }
 
   const handleSearch = () => {
     // Build query parameters based on active tab and filters
-    const params = new URLSearchParams()
+    const params = new URLSearchParams();
 
     // Add common date parameters
-    if (dates[0]) params.append('checkIn', dates[0])
-    if (dates[1]) params.append('checkOut', dates[1])
+    if (dates[0]) params.append("checkIn", dates[0]);
+    if (dates[1]) params.append("checkOut", dates[1]);
 
     switch (activeTab) {
       case "excursions":
         // Add excursion-specific filters
-        if (excursionType) params.append('tourType', excursionType)
-        if (excursionDate) params.append('date', excursionDate)
-        if (excursionPeople) params.append('people', excursionPeople.toString())
-        if (excursionFilters.location) params.append('location', excursionFilters.location)
-        if (excursionFilters.priceFrom) params.append('priceFrom', excursionFilters.priceFrom)
-        if (excursionFilters.priceTo) params.append('priceTo', excursionFilters.priceTo)
-        if (excursionFilters.duration) params.append('duration', excursionFilters.duration)
-        if (excursionFilters.language) params.append('language', excursionFilters.language)
-        if (excursionFilters.category) params.append('category', excursionFilters.category)
-        router.push(`/tours?${params.toString()}`)
-        break
+        if (excursionType) params.append("tourType", excursionType);
+        if (excursionDate) params.append("date", excursionDate);
+        if (excursionPeople)
+          params.append("people", excursionPeople.toString());
+        if (excursionFilters.location)
+          params.append("location", excursionFilters.location);
+        if (excursionFilters.priceFrom)
+          params.append("priceFrom", excursionFilters.priceFrom);
+        if (excursionFilters.priceTo)
+          params.append("priceTo", excursionFilters.priceTo);
+        if (excursionFilters.duration)
+          params.append("duration", excursionFilters.duration);
+        if (excursionFilters.language)
+          params.append("language", excursionFilters.language);
+        if (excursionFilters.category)
+          params.append("category", excursionFilters.category);
+        router.push(`/tours?${params.toString()}`);
+        break;
 
       case "cars":
         // Add car-specific filters
-        if (carType) params.append('type', carType)
-        if (carFilters.brand) params.append('brand', carFilters.brand)
-        if (carFilters.model) params.append('model', carFilters.model)
-        if (carFilters.yearFrom) params.append('yearFrom', carFilters.yearFrom)
-        if (carFilters.yearTo) params.append('yearTo', carFilters.yearTo)
-        if (carFilters.priceFrom) params.append('priceFrom', carFilters.priceFrom)
-        if (carFilters.priceTo) params.append('priceTo', carFilters.priceTo)
-        if (carFilters.fuel) params.append('fuel', carFilters.fuel)
-        if (carFilters.transmission) params.append('transmission', carFilters.transmission)
-        if (carFilters.location) params.append('location', carFilters.location)
-        if (carFilters.type) params.append('type', carFilters.type)
-        router.push(`/cars?${params.toString()}`)
-        break
+        if (carType) params.append("type", carType);
+        if (carFilters.brand) params.append("brand", carFilters.brand);
+        if (carFilters.model) params.append("model", carFilters.model);
+        if (carFilters.yearFrom) params.append("yearFrom", carFilters.yearFrom);
+        if (carFilters.yearTo) params.append("yearTo", carFilters.yearTo);
+        if (carFilters.priceFrom)
+          params.append("priceFrom", carFilters.priceFrom);
+        if (carFilters.priceTo) params.append("priceTo", carFilters.priceTo);
+        if (carFilters.fuel) params.append("fuel", carFilters.fuel);
+        if (carFilters.transmission)
+          params.append("transmission", carFilters.transmission);
+        if (carFilters.location) params.append("location", carFilters.location);
+        if (carFilters.type) params.append("type", carFilters.type);
+        router.push(`/cars?${params.toString()}`);
+        break;
 
       case "accommodation":
         // Add accommodation-specific filters
-        if (accommodationFilters.propertyType) params.append('propertyType', accommodationFilters.propertyType)
-        if (accommodationFilters.rooms) params.append('rooms', accommodationFilters.rooms)
-        if (accommodationFilters.priceFrom) params.append('priceFrom', accommodationFilters.priceFrom)
-        if (accommodationFilters.priceTo) params.append('priceTo', accommodationFilters.priceTo)
-        if (accommodationFilters.city) params.append('city', accommodationFilters.city)
-        if (accommodationFilters.district) params.append('district', accommodationFilters.district)
-        if (accommodationFilters.type) params.append('type', accommodationFilters.type)
-        if (guests) params.append('guests', guests.toString())
-        router.push(`/apartments?${params.toString()}`)
-        break
+        if (accommodationFilters.propertyType)
+          params.append("propertyType", accommodationFilters.propertyType);
+        if (accommodationFilters.rooms)
+          params.append("rooms", accommodationFilters.rooms);
+        if (accommodationFilters.priceFrom)
+          params.append("priceFrom", accommodationFilters.priceFrom);
+        if (accommodationFilters.priceTo)
+          params.append("priceTo", accommodationFilters.priceTo);
+        if (accommodationFilters.city)
+          params.append("city", accommodationFilters.city);
+        if (accommodationFilters.district)
+          params.append("district", accommodationFilters.district);
+        if (accommodationFilters.type)
+          params.append("type", accommodationFilters.type);
+        if (guests) params.append("guests", guests.toString());
+        router.push(`/apartments?${params.toString()}`);
+        break;
 
       case "blog":
-        router.push(`/blog`)
-        break
+        router.push(`/blog`);
+        break;
     }
-  }
+  };
 
   const EmptyState = ({ type }: { type: "loading" | "error" | "empty" }) => {
     if (type === "loading") {
@@ -820,7 +1121,7 @@ export function LocalePageClient() {
             </div>
           ))}
         </div>
-      )
+      );
     }
 
     if (type === "error") {
@@ -831,7 +1132,7 @@ export function LocalePageClient() {
           </div>
           <p className="text-lg text-red-600">{t.common.serverError}</p>
         </div>
-      )
+      );
     }
 
     return (
@@ -841,8 +1142,8 @@ export function LocalePageClient() {
         </div>
         <p className="text-lg text-blue-600">{t.common.noData}</p>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <main>
@@ -854,8 +1155,12 @@ export function LocalePageClient() {
             className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg hover:bg-white transition-all duration-200"
           >
             <span className="text-lg">{currentLanguage?.flag}</span>
-            <span className="font-medium text-gray-700 hidden sm:block">{currentLanguage?.name}</span>
-            <span className="font-medium text-gray-700 sm:hidden">{currentLanguage?.code.toUpperCase()}</span>
+            <span className="font-medium text-gray-700 hidden sm:block">
+              {currentLanguage?.name}
+            </span>
+            <span className="font-medium text-gray-700 sm:hidden">
+              {currentLanguage?.code.toUpperCase()}
+            </span>
             <ChevronDown
               className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isLanguageDropdownOpen ? "rotate-180" : ""}`}
             />
@@ -870,13 +1175,20 @@ export function LocalePageClient() {
                 {languages.map((lang) => (
                   <button
                     key={lang.code}
-                    onClick={() => handleLanguageChange(lang.code as LanguageCode)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors ${language === lang.code ? "bg-blue-50 text-blue-700" : "text-gray-700"
-                      }`}
+                    onClick={() =>
+                      handleLanguageChange(lang.code as LanguageCode)
+                    }
+                    className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors ${
+                      language === lang.code
+                        ? "bg-blue-50 text-blue-700"
+                        : "text-gray-700"
+                    }`}
                   >
                     <span className="text-lg">{lang.flag}</span>
                     <span className="font-medium">{lang.name}</span>
-                    {language === lang.code && <Check className="w-4 h-4 ml-auto text-blue-600" />}
+                    {language === lang.code && (
+                      <Check className="w-4 h-4 ml-auto text-blue-600" />
+                    )}
                   </button>
                 ))}
               </div>
@@ -898,7 +1210,9 @@ export function LocalePageClient() {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
               {t.hero.title}
             </h1>
-            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto drop-shadow-md">{t.hero.subtitle}</p>
+            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto drop-shadow-md">
+              {t.hero.subtitle}
+            </p>
           </div>
 
           {/* Search Card - centered */}
@@ -907,18 +1221,27 @@ export function LocalePageClient() {
             <div className="border-b border-gray-200">
               <nav className="flex">
                 {[
-                  { key: "accommodation", icon: Home, label: t.hero.tabs.accommodation },
+                  {
+                    key: "accommodation",
+                    icon: Home,
+                    label: t.hero.tabs.accommodation,
+                  },
                   { key: "cars", icon: Car, label: t.hero.tabs.cars },
-                  { key: "excursions", icon: MapPin, label: t.hero.tabs.excursions },
+                  {
+                    key: "excursions",
+                    icon: MapPin,
+                    label: t.hero.tabs.excursions,
+                  },
                   { key: "blog", icon: BookOpen, label: t.hero.tabs.blog },
                 ].map(({ key, icon: Icon, label }) => (
                   <button
                     key={key}
                     onClick={() => setActiveTab(key)}
-                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-200 ${activeTab === key
-                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
-                      : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-                      }`}
+                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-200 ${
+                      activeTab === key
+                        ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
+                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                    }`}
                   >
                     <Icon className="w-5 h-5" />
                     <span className="hidden sm:inline">{label}</span>
@@ -935,11 +1258,18 @@ export function LocalePageClient() {
                   {/* First row - Basic filters */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">{t.hero.accommodation.type}</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t.hero.accommodation.type}
+                      </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={accommodationFilters.propertyType}
-                        onChange={(e) => setAccommodationFilters({ ...accommodationFilters, propertyType: e.target.value })}
+                        onChange={(e) =>
+                          setAccommodationFilters({
+                            ...accommodationFilters,
+                            propertyType: e.target.value,
+                          })
+                        }
                       >
                         <option value="">
                           {language === "en"
@@ -1003,20 +1333,42 @@ export function LocalePageClient() {
                   <div className="flex justify-center">
                     <button
                       type="button"
-                      onClick={() => setShowAdvancedAccommodation(!showAdvancedAccommodation)}
+                      onClick={() =>
+                        setShowAdvancedAccommodation(!showAdvancedAccommodation)
+                      }
                       className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
                     >
                       {showAdvancedAccommodation ? (
                         <>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 15l7-7 7 7"
+                            />
                           </svg>
                           Hide Advanced Search
                         </>
                       ) : (
                         <>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
                           </svg>
                           Advanced Search
                         </>
@@ -1028,11 +1380,18 @@ export function LocalePageClient() {
                   {showAdvancedAccommodation && (
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Rooms</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Rooms
+                        </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={accommodationFilters.rooms}
-                          onChange={(e) => setAccommodationFilters({ ...accommodationFilters, rooms: e.target.value })}
+                          onChange={(e) =>
+                            setAccommodationFilters({
+                              ...accommodationFilters,
+                              rooms: e.target.value,
+                            })
+                          }
                         >
                           <option value="">Any</option>
                           <option value="1">1 Room</option>
@@ -1042,31 +1401,52 @@ export function LocalePageClient() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Price From</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price From
+                        </label>
                         <input
                           type="number"
                           placeholder="€"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={accommodationFilters.priceFrom}
-                          onChange={(e) => setAccommodationFilters({ ...accommodationFilters, priceFrom: e.target.value })}
+                          onChange={(e) =>
+                            setAccommodationFilters({
+                              ...accommodationFilters,
+                              priceFrom: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Price To</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price To
+                        </label>
                         <input
                           type="number"
                           placeholder="€"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={accommodationFilters.priceTo}
-                          onChange={(e) => setAccommodationFilters({ ...accommodationFilters, priceTo: e.target.value })}
+                          onChange={(e) =>
+                            setAccommodationFilters({
+                              ...accommodationFilters,
+                              priceTo: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Type
+                        </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={accommodationFilters.type}
-                          onChange={(e) => setAccommodationFilters({ ...accommodationFilters, type: e.target.value })}
+                          onChange={(e) =>
+                            setAccommodationFilters({
+                              ...accommodationFilters,
+                              type: e.target.value,
+                            })
+                          }
                         >
                           <option value="rent">Rent</option>
                           <option value="sale">Sale</option>
@@ -1083,7 +1463,9 @@ export function LocalePageClient() {
                   {/* First row - Basic filters */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.hero.cars.type}</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {t.hero.cars.type}
+                      </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={carType}
@@ -1108,7 +1490,9 @@ export function LocalePageClient() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.hero.cars.pickup}</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {t.hero.cars.pickup}
+                      </label>
                       <input
                         type="date"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1117,7 +1501,9 @@ export function LocalePageClient() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.hero.cars.dropoff}</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {t.hero.cars.dropoff}
+                      </label>
                       <input
                         type="date"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1126,11 +1512,15 @@ export function LocalePageClient() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Type
+                      </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={carFilters.type}
-                        onChange={(e) => setCarFilters({ ...carFilters, type: e.target.value })}
+                        onChange={(e) =>
+                          setCarFilters({ ...carFilters, type: e.target.value })
+                        }
                       >
                         <option value="rent">Rent</option>
                         <option value="sale">Sale</option>
@@ -1147,15 +1537,35 @@ export function LocalePageClient() {
                     >
                       {showAdvancedCars ? (
                         <>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 15l7-7 7 7"
+                            />
                           </svg>
                           Hide Advanced Search
                         </>
                       ) : (
                         <>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
                           </svg>
                           Advanced Search
                         </>
@@ -1167,11 +1577,18 @@ export function LocalePageClient() {
                   {showAdvancedCars && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Brand
+                        </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={carFilters.brand}
-                          onChange={(e) => setCarFilters({ ...carFilters, brand: e.target.value })}
+                          onChange={(e) =>
+                            setCarFilters({
+                              ...carFilters,
+                              brand: e.target.value,
+                            })
+                          }
                         >
                           {carBrands.map((brand) => (
                             <option key={brand} value={brand}>
@@ -1181,35 +1598,57 @@ export function LocalePageClient() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Price From</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price From
+                        </label>
                         <input
                           type="number"
                           placeholder="€"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={carFilters.priceFrom}
-                          onChange={(e) => setCarFilters({ ...carFilters, priceFrom: e.target.value })}
+                          onChange={(e) =>
+                            setCarFilters({
+                              ...carFilters,
+                              priceFrom: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Price To</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price To
+                        </label>
                         <input
                           type="number"
                           placeholder="€"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={carFilters.priceTo}
-                          onChange={(e) => setCarFilters({ ...carFilters, priceTo: e.target.value })}
+                          onChange={(e) =>
+                            setCarFilters({
+                              ...carFilters,
+                              priceTo: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Transmission</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Transmission
+                        </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={carFilters.transmission}
-                          onChange={(e) => setCarFilters({ ...carFilters, transmission: e.target.value })}
+                          onChange={(e) =>
+                            setCarFilters({
+                              ...carFilters,
+                              transmission: e.target.value,
+                            })
+                          }
                         >
                           {carTransmissions.map((transmission) => (
                             <option key={transmission} value={transmission}>
-                              {transmission.charAt(0).toUpperCase() + transmission.slice(1)}
+                              {transmission.charAt(0).toUpperCase() +
+                                transmission.slice(1)}
                             </option>
                           ))}
                         </select>
@@ -1225,7 +1664,9 @@ export function LocalePageClient() {
                   {/* First row - Basic filters */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.hero.excursions.type}</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {t.hero.excursions.type}
+                      </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={excursionType}
@@ -1250,7 +1691,9 @@ export function LocalePageClient() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.hero.excursions.date}</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {t.hero.excursions.date}
+                      </label>
                       <input
                         type="date"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1259,7 +1702,9 @@ export function LocalePageClient() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">{t.hero.excursions.people}</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {t.hero.excursions.people}
+                      </label>
                       <div className="relative">
                         <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <input
@@ -1268,20 +1713,30 @@ export function LocalePageClient() {
                           max="20"
                           className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={excursionPeople}
-                          onChange={(e) => setExcursionPeople(Number(e.target.value))}
+                          onChange={(e) =>
+                            setExcursionPeople(Number(e.target.value))
+                          }
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Language
+                      </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={excursionFilters.language}
-                        onChange={(e) => setExcursionFilters({ ...excursionFilters, language: e.target.value })}
+                        onChange={(e) =>
+                          setExcursionFilters({
+                            ...excursionFilters,
+                            language: e.target.value,
+                          })
+                        }
                       >
                         {tourLanguages.map((language) => (
                           <option key={language} value={language}>
-                            {language.charAt(0).toUpperCase() + language.slice(1)}
+                            {language.charAt(0).toUpperCase() +
+                              language.slice(1)}
                           </option>
                         ))}
                       </select>
@@ -1297,15 +1752,35 @@ export function LocalePageClient() {
                     >
                       {showAdvancedTours ? (
                         <>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 15l7-7 7 7"
+                            />
                           </svg>
                           Hide Advanced Search
                         </>
                       ) : (
                         <>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
                           </svg>
                           Advanced Search
                         </>
@@ -1317,45 +1792,74 @@ export function LocalePageClient() {
                   {showAdvancedTours && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Location
+                        </label>
                         <input
                           type="text"
                           placeholder="Any location"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={excursionFilters.location}
-                          onChange={(e) => setExcursionFilters({ ...excursionFilters, location: e.target.value })}
+                          onChange={(e) =>
+                            setExcursionFilters({
+                              ...excursionFilters,
+                              location: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Price From</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price From
+                        </label>
                         <input
                           type="number"
                           placeholder="€"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={excursionFilters.priceFrom}
-                          onChange={(e) => setExcursionFilters({ ...excursionFilters, priceFrom: e.target.value })}
+                          onChange={(e) =>
+                            setExcursionFilters({
+                              ...excursionFilters,
+                              priceFrom: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Price To</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price To
+                        </label>
                         <input
                           type="number"
                           placeholder="€"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={excursionFilters.priceTo}
-                          onChange={(e) => setExcursionFilters({ ...excursionFilters, priceTo: e.target.value })}
+                          onChange={(e) =>
+                            setExcursionFilters({
+                              ...excursionFilters,
+                              priceTo: e.target.value,
+                            })
+                          }
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Duration
+                        </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={excursionFilters.duration}
-                          onChange={(e) => setExcursionFilters({ ...excursionFilters, duration: e.target.value })}
+                          onChange={(e) =>
+                            setExcursionFilters({
+                              ...excursionFilters,
+                              duration: e.target.value,
+                            })
+                          }
                         >
                           {tourDurations.map((duration) => (
                             <option key={duration} value={duration}>
-                              {duration.charAt(0).toUpperCase() + duration.slice(1)}
+                              {duration.charAt(0).toUpperCase() +
+                                duration.slice(1)}
                             </option>
                           ))}
                         </select>
@@ -1429,8 +1933,12 @@ export function LocalePageClient() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.sections.accommodation.title}</h2>
-              <p className="text-xl text-gray-600">{t.sections.accommodation.subtitle}</p>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                {t.sections.accommodation.title}
+              </h2>
+              <p className="text-xl text-gray-600">
+                {t.sections.accommodation.subtitle}
+              </p>
             </div>
             <button
               onClick={() => router.push("/apartments")}
@@ -1457,28 +1965,48 @@ export function LocalePageClient() {
                       src={place.image || "/placeholder.svg"}
                       alt={place.title}
                       className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                      onClick={() => router.push(`/apartments/${place.documentId}`)}
+                      onClick={() =>
+                        router.push(`/apartments/${place.documentId}`)
+                      }
                     />
                     <div className="absolute top-2 right-2">
                       <button
-                        onClick={() => router.push(`/apartments/${place.documentId}`)}
+                        onClick={() =>
+                          router.push(`/apartments/${place.documentId}`)
+                        }
                         className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
                       >
-                        <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        <svg
+                          className="w-4 h-4 text-gray-700"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
                         </svg>
                       </button>
                     </div>
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">{place.title}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {place.title}
+                      </h3>
                       <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
                         <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium text-yellow-700">{place.rating}</span>
+                        <span className="text-sm font-medium text-yellow-700">
+                          {place.rating}
+                        </span>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{place.description}</p>
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                      {place.description}
+                    </p>
                     <div className="space-y-2 mb-6">
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <MapPin className="w-4 h-4" />
@@ -1489,7 +2017,8 @@ export function LocalePageClient() {
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <Home className="w-4 h-4" />
                         <span>
-                          {t.sections.accommodation.amenities}: {place.amenities}
+                          {t.sections.accommodation.amenities}:{" "}
+                          {place.amenities}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -1502,7 +2031,7 @@ export function LocalePageClient() {
                         onClick={() =>
                           openBookingModal("accommodation", {
                             title: place.title,
-                            price: place.price
+                            price: place.price,
                           })
                         }
                         className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -1523,8 +2052,12 @@ export function LocalePageClient() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.sections.cars.title}</h2>
-              <p className="text-xl text-gray-600">{t.sections.cars.subtitle}</p>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                {t.sections.cars.title}
+              </h2>
+              <p className="text-xl text-gray-600">
+                {t.sections.cars.subtitle}
+              </p>
             </div>
             <button
               onClick={() => router.push("/cars")}
@@ -1558,21 +2091,37 @@ export function LocalePageClient() {
                         onClick={() => router.push(`/cars/${car.documentId}`)}
                         className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
                       >
-                        <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        <svg
+                          className="w-4 h-4 text-gray-700"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
                         </svg>
                       </button>
                     </div>
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">{car.title}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {car.title}
+                      </h3>
                       <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
                         <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium text-yellow-700">{car.rating}</span>
+                        <span className="text-sm font-medium text-yellow-700">
+                          {car.rating}
+                        </span>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{car.description}</p>
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                      {car.description}
+                    </p>
                     <div className="space-y-2 mb-6">
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <Car className="w-4 h-4" />
@@ -1598,7 +2147,7 @@ export function LocalePageClient() {
                             title: car.title,
                             price: car.price,
                             brand: car.brand,
-                            model: car.model
+                            model: car.model,
                           })
                         }
                         className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -1619,8 +2168,12 @@ export function LocalePageClient() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.sections.excursions.title}</h2>
-              <p className="text-xl text-gray-600">{t.sections.excursions.subtitle}</p>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                {t.sections.excursions.title}
+              </h2>
+              <p className="text-xl text-gray-600">
+                {t.sections.excursions.subtitle}
+              </p>
             </div>
             <button
               onClick={() => router.push("/tours")}
@@ -1638,8 +2191,11 @@ export function LocalePageClient() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {(() => {
-                console.log("🎨 Rendering excursions, count:", excursions.length)
-                console.log("🎨 Excursions data:", excursions)
+                console.log(
+                  "🎨 Rendering excursions, count:",
+                  excursions.length
+                );
+                console.log("🎨 Excursions data:", excursions);
                 return excursions.map((excursion, index) => (
                   <div
                     key={excursion.id || index}
@@ -1650,39 +2206,65 @@ export function LocalePageClient() {
                         src={excursion.image || "/placeholder.svg"}
                         alt={excursion.title}
                         className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                        onClick={() => router.push(`/tours/${excursion.documentId || index + 1}`)}
+                        onClick={() =>
+                          router.push(
+                            `/tours/${excursion.documentId || index + 1}`
+                          )
+                        }
                       />
                       <div className="absolute top-2 right-2">
                         <button
-                          onClick={() => router.push(`/tours/${excursion.documentId || index + 1}`)}
+                          onClick={() =>
+                            router.push(
+                              `/tours/${excursion.documentId || index + 1}`
+                            )
+                          }
                           className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
                         >
-                          <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          <svg
+                            className="w-4 h-4 text-gray-700"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
                           </svg>
                         </button>
                       </div>
                     </div>
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900">{excursion.title}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {excursion.title}
+                        </h3>
                         <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
                           <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                          <span className="text-sm font-medium text-yellow-700">{excursion.rating}</span>
+                          <span className="text-sm font-medium text-yellow-700">
+                            {excursion.rating}
+                          </span>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">{excursion.description}</p>
+                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                        {excursion.description}
+                      </p>
                       <div className="space-y-2 mb-6">
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                           <Clock className="w-4 h-4" />
                           <span>
-                            {t.sections.excursions.duration}: {excursion.duration}
+                            {t.sections.excursions.duration}:{" "}
+                            {excursion.duration}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                           <Users className="w-4 h-4" />
                           <span>
-                            {t.sections.excursions.groupSize}: {excursion.groupSize}
+                            {t.sections.excursions.groupSize}:{" "}
+                            {excursion.groupSize}
                           </span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -1699,7 +2281,7 @@ export function LocalePageClient() {
                               title: excursion.title,
                               price: excursion.price,
                               duration: excursion.duration,
-                              language: "English"
+                              language: "English",
                             })
                           }
                           className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -1709,7 +2291,7 @@ export function LocalePageClient() {
                       </div>
                     </div>
                   </div>
-                ))
+                ));
               })()}
             </div>
           )}
@@ -1721,8 +2303,12 @@ export function LocalePageClient() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.sections.blog.title}</h2>
-              <p className="text-xl text-gray-600">{t.sections.blog.subtitle}</p>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                {t.sections.blog.title}
+              </h2>
+              <p className="text-xl text-gray-600">
+                {t.sections.blog.subtitle}
+              </p>
             </div>
             <button
               onClick={() => router.push("/blog")}
@@ -1749,28 +2335,48 @@ export function LocalePageClient() {
                       src={post.image || "/placeholder.svg"}
                       alt={post.title}
                       className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                      onClick={() => router.push(`/blog/${post.documentId || index + 1}`)}
+                      onClick={() =>
+                        router.push(`/blog/${post.documentId || index + 1}`)
+                      }
                     />
                     <div className="absolute top-2 right-2">
                       <button
-                        onClick={() => router.push(`/blog/${post.documentId || index + 1}`)}
+                        onClick={() =>
+                          router.push(`/blog/${post.documentId || index + 1}`)
+                        }
                         className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
                       >
-                        <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        <svg
+                          className="w-4 h-4 text-gray-700"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
                         </svg>
                       </button>
                     </div>
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">{post.title}</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {post.title}
+                      </h3>
                       <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
                         <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium text-yellow-700">{post.rating}</span>
+                        <span className="text-sm font-medium text-yellow-700">
+                          {post.rating}
+                        </span>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{post.description}</p>
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                      {post.description}
+                    </p>
                     <div className="space-y-2 mb-6">
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <User className="w-4 h-4" />
@@ -1793,7 +2399,9 @@ export function LocalePageClient() {
                     </div>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => router.push(`/blog/${post.documentId || index + 1}`)}
+                        onClick={() =>
+                          router.push(`/blog/${post.documentId || index + 1}`)
+                        }
                         className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
                         {t.common.readMore}
@@ -1807,20 +2415,22 @@ export function LocalePageClient() {
         </div>
       </section>
 
-
-
       {/* CTA секция */}
       <section className="py-20 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4">
           <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t.cta.title}</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              {t.cta.title}
+            </h2>
             <p className="text-lg text-gray-600 mb-8">{t.cta.subtitle}</p>
             <button
-              onClick={() => openBookingModal("accommodation", {
-                title: "",
-                price: undefined,
-                currency: undefined
-              })}
+              onClick={() =>
+                openBookingModal("accommodation", {
+                  title: "",
+                  price: undefined,
+                  currency: undefined,
+                })
+              }
               className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors text-lg"
             >
               <Phone className="w-5 h-5" />
@@ -1834,7 +2444,9 @@ export function LocalePageClient() {
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t.faq.title}</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              {t.faq.title}
+            </h2>
             <p className="text-lg text-gray-600">{t.faq.subtitle}</p>
           </div>
 
@@ -1842,15 +2454,23 @@ export function LocalePageClient() {
             {/* Pre-Book FAQ */}
             <div className="border border-gray-200 rounded-lg overflow-hidden">
               <button
-                onClick={() => setExpandedFaq(expandedFaq === 'preBook' ? null : 'preBook')}
+                onClick={() =>
+                  setExpandedFaq(expandedFaq === "preBook" ? null : "preBook")
+                }
                 className="w-full px-6 py-4 text-left bg-white hover:bg-gray-50 transition-colors flex items-center justify-between"
               >
-                <h3 className="text-lg font-semibold text-gray-900">{t.faq.preBook.question}</h3>
-                <ChevronDown className={`w-5 h-5 text-gray-500 transition-transform ${expandedFaq === 'preBook' ? 'rotate-180' : ''}`} />
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {t.faq.preBook.question}
+                </h3>
+                <ChevronDown
+                  className={`w-5 h-5 text-gray-500 transition-transform ${expandedFaq === "preBook" ? "rotate-180" : ""}`}
+                />
               </button>
-              {expandedFaq === 'preBook' && (
+              {expandedFaq === "preBook" && (
                 <div className="px-6 pb-4 bg-gray-50">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">{t.faq.preBook.answer}</p>
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    {t.faq.preBook.answer}
+                  </p>
                 </div>
               )}
             </div>
@@ -1863,29 +2483,49 @@ export function LocalePageClient() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-2xl font-bold text-white mb-4">Tenerifly.io</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Tenerifly.io
+              </h3>
               <p className="text-gray-400 mb-4">{t.footer.description}</p>
-              <p className="text-sm text-gray-500">© {new Date().getFullYear()} Tenerifly. All rights reserved.</p>
+              <p className="text-sm text-gray-500">
+                © {new Date().getFullYear()} Tenerifly. All rights reserved.
+              </p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold text-white mb-6">{t.footer.services}</h4>
+              <h4 className="text-lg font-semibold text-white mb-6">
+                {t.footer.services}
+              </h4>
               <div className="space-y-3">
-                <a href="/cars" className="block text-gray-400 hover:text-white transition-colors">
+                <a
+                  href="/cars"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
                   Airport Transfers
                 </a>
-                <a href="/tours" className="block text-gray-400 hover:text-white transition-colors">
+                <a
+                  href="/tours"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
                   Excursions & Tours
                 </a>
-                <a href="/apartments" className="block text-gray-400 hover:text-white transition-colors">
+                <a
+                  href="/apartments"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
                   Property Rental & Sales
                 </a>
-                <a href="/cars" className="block text-gray-400 hover:text-white transition-colors">
+                <a
+                  href="/cars"
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
                   Car Rental Services
                 </a>
               </div>
             </div>
             <div>
-              <h4 className="text-lg font-semibold text-white mb-6">{t.footer.contacts}</h4>
+              <h4 className="text-lg font-semibold text-white mb-6">
+                {t.footer.contacts}
+              </h4>
               <div className="space-y-3">
                 <a
                   href="tel:+34656641433"
@@ -1909,7 +2549,10 @@ export function LocalePageClient() {
 
       {/* Click outside to close dropdown */}
       {isLanguageDropdownOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsLanguageDropdownOpen(false)} />
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsLanguageDropdownOpen(false)}
+        />
       )}
 
       {/* Модальное окно бронирования */}
@@ -1917,18 +2560,18 @@ export function LocalePageClient() {
         <SimpleBookingPopup
           opened={isBookingModalOpen}
           onClose={() => {
-            setIsBookingModalOpen(false)
-            setBookingItem(null)
+            setIsBookingModalOpen(false);
+            setBookingItem(null);
           }}
           item={{
             name: bookingItem.title,
             price: bookingItem.price,
             currency: bookingItem.currency,
-            contactEmail: bookingItem.contact?.email
+            contactEmail: bookingItem.contact?.email,
           }}
           mode="contact"
         />
       )}
     </main>
-  )
+  );
 }

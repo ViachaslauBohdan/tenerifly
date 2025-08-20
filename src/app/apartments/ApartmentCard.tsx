@@ -111,7 +111,9 @@ const getFoundPropertiesText = (locale: string): string => {
         ru: 'Найдено объектов',
         pl: 'Znaleziono nieruchomości',
         fr: 'Propriétés trouvées',
-        uk: 'Знайдено об\'єктів'
+        uk: 'Знайдено об\'єктів',
+        de: 'Gefundene Immobilien',
+        es: 'Propiedades encontradas'
     };
     return texts[locale] || texts.en;
 };
@@ -122,7 +124,9 @@ const getFilterActiveText = (locale: string): string => {
         ru: '🔍 Фильтр активен',
         pl: '🔍 Filtr aktywny',
         fr: '🔍 Filtre actif',
-        uk: '🔍 Фільтр активний'
+        uk: '🔍 Фільтр активний',
+        de: '🔍 Filter aktiv',
+        es: '🔍 Filtro activo'
     };
     return texts[locale] || texts.en;
 };

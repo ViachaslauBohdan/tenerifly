@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../styles/globals.css";
-import '@mantine/core/styles.css';
-import '@mantine/dates/styles.css';
-import { ColorSchemeScript } from '@mantine/core';
-import { MantineProvider } from '@/components/providers/MantineProvider';
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
+import { ColorSchemeScript } from "@mantine/core";
+import { MantineProvider } from "@/components/providers/MantineProvider";
 
-import { ReferralCodeClient } from '@/components/ReferralCodeClient';
+import { ReferralCodeClient } from "@/components/ReferralCodeClient";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +25,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       default: "Tenerifly.io - Accommodation, Tours and Car Rental in Tenerife",
-      template: "%s | Tenerifly.io"
+      template: "%s | Tenerifly.io",
     },
-    description: "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
+    description:
+      "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
     keywords: [
       "Tenerife accommodation",
       "Tenerife tours",
@@ -38,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "Tenerife villas",
       "Tenerife activities",
       "Tenerife sightseeing",
-      "Tenerife travel"
+      "Tenerife travel",
     ],
     authors: [{ name: "Tenerifly.io" }],
     creator: "Tenerifly.io",
@@ -50,7 +51,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       title: "Tenerifly.io - Your Guide to Tenerife",
-      description: "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
+      description:
+        "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
       url: "https://tenerifly.io",
       siteName: "Tenerifly.io",
       images: [
@@ -67,8 +69,11 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "Tenerifly.io - Your Guide to Tenerife",
-      description: "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
-      images: ["https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg"],
+      description:
+        "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
+      images: [
+        "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
+      ],
       creator: "@tenerifly",
       site: "@tenerifly",
     },
@@ -76,11 +81,13 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: "https://tenerifly.io",
       languages: {
-        'en': 'https://tenerifly.io/en',
-        'pl': 'https://tenerifly.io/pl',
-        'fr': 'https://tenerifly.io/fr',
-        'ru': 'https://tenerifly.io/ru',
-        'uk': 'https://tenerifly.io/uk',
+        en: "https://tenerifly.io/en",
+        pl: "https://tenerifly.io/pl",
+        fr: "https://tenerifly.io/fr",
+        ru: "https://tenerifly.io/ru",
+        uk: "https://tenerifly.io/uk",
+        de: "https://tenerifly.io/de",
+        es: "https://tenerifly.io/es",
       },
     },
     robots: {
@@ -89,9 +96,9 @@ export async function generateMetadata(): Promise<Metadata> {
       googleBot: {
         index: true,
         follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
       },
     },
   };
@@ -107,14 +114,25 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript defaultColorScheme="light" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
           rel="stylesheet"
         />
-        <link rel="preload" href="https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg" as="image" />
+        <link
+          rel="preload"
+          href="https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg"
+          as="image"
+        />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable}`}
+        suppressHydrationWarning
+      >
         <MantineProvider>
           <ReferralCodeClient />
           {children}

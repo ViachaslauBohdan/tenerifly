@@ -88,7 +88,9 @@ const getFoundCarsText = (locale: string): string => {
         ru: 'Найдено автомобилей',
         pl: 'Znaleziono samochodów',
         fr: 'Voitures trouvées',
-        uk: 'Знайдено автомобілів'
+        uk: 'Знайдено автомобілів',
+        de: 'Gefundene Autos',
+        es: 'Coches encontrados'
     };
     return texts[locale] || texts.en;
 };
@@ -99,7 +101,9 @@ const getFilterActiveText = (locale: string): string => {
         ru: '🔍 Фильтр активен',
         pl: '🔍 Filtr aktywny',
         fr: '🔍 Filtre actif',
-        uk: '🔍 Фільтр активний'
+        uk: '🔍 Фільтр активний',
+        de: '🔍 Filter aktiv',
+        es: '🔍 Filtro activo'
     };
     return texts[locale] || texts.en;
 };
