@@ -1642,8 +1642,6 @@ export function LocalePageClient() {
                               </option>
                             )
                           )}
-                            )
-                          )}
                         </select>
                       </div>
                       <div>
