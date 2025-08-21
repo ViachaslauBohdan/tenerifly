@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   ChevronDown,
   Check,
@@ -49,6 +50,16 @@ const translations = {
         checkin: "Check-in",
         checkout: "Check-out",
         guests: "Guests",
+        rooms: "Rooms",
+        roomsList: [
+          { value: "", label: "Any" },
+          { value: "0", label: "Studio" },
+          { value: "1", label: "1 Room" },
+          { value: "2", label: "2 Rooms" },
+          { value: "3", label: "3 Rooms" },
+          { value: "4", label: "4+ Rooms" },
+          { value: "5", label: "5+ Rooms" },
+        ],
       },
       cars: {
         type: "Car Type",
@@ -58,16 +69,33 @@ const translations = {
         ],
         pickup: "Pick-up",
         dropoff: "Drop-off",
+        brand: "Brand",
+        transmission: "Transmission",
+        transmissionOptions: [
+          { value: "manual", label: "Manual" },
+          { value: "automatic", label: "Automatic" },
+          { value: "other", label: "Other" },
+        ],
       },
       excursions: {
         type: "Excursion Type",
         types: [
-          { value: "nature", label: "Nature" },
+          { value: "boat_trip", label: "Boat Trip" },
+          { value: "walking_tour", label: "Walking Tour" },
+          { value: "jeep_safari", label: "Jeep Safari" },
+          { value: "museum", label: "Museum" },
+          { value: "aquapark", label: "Aquapark" },
+          { value: "whale_watching", label: "Whale Watching" },
+          { value: "diving", label: "Diving" },
+          { value: "hiking", label: "Hiking" },
           { value: "cultural", label: "Cultural" },
           { value: "adventure", label: "Adventure" },
+          { value: "food_tour", label: "Food Tour" },
         ],
         date: "Date",
         people: "People",
+        language: "Language",
+        languageOptions: [{ value: "en", label: "English" }],
       },
       search: "Search",
     },
@@ -106,6 +134,13 @@ const translations = {
     common: {
       bookNow: "Book",
       readMore: "Read More",
+      showSearch: "Advanced Search",
+      hideSearch: "Hide Advanced Search",
+      priceFrom: "Price From",
+      priceTo: "Price To",
+      type: "Type",
+      typeRent: "Rent",
+      typeSale: "Sale",
       loading: "Loading our featured experiences...",
       serverError:
         "We're experiencing server issues. Please try refreshing the page or contact support.",
@@ -154,6 +189,16 @@ const translations = {
         checkin: "Заезд",
         checkout: "Выезд",
         guests: "Гости",
+        rooms: "Комнаты",
+        roomsList: [
+          { value: "", label: "Любое" },
+          { value: "0", label: "Студия" },
+          { value: "1", label: "1 Комната" },
+          { value: "2", label: "2 Комнаты" },
+          { value: "3", label: "3 Комнаты" },
+          { value: "4", label: "4+ Комнаты" },
+          { value: "5", label: "5+ Комнаты" },
+        ],
       },
       cars: {
         type: "Тип автомобиля",
@@ -163,16 +208,33 @@ const translations = {
         ],
         pickup: "Получение",
         dropoff: "Возврат",
+        brand: "Марка",
+        transmission: "Коробка передач",
+        transmissionOptions: [
+          { value: "manual", label: "Механическая" },
+          { value: "automatic", label: "Автоматическая" },
+          { value: "other", label: "Другая" },
+        ],
       },
       excursions: {
         type: "Тип экскурсии",
         types: [
-          { value: "nature", label: "Природа" },
-          { value: "cultural", label: "Культура" },
+          { value: "boat_trip", label: "Прогулка на катере" },
+          { value: "walking_tour", label: "Пешая экскурсия" },
+          { value: "jeep_safari", label: "Джип-сафари" },
+          { value: "museum", label: "Музей" },
+          { value: "aquapark", label: "Аквапарк" },
+          { value: "whale_watching", label: "Наблюдение за китами" },
+          { value: "diving", label: "Дайвинг" },
+          { value: "hiking", label: "Пешие походы" },
+          { value: "cultural", label: "Культурные туры" },
           { value: "adventure", label: "Приключения" },
+          { value: "food_tour", label: "Гастрономические туры" },
         ],
         date: "Дата",
         people: "Люди",
+        language: "Язык Гида",
+        languageOptions: [{ value: "en", label: "English" }],
       },
       search: "Поиск",
     },
@@ -211,6 +273,13 @@ const translations = {
     common: {
       bookNow: "Забронировать",
       readMore: "Читать далее",
+      showSearch: "Расширенный поиск",
+      hideSearch: "Скрыть расширенный поиск",
+      priceFrom: "Цена от",
+      priceTo: "Цена до",
+      type: "Тип",
+      typeRent: "Аренда",
+      typeSale: "Продажа",
       loading: "Загружаем лучшие предложения...",
       serverError:
         "Проблемы с сервером. Попробуйте обновить страницу или свяжитесь с поддержкой.",
@@ -259,6 +328,16 @@ const translations = {
         checkin: "Zameldowanie",
         checkout: "Wymeldowanie",
         guests: "Goście",
+        rooms: "Pokoje",
+        roomsList: [
+          { value: "", label: "Any" },
+          { value: "0", label: "Studio" },
+          { value: "1", label: "1 Room" },
+          { value: "2", label: "2 Rooms" },
+          { value: "3", label: "3 Rooms" },
+          { value: "4", label: "4+ Rooms" },
+          { value: "5", label: "5+ Rooms" },
+        ],
       },
       cars: {
         type: "Typ samochodu",
@@ -268,16 +347,33 @@ const translations = {
         ],
         pickup: "Odbiór",
         dropoff: "Zwrot",
+        brand: "Marka",
+        transmission: "Skrzynia biegów",
+        transmissionOptions: [
+          { value: "manual", label: "Manualna" },
+          { value: "automatic", label: "Automatyczna" },
+          { value: "other", label: "Inna" },
+        ],
       },
       excursions: {
         type: "Typ wycieczki",
         types: [
-          { value: "nature", label: "Natura" },
-          { value: "cultural", label: "Kultura" },
-          { value: "adventure", label: "Przygoda" },
+          { value: "boat_trip", label: "Wycieczka na statku" },
+          { value: "walking_tour", label: "Wycieczka piesza" },
+          { value: "jeep_safari", label: "Safari na samochodzie" },
+          { value: "museum", label: "Muzeum" },
+          { value: "aquapark", label: "Akwarium" },
+          { value: "whale_watching", label: "Obserwacja delfinów" },
+          { value: "diving", label: "Pływanie" },
+          { value: "hiking", label: "Wycieczka górska" },
+          { value: "cultural", label: "Wycieczka kulturalna" },
+          { value: "adventure", label: "Wycieczka przygodowa" },
+          { value: "food_tour", label: "Wycieczka gastronomiczna" },
         ],
         date: "Data",
         people: "Ludzie",
+        language: "Język",
+        languageOptions: [{ value: "en", label: "English" }],
       },
       search: "Szukaj",
     },
@@ -317,6 +413,13 @@ const translations = {
     common: {
       bookNow: "Zarezerwuj teraz",
       readMore: "Czytaj więcej",
+      showSearch: "Rozszerzony wyszukiwanie",
+      hideSearch: "Ukryj rozszerzony wyszukiwanie",
+      priceFrom: "Cena od",
+      priceTo: "Cena do",
+      type: "Typ",
+      typeRent: "Wynajem",
+      typeSale: "Sprzedaż",
       loading: "Ładujemy najlepsze oferty...",
       serverError:
         "Problemy z serwerem. Spróbuj odświeżyć stronę lub skontaktuj się z pomocą.",
@@ -367,6 +470,16 @@ const translations = {
         checkin: "Arrivée",
         checkout: "Départ",
         guests: "Invités",
+        rooms: "Chambres",
+        roomsList: [
+          { value: "", label: "Any" },
+          { value: "0", label: "Studio" },
+          { value: "1", label: "1 Room" },
+          { value: "2", label: "2 Rooms" },
+          { value: "3", label: "3 Rooms" },
+          { value: "4", label: "4+ Rooms" },
+          { value: "5", label: "5+ Rooms" },
+        ],
       },
       cars: {
         type: "Type de voiture",
@@ -376,16 +489,31 @@ const translations = {
         ],
         pickup: "Prise en charge",
         dropoff: "Retour",
+        brand: "Marque",
+        transmission: "Transmission",
+        transmissionOptions: [
+          { value: "manual", label: "Manual" },
+          { value: "automatic", label: "Automatic" },
+          { value: "other", label: "Other" },
+        ],
       },
       excursions: {
         type: "Type d'excursion",
         types: [
-          { value: "nature", label: "Nature" },
-          { value: "cultural", label: "Culture" },
-          { value: "adventure", label: "Aventure" },
+          { value: "food_tour", label: "Tour gastronomique" },
+          { value: "whale_watching", label: "Observatoire des baleines" },
+          { value: "diving", label: "Plongée" },
+          { value: "hiking", label: "Randonnée" },
+          { value: "museum", label: "Musée" },
+          { value: "aquapark", label: "Aquapark" },
+          { value: "boat_trip", label: "Croisière" },
+          { value: "walking_tour", label: "Randonnée" },
+          { value: "jeep_safari", label: "Safari en 4x4" },
         ],
         date: "Date",
         people: "Personnes",
+        language: "Langue",
+        languageOptions: [{ value: "en", label: "English" }],
       },
       search: "Rechercher",
     },
@@ -424,6 +552,13 @@ const translations = {
     common: {
       bookNow: "Réserver maintenant",
       readMore: "Lire la suite",
+      showSearch: "Recherche avancée",
+      hideSearch: "Masquer la recherche avancée",
+      priceFrom: "Prix de",
+      priceTo: "Prix à",
+      type: "Typ",
+      typeRent: "Wynajem",
+      typeSale: "Sprzedaż",
       loading: "Chargement de nos meilleures offres...",
       serverError:
         "Problèmes de serveur. Essayez de rafraîchir la page ou contactez le support.",
@@ -473,6 +608,16 @@ const translations = {
         checkin: "Заїзд",
         checkout: "Виїзд",
         guests: "Гості",
+        rooms: "Кімнати",
+        roomsList: [
+          { value: "", label: "Будь-яка" },
+          { value: "0", label: "Студія" },
+          { value: "1", label: "1 Кімната" },
+          { value: "2", label: "2 Кімнати" },
+          { value: "3", label: "3 Кімнати" },
+          { value: "4", label: "4+ Кімнати" },
+          { value: "5", label: "5+ Кімнати" },
+        ],
       },
       cars: {
         type: "Тип автомобіля",
@@ -482,16 +627,33 @@ const translations = {
         ],
         pickup: "Отримання",
         dropoff: "Повернення",
+        brand: "Марка",
+        transmission: "Коробка передач",
+        transmissionOptions: [
+          { value: "manual", label: "Механическая" },
+          { value: "automatic", label: "Автоматическая" },
+          { value: "other", label: "Другая" },
+        ],
       },
       excursions: {
         type: "Тип екскурсії",
         types: [
-          { value: "nature", label: "Природа" },
-          { value: "cultural", label: "Культура" },
-          { value: "adventure", label: "Пригоди" },
+          { value: "boat_trip", label: "Прогулка на катере" },
+          { value: "walking_tour", label: "Пешая экскурсия" },
+          { value: "jeep_safari", label: "Джип-сафари" },
+          { value: "museum", label: "Музей" },
+          { value: "aquapark", label: "Аквапарк" },
+          { value: "whale_watching", label: "Наблюдение за китами" },
+          { value: "diving", label: "Дайвинг" },
+          { value: "hiking", label: "Пешие походы" },
+          { value: "cultural", label: "Культурные туры" },
+          { value: "adventure", label: "Приключения" },
+          { value: "food_tour", label: "Гастрономические туры" },
         ],
         date: "Дата",
         people: "Люди",
+        language: "Мова",
+        languageOptions: [{ value: "en", label: "English" }],
       },
       search: "Пошук",
     },
@@ -530,6 +692,13 @@ const translations = {
     common: {
       bookNow: "Забронювати",
       readMore: "Читати далі",
+      showSearch: "Розширений пошук",
+      hideSearch: "Приховати розширений пошук",
+      priceFrom: "Ціна від",
+      priceTo: "Ціна до",
+      type: "Тип",
+      typeRent: "Аренда",
+      typeSale: "Продажа",
       loading: "Завантажуємо найкращі пропозиції...",
       serverError:
         "Проблеми з сервером. Спробуйте оновити сторінку або зв'яжіться з підтримкою.",
@@ -578,6 +747,16 @@ const translations = {
         checkin: "Check-in",
         checkout: "Check-out",
         guests: "Gäste",
+        rooms: "Zimmer",
+        roomsList: [
+          { value: "", label: "Any" },
+          { value: "0", label: "Studio" },
+          { value: "1", label: "1 Room" },
+          { value: "2", label: "2 Rooms" },
+          { value: "3", label: "3 Rooms" },
+          { value: "4", label: "4+ Rooms" },
+          { value: "5", label: "5+ Rooms" },
+        ],
       },
       cars: {
         type: "Autotyp",
@@ -587,16 +766,33 @@ const translations = {
         ],
         pickup: "Abholung",
         dropoff: "Rückgabe",
+        brand: "Marke",
+        transmission: "Getriebe",
+        transmissionOptions: [
+          { value: "manual", label: "Manuell" },
+          { value: "automatic", label: "Automatisch" },
+          { value: "other", label: "Andere" },
+        ],
       },
       excursions: {
         type: "Exkursionstyp",
         types: [
-          { value: "nature", label: "Natur" },
+          { value: "boat_trip", label: "Bootstour" },
+          { value: "walking_tour", label: "Wanderung" },
+          { value: "jeep_safari", label: "Safari" },
+          { value: "museum", label: "Museum" },
+          { value: "aquapark", label: "Aquapark" },
+          { value: "whale_watching", label: "Whale Watching" },
+          { value: "diving", label: "Tauchen" },
+          { value: "hiking", label: "Wandern" },
           { value: "cultural", label: "Kultur" },
           { value: "adventure", label: "Abenteuer" },
+          { value: "food_tour", label: "Gastronomie" },
         ],
         date: "Datum",
         people: "Personen",
+        language: "Sprache",
+        languageOptions: [{ value: "en", label: "English" }],
       },
       search: "Suchen",
     },
@@ -635,6 +831,13 @@ const translations = {
     common: {
       bookNow: "Jetzt buchen",
       readMore: "Weiterlesen",
+      showSearch: "Erweiterte Suche",
+      hideSearch: "Erweiterte Suche ausblenden",
+      priceFrom: "Preis von",
+      priceTo: "Preis bis",
+      type: "Typ",
+      typeRent: "Wynajem",
+      typeSale: "Sprzedaż",
       loading: "Laden unserer besten Angebote...",
       serverError:
         "Serverprobleme. Versuchen Sie, die Seite zu aktualisieren oder kontaktieren Sie den Support.",
@@ -685,6 +888,16 @@ const translations = {
         checkin: "Llegada",
         checkout: "Salida",
         guests: "Huéspedes",
+        rooms: "Habitaciones",
+        roomsList: [
+          { value: "", label: "Any" },
+          { value: "0", label: "Studio" },
+          { value: "1", label: "1 Room" },
+          { value: "2", label: "2 Rooms" },
+          { value: "3", label: "3 Rooms" },
+          { value: "4", label: "4+ Rooms" },
+          { value: "5", label: "5+ Rooms" },
+        ],
       },
       cars: {
         type: "Tipo de coche",
@@ -694,16 +907,33 @@ const translations = {
         ],
         pickup: "Recogida",
         dropoff: "Devolución",
+        brand: "Marca",
+        transmission: "Transmisión",
+        transmissionOptions: [
+          { value: "manual", label: "Manual" },
+          { value: "automatic", label: "Automático" },
+          { value: "other", label: "Otro" },
+        ],
       },
       excursions: {
         type: "Tipo de excursión",
         types: [
-          { value: "nature", label: "Naturaleza" },
-          { value: "cultural", label: "Cultura" },
-          { value: "adventure", label: "Aventura" },
+          { value: "boat_trip", label: "Excursión en barco" },
+          { value: "walking_tour", label: "Excursión a pie" },
+          { value: "jeep_safari", label: "Safari en Jeep" },
+          { value: "museum", label: "Museo" },
+          { value: "aquapark", label: "Parque acuático" },
+          { value: "whale_watching", label: "Observación de ballenas" },
+          { value: "diving", label: "Buceo" },
+          { value: "hiking", label: "Senderismo" },
+          { value: "cultural", label: "Excursión cultural" },
+          { value: "adventure", label: "Excursión de aventura" },
+          { value: "food_tour", label: "Excursión gastronómica" },
         ],
         date: "Fecha",
         people: "Personas",
+        language: "Idioma",
+        languageOptions: [{ value: "en", label: "English" }],
       },
       search: "Buscar",
     },
@@ -742,7 +972,15 @@ const translations = {
     common: {
       bookNow: "Reservar ahora",
       readMore: "Leer más",
+      showSearch: "Búsqueda avanzada",
+      hideSearch: "Ocultar búsqueda avanzada",
+      priceFrom: "Precio desde",
+      priceTo: "Precio hasta",
+      type: "Tipo",
+      typeRent: "Alquiler",
+      typeSale: "Venta",
       loading: "Cargando nuestras mejores ofertas...",
+
       serverError:
         "Problemas del servidor. Intenta actualizar la página o contacta con soporte.",
       noData:
@@ -784,6 +1022,21 @@ const languages = [
 ];
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
+
+const carMarks = [
+  { value: "toyota", label: "Toyota" },
+  { value: "volkswagen", label: "Volkswagen" },
+  { value: "ford", label: "Ford" },
+  { value: "mercedes", label: "Mercedes-Benz" },
+  { value: "bmw", label: "BMW" },
+  { value: "audi", label: "Audi" },
+  { value: "nissan", label: "Nissan" },
+  { value: "hyundai", label: "Hyundai" },
+  { value: "kia", label: "Kia" },
+  { value: "peugeot", label: "Peugeot" },
+  { value: "renault", label: "Renault" },
+  { value: "seat", label: "SEAT" },
+];
 
 export function LocalePageClient() {
   const router = useRouter();
@@ -834,16 +1087,22 @@ export function LocalePageClient() {
     priceFrom: "",
     priceTo: "",
     duration: "",
-    language: "",
     category: "",
+    language: "", // Добавляем свойство language
   });
 
   // State для модального окна бронирования
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [bookingType, setBookingType] = useState<
-    "excursion" | "car" | "accommodation" | "blog"
-  >("excursion");
-  const [bookingItem, setBookingItem] = useState<any>(null);
+  const [bookingItem, setBookingItem] = useState<{
+    title: string;
+    price?: string;
+    currency?: string;
+    duration?: string;
+    language?: string;
+    brand?: string;
+    model?: string;
+    contact?: { email?: string };
+  } | null>(null);
 
   // State для FAQ секции
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
@@ -852,9 +1111,7 @@ export function LocalePageClient() {
   const [propertyTypes, setPropertyTypes] = useState<string[]>([]);
   const [carTypes, setCarTypes] = useState<string[]>([]);
   const [carBrands, setCarBrands] = useState<string[]>([]);
-  const [carFuels, setCarFuels] = useState<string[]>([]);
   const [carTransmissions, setCarTransmissions] = useState<string[]>([]);
-  const [tourLanguages, setTourLanguages] = useState<string[]>([]);
   const [tourDurations, setTourDurations] = useState<string[]>([]);
 
   // Advanced search visibility states
@@ -867,17 +1124,8 @@ export function LocalePageClient() {
   const currentLanguage = languages.find((lang) => lang.code === language);
 
   // Загрузка данных из нового хука
-  const { excursions, cars, accommodation, blogPosts, dataLoading, hasError } =
+  const { excursions, cars, accommodation, blogPosts, dataLoading } =
     useDataLoader(mounted, language);
-
-  // Function to fetch real property data from Strapi
-  const getAuthHeaders = () => {
-    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-    return {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    };
-  };
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
@@ -886,9 +1134,9 @@ export function LocalePageClient() {
       const propertyTypesArray = [
         ...new Set(
           accommodation
-            .map((property: any) => property.category)
+            .map((property: { category?: string }) => property.category)
             .filter(
-              (value: any): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
         ),
@@ -898,9 +1146,9 @@ export function LocalePageClient() {
       const carTypesArray = [
         ...new Set(
           cars
-            .map((car: any) => car.type)
+            .map((car: { type?: string }) => car.type)
             .filter(
-              (value: any): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
         ),
@@ -909,20 +1157,12 @@ export function LocalePageClient() {
       const carBrandsArray = [
         ...new Set(
           cars
-            .map((car: any) => car.specifications?.make)
-            .filter(
-              (value: any): value is string =>
-                Boolean(value) && typeof value === "string"
+            .map(
+              (car: { specifications?: { make?: string } }) =>
+                car.specifications?.make
             )
-        ),
-      ].sort();
-
-      const carFuelsArray = [
-        ...new Set(
-          cars
-            .map((car: any) => car.specifications?.fuel)
             .filter(
-              (value: any): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
         ),
@@ -931,32 +1171,24 @@ export function LocalePageClient() {
       const carTransmissionsArray = [
         ...new Set(
           cars
-            .map((car: any) => car.specifications?.transmission)
+            .map(
+              (car: { specifications?: { transmission?: string } }) =>
+                car.specifications?.transmission
+            )
             .filter(
-              (value: any): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
         ),
       ].sort();
 
       // Extract tour filter options from excursions data
-      const tourLanguagesArray = [
-        ...new Set(
-          excursions
-            .map((tour: any) => tour.language)
-            .filter(
-              (value: any): value is string =>
-                Boolean(value) && typeof value === "string"
-            )
-        ),
-      ].sort();
-
       const tourDurationsArray = [
         ...new Set(
           excursions
-            .map((tour: any) => tour.duration)
+            .map((tour: { duration?: string }) => tour.duration)
             .filter(
-              (value: any): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
         ),
@@ -966,9 +1198,7 @@ export function LocalePageClient() {
       setPropertyTypes(propertyTypesArray);
       setCarTypes(carTypesArray);
       setCarBrands(carBrandsArray);
-      setCarFuels(carFuelsArray);
       setCarTransmissions(carTransmissionsArray);
-      setTourLanguages(tourLanguagesArray);
       setTourDurations(tourDurationsArray);
     }
   }, [mounted, accommodation, cars, excursions]);
@@ -976,9 +1206,17 @@ export function LocalePageClient() {
   // Функция для открытия модального окна бронирования
   const openBookingModal = (
     type: "excursion" | "car" | "accommodation",
-    item: any
+    item: {
+      title: string;
+      price?: string;
+      currency?: string;
+      duration?: string;
+      language?: string;
+      brand?: string;
+      model?: string;
+      contact?: { email?: string };
+    }
   ) => {
-    setBookingType(type);
     setBookingItem(item);
     setIsBookingModalOpen(true);
   };
@@ -1280,7 +1518,11 @@ export function LocalePageClient() {
                                 ? "Wybierz typ"
                                 : language === "fr"
                                   ? "Sélectionner le type"
-                                  : "Оберіть тип"}
+                                  : language === "de"
+                                    ? "Typ auswählen"
+                                    : language === "es"
+                                      ? "Seleccionar tipo"
+                                      : "Оберіть тип"}
                         </option>
                         {propertyTypes.map((type) => (
                           <option key={type} value={type}>
@@ -1353,7 +1595,7 @@ export function LocalePageClient() {
                               d="M5 15l7-7 7 7"
                             />
                           </svg>
-                          Hide Advanced Search
+                          {t.common.hideSearch}
                         </>
                       ) : (
                         <>
@@ -1370,7 +1612,7 @@ export function LocalePageClient() {
                               d="M19 9l-7 7-7-7"
                             />
                           </svg>
-                          Advanced Search
+                          {t.common.showSearch}
                         </>
                       )}
                     </button>
@@ -1380,8 +1622,8 @@ export function LocalePageClient() {
                   {showAdvancedAccommodation && (
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Rooms
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          {t.hero.accommodation.rooms}
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1393,16 +1635,18 @@ export function LocalePageClient() {
                             })
                           }
                         >
-                          <option value="">Any</option>
-                          <option value="1">1 Room</option>
-                          <option value="2">2 Rooms</option>
-                          <option value="3">3 Rooms</option>
-                          <option value="4">4+ Rooms</option>
+                          {(t.hero.accommodation as any).roomsList?.map(
+                            (room: { value: string; label: string }) => (
+                              <option key={room.value} value={room.value}>
+                                {room.label}
+                              </option>
+                            )
+                          )}
                         </select>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price From
+                          {t.common.priceFrom}
                         </label>
                         <input
                           type="number"
@@ -1419,7 +1663,7 @@ export function LocalePageClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price To
+                          {t.common.priceTo}
                         </label>
                         <input
                           type="number"
@@ -1436,7 +1680,7 @@ export function LocalePageClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Type
+                          {t.common.type}
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1448,8 +1692,8 @@ export function LocalePageClient() {
                             })
                           }
                         >
-                          <option value="rent">Rent</option>
-                          <option value="sale">Sale</option>
+                          <option value="rent">{t.common.typeRent}</option>
+                          <option value="sale">{t.common.typeSale}</option>
                         </select>
                       </div>
                     </div>
@@ -1480,7 +1724,11 @@ export function LocalePageClient() {
                                 ? "Wybierz typ samochodu"
                                 : language === "fr"
                                   ? "Sélectionner le type de voiture"
-                                  : "Оберіть тип авто"}
+                                  : language === "de"
+                                    ? "Auto-Typ auswählen"
+                                    : language === "es"
+                                      ? "Seleccionar tipo de coche"
+                                      : "Оберіть тип авто"}
                         </option>
                         {carTypes.map((type) => (
                           <option key={type} value={type}>
@@ -1513,7 +1761,7 @@ export function LocalePageClient() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Type
+                        {t.common.type}
                       </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1522,8 +1770,8 @@ export function LocalePageClient() {
                           setCarFilters({ ...carFilters, type: e.target.value })
                         }
                       >
-                        <option value="rent">Rent</option>
-                        <option value="sale">Sale</option>
+                        <option value="rent">{t.common.typeRent}</option>
+                        <option value="sale">{t.common.typeSale}</option>
                       </select>
                     </div>
                   </div>
@@ -1550,7 +1798,7 @@ export function LocalePageClient() {
                               d="M5 15l7-7 7 7"
                             />
                           </svg>
-                          Hide Advanced Search
+                          {t.common.hideSearch}
                         </>
                       ) : (
                         <>
@@ -1567,7 +1815,7 @@ export function LocalePageClient() {
                               d="M19 9l-7 7-7-7"
                             />
                           </svg>
-                          Advanced Search
+                          {t.common.showSearch}
                         </>
                       )}
                     </button>
@@ -1578,7 +1826,7 @@ export function LocalePageClient() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Brand
+                          {t.hero.cars.brand}
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1590,16 +1838,21 @@ export function LocalePageClient() {
                             })
                           }
                         >
-                          {carBrands.map((brand) => (
+                          {/* {carBrands.map((brand) => (
                             <option key={brand} value={brand}>
                               {brand.charAt(0).toUpperCase() + brand.slice(1)}
+                            </option>
+                          ))} */}
+                          {carMarks.map((mark) => (
+                            <option key={mark.value} value={mark.value}>
+                              {mark.label}
                             </option>
                           ))}
                         </select>
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price From
+                          {t.common.priceFrom}
                         </label>
                         <input
                           type="number"
@@ -1616,7 +1869,7 @@ export function LocalePageClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price To
+                          {t.common.priceTo}
                         </label>
                         <input
                           type="number"
@@ -1633,7 +1886,7 @@ export function LocalePageClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Transmission
+                          {t.hero.cars.transmission}
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1645,12 +1898,16 @@ export function LocalePageClient() {
                             })
                           }
                         >
-                          {carTransmissions.map((transmission) => (
-                            <option key={transmission} value={transmission}>
-                              {transmission.charAt(0).toUpperCase() +
-                                transmission.slice(1)}
-                            </option>
-                          ))}
+                          {t.hero.cars.transmissionOptions.map(
+                            (transmission) => (
+                              <option
+                                key={transmission.value}
+                                value={transmission.value}
+                              >
+                                {transmission.label}
+                              </option>
+                            )
+                          )}
                         </select>
                       </div>
                     </div>
@@ -1721,7 +1978,7 @@ export function LocalePageClient() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Language
+                        {t.hero.excursions.language}
                       </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -1733,10 +1990,24 @@ export function LocalePageClient() {
                           })
                         }
                       >
-                        {tourLanguages.map((language) => (
-                          <option key={language} value={language}>
-                            {language.charAt(0).toUpperCase() +
-                              language.slice(1)}
+                        <option value="">
+                          {language === "en"
+                            ? "Select language"
+                            : language === "ru"
+                              ? "Выберите язык"
+                              : language === "pl"
+                                ? "Wybierz język"
+                                : language === "fr"
+                                  ? "Sélectionner la langue"
+                                  : language === "uk"
+                                    ? "Оберіть мову"
+                                    : language === "de"
+                                      ? "Sprache auswählen"
+                                      : "Seleccionar idioma"}
+                        </option>
+                        {t.hero.excursions.languageOptions.map((lang) => (
+                          <option key={lang.value} value={lang.value}>
+                            {lang.label}
                           </option>
                         ))}
                       </select>
@@ -1765,7 +2036,7 @@ export function LocalePageClient() {
                               d="M5 15l7-7 7 7"
                             />
                           </svg>
-                          Hide Advanced Search
+                          {t.common.hideSearch}
                         </>
                       ) : (
                         <>
@@ -1782,7 +2053,7 @@ export function LocalePageClient() {
                               d="M19 9l-7 7-7-7"
                             />
                           </svg>
-                          Advanced Search
+                          {t.common.showSearch}
                         </>
                       )}
                     </button>
@@ -1810,7 +2081,7 @@ export function LocalePageClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price From
+                          {t.common.priceFrom}
                         </label>
                         <input
                           type="number"
@@ -1827,7 +2098,7 @@ export function LocalePageClient() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price To
+                          {t.common.priceTo}
                         </label>
                         <input
                           type="number"
@@ -1882,7 +2153,13 @@ export function LocalePageClient() {
                           ? "Odkryj nasz blog"
                           : language === "fr"
                             ? "Découvrez notre blog"
-                            : "Відкрийте наш блог"}
+                            : language === "uk"
+                              ? "Відкрийте наш блог"
+                              : language === "de"
+                                ? "Unser Blog entdecken"
+                                : language === "es"
+                                  ? "Descubre nuestro blog"
+                                  : "Відкрийте наш блог"}
                   </h3>
                   <p className="text-gray-600 mb-6">
                     {language === "en"
@@ -1893,7 +2170,13 @@ export function LocalePageClient() {
                           ? "Czytaj o najlepszych miejscach, wskazówkach i doświadczeniach na Teneryfie"
                           : language === "fr"
                             ? "Lisez sur les meilleurs endroits, conseils et expériences à Tenerife"
-                            : "Читайте про найкращі місця, поради та враження на Тенеріфе"}
+                            : language === "uk"
+                              ? "Читайте про найкращі місця, поради та враження на Тенеріфе"
+                              : language === "de"
+                                ? "Lesen Sie über die besten Orte, Tipps und Erfahrungen auf Teneriffa"
+                                : language === "es"
+                                  ? "Lee sobre los mejores lugares, consejos y experiencias en Tenerife"
+                                  : "Читайте про найкращі місця, поради та враження на Тенеріфе"}
                   </p>
                   <button
                     onClick={() => router.push("/blog")}
@@ -1908,7 +2191,13 @@ export function LocalePageClient() {
                           ? "Odwiedź blog"
                           : language === "fr"
                             ? "Visiter le blog"
-                            : "Відвідати блог"}
+                            : language === "uk"
+                              ? "Відвідати блог"
+                              : language === "de"
+                                ? "Blog besuchen"
+                                : language === "es"
+                                  ? "Visitar el blog"
+                                  : "Відвідати блог"}
                   </button>
                 </div>
               )}
@@ -2032,6 +2321,12 @@ export function LocalePageClient() {
                           openBookingModal("accommodation", {
                             title: place.title,
                             price: place.price,
+                            currency: place.currency,
+                            duration: place.duration,
+                            language: place.language,
+                            brand: place.brand,
+                            model: place.model,
+                            contact: place.contact,
                           })
                         }
                         className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -2148,6 +2443,9 @@ export function LocalePageClient() {
                             price: car.price,
                             brand: car.brand,
                             model: car.model,
+                            duration: car.duration,
+                            language: car.language,
+                            contact: car.contact,
                           })
                         }
                         className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -2282,6 +2580,9 @@ export function LocalePageClient() {
                               price: excursion.price,
                               duration: excursion.duration,
                               language: "English",
+                              brand: excursion.brand,
+                              model: excursion.model,
+                              contact: excursion.contact,
                             })
                           }
                           className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -2429,6 +2730,11 @@ export function LocalePageClient() {
                   title: "",
                   price: undefined,
                   currency: undefined,
+                  duration: undefined,
+                  language: undefined,
+                  brand: undefined,
+                  model: undefined,
+                  contact: undefined,
                 })
               }
               className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors text-lg"
@@ -2496,30 +2802,30 @@ export function LocalePageClient() {
                 {t.footer.services}
               </h4>
               <div className="space-y-3">
-                <a
+                <Link
                   href="/cars"
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Airport Transfers
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/tours"
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Excursions & Tours
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/apartments"
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Property Rental & Sales
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/cars"
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Car Rental Services
-                </a>
+                </Link>
               </div>
             </div>
             <div>
