@@ -657,7 +657,6 @@ export default function ApartmentsPage() {
         const apiUrl =
           process.env.NEXT_PUBLIC_STRAPI_API_URL ||
           "https://tenerifly-strapi-production.up.railway.app";
-        console.log("Page API URL:", apiUrl);
 
         const response = await fetch(
           `${apiUrl}/api/properties?populate=*&pagination[pageSize]=1000`,
@@ -671,7 +670,6 @@ export default function ApartmentsPage() {
         }
 
         const data = await response.json();
-
         if (data.data) {
           setAllApartments(data.data);
           setFilteredApartments(data.data); // Изначально показываем все

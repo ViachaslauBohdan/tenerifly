@@ -1524,9 +1524,9 @@ export function LocalePageClient() {
                                       ? "Seleccionar tipo"
                                       : "Оберіть тип"}
                         </option>
-                        {propertyTypes.map((type) => (
-                          <option key={type} value={type}>
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
+                        {t.hero.accommodation.types.map((type: { value: string; label: string; }) => (
+                          <option key={type.value} value={type.value}>
+                            {type.label}
                           </option>
                         ))}
                       </select>
@@ -1635,11 +1635,13 @@ export function LocalePageClient() {
                             })
                           }
                         >
-                          {(t.hero.accommodation as any).roomsList?.map(
+                          {t.hero.accommodation.roomsList?.map(
                             (room: { value: string; label: string }) => (
                               <option key={room.value} value={room.value}>
                                 {room.label}
                               </option>
+                            )
+                          )}
                             )
                           )}
                         </select>
@@ -1938,6 +1940,10 @@ export function LocalePageClient() {
                                 ? "Wybierz typ"
                                 : language === "fr"
                                   ? "Sélectionner le type"
+                                  : language === "de"
+                                    ? "Typ auswählen"
+                                    : language === "es"
+                                      ? "Seleccionar tipo"
                                   : "Оберіть тип"}
                         </option>
                         {t.hero.excursions.types.map((type) => (
