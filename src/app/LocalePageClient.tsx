@@ -67,6 +67,16 @@ const translations = {
           { value: "rent", label: "Rent" },
           { value: "sale", label: "Sale" },
         ],
+        bodyType: "Body Type",
+        bodyTypeOptions: [
+          { value: "", label: "All" },
+          { value: "sedan", label: "Sedan" },
+          { value: "hatchback", label: "Hatchback" },
+          { value: "suv", label: "SUV" },
+          { value: "convertible", label: "Convertible" },
+          { value: "wagon", label: "Wagon" },
+        ],
+
         pickup: "Pick-up",
         dropoff: "Drop-off",
         brand: "Brand",
@@ -74,7 +84,6 @@ const translations = {
         transmissionOptions: [
           { value: "manual", label: "Manual" },
           { value: "automatic", label: "Automatic" },
-          { value: "other", label: "Other" },
         ],
       },
       excursions: {
@@ -142,6 +151,7 @@ const translations = {
       typeRent: "Rent",
       typeSale: "Sale",
       loading: "Loading our featured experiences...",
+      all: "All",
       serverError:
         "We're experiencing server issues. Please try refreshing the page or contact support.",
       noData:
@@ -207,13 +217,21 @@ const translations = {
           { value: "sale", label: "Продажа" },
         ],
         pickup: "Получение",
+        bodyType: "Тип кузова",
+        bodyTypeOptions: [
+          { value: "", label: "Все" },
+          { value: "sedan", label: "Седан" },
+          { value: "hatchback", label: "Хэтчбек" },
+          { value: "suv", label: "Внедорожник" },
+          { value: "convertible", label: "Кабриолет" },
+          { value: "wagon", label: "Универсал" },
+        ],
         dropoff: "Возврат",
         brand: "Марка",
         transmission: "Коробка передач",
         transmissionOptions: [
           { value: "manual", label: "Механическая" },
           { value: "automatic", label: "Автоматическая" },
-          { value: "other", label: "Другая" },
         ],
       },
       excursions: {
@@ -281,6 +299,7 @@ const translations = {
       typeRent: "Аренда",
       typeSale: "Продажа",
       loading: "Загружаем лучшие предложения...",
+      all: "Все",
       serverError:
         "Проблемы с сервером. Попробуйте обновить страницу или свяжитесь с поддержкой.",
       noData: "Обновляем наши рекомендации. Скоро появятся новые варианты!",
@@ -346,13 +365,21 @@ const translations = {
           { value: "sale", label: "Sprzedaż" },
         ],
         pickup: "Odbiór",
+        bodyType: "Typ samochodu",
+        bodyTypeOptions: [
+          { value: "", label: "Wszystkie" },
+          { value: "sedan", label: "Sedan" },
+          { value: "hatchback", label: "Hatchback" },
+          { value: "suv", label: "SUV" },
+          { value: "convertible", label: "Convertible" },
+          { value: "wagon", label: "Wagon" },
+        ],
         dropoff: "Zwrot",
         brand: "Marka",
         transmission: "Skrzynia biegów",
         transmissionOptions: [
           { value: "manual", label: "Manualna" },
           { value: "automatic", label: "Automatyczna" },
-          { value: "other", label: "Inna" },
         ],
       },
       excursions: {
@@ -421,6 +448,7 @@ const translations = {
       typeRent: "Wynajem",
       typeSale: "Sprzedaż",
       loading: "Ładujemy najlepsze oferty...",
+      all: "Wszystkie",
       serverError:
         "Problemy z serwerem. Spróbuj odświeżyć stronę lub skontaktuj się z pomocą.",
       noData:
@@ -488,13 +516,21 @@ const translations = {
           { value: "sale", label: "Vente" },
         ],
         pickup: "Prise en charge",
+        bodyType: "Type de voiture",
+        bodyTypeOptions: [
+          { value: "", label: "Tous" },
+          { value: "sedan", label: "Sedan" },
+          { value: "hatchback", label: "Hatchback" },
+          { value: "suv", label: "SUV" },
+          { value: "convertible", label: "Convertible" },
+          { value: "wagon", label: "Wagon" },
+        ],
         dropoff: "Retour",
         brand: "Marque",
         transmission: "Transmission",
         transmissionOptions: [
           { value: "manual", label: "Manual" },
           { value: "automatic", label: "Automatic" },
-          { value: "other", label: "Other" },
         ],
       },
       excursions: {
@@ -560,6 +596,7 @@ const translations = {
       typeRent: "Wynajem",
       typeSale: "Sprzedaż",
       loading: "Chargement de nos meilleures offres...",
+      all: "Tous",
       serverError:
         "Problèmes de serveur. Essayez de rafraîchir la page ou contactez le support.",
       noData:
@@ -626,13 +663,21 @@ const translations = {
           { value: "sale", label: "Продаж" },
         ],
         pickup: "Отримання",
+        bodyType: "Тип автомобіля",
+        bodyTypeOptions: [
+          { value: "", label: "Всі" },
+          { value: "sedan", label: "Седан" },
+          { value: "hatchback", label: "Хэтчбек" },
+          { value: "suv", label: "Внедорожник" },
+          { value: "convertible", label: "Кабриолет" },
+          { value: "wagon", label: "Универсал" },
+        ],
         dropoff: "Повернення",
         brand: "Марка",
         transmission: "Коробка передач",
         transmissionOptions: [
           { value: "manual", label: "Механическая" },
           { value: "automatic", label: "Автоматическая" },
-          { value: "other", label: "Другая" },
         ],
       },
       excursions: {
@@ -700,6 +745,7 @@ const translations = {
       typeRent: "Аренда",
       typeSale: "Продажа",
       loading: "Завантажуємо найкращі пропозиції...",
+      all: "Всі",
       serverError:
         "Проблеми з сервером. Спробуйте оновити сторінку або зв'яжіться з підтримкою.",
       noData:
@@ -765,13 +811,21 @@ const translations = {
           { value: "sale", label: "Kaufen" },
         ],
         pickup: "Abholung",
+        bodyType: "Autotyp",
+        bodyTypeOptions: [
+          { value: "", label: "Alle" },
+          { value: "sedan", label: "Sedan" },
+          { value: "hatchback", label: "Hatchback" },
+          { value: "suv", label: "SUV" },
+          { value: "convertible", label: "Convertible" },
+          { value: "wagon", label: "Wagon" },
+        ],
         dropoff: "Rückgabe",
         brand: "Marke",
         transmission: "Getriebe",
         transmissionOptions: [
           { value: "manual", label: "Manuell" },
           { value: "automatic", label: "Automatisch" },
-          { value: "other", label: "Andere" },
         ],
       },
       excursions: {
@@ -839,6 +893,7 @@ const translations = {
       typeRent: "Wynajem",
       typeSale: "Sprzedaż",
       loading: "Laden unserer besten Angebote...",
+      all: "Alle",
       serverError:
         "Serverprobleme. Versuchen Sie, die Seite zu aktualisieren oder kontaktieren Sie den Support.",
       noData:
@@ -906,13 +961,21 @@ const translations = {
           { value: "sale", label: "Venta" },
         ],
         pickup: "Recogida",
+        bodyType: "Tipo de coche",
+        bodyTypeOptions: [
+          { value: "", label: "Todos" },
+          { value: "sedan", label: "Sedan" },
+          { value: "hatchback", label: "Hatchback" },
+          { value: "suv", label: "SUV" },
+          { value: "convertible", label: "Convertible" },
+          { value: "wagon", label: "Wagon" },
+        ],
         dropoff: "Devolución",
         brand: "Marca",
         transmission: "Transmisión",
         transmissionOptions: [
           { value: "manual", label: "Manual" },
           { value: "automatic", label: "Automático" },
-          { value: "other", label: "Otro" },
         ],
       },
       excursions: {
@@ -980,7 +1043,7 @@ const translations = {
       typeRent: "Alquiler",
       typeSale: "Venta",
       loading: "Cargando nuestras mejores ofertas...",
-
+      all: "Todos",
       serverError:
         "Problemas del servidor. Intenta actualizar la página o contacta con soporte.",
       noData:
@@ -1024,18 +1087,17 @@ const languages = [
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
 
 const carMarks = [
-  { value: "toyota", label: "Toyota" },
-  { value: "volkswagen", label: "Volkswagen" },
-  { value: "ford", label: "Ford" },
-  { value: "mercedes", label: "Mercedes-Benz" },
-  { value: "bmw", label: "BMW" },
-  { value: "audi", label: "Audi" },
-  { value: "nissan", label: "Nissan" },
-  { value: "hyundai", label: "Hyundai" },
-  { value: "kia", label: "Kia" },
-  { value: "peugeot", label: "Peugeot" },
-  { value: "renault", label: "Renault" },
-  { value: "seat", label: "SEAT" },
+  { value: "Toyota", label: "Toyota" },
+  { value: "Volkswagen", label: "Volkswagen" },
+  { value: "Ford", label: "Ford" },
+  { value: "Mercedes", label: "Mercedes-Benz" },
+  { value: "BMW", label: "BMW" },
+  { value: "Nissan", label: "Nissan" },
+  { value: "Hyundai", label: "Hyundai" },
+  { value: "Kia", label: "Kia" },
+  { value: "Peugeot", label: "Peugeot" },
+  { value: "Renault", label: "Renault" },
+  { value: "SEAT", label: "SEAT" },
 ];
 
 export function LocalePageClient() {
@@ -1274,7 +1336,7 @@ export function LocalePageClient() {
 
       case "cars":
         // Add car-specific filters
-        if (carType) params.append("type", carType);
+        if (carType) params.append("bodyType", carType);
         if (carFilters.brand) params.append("brand", carFilters.brand);
         if (carFilters.model) params.append("model", carFilters.model);
         if (carFilters.yearFrom) params.append("yearFrom", carFilters.yearFrom);
@@ -1524,11 +1586,13 @@ export function LocalePageClient() {
                                       ? "Seleccionar tipo"
                                       : "Оберіть тип"}
                         </option>
-                        {t.hero.accommodation.types.map((type: { value: string; label: string; }) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
+                        {t.hero.accommodation.types.map(
+                          (type: { value: string; label: string }) => (
+                            <option key={type.value} value={type.value}>
+                              {type.label}
+                            </option>
+                          )
+                        )}
                       </select>
                     </div>
                     <div>
@@ -1708,14 +1772,14 @@ export function LocalePageClient() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t.hero.cars.type}
+                        {t.hero.cars.bodyType}
                       </label>
                       <select
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         value={carType}
                         onChange={(e) => setCarType(e.target.value)}
                       >
-                        <option value="">
+                        {/* <option value="">
                           {language === "en"
                             ? "Select car type"
                             : language === "ru"
@@ -1729,10 +1793,10 @@ export function LocalePageClient() {
                                     : language === "es"
                                       ? "Seleccionar tipo de coche"
                                       : "Оберіть тип авто"}
-                        </option>
-                        {carTypes.map((type) => (
-                          <option key={type} value={type}>
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </option> */}
+                        {t.hero.cars.bodyTypeOptions.map((type) => (
+                          <option key={type.value} value={type.value}>
+                            {type.label}
                           </option>
                         ))}
                       </select>
@@ -1838,16 +1902,17 @@ export function LocalePageClient() {
                             })
                           }
                         >
-                          {/* {carBrands.map((brand) => (
+                          <option value="">{t.common.all}</option>
+                          {carBrands.map((brand) => (
                             <option key={brand} value={brand}>
                               {brand.charAt(0).toUpperCase() + brand.slice(1)}
                             </option>
-                          ))} */}
-                          {carMarks.map((mark) => (
+                          ))}
+                          {/* {carMarks.map((mark) => (
                             <option key={mark.value} value={mark.value}>
                               {mark.label}
                             </option>
-                          ))}
+                          ))} */}
                         </select>
                       </div>
                       <div>
@@ -1898,6 +1963,7 @@ export function LocalePageClient() {
                             })
                           }
                         >
+                          <option value="">{t.common.all}</option>
                           {t.hero.cars.transmissionOptions.map(
                             (transmission) => (
                               <option
@@ -1942,7 +2008,7 @@ export function LocalePageClient() {
                                     ? "Typ auswählen"
                                     : language === "es"
                                       ? "Seleccionar tipo"
-                                  : "Оберіть тип"}
+                                      : "Оберіть тип"}
                         </option>
                         {t.hero.excursions.types.map((type) => (
                           <option key={type.value} value={type.value}>
