@@ -227,7 +227,28 @@ export async function getAllPropertyIds() {
 
 // Получение апартамента по ID
 export async function getPropertyById(id: string) {
-  return fetchWithCache(`/properties/${id}?populate=*`, `property-${id}`);
+  const property = await fetchWithCache(
+    `/properties/${id}?populate=*`,
+    `property-${id}`
+  );
+
+  // Предзагружаем изображения во время сборки (не критично для сборки)
+  if (process.env.NODE_ENV === "production") {
+    try {
+      const { preloadPropertyImages } = await import("./imageCacheService");
+      await preloadPropertyImages(property);
+    } catch (error) {
+      // Логируем ошибку, но не прерываем сборку
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      console.warn(
+        `⚠️ Image preloading failed for property ${id}:`,
+        errorMessage
+      );
+    }
+  }
+
+  return property;
 }
 
 // Получение всех ID автомобилей для генерации статических путей

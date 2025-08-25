@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import ApartmentCard from "./ApartmentCard";
 import ApartmentsFilter from "./ApartmentsFilter";
 import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
@@ -568,6 +568,7 @@ export default function ApartmentsPageClient({
   initialProperties,
 }: ApartmentsPageClientProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   >("en");
@@ -654,8 +655,14 @@ export default function ApartmentsPageClient({
     onFiltersChange: setFilters,
   });
 
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
+  // Инициализация текущей страницы из URL параметров
+  const [currentPage, setCurrentPage] = useState(() => {
+    if (searchParams) {
+      const page = searchParams.get("page");
+      return page ? parseInt(page, 10) : 1;
+    }
+    return 1;
+  });
   const [itemsPerPage] = useState(12); // Show 12 apartments per page
 
   // Функция для создания заголовков с авторизацией
@@ -724,6 +731,17 @@ export default function ApartmentsPageClient({
     }
   }, []);
 
+  // Синхронизация текущей страницы с URL при изменении searchParams
+  useEffect(() => {
+    if (searchParams) {
+      const page = searchParams.get("page");
+      const newPage = page ? parseInt(page, 10) : 1;
+      if (newPage !== currentPage) {
+        setCurrentPage(newPage);
+      }
+    }
+  }, [searchParams, currentPage]);
+
   // Сохранение языка в localStorage
   const handleLanguageChange = (
     langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
@@ -771,13 +789,32 @@ export default function ApartmentsPageClient({
     []
   );
 
+  // Функция для обновления URL с пагинацией
+  const updateUrlWithPage = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (page === 1) {
+      params.delete("page");
+    } else {
+      params.set("page", page.toString());
+    }
+    const queryString = params.toString();
+    const path = "/apartments";
+    const url = queryString ? `${path}?${queryString}` : path;
+    router.replace(url, { scroll: false });
+  };
+
   // Мемоизированная функция обновления отфильтрованных апартаментов
   const handleApartmentsUpdate = useCallback(
     (updatedApartments: PropertyData[]) => {
       setFilteredApartments(updatedApartments);
-      setCurrentPage(1); // Reset to first page when filters change
+      // Сбрасываем страницу только если количество апартаментов изменилось
+      const newTotalPages = Math.ceil(updatedApartments.length / itemsPerPage);
+      if (currentPage > newTotalPages) {
+        setCurrentPage(1);
+        updateUrlWithPage(1);
+      }
     },
-    []
+    [currentPage, itemsPerPage]
   );
 
   // Pagination logic
@@ -789,6 +826,7 @@ export default function ApartmentsPageClient({
   // Pagination handlers
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    updateUrlWithPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
