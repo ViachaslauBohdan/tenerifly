@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import ToursFilter from "./ToursFilter";
 import TourCard from "./TourCard";
 import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
@@ -548,7 +548,7 @@ const getLoadingToursText = (language: string) => {
     fr: "Chargement des excursions...",
     uk: "Завантаження екскурсій...",
     de: "Laden von Touren...",
-    es: "Cargando excursiones..."
+    es: "Cargando excursiones...",
   };
   return texts[language] || texts.en;
 };
@@ -625,8 +625,15 @@ interface Tour {
   [key: string]: any; // для дополнительных полей
 }
 
-export default function ToursPage() {
+interface ToursPageClientProps {
+  initialTours?: any[];
+}
+
+export default function ToursPageClient({
+  initialTours,
+}: ToursPageClientProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   >("en");
@@ -672,9 +679,19 @@ export default function ToursPage() {
       tickets: false,
     };
   });
+
+  // Инициализация текущей страницы из URL параметров
+  const [currentPage, setCurrentPage] = useState(() => {
+    if (searchParams) {
+      const page = searchParams.get("page");
+      return page ? parseInt(page, 10) : 1;
+    }
+    return 1;
+  });
   // Исправляем тип для tours
-  const [tours, setTours] = useState<Tour[]>([]);
-  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const [tours, setTours] = useState<Tour[]>(initialTours || []);
+  const [initialLoadComplete, setInitialLoadComplete] =
+    useState(!!initialTours);
 
   // Используем хук синхронизации фильтров с URL
   const {
@@ -686,8 +703,6 @@ export default function ToursPage() {
     onFiltersChange: setFilters,
   });
 
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12); // Show 12 tours per page
 
   // Функция для создания заголовков с авторизацией
@@ -699,8 +714,14 @@ export default function ToursPage() {
     };
   };
 
-  // Загружаем все экскурсии при первой загрузке
+  // Загружаем все экскурсии только если нет initialTours
   useEffect(() => {
+    if (initialTours) {
+      setTours(initialTours);
+      setInitialLoadComplete(true);
+      return;
+    }
+
     const loadAllTours = async () => {
       try {
         const apiUrl =
@@ -728,7 +749,7 @@ export default function ToursPage() {
     };
 
     loadAllTours();
-  }, []);
+  }, [initialTours]);
 
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
@@ -746,6 +767,17 @@ export default function ToursPage() {
     }
   }, []);
 
+  // Синхронизация текущей страницы с URL при изменении searchParams
+  useEffect(() => {
+    if (searchParams) {
+      const page = searchParams.get("page");
+      const newPage = page ? parseInt(page, 10) : 1;
+      if (newPage !== currentPage) {
+        setCurrentPage(newPage);
+      }
+    }
+  }, [searchParams, currentPage]);
+
   // Сохранение языка в localStorage
   const handleLanguageChange = (
     langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
@@ -761,12 +793,36 @@ export default function ToursPage() {
 
   const handleFilterChange = (key: string, value: string | boolean) => {
     handleFilterChangeSync(key, value);
+    // Сбрасываем страницу при изменении фильтров
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+      updateUrlWithPage(1);
+    }
   };
 
   // Теперь функция принимает правильный тип
   const handleToursUpdate = (updatedTours: Tour[]) => {
     setTours(updatedTours);
-    setCurrentPage(1); // Reset to first page when filters change
+    // Сбрасываем страницу только если количество туров изменилось
+    const newTotalPages = Math.ceil(updatedTours.length / itemsPerPage);
+    if (currentPage > newTotalPages) {
+      setCurrentPage(1);
+      updateUrlWithPage(1);
+    }
+  };
+
+  // Функция для обновления URL с пагинацией
+  const updateUrlWithPage = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (page === 1) {
+      params.delete("page");
+    } else {
+      params.set("page", page.toString());
+    }
+    const queryString = params.toString();
+    const path = "/tours";
+    const url = queryString ? `${path}?${queryString}` : path;
+    router.replace(url, { scroll: false });
   };
 
   // Pagination logic
@@ -778,6 +834,7 @@ export default function ToursPage() {
   // Pagination handlers
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    updateUrlWithPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -1022,11 +1079,17 @@ export default function ToursPage() {
                           ? "Next"
                           : language === "ru"
                             ? "Вперед"
-                            : language === "pl"
-                              ? "Następna"
-                              : language === "fr"
-                                ? "Suivant"
-                                : "Наступна"}
+                            : language === "uk"
+                              ? "Далі"
+                              : language === "de"
+                                ? "Weiter"
+                                : language === "pl"
+                                  ? "Następna"
+                                  : language === "fr"
+                                    ? "Suivant"
+                                    : language === "es"
+                                      ? "Siguiente"
+                                      : "Наступна"}
                         <svg
                           className="w-4 h-4"
                           fill="none"

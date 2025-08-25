@@ -2,11 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import ApartmentCard from "./ApartmentCard";
 import ApartmentsFilter from "./ApartmentsFilter";
 import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
+import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 
 // ... (оставляем все переводы и languages как есть)
 
@@ -554,12 +556,24 @@ interface PropertyData {
   } | null;
 }
 
-export default function ApartmentsPage() {
+interface ApartmentsPageClientProps {
+  initialProperties?: any[];
+}
+
+interface ApartmentsPageClientProps {
+  initialProperties?: any[];
+}
+
+export default function ApartmentsPageClient({
+  initialProperties,
+}: ApartmentsPageClientProps) {
   const searchParams = useSearchParams();
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   >("en");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [bookingItem, setBookingItem] = useState<any>(null);
 
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<FilterParams>(() => {
@@ -621,11 +635,14 @@ export default function ApartmentsPage() {
   });
 
   // Состояния для всех и отфильтрованных апартаментов
-  const [allApartments, setAllApartments] = useState<PropertyData[]>([]);
-  const [filteredApartments, setFilteredApartments] = useState<PropertyData[]>(
-    []
+  const [allApartments, setAllApartments] = useState<PropertyData[]>(
+    initialProperties || []
   );
-  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const [filteredApartments, setFilteredApartments] = useState<PropertyData[]>(
+    initialProperties || []
+  );
+  const [initialLoadComplete, setInitialLoadComplete] =
+    useState(!!initialProperties);
 
   // Используем хук синхронизации фильтров с URL
   const {
@@ -650,8 +667,15 @@ export default function ApartmentsPage() {
     };
   };
 
-  // Загружаем все апартаменты только один раз при первой загрузке
+  // Загружаем все апартаменты только если нет initialProperties
   useEffect(() => {
+    if (initialProperties) {
+      setAllApartments(initialProperties);
+      setFilteredApartments(initialProperties);
+      setInitialLoadComplete(true);
+      return;
+    }
+
     const loadAllApartments = async () => {
       try {
         const apiUrl =
@@ -682,7 +706,7 @@ export default function ApartmentsPage() {
     };
 
     loadAllApartments();
-  }, []);
+  }, [initialProperties]);
 
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);

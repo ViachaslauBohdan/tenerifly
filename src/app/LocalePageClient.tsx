@@ -1100,7 +1100,16 @@ const carMarks = [
   { value: "SEAT", label: "SEAT" },
 ];
 
-export function LocalePageClient() {
+interface LocalePageClientProps {
+  initialData?: {
+    properties: any[];
+    cars: any[];
+    tours: any[];
+    blogs: any[];
+  };
+}
+
+export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const router = useRouter();
 
   // State для языка
@@ -1185,9 +1194,18 @@ export function LocalePageClient() {
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
 
-  // Загрузка данных из нового хука
+  // Используем initialData если доступно, иначе загружаем через хук
+  const dataFromHook = useDataLoader(mounted, language);
   const { excursions, cars, accommodation, blogPosts, dataLoading } =
-    useDataLoader(mounted, language);
+    initialData
+      ? {
+          excursions: initialData.tours || [],
+          cars: initialData.cars || [],
+          accommodation: initialData.properties || [],
+          blogPosts: initialData.blogs || [],
+          dataLoading: false,
+        }
+      : dataFromHook;
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
@@ -2314,99 +2332,103 @@ export function LocalePageClient() {
             <EmptyState type="empty" />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {accommodation.map((place, index) => (
-                <div
-                  key={place.id || index}
-                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                >
-                  <div className="aspect-video relative overflow-hidden">
-                    <img
-                      src={place.image || "/placeholder.svg"}
-                      alt={place.title}
-                      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                      onClick={() =>
-                        router.push(`/apartments/${place.documentId}`)
-                      }
-                    />
-                    <div className="absolute top-2 right-2">
-                      <button
-                        onClick={() =>
-                          router.push(`/apartments/${place.documentId}`)
-                        }
-                        className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
-                      >
-                        <svg
-                          className="w-4 h-4 text-gray-700"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {place.title}
-                      </h3>
-                      <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium text-yellow-700">
-                          {place.rating}
-                        </span>
+              {accommodation.map(
+                (place, index) =>
+                  index < 3 && (
+                    <div
+                      key={place.id || index}
+                      className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                    >
+                      <div className="aspect-video relative overflow-hidden">
+                        <img
+                          src={place.image || "/placeholder.svg"}
+                          alt={place.title}
+                          className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                          onClick={() =>
+                            router.push(`/apartments/${place.documentId}`)
+                          }
+                        />
+                        <div className="absolute top-2 right-2">
+                          <button
+                            onClick={() =>
+                              router.push(`/apartments/${place.documentId}`)
+                            }
+                            className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
+                          >
+                            <svg
+                              className="w-4 h-4 text-gray-700"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div className="p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {place.title}
+                          </h3>
+                          <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
+                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                            <span className="text-sm font-medium text-yellow-700">
+                              {place.rating}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                          {place.description}
+                        </p>
+                        <div className="space-y-2 mb-6">
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <MapPin className="w-4 h-4" />
+                            <span>
+                              {t.sections.accommodation.location}:{" "}
+                              {place.location}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Home className="w-4 h-4" />
+                            <span>
+                              {t.sections.accommodation.amenities}:{" "}
+                              {place.amenities}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Euro className="w-4 h-4" />
+                            <span>{place.price}</span>
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <button
+                            onClick={() =>
+                              openBookingModal("accommodation", {
+                                title: place.title,
+                                price: place.price,
+                                currency: place.currency,
+                                duration: place.duration,
+                                language: place.language,
+                                brand: place.brand,
+                                model: place.model,
+                                contact: place.contact,
+                              })
+                            }
+                            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            {t.common.bookNow}
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                      {place.description}
-                    </p>
-                    <div className="space-y-2 mb-6">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <MapPin className="w-4 h-4" />
-                        <span>
-                          {t.sections.accommodation.location}: {place.location}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Home className="w-4 h-4" />
-                        <span>
-                          {t.sections.accommodation.amenities}:{" "}
-                          {place.amenities}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Euro className="w-4 h-4" />
-                        <span>{place.price}</span>
-                      </div>
-                    </div>
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() =>
-                          openBookingModal("accommodation", {
-                            title: place.title,
-                            price: place.price,
-                            currency: place.currency,
-                            duration: place.duration,
-                            language: place.language,
-                            brand: place.brand,
-                            model: place.model,
-                            contact: place.contact,
-                          })
-                        }
-                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        {t.common.bookNow}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  )
+              )}
             </div>
           )}
         </div>
@@ -2439,93 +2461,98 @@ export function LocalePageClient() {
             <EmptyState type="empty" />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {cars.map((car, index) => (
-                <div
-                  key={car.id || index}
-                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                >
-                  <div className="aspect-video relative overflow-hidden">
-                    <img
-                      src={car.image || "/placeholder.svg"}
-                      alt={car.title}
-                      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                      onClick={() => router.push(`/cars/${car.documentId}`)}
-                    />
-                    <div className="absolute top-2 right-2">
-                      <button
-                        onClick={() => router.push(`/cars/${car.documentId}`)}
-                        className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
-                      >
-                        <svg
-                          className="w-4 h-4 text-gray-700"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {car.title}
-                      </h3>
-                      <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium text-yellow-700">
-                          {car.rating}
-                        </span>
+              {cars.map(
+                (car, index) =>
+                  index < 3 && (
+                    <div
+                      key={car.id || index}
+                      className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                    >
+                      <div className="aspect-video relative overflow-hidden">
+                        <img
+                          src={car.image || "/placeholder.svg"}
+                          alt={car.title}
+                          className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                          onClick={() => router.push(`/cars/${car.documentId}`)}
+                        />
+                        <div className="absolute top-2 right-2">
+                          <button
+                            onClick={() =>
+                              router.push(`/cars/${car.documentId}`)
+                            }
+                            className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
+                          >
+                            <svg
+                              className="w-4 h-4 text-gray-700"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div className="p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {car.title}
+                          </h3>
+                          <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
+                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                            <span className="text-sm font-medium text-yellow-700">
+                              {car.rating}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                          {car.description}
+                        </p>
+                        <div className="space-y-2 mb-6">
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Car className="w-4 h-4" />
+                            <span>
+                              {t.sections.cars.transmission}: {car.transmission}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Home className="w-4 h-4" />
+                            <span>
+                              {t.sections.cars.features}: {car.features}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Euro className="w-4 h-4" />
+                            <span>{car.price}</span>
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <button
+                            onClick={() =>
+                              openBookingModal("car", {
+                                title: car.title,
+                                price: car.price,
+                                brand: car.brand,
+                                model: car.model,
+                                duration: car.duration,
+                                language: car.language,
+                                contact: car.contact,
+                              })
+                            }
+                            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            {t.common.bookNow}
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                      {car.description}
-                    </p>
-                    <div className="space-y-2 mb-6">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Car className="w-4 h-4" />
-                        <span>
-                          {t.sections.cars.transmission}: {car.transmission}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Home className="w-4 h-4" />
-                        <span>
-                          {t.sections.cars.features}: {car.features}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Euro className="w-4 h-4" />
-                        <span>{car.price}</span>
-                      </div>
-                    </div>
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() =>
-                          openBookingModal("car", {
-                            title: car.title,
-                            price: car.price,
-                            brand: car.brand,
-                            model: car.model,
-                            duration: car.duration,
-                            language: car.language,
-                            contact: car.contact,
-                          })
-                        }
-                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        {t.common.bookNow}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  )
+              )}
             </div>
           )}
         </div>
@@ -2564,105 +2591,108 @@ export function LocalePageClient() {
                   excursions.length
                 );
                 console.log("🎨 Excursions data:", excursions);
-                return excursions.map((excursion, index) => (
-                  <div
-                    key={excursion.id || index}
-                    className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                  >
-                    <div className="aspect-video relative overflow-hidden">
-                      <img
-                        src={excursion.image || "/placeholder.svg"}
-                        alt={excursion.title}
-                        className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                        onClick={() =>
-                          router.push(
-                            `/tours/${excursion.documentId || index + 1}`
-                          )
-                        }
-                      />
-                      <div className="absolute top-2 right-2">
-                        <button
-                          onClick={() =>
-                            router.push(
-                              `/tours/${excursion.documentId || index + 1}`
-                            )
-                          }
-                          className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
-                        >
-                          <svg
-                            className="w-4 h-4 text-gray-700"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                    <div className="p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          {excursion.title}
-                        </h3>
-                        <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
-                          <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                          <span className="text-sm font-medium text-yellow-700">
-                            {excursion.rating}
-                          </span>
+                return excursions.map(
+                  (excursion, index) =>
+                    index < 3 && (
+                      <div
+                        key={excursion.id || index}
+                        className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                      >
+                        <div className="aspect-video relative overflow-hidden">
+                          <img
+                            src={excursion.image || "/placeholder.svg"}
+                            alt={excursion.title}
+                            className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                            onClick={() =>
+                              router.push(
+                                `/tours/${excursion.documentId || index + 1}`
+                              )
+                            }
+                          />
+                          <div className="absolute top-2 right-2">
+                            <button
+                              onClick={() =>
+                                router.push(
+                                  `/tours/${excursion.documentId || index + 1}`
+                                )
+                              }
+                              className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
+                            >
+                              <svg
+                                className="w-4 h-4 text-gray-700"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                        <div className="p-6">
+                          <div className="flex justify-between items-start mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {excursion.title}
+                            </h3>
+                            <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
+                              <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                              <span className="text-sm font-medium text-yellow-700">
+                                {excursion.rating}
+                              </span>
+                            </div>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                            {excursion.description}
+                          </p>
+                          <div className="space-y-2 mb-6">
+                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                              <Clock className="w-4 h-4" />
+                              <span>
+                                {t.sections.excursions.duration}:{" "}
+                                {excursion.duration}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                              <Users className="w-4 h-4" />
+                              <span>
+                                {t.sections.excursions.groupSize}:{" "}
+                                {excursion.groupSize}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                              <Euro className="w-4 h-4" />
+                              <span>
+                                {t.sections.excursions.price}: {excursion.price}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() =>
+                                openBookingModal("excursion", {
+                                  title: excursion.title,
+                                  price: excursion.price,
+                                  duration: excursion.duration,
+                                  language: "English",
+                                  brand: excursion.brand,
+                                  model: excursion.model,
+                                  contact: excursion.contact,
+                                })
+                              }
+                              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                              {t.common.bookNow}
+                            </button>
+                          </div>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                        {excursion.description}
-                      </p>
-                      <div className="space-y-2 mb-6">
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Clock className="w-4 h-4" />
-                          <span>
-                            {t.sections.excursions.duration}:{" "}
-                            {excursion.duration}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Users className="w-4 h-4" />
-                          <span>
-                            {t.sections.excursions.groupSize}:{" "}
-                            {excursion.groupSize}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Euro className="w-4 h-4" />
-                          <span>
-                            {t.sections.excursions.price}: {excursion.price}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() =>
-                            openBookingModal("excursion", {
-                              title: excursion.title,
-                              price: excursion.price,
-                              duration: excursion.duration,
-                              language: "English",
-                              brand: excursion.brand,
-                              model: excursion.model,
-                              contact: excursion.contact,
-                            })
-                          }
-                          className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                          {t.common.bookNow}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ));
+                    )
+                );
               })()}
             </div>
           )}
@@ -2696,91 +2726,99 @@ export function LocalePageClient() {
             <EmptyState type="empty" />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogPosts.map((post, index) => (
-                <div
-                  key={post.id || index}
-                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                >
-                  <div className="aspect-video relative overflow-hidden">
-                    <img
-                      src={post.image || "/placeholder.svg"}
-                      alt={post.title}
-                      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                      onClick={() =>
-                        router.push(`/blog/${post.documentId || index + 1}`)
-                      }
-                    />
-                    <div className="absolute top-2 right-2">
-                      <button
-                        onClick={() =>
-                          router.push(`/blog/${post.documentId || index + 1}`)
-                        }
-                        className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
-                      >
-                        <svg
-                          className="w-4 h-4 text-gray-700"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {post.title}
-                      </h3>
-                      <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium text-yellow-700">
-                          {post.rating}
-                        </span>
+              {blogPosts.map(
+                (post, index) =>
+                  index < 3 && (
+                    <div
+                      key={post.id || index}
+                      className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                    >
+                      <div className="aspect-video relative overflow-hidden">
+                        <img
+                          src={post.image || "/placeholder.svg"}
+                          alt={post.title}
+                          className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                          onClick={() =>
+                            router.push(`/blog/${post.documentId || index + 1}`)
+                          }
+                        />
+                        <div className="absolute top-2 right-2">
+                          <button
+                            onClick={() =>
+                              router.push(
+                                `/blog/${post.documentId || index + 1}`
+                              )
+                            }
+                            className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
+                          >
+                            <svg
+                              className="w-4 h-4 text-gray-700"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div className="p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {post.title}
+                          </h3>
+                          <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
+                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                            <span className="text-sm font-medium text-yellow-700">
+                              {post.rating}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                          {post.description}
+                        </p>
+                        <div className="space-y-2 mb-6">
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <User className="w-4 h-4" />
+                            <span>
+                              {t.sections.blog.author}: {post.author}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Clock className="w-4 h-4" />
+                            <span>
+                              {t.sections.blog.readTime}: {post.readTime}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Calendar className="w-4 h-4" />
+                            <span>
+                              {t.sections.blog.publishedDate}:{" "}
+                              {post.publishedDate}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() =>
+                              router.push(
+                                `/blog/${post.documentId || index + 1}`
+                              )
+                            }
+                            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            {t.common.readMore}
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                      {post.description}
-                    </p>
-                    <div className="space-y-2 mb-6">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <User className="w-4 h-4" />
-                        <span>
-                          {t.sections.blog.author}: {post.author}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Clock className="w-4 h-4" />
-                        <span>
-                          {t.sections.blog.readTime}: {post.readTime}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Calendar className="w-4 h-4" />
-                        <span>
-                          {t.sections.blog.publishedDate}: {post.publishedDate}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() =>
-                          router.push(`/blog/${post.documentId || index + 1}`)
-                        }
-                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        {t.common.readMore}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  )
+              )}
             </div>
           )}
         </div>

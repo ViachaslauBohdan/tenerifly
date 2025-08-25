@@ -7,6 +7,7 @@ import CarCard from "./CarCard";
 import CarsFilter from "./CarsFilter";
 import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
+import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 
 // Переводы для всех языков
 const translations = {
@@ -605,7 +606,11 @@ interface CarData {
   } | null;
 }
 
-export default function CarsPage() {
+interface CarsPageClientProps {
+  initialCars?: any[];
+}
+
+export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
   const searchParams = useSearchParams();
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
@@ -668,9 +673,13 @@ export default function CarsPage() {
   });
 
   // Состояния для всех и отфильтрованных автомобилей
-  const [allCars, setAllCars] = useState<CarData[]>([]);
-  const [filteredCars, setFilteredCars] = useState<CarData[]>([]);
-  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const [allCars, setAllCars] = useState<CarData[]>(initialCars || []);
+  const [filteredCars, setFilteredCars] = useState<CarData[]>(
+    initialCars || []
+  );
+  const [initialLoadComplete, setInitialLoadComplete] = useState(!!initialCars);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [bookingItem, setBookingItem] = useState<any>(null);
 
   // Используем хук синхронизации фильтров с URL
   const {
@@ -695,27 +704,36 @@ export default function CarsPage() {
     };
   };
 
-  // Загружаем все машины только один раз при первой загрузке
+  // Загружаем все автомобили только если нет initialCars
   useEffect(() => {
+    if (initialCars) {
+      setAllCars(initialCars);
+      setFilteredCars(initialCars);
+      setInitialLoadComplete(true);
+      return;
+    }
+
     const loadAllCars = async () => {
       try {
         const apiUrl =
-          process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
-        console.log("Page API URL:", apiUrl);
+          process.env.NEXT_PUBLIC_STRAPI_API_URL ||
+          "https://tenerifly-strapi-production.up.railway.app";
 
-        const response = await fetch(`${apiUrl}/api/cars/?populate=*`, {
-          headers: getAuthHeaders(),
-        });
+        const response = await fetch(
+          `${apiUrl}/api/cars?populate=*&pagination[pageSize]=1000`,
+          {
+            headers: getAuthHeaders(),
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-
         if (data.data) {
           setAllCars(data.data);
-          setFilteredCars(data.data); // Изначально показываем все
+          setFilteredCars(data.data);
         }
       } catch (error) {
         console.error("Error loading cars:", error);
@@ -725,7 +743,7 @@ export default function CarsPage() {
     };
 
     loadAllCars();
-  }, []);
+  }, [initialCars]);
 
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
