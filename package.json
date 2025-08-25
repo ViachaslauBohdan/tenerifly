@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "preload-images": "node scripts/preload-images.js",
+    "build": "npm run preload-images && next build",
+    "build:fast": "next build",
     "start": "next start",
     "lint": "next lint"
   },
