@@ -193,10 +193,10 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
         // Параллельная загрузка всех данных
         const [toursResult, carsResult, propertiesResult, blogsResult] =
           await Promise.allSettled([
-            fetchFromStrapi("/tours/?populate=*&pagination[pageSize]=3"),
-            fetchFromStrapi("/cars/?populate=*&pagination[pageSize]=3"),
-            fetchFromStrapi("/properties/?populate=*&pagination[pageSize]=3"),
-            fetchFromStrapi("/blog-posts/?populate=*&pagination[pageSize]=3"),
+            fetchFromStrapi("/tours/?populate=*&pagination[pageSize]=1000"),
+            fetchFromStrapi("/cars/?populate=*&pagination[pageSize]=1000"),
+            fetchFromStrapi("/properties/?populate=*&pagination[pageSize]=1000"),
+            fetchFromStrapi("/blog-posts/?populate=*&pagination[pageSize]=1000"),
           ]);
 
         // Обработка туров
