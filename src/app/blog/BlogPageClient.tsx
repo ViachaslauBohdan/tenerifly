@@ -253,6 +253,7 @@ interface BlogPost {
     url: string;
     alternativeText?: string;
   };
+  documentId?: string;
   publishedAt: string;
   reading_time?: number;
   category?: string;
@@ -572,7 +573,7 @@ export default function BlogPageClient({ initialBlogs }: BlogPageClientProps) {
 
                   {/* Read More Button */}
                   <Link
-                    href={`/blog/${post.id}`}
+                    href={`/blog/${post.documentId}`}
                     className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
                   >
                     {t.readMore}
