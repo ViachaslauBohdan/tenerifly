@@ -235,7 +235,9 @@ export async function getPropertyById(id: string) {
   // Предзагружаем изображения во время сборки (не критично для сборки)
   if (process.env.NODE_ENV === "production") {
     try {
-      const { preloadPropertyImages } = await import("./imageCacheService");
+      const { preloadPropertyImages } = await import(
+        "./universalImageCacheService"
+      );
       await preloadPropertyImages(property);
     } catch (error) {
       // Логируем ошибку, но не прерываем сборку
@@ -251,14 +253,76 @@ export async function getPropertyById(id: string) {
   return property;
 }
 
+// Получение блога по ID
+export async function getBlogById(id: string) {
+  const blog = await fetchWithCache(
+    `/blog-posts/${id}?populate=*`,
+    `blog-${id}`
+  );
+
+  // Предзагружаем изображения во время сборки (не критично для сборки)
+  if (process.env.NODE_ENV === "production") {
+    try {
+      const { preloadBlogImages } = await import(
+        "./universalImageCacheService"
+      );
+      await preloadBlogImages(blog);
+    } catch (error) {
+      // Логируем ошибку, но не прерываем сборку
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      console.warn(`⚠️ Image preloading failed for blog ${id}:`, errorMessage);
+    }
+  }
+
+  return blog;
+}
+
+// Получение тура по ID
+export async function getTourById(id: string) {
+  const tour = await fetchWithCache(`/tours/${id}?populate=*`, `tour-${id}`);
+
+  // Предзагружаем изображения во время сборки (не критично для сборки)
+  if (process.env.NODE_ENV === "production") {
+    try {
+      const { preloadTourImages } = await import(
+        "./universalImageCacheService"
+      );
+      await preloadTourImages(tour);
+    } catch (error) {
+      // Логируем ошибку, но не прерываем сборку
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      console.warn(`⚠️ Image preloading failed for tour ${id}:`, errorMessage);
+    }
+  }
+
+  return tour;
+}
+
+// Получение машины по ID
+export async function getCarById(id: string) {
+  const car = await fetchWithCache(`/cars/${id}?populate=*`, `car-${id}`);
+
+  // Предзагружаем изображения во время сборки (не критично для сборки)
+  if (process.env.NODE_ENV === "production") {
+    try {
+      const { preloadCarImages } = await import("./universalImageCacheService");
+      await preloadCarImages(car);
+    } catch (error) {
+      // Логируем ошибку, но не прерываем сборку
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      console.warn(`⚠️ Image preloading failed for car ${id}:`, errorMessage);
+    }
+  }
+
+  return car;
+}
+
 // Получение всех ID автомобилей для генерации статических путей
 export async function getAllCarIds() {
   return fetchWithCache("/cars?fields=id&pagination[pageSize]=1000", "car-ids");
-}
-
-// Получение автомобиля по ID
-export async function getCarById(id: string) {
-  return fetchWithCache(`/cars/${id}?populate=*`, `car-${id}`);
 }
 
 // Получение всех ID экскурсий для генерации статических путей
@@ -269,22 +333,12 @@ export async function getAllTourIds() {
   );
 }
 
-// Получение экскурсии по ID
-export async function getTourById(id: string) {
-  return fetchWithCache(`/tours/${id}?populate=*`, `tour-${id}`);
-}
-
 // Получение всех ID блогов для генерации статических путей
 export async function getAllBlogIds() {
   return fetchWithCache(
     "/blog-posts?fields=id&pagination[pageSize]=1000",
     "blog-ids"
   );
-}
-
-// Получение блога по ID
-export async function getBlogById(id: string) {
-  return fetchWithCache(`/blog-posts/${id}?populate=*`, `blog-${id}`);
 }
 
 // Получение данных для главной страницы с трансформацией

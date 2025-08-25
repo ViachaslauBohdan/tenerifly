@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPropertyIds, getPropertyById } from "@/services/ssgDataService";
 import PropertyDetailPageClient from "./PropertyDetailPageClient";
-import BuildTimeImagePreloader from "./BuildTimeImagePreloader";
+import UniversalBuildTimeImagePreloader from "@/components/UniversalBuildTimeImagePreloader";
 
 // ISR настройки - обновление каждые 24 часа
 export const revalidate = 86400;
@@ -114,7 +114,10 @@ export default async function PropertyDetailPage({
 
     return (
       <>
-        <BuildTimeImagePreloader property={property} />
+        <UniversalBuildTimeImagePreloader
+          content={property}
+          contentType="properties"
+        />
         <PropertyDetailPageClient property={property} />
       </>
     );

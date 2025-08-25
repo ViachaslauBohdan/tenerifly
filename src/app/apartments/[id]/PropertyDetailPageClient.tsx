@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/carousel";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import ImagePreloader from "./ImagePreloader";
-import { getCachedImageUrl } from "@/services/imageCacheService";
+import { getCachedImageUrl } from "@/services/universalImageCacheService";
 
 // Переводы для всех языков
 const translations = {
