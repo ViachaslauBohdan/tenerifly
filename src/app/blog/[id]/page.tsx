@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllBlogIds, getBlogById } from "@/services/ssgDataService";
-import UniversalBuildTimeImagePreloader from "@/components/UniversalBuildTimeImagePreloader";
 import BlogDetailPageClient from "./BlogDetailPageClient";
 
 // ISR настройки - обновление каждые 24 часа
@@ -106,12 +105,7 @@ export default async function BlogDetailPage({
       notFound();
     }
 
-    return (
-      <>
-        <UniversalBuildTimeImagePreloader content={blog} contentType="blogs" />
-        <BlogDetailPageClient blog={blog} />
-      </>
-    );
+    return <BlogDetailPageClient blog={blog} />;
   } catch (error) {
     console.error("Error loading blog:", error);
     notFound();

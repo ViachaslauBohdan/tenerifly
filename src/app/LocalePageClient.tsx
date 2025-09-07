@@ -1135,7 +1135,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     priceFrom: "",
     priceTo: "",
     city: "",
-    district: "",
+    district: "Tenerife",
     type: "rent", // rent or sale
   });
 

@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { getCachedImageUrl } from "@/services/universalImageCacheService";
 
 interface BlogPost {
   id: number;
@@ -41,11 +40,16 @@ interface BlogDetailPageClientProps {
 export default function BlogDetailPageClient({
   blog,
 }: BlogDetailPageClientProps) {
-  // Функция для получения оптимизированного URL изображения с кэшированием
+  // Функция для получения URL изображения (динамическая загрузка)
   const getImageUrl = (post: BlogPost) => {
     // Приоритет: новые images -> featured_image
     if (post.images && post.images.length > 0) {
-      return getCachedImageUrl(post.images[0].url, "large");
+      const imageUrl = post.images[0].url;
+      if (imageUrl.startsWith("http")) {
+        return imageUrl;
+      }
+      const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://tenerifly-strapi-production.up.railway.app";
+      return `${apiUrl}${imageUrl}`;
     }
 
     if (post.featured_image && post.featured_image.url) {

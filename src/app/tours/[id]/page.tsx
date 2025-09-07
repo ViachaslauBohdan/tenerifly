@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllTourIds, getTourById } from "@/services/ssgDataService";
-import UniversalBuildTimeImagePreloader from "@/components/UniversalBuildTimeImagePreloader";
 import TourDetailPageClient from "./client";
 
 // ISR настройки - обновление каждые 24 часа
@@ -105,12 +104,7 @@ export default async function TourDetailPage({
       notFound();
     }
 
-    return (
-      <>
-        <UniversalBuildTimeImagePreloader content={tour} contentType="tours" />
-        <TourDetailPageClient tour={tour} />
-      </>
-    );
+    return <TourDetailPageClient tour={tour} />;
   } catch (error) {
     console.error("Error loading tour:", error);
     notFound();
