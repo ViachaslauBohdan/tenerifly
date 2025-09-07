@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllCarIds, getCarById } from "@/services/ssgDataService";
-import UniversalBuildTimeImagePreloader from "@/components/UniversalBuildTimeImagePreloader";
 import CarDetailPageClient from "./client";
 
 // ISR настройки - обновление каждые 24 часа
@@ -109,12 +108,7 @@ export default async function CarDetailPage({
       notFound();
     }
 
-    return (
-      <>
-        <UniversalBuildTimeImagePreloader content={car} contentType="cars" />
-        <CarDetailPageClient car={car} />
-      </>
-    );
+    return <CarDetailPageClient car={car} />;
   } catch (error) {
     console.error("Error loading car:", error);
     notFound();

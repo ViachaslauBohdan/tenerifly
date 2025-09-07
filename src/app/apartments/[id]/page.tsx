@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPropertyIds, getPropertyById } from "@/services/ssgDataService";
 import PropertyDetailPageClient from "./PropertyDetailPageClient";
-import UniversalBuildTimeImagePreloader from "@/components/UniversalBuildTimeImagePreloader";
 
 // ISR настройки - обновление каждые 24 часа
 export const revalidate = 86400;
@@ -112,15 +111,7 @@ export default async function PropertyDetailPage({
       notFound();
     }
 
-    return (
-      <>
-        <UniversalBuildTimeImagePreloader
-          content={property}
-          contentType="properties"
-        />
-        <PropertyDetailPageClient property={property} />
-      </>
-    );
+    return <PropertyDetailPageClient property={property} />;
   } catch (error) {
     console.error("Error loading property:", error);
     notFound();

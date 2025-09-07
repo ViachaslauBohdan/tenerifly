@@ -18,7 +18,7 @@ const getAuthHeaders = () => {
 };
 
 // Функция для получения URL изображения
-const getImageUrl = (item: any): string => {
+const getImageUrl = (item: { images?: Array<{ url: string }>; image?: { url: string } }): string => {
   if (item.images && item.images.length > 0) {
     if (item.images[0].url.startsWith("http")) {
       return item.images[0].url;
@@ -232,23 +232,7 @@ export async function getPropertyById(id: string) {
     `property-${id}`
   );
 
-  // Предзагружаем изображения во время сборки (не критично для сборки)
-  if (process.env.NODE_ENV === "production") {
-    try {
-      const { preloadPropertyImages } = await import(
-        "./universalImageCacheService"
-      );
-      await preloadPropertyImages(property);
-    } catch (error) {
-      // Логируем ошибку, но не прерываем сборку
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-      console.warn(
-        `⚠️ Image preloading failed for property ${id}:`,
-        errorMessage
-      );
-    }
-  }
+  // Изображения загружаются динамически, без предзагрузки в SSG
 
   return property;
 }
@@ -260,20 +244,7 @@ export async function getBlogById(id: string) {
     `blog-${id}`
   );
 
-  // Предзагружаем изображения во время сборки (не критично для сборки)
-  if (process.env.NODE_ENV === "production") {
-    try {
-      const { preloadBlogImages } = await import(
-        "./universalImageCacheService"
-      );
-      await preloadBlogImages(blog);
-    } catch (error) {
-      // Логируем ошибку, но не прерываем сборку
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-      console.warn(`⚠️ Image preloading failed for blog ${id}:`, errorMessage);
-    }
-  }
+  // Изображения загружаются динамически, без предзагрузки в SSG
 
   return blog;
 }
@@ -282,20 +253,7 @@ export async function getBlogById(id: string) {
 export async function getTourById(id: string) {
   const tour = await fetchWithCache(`/tours/${id}?populate=*`, `tour-${id}`);
 
-  // Предзагружаем изображения во время сборки (не критично для сборки)
-  if (process.env.NODE_ENV === "production") {
-    try {
-      const { preloadTourImages } = await import(
-        "./universalImageCacheService"
-      );
-      await preloadTourImages(tour);
-    } catch (error) {
-      // Логируем ошибку, но не прерываем сборку
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-      console.warn(`⚠️ Image preloading failed for tour ${id}:`, errorMessage);
-    }
-  }
+  // Изображения загружаются динамически, без предзагрузки в SSG
 
   return tour;
 }
@@ -304,18 +262,7 @@ export async function getTourById(id: string) {
 export async function getCarById(id: string) {
   const car = await fetchWithCache(`/cars/${id}?populate=*`, `car-${id}`);
 
-  // Предзагружаем изображения во время сборки (не критично для сборки)
-  if (process.env.NODE_ENV === "production") {
-    try {
-      const { preloadCarImages } = await import("./universalImageCacheService");
-      await preloadCarImages(car);
-    } catch (error) {
-      // Логируем ошибку, но не прерываем сборку
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-      console.warn(`⚠️ Image preloading failed for car ${id}:`, errorMessage);
-    }
-  }
+  // Изображения загружаются динамически, без предзагрузки в SSG
 
   return car;
 }
@@ -355,7 +302,7 @@ export async function getHomePageData(language: string = "en") {
     // Трансформация туров
     const tours =
       toursResult.status === "fulfilled"
-        ? toursResult.value.map((tour: any) => ({
+        ? toursResult.value.map((tour: { id: number; documentId: string; name?: string; title?: string; description?: string; duration?: string; price?: { amount: number }; cost?: number; pricing?: { amount: number }; maxGroupSize?: number; max_group_size?: number; images?: Array<{ url: string }> }) => ({
             id: tour.id,
             documentId: tour.documentId,
             title: tour.name || tour.title || "Tour",
@@ -372,7 +319,7 @@ export async function getHomePageData(language: string = "en") {
     // Трансформация автомобилей
     const cars =
       carsResult.status === "fulfilled"
-        ? carsResult.value.map((car: any) => ({
+        ? carsResult.value.map((car: { id: number; documentId: string; title?: string; description?: string; specifications?: { make?: string; model?: string; transmission?: string; seats?: number; fuel?: string; year?: number }; features?: { air_conditioning?: boolean; bluetooth?: boolean }; rental_prices?: { day_1?: number }; location?: { city?: string; region?: string }; type?: string; car_status?: string; images?: Array<{ url: string }> }) => ({
             id: car.id,
             documentId: car.documentId,
             title:
@@ -407,7 +354,7 @@ export async function getHomePageData(language: string = "en") {
     // Трансформация недвижимости
     const properties =
       propertiesResult.status === "fulfilled"
-        ? propertiesResult.value.map((property: any) => ({
+        ? propertiesResult.value.map((property: { id: number; documentId: string; title?: string; description?: string; type?: string; location?: { city?: string }; category?: string; specifications?: { bedrooms?: number; bathrooms?: number }; price?: { amount: number }; contact?: { name?: string; email?: string; phone?: string }; images?: Array<{ url: string }> }) => ({
             id: property.id,
             documentId: property.documentId,
             title: property.title || "Property",
@@ -434,7 +381,7 @@ export async function getHomePageData(language: string = "en") {
     // Трансформация блогов
     const blogs =
       blogsResult.status === "fulfilled"
-        ? blogsResult.value.map((blog: any) => ({
+        ? blogsResult.value.map((blog: { id: number; documentId: string; title?: string; excerpt?: string; description?: string; author?: string; readTime?: number; read_time?: number; publishedAt?: string; images?: Array<{ url: string }> }) => ({
             id: blog.id,
             documentId: blog.documentId,
             title: blog.title || "Blog Post",

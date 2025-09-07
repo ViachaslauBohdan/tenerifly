@@ -11,8 +11,6 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
-import ImagePreloader from "./ImagePreloader";
-import { getCachedImageUrl } from "@/services/universalImageCacheService";
 
 // Переводы для всех языков
 const translations = {
@@ -595,12 +593,14 @@ export default function PropertyDetailPage({
     setIsLanguageDropdownOpen(false);
   };
 
-  const getImageUrl = (
-    imageUrl: string,
-    format?: "thumbnail" | "small" | "medium" | "large"
-  ) => {
-    // Используем кэшированные URL если доступны
-    return getCachedImageUrl(imageUrl, format || "large");
+  const getImageUrl = (imageUrl: string) => {
+    // Изображения загружаются динамически без предзагрузки
+    if (imageUrl.startsWith("http")) {
+      return imageUrl;
+    }
+    
+    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://tenerifly-strapi-production.up.railway.app";
+    return `${apiUrl}${imageUrl}`;
   };
 
   const getPropertyTypeText = (category: string) => {
@@ -678,12 +678,6 @@ export default function PropertyDetailPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Image Preloader */}
-      <ImagePreloader
-        images={property.images}
-        baseUrl={process.env.NEXT_PUBLIC_STRAPI_API_URL}
-      />
-
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Header with Language Switcher */}
         <div className="flex justify-between items-center mb-6">
@@ -806,7 +800,7 @@ export default function PropertyDetailPage({
                           <div className="relative">
                             <div className="aspect-video relative bg-gray-100 rounded-lg overflow-hidden">
                               <Image
-                                src={getImageUrl(image.url, "large")}
+                                src={getImageUrl(image.url)}
                                 alt={`${property.title} - Image ${index + 1}`}
                                 fill
                                 className={`object-cover transition-opacity duration-300 ${
@@ -849,7 +843,7 @@ export default function PropertyDetailPage({
                           className="aspect-square relative bg-gray-100 rounded-md overflow-hidden cursor-pointer hover:opacity-75 transition-opacity group"
                         >
                           <Image
-                            src={getImageUrl(image.url, "thumbnail")}
+                            src={getImageUrl(image.url)}
                             alt={`${property.title} - Thumbnail ${index + 1}`}
                             fill
                             className="object-cover"
