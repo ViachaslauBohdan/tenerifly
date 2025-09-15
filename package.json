@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "npm run fetch-translations && next dev",
+    "build": "npm run fetch-translations && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "fetch-translations": "node scripts/fetch-translations.js"
   },
   "dependencies": {
     "@mantine/carousel": "^7.17.8",
