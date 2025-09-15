@@ -8,7 +8,7 @@ import CarsFilter from "./CarsFilter";
 import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
-import translations from "@/i18n";
+import translations from "@/i18n/cars.json";
 
 const getLoadingCarsText = (language: string) => {
   const texts: Record<string, string> = {
