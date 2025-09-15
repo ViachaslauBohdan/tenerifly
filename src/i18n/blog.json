@@ -1,0 +1,226 @@
+{
+  "de": {
+    "blog": {
+      "title": "Teneriffa Blog",
+      "subtitle": "Entdecken Sie das Beste von Teneriffa durch unsere Geschichten und Reiseführer"
+    },
+    "error": "Fehler beim Laden des Blogs",
+    "author": "Autor",
+    "loading": "Wird geladen...",
+    "minRead": "Min. Lesezeit",
+    "noPosts": "Keine Blog-Beiträge gefunden",
+    "readMore": "Weiterlesen",
+    "readTime": "Min. Lesezeit",
+    "tryAgain": "Erneut versuchen",
+    "blogTitle": "Blog",
+    "backToHome": "Zurück zur Startseite",
+    "categories": {
+      "food": "Essen",
+      "nature": "Natur",
+      "travel": "Reisen",
+      "culture": "Kultur",
+      "business": "Geschäft",
+      "adventure": "Abenteuer",
+      "lifestyle": "Lifestyle",
+      "relaxation": "Entspannung"
+    },
+    "noCategory": "Keine Kategorie",
+    "noBlogPosts": "Keine Blog-Beiträge gefunden",
+    "publishedOn": "Veröffentlicht am",
+    "errorLoading": "Fehler beim Laden des Blogs",
+    "selectLanguage": "Sprache auswählen",
+    "noBlogPostsDescription": "Wir arbeiten daran, erstaunliche Inhalte für Sie zu erstellen. Schauen Sie bald wieder vorbei!"
+  },
+  "en": {
+    "blog": {
+      "title": "Tenerife Blog",
+      "subtitle": "Discover the best of Tenerife through our stories and guides"
+    },
+    "error": "Error loading blog posts",
+    "author": "Author",
+    "loading": "Loading...",
+    "minRead": "min read",
+    "noPosts": "No blog posts found",
+    "readMore": "Read More",
+    "readTime": "min read",
+    "tryAgain": "Try Again",
+    "blogTitle": "Blog",
+    "backToHome": "Back to Home",
+    "categories": {
+      "food": "Food",
+      "nature": "Nature",
+      "travel": "Travel",
+      "culture": "Culture",
+      "business": "Business",
+      "adventure": "Adventure",
+      "lifestyle": "Lifestyle",
+      "relaxation": "Relaxation"
+    },
+    "noCategory": "No Category",
+    "noBlogPosts": "No blog posts found",
+    "publishedOn": "Published on",
+    "errorLoading": "Error loading blog posts",
+    "selectLanguage": "Select Language",
+    "noBlogPostsDescription": "We're working on creating amazing content for you. Check back soon!"
+  },
+  "es": {
+    "blog": {
+      "title": "Blog de Tenerife",
+      "subtitle": "Descubre lo mejor de Tenerife a través de nuestras historias y guías"
+    },
+    "error": "Error al cargar el blog",
+    "author": "Autor",
+    "loading": "Cargando...",
+    "minRead": "min de lectura",
+    "noPosts": "No se encontraron entradas del blog",
+    "readMore": "Leer más",
+    "readTime": "min de lectura",
+    "tryAgain": "Intentar de nuevo",
+    "blogTitle": "Blog",
+    "backToHome": "Volver al inicio",
+    "categories": {
+      "food": "Comida",
+      "nature": "Naturaleza",
+      "travel": "Viajes",
+      "culture": "Cultura",
+      "business": "Negocios",
+      "adventure": "Aventura",
+      "lifestyle": "Estilo de vida",
+      "relaxation": "Relajación"
+    },
+    "noCategory": "Sin categoría",
+    "noBlogPosts": "No se encontraron entradas del blog",
+    "publishedOn": "Publicado el",
+    "errorLoading": "Error al cargar el blog",
+    "selectLanguage": "Seleccionar idioma",
+    "noBlogPostsDescription": "Estamos trabajando en crear contenido increíble para ti. ¡Vuelve pronto!"
+  },
+  "fr": {
+    "blog": {
+      "title": "Blog de Tenerife",
+      "subtitle": "Découvrez le meilleur de Tenerife à travers nos histoires et guides"
+    },
+    "error": "Erreur de chargement du blog",
+    "author": "Auteur",
+    "loading": "Chargement...",
+    "minRead": "min de lecture",
+    "noPosts": "Aucun article de blog trouvé",
+    "readMore": "Lire la suite",
+    "readTime": "min de lecture",
+    "tryAgain": "Réessayer",
+    "blogTitle": "Blog",
+    "backToHome": "Retour à l'accueil",
+    "categories": {
+      "food": "Nourriture",
+      "nature": "Nature",
+      "travel": "Voyage",
+      "culture": "Culture",
+      "business": "Affaires",
+      "adventure": "Aventure",
+      "lifestyle": "Mode de vie",
+      "relaxation": "Relaxation"
+    },
+    "noCategory": "Sans catégorie",
+    "noBlogPosts": "Aucun article de blog trouvé",
+    "publishedOn": "Publié le",
+    "errorLoading": "Erreur de chargement du blog",
+    "selectLanguage": "Choisir la langue",
+    "noBlogPostsDescription": "Nous travaillons sur la création de contenu incroyable pour vous. Revenez bientôt !"
+  },
+  "pl": {
+    "blog": {
+      "title": "Blog Teneryfy",
+      "subtitle": "Odkryj najlepsze z Teneryfy poprzez nasze historie i przewodniki"
+    },
+    "error": "Błąd ładowania bloga",
+    "author": "Autor",
+    "loading": "Ładowanie...",
+    "minRead": "min czytania",
+    "noPosts": "Nie znaleziono wpisów bloga",
+    "readMore": "Czytaj więcej",
+    "readTime": "min czytania",
+    "tryAgain": "Spróbuj ponownie",
+    "blogTitle": "Blog",
+    "backToHome": "Powrót do strony głównej",
+    "categories": {
+      "food": "Jedzenie",
+      "nature": "Natura",
+      "travel": "Podróże",
+      "culture": "Kultura",
+      "business": "Biznes",
+      "adventure": "Przygoda",
+      "lifestyle": "Styl życia",
+      "relaxation": "Relaks"
+    },
+    "noCategory": "Bez kategorii",
+    "noBlogPosts": "Nie znaleziono wpisów bloga",
+    "publishedOn": "Opublikowano",
+    "errorLoading": "Błąd ładowania bloga",
+    "selectLanguage": "Wybierz język",
+    "noBlogPostsDescription": "Pracujemy nad tworzeniem niesamowitych treści dla Ciebie. Sprawdź wkrótce!"
+  },
+  "ru": {
+    "blog": {
+      "title": "Блог Тенерифе",
+      "subtitle": "Откройте для себя лучшее в Тенерифе через наши истории и путеводители"
+    },
+    "error": "Ошибка загрузки блога",
+    "author": "Автор",
+    "loading": "Загрузка...",
+    "minRead": "мин чтения",
+    "noPosts": "Записи блога не найдены",
+    "readMore": "Читать далее",
+    "readTime": "мин чтения",
+    "tryAgain": "Попробовать снова",
+    "blogTitle": "Блог",
+    "backToHome": "Назад на главную",
+    "categories": {
+      "food": "Еда",
+      "nature": "Природа",
+      "travel": "Путешествия",
+      "culture": "Культура",
+      "business": "Бизнес",
+      "adventure": "Приключения",
+      "lifestyle": "Образ жизни",
+      "relaxation": "Отдых"
+    },
+    "noCategory": "Без категории",
+    "noBlogPosts": "Записи блога не найдены",
+    "publishedOn": "Опубликовано",
+    "errorLoading": "Ошибка загрузки блога",
+    "selectLanguage": "Выбрать язык",
+    "noBlogPostsDescription": "Мы работаем над созданием удивительного контента для вас. Загляните позже!"
+  },
+  "uk": {
+    "blog": {
+      "title": "Блог Тенерифе",
+      "subtitle": "Відкрийте для себе найкраще в Тенерифе через наші історії та путівники"
+    },
+    "error": "Помилка завантаження блогу",
+    "author": "Автор",
+    "loading": "Завантаження...",
+    "minRead": "хв читання",
+    "noPosts": "Записи блогу не знайдені",
+    "readMore": "Читати далі",
+    "readTime": "хв читання",
+    "tryAgain": "Спробувати знову",
+    "blogTitle": "Блог",
+    "backToHome": "Назад на головну",
+    "categories": {
+      "food": "Їжа",
+      "nature": "Природа",
+      "travel": "Подорожі",
+      "culture": "Культура",
+      "business": "Бізнес",
+      "adventure": "Пригоди",
+      "lifestyle": "Спосіб життя",
+      "relaxation": "Відпочинок"
+    },
+    "noCategory": "Без категорії",
+    "noBlogPosts": "Записи блогу не знайдені",
+    "publishedOn": "Опубліковано",
+    "errorLoading": "Помилка завантаження блогу",
+    "selectLanguage": "Обрати мову",
+    "noBlogPostsDescription": "Ми працюємо над створенням дивовижного контенту для вас. Загляньте пізніше!"
+  }
+}
