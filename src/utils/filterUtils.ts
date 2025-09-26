@@ -1,6 +1,12 @@
 // Утилиты для работы с фильтрами и URL параметрами
 
-export interface FilterParams {
+// Базовый интерфейс для фильтров
+export interface BaseFilterParams {
+  [key: string]: string | string[] | number | boolean | undefined;
+}
+
+// Интерфейс для фильтров апартаментов
+export interface ApartmentFilterParams {
   propertyType: string;
   rooms: string;
   areaFrom: string;
@@ -27,24 +33,71 @@ export interface FilterParams {
   propertyStatus: string;
 }
 
+// Интерфейс для фильтров автомобилей
+export interface CarFilterParams {
+  brand: string;
+  model: string;
+  yearFrom: string;
+  yearTo: string;
+  priceFrom: string;
+  priceTo: string;
+  mileageFrom: string;
+  mileageTo: string;
+  fuel: string;
+  transmission: string;
+  bodyType: string;
+  color: string;
+  doors: string;
+  powerFrom: string;
+  powerTo: string;
+  location: string;
+  availableFrom: string;
+  airConditioner: boolean;
+  rearCamera: boolean;
+  multimedia: boolean;
+  bluetooth: boolean;
+  gps: boolean;
+  carStatus: string;
+}
+
+// Интерфейс для фильтров туров
+export interface TourFilterParams {
+  duration: string;
+  priceFrom: string;
+  priceTo: string;
+  difficulty: string;
+  location: string;
+  category: string;
+  availableFrom: string;
+  maxGroupSize: string;
+  includes: string;
+  tourStatus: string;
+}
+
+// Общий тип для всех фильтров
+export type FilterParams =
+  | ApartmentFilterParams
+  | CarFilterParams
+  | TourFilterParams;
+
 // Парсинг URL параметров в объект фильтров
 export const parseUrlParams = (
   searchParams: URLSearchParams
-): Partial<FilterParams> => {
-  const filters: Partial<FilterParams> = {};
+): BaseFilterParams => {
+  const filters: BaseFilterParams = {};
 
   for (const [key, value] of searchParams.entries()) {
     // Обработка булевых значений
     if (value === "true" || value === "false") {
-      (filters as any)[key] = value === "true";
+      filters[key] = value === "true";
     }
     // Обработка чисел
     else if (!isNaN(Number(value))) {
-      (filters as any)[key] = Number(value);
+      filters[key] = Number(value);
     }
     // Обработка строк
     else {
-      (filters as any)[key] = value;
+      filters[key] = value;
     }
   }
 
@@ -52,7 +105,9 @@ export const parseUrlParams = (
 };
 
 // Преобразование фильтров в URL параметры
-export const filtersToUrlParams = (filters: Partial<FilterParams>): URLSearchParams => {
+export const filtersToUrlParams = (
+  filters: BaseFilterParams
+): URLSearchParams => {
   const params = new URLSearchParams();
 
   Object.entries(filters).forEach(([key, value]) => {
@@ -73,7 +128,7 @@ export const filtersToUrlParams = (filters: Partial<FilterParams>): URLSearchPar
 // Создание URL с фильтрами
 export const createFilteredUrl = (
   basePath: string,
-  filters: Partial<FilterParams>
+  filters: BaseFilterParams
 ): string => {
   const params = filtersToUrlParams(filters);
   const queryString = params.toString();
@@ -81,8 +136,10 @@ export const createFilteredUrl = (
 };
 
 // Очистка пустых фильтров
-export const cleanEmptyFilters = (filters: Partial<FilterParams>): Partial<FilterParams> => {
-  const cleaned: Partial<FilterParams> = {};
+export const cleanEmptyFilters = (
+  filters: BaseFilterParams
+): BaseFilterParams => {
+  const cleaned: BaseFilterParams = {};
 
   Object.entries(filters).forEach(([key, value]) => {
     if (
@@ -91,7 +148,7 @@ export const cleanEmptyFilters = (filters: Partial<FilterParams>): Partial<Filte
       value !== "" &&
       value !== false
     ) {
-      (cleaned as any)[key] = value;
+      cleaned[key] = value;
     }
   });
 
@@ -99,6 +156,8 @@ export const cleanEmptyFilters = (filters: Partial<FilterParams>): Partial<Filte
 };
 
 // Получение активных фильтров (непустых)
-export const getActiveFilters = (filters: FilterParams): FilterParams => {
+export const getActiveFilters = (
+  filters: BaseFilterParams
+): BaseFilterParams => {
   return cleanEmptyFilters(filters);
 };
