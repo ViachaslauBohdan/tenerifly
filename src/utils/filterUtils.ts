@@ -31,6 +31,7 @@ export interface ApartmentFilterParams {
   dishwasher: boolean;
   type: string;
   propertyStatus: string;
+  [key: string]: string | string[] | number | boolean | undefined;
 }
 
 // Интерфейс для фильтров автомобилей
@@ -58,6 +59,7 @@ export interface CarFilterParams {
   bluetooth: boolean;
   gps: boolean;
   carStatus: string;
+  [key: string]: string | string[] | number | boolean | undefined;
 }
 
 // Интерфейс для фильтров туров
@@ -72,6 +74,7 @@ export interface TourFilterParams {
   maxGroupSize: string;
   includes: string;
   tourStatus: string;
+  [key: string]: string | string[] | number | boolean | undefined;
 }
 
 // Общий тип для всех фильтров
