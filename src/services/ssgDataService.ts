@@ -162,7 +162,9 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
   }
 
   try {
-    const response = await fetch(`${API_URL}/api${endpoint}`, {
+    const url = `${API_URL}/api${endpoint}`;
+    
+    const response = await fetch(url, {
       headers: getAuthHeaders(),
       next: { revalidate: 3600 }, // Кэширование на уровне Next.js
     });
@@ -173,12 +175,13 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
 
     const data = await response.json();
 
+    const result = data.data || data;
     cache.set(cacheKey, {
-      data: data.data || data,
+      data: result,
       timestamp: now,
     });
 
-    return data.data || data;
+    return result;
   } catch (error) {
     console.error(`Error fetching ${endpoint}:`, error);
     throw error;
@@ -187,10 +190,13 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
 
 // Получение всех апартаментов
 export async function getAllProperties() {
-  return fetchWithCache(
+  console.log("getAllProperties called");
+  const result = await fetchWithCache(
     "/properties?populate=*&pagination[pageSize]=1000",
     "all-properties"
   );
+  console.log("getAllProperties result:", result);
+  return result;
 }
 
 // Получение всех автомобилей

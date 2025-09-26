@@ -1,33 +1,10 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { FilterParams } from "@/utils/filterUtils"
 
-interface FilterState {
-    propertyType: string
-    rooms: string
-    areaFrom: string
-    areaTo: string
-    priceFrom: string
-    priceTo: string
-    floorFrom: string
-    floorTo: string
-    yearBuiltFrom: string
-    yearBuiltTo: string
-    condition: string
-    city: string
-    district: string
-    balcony: boolean
-    terrace: boolean
-    garden: boolean
-    parking: boolean
-    furnished: boolean
-    airConditioner: boolean
-    wifi: boolean
-    washingMachine: boolean
-    dishwasher: boolean
-    type: string // rent or sale
-    propertyStatus: string // available, reserved, rented, sold
-}
+// Используем FilterParams из utils
+type FilterState = FilterParams;
 
 interface ApartmentsFilterProps {
     filters: FilterState
@@ -211,6 +188,7 @@ export default function ApartmentsFilter({
             if (filterState.wifi && !property.features?.has_internet) {
                 return false
             }
+            // Исправляем логику для washingMachine и dishwasher
             if (filterState.washingMachine && !property.features?.has_heating) {
                 return false
             }
@@ -219,7 +197,7 @@ export default function ApartmentsFilter({
             }
 
             return true
-        })
+        });
     }, [])
 
     // Применение фильтров локально без API запросов
