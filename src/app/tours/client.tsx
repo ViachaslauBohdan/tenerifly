@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import ToursFilter from "./ToursFilter";
 import TourCard from "./TourCard";
-import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
+import { parseUrlParams, TourFilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import translations from "@/i18n/tours.json";
 // Переводы для всех языков
@@ -110,28 +110,8 @@ export default function ToursPageClient({
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
   // Инициализация фильтров из URL параметров
-  const [filters, setFilters] = useState<FilterParams>(() => {
-    if (searchParams) {
-      const urlFilters = parseUrlParams(searchParams);
-      return {
-        location: (urlFilters.location as string) || "",
-        tourType: (urlFilters.tourType as string) || "",
-        priceFrom: (urlFilters.priceFrom as string) || "",
-        priceTo: (urlFilters.priceTo as string) || "",
-        duration: (urlFilters.duration as string) || "",
-        durationType: (urlFilters.durationType as string) || "hours",
-        availableFrom: (urlFilters.availableFrom as string) || "",
-        language: (urlFilters.language as string) || "",
-        category: (urlFilters.category as string) || "",
-        groupSize: (urlFilters.groupSize as string) || "",
-        difficulty: (urlFilters.difficulty as string) || "",
-        rating: (urlFilters.rating as string) || "",
-        transport: (urlFilters.transport as boolean) || false,
-        meals: (urlFilters.meals as boolean) || false,
-        tickets: (urlFilters.tickets as boolean) || false,
-      };
-    }
-    return {
+  const [filters, setFilters] = useState<TourFilterParams>(() => {
+    const defaultFilters: TourFilterParams = {
       location: "",
       tourType: "",
       priceFrom: "",
@@ -148,6 +128,15 @@ export default function ToursPageClient({
       meals: false,
       tickets: false,
     };
+
+    if (searchParams) {
+      const urlFilters = parseUrlParams(searchParams);
+      return {
+        ...defaultFilters,
+        ...urlFilters,
+      };
+    }
+    return defaultFilters;
   });
 
   // Инициализация текущей страницы из URL параметров
@@ -170,7 +159,9 @@ export default function ToursPageClient({
   } = useFilterSync({
     pageType: "tours",
     filters,
-    onFiltersChange: setFilters,
+    onFiltersChange: (newFilters) => {
+      setFilters(newFilters as TourFilterParams);
+    },
   });
 
   const [itemsPerPage] = useState(12); // Show 12 tours per page

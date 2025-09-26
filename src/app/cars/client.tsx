@@ -309,7 +309,8 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
       airConditioner: false,
       rearCamera: false,
       multimedia: false,
-      type: "",
+      bluetooth: false,
+      gps: false,
       carStatus: "",
     });
   }, []);
