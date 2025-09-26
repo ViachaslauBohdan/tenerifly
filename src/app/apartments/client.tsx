@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import ApartmentCard from "./ApartmentCard";
 import ApartmentsFilter from "./ApartmentsFilter";
-import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
+import { parseUrlParams, ApartmentFilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import translations from "@/i18n/apartments.json";
 
@@ -117,8 +117,8 @@ export default function ApartmentsPageClient({
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
   // Инициализация фильтров из URL параметров
-  const [filters, setFilters] = useState<FilterParams>(() => {
-    const defaultFilters: FilterParams = {
+  const [filters, setFilters] = useState<ApartmentFilterParams>(() => {
+    const defaultFilters: ApartmentFilterParams = {
       propertyType: "",
       rooms: "",
       areaFrom: "",

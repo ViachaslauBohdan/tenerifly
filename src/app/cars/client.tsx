@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import CarCard from "./CarCard";
 import CarsFilter from "./CarsFilter";
-import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
+import { parseUrlParams, CarFilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translations from "@/i18n/cars.json";
@@ -113,7 +113,7 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
   // Инициализация фильтров из URL параметров
-  const [filters, setFilters] = useState<FilterParams>(() => {
+  const [filters, setFilters] = useState<CarFilterParams>(() => {
     if (searchParams) {
       const urlFilters = parseUrlParams(searchParams);
       return {
@@ -137,7 +137,8 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
         airConditioner: (urlFilters.airConditioner as boolean) || false,
         rearCamera: (urlFilters.rearCamera as boolean) || false,
         multimedia: (urlFilters.multimedia as boolean) || false,
-        type: (urlFilters.type as string) || "",
+        bluetooth: (urlFilters.bluetooth as boolean) || false,
+        gps: (urlFilters.gps as boolean) || false,
         carStatus: (urlFilters.carStatus as string) || "",
       };
     }
@@ -162,7 +163,8 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
       airConditioner: false,
       rearCamera: false,
       multimedia: false,
-      type: "",
+      bluetooth: false,
+      gps: false,
       carStatus: "",
     };
   });
