@@ -240,7 +240,7 @@ const ApartmentCard = ({
   const getPrice = (property: PropertyData) => {
     if (property.price && property.price.amount) {
       console.log("property.price", property.price);
-      return `${property.price.amount}/${property.price?.period == "month" ? `${translations.perMonth}` : property.price?.period == "day" ? `${translations.perDay}` :translations.perTotal}`;
+      return `${property.price.amount}/${property.price?.period == "month" ? `${translations.perMonth}` : property.price?.period == "day" ? `${translations.perDay}` : translations.perTotal}`;
     }
     return property.type === "rent" ? 850 : 250000;
   };
@@ -414,11 +414,11 @@ const ApartmentCard = ({
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
         <div className="text-gray-500 text-lg mb-2">
-          {providedApartments !== undefined
+          {providedApartments !== undefined && providedApartments.length > 0
             ? "Нет недвижимости, соответствующей выбранным фильтрам"
             : "No properties available"}
         </div>
-        {providedApartments !== undefined && (
+        {providedApartments !== undefined && providedApartments.length > 0 && (
           <div className="text-gray-400 text-sm">
             Попробуйте изменить параметры фильтрации
           </div>
@@ -427,8 +427,7 @@ const ApartmentCard = ({
     );
   }
 
-  console.log(apartments);
-  console.log(providedApartments);
+
   return (
     <div className="space-y-4">
       {/* Счетчик результатов */}

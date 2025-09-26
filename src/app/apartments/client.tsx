@@ -2,15 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import ApartmentCard from "./ApartmentCard";
 import ApartmentsFilter from "./ApartmentsFilter";
 import { parseUrlParams, FilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
-import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translations from "@/i18n/apartments.json";
-
 
 const getLoadingPropertiesText = (language: string) => {
   const texts: Record<string, string> = {
@@ -106,11 +103,7 @@ interface PropertyData {
 }
 
 interface ApartmentsPageClientProps {
-  initialProperties?: any[];
-}
-
-interface ApartmentsPageClientProps {
-  initialProperties?: any[];
+  initialProperties?: PropertyData[];
 }
 
 export default function ApartmentsPageClient({
@@ -122,8 +115,6 @@ export default function ApartmentsPageClient({
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   >("en");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [bookingItem, setBookingItem] = useState<any>(null);
 
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<FilterParams>(() => {
@@ -142,7 +133,7 @@ export default function ApartmentsPageClient({
         yearBuiltTo: (urlFilters.yearBuiltTo as string) || "",
         condition: (urlFilters.condition as string) || "",
         city: (urlFilters.city as string) || "",
-        district: (urlFilters.district as string) || "Tenerife",
+        district: (urlFilters.district as string) || "",
         balcony: (urlFilters.balcony as boolean) || false,
         terrace: (urlFilters.terrace as boolean) || false,
         garden: (urlFilters.garden as boolean) || false,
@@ -169,7 +160,7 @@ export default function ApartmentsPageClient({
       yearBuiltTo: "",
       condition: "",
       city: "",
-      district: "Tenerife",
+      district: "",
       balcony: false,
       terrace: false,
       garden: false,
@@ -250,6 +241,7 @@ export default function ApartmentsPageClient({
         }
 
         const data = await response.json();
+        
         if (data.data) {
           setAllApartments(data.data);
           setFilteredApartments(data.data); // Изначально показываем все
@@ -300,46 +292,9 @@ export default function ApartmentsPageClient({
     setIsLanguageDropdownOpen(false);
   };
 
-  // Мемоизированная функция сброса фильтров
-  const resetFilters = useCallback(() => {
-    setFilters({
-      propertyType: "",
-      rooms: "",
-      areaFrom: "",
-      areaTo: "",
-      priceFrom: "",
-      priceTo: "",
-      floorFrom: "",
-      floorTo: "",
-      yearBuiltFrom: "",
-      yearBuiltTo: "",
-      condition: "",
-      city: "",
-      district: "Tenerife",
-      balcony: false,
-      terrace: false,
-      garden: false,
-      parking: false,
-      furnished: false,
-      airConditioner: false,
-      wifi: false,
-      washingMachine: false,
-      dishwasher: false,
-      type: "",
-      propertyStatus: "",
-    });
-  }, []);
-
-  // Мемоизированная функция изменения фильтров
-  const handleFilterChange = useCallback(
-    (key: string, value: string | boolean) => {
-      setFilters((prev) => ({ ...prev, [key]: value }));
-    },
-    []
-  );
 
   // Функция для обновления URL с пагинацией
-  const updateUrlWithPage = (page: number) => {
+  const updateUrlWithPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     if (page === 1) {
       params.delete("page");
@@ -350,7 +305,7 @@ export default function ApartmentsPageClient({
     const path = "/apartments";
     const url = queryString ? `${path}?${queryString}` : path;
     router.replace(url, { scroll: false });
-  };
+  }, [searchParams, router]);
 
   // Мемоизированная функция обновления отфильтрованных апартаментов
   const handleApartmentsUpdate = useCallback(
@@ -363,7 +318,7 @@ export default function ApartmentsPageClient({
         updateUrlWithPage(1);
       }
     },
-    [currentPage, itemsPerPage]
+    [currentPage, itemsPerPage, updateUrlWithPage]
   );
 
   // Pagination logic
@@ -371,6 +326,7 @@ export default function ApartmentsPageClient({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentApartments = filteredApartments.slice(startIndex, endIndex);
+
 
   // Pagination handlers
   const handlePageChange = (page: number) => {
@@ -506,7 +462,7 @@ export default function ApartmentsPageClient({
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filters Sidebar - передаем все апартаменты в компонент фильтра */}
           <ApartmentsFilter
-            filters={filters as any}
+            filters={filters}
             onFilterChange={handleFilterChangeSync}
             onResetFilters={resetFiltersSync}
             onApartmentsUpdate={handleApartmentsUpdate}

@@ -187,6 +187,9 @@ export default function ToursPageClient({
   // Загружаем все экскурсии только если нет initialTours
   useEffect(() => {
     if (initialTours) {
+      console.log("Using initial tours from SSG:", {
+        count: initialTours.length,
+      });
       setTours(initialTours);
       setInitialLoadComplete(true);
       return;
@@ -207,6 +210,10 @@ export default function ToursPageClient({
         }
 
         const data = await response.json();
+
+        console.log("Loaded tours from API:", {
+          count: data.data?.length || 0,
+        });
 
         if (data.data) {
           setTours(data.data);
@@ -272,6 +279,11 @@ export default function ToursPageClient({
 
   // Теперь функция принимает правильный тип
   const handleToursUpdate = (updatedTours: Tour[]) => {
+    console.log("Updating tours:", {
+      previousCount: tours.length,
+      newCount: updatedTours.length,
+      currentPage,
+    });
     setTours(updatedTours);
     // Сбрасываем страницу только если количество туров изменилось
     const newTotalPages = Math.ceil(updatedTours.length / itemsPerPage);
@@ -300,6 +312,17 @@ export default function ToursPageClient({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentTours = tours.slice(startIndex, endIndex);
+
+  // Debug logging for pagination
+  console.log("Pagination debug:", {
+    totalTours: tours.length,
+    itemsPerPage,
+    totalPages,
+    currentPage,
+    startIndex,
+    endIndex,
+    currentToursCount: currentTours.length,
+  });
 
   // Pagination handlers
   const handlePageChange = (page: number) => {

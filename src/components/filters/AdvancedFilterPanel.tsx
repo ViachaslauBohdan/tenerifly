@@ -1,24 +1,29 @@
-import { useState } from 'react';
-import { 
-  Box, 
-  Button, 
-  Group, 
-  Select, 
-  TextInput, 
-  RangeSlider, 
-  Switch, 
+import { useState } from "react";
+import {
+  Box,
+  Button,
+  Group,
+  Select,
+  TextInput,
+  RangeSlider,
+  Switch,
   MultiSelect,
   Stack,
   Text,
   Collapse,
-  Paper
-} from '@mantine/core';
-import { DateInput } from '@mantine/dates';
-import { IconFilter, IconFilterOff, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+  Paper,
+} from "@mantine/core";
+import { DateInput } from "@mantine/dates";
+import {
+  IconFilter,
+  IconFilterOff,
+  IconChevronDown,
+  IconChevronUp,
+} from "@tabler/icons-react";
 
 export interface FilterConfig {
   key: string;
-  type: 'select' | 'multiselect' | 'range' | 'text' | 'boolean' | 'date';
+  type: "select" | "multiselect" | "range" | "text" | "boolean" | "date";
   label: string;
   options?: { value: any; label: string }[];
   min?: number;
@@ -34,24 +39,28 @@ export interface AdvancedFilterPanelProps {
   onClear: () => void;
 }
 
-export function AdvancedFilterPanel({ 
-  filters, 
-  values, 
-  onChange, 
-  onClear 
+export function AdvancedFilterPanel({
+  filters,
+  values,
+  onChange,
+  onClear,
 }: AdvancedFilterPanelProps) {
   const [opened, setOpened] = useState(false);
 
   const handleFilterChange = (key: string, value: any) => {
     const newValues = { ...values };
-    
-    if (value === null || value === undefined || value === '' || 
-        (Array.isArray(value) && value.length === 0)) {
+
+    if (
+      value === null ||
+      value === undefined ||
+      value === "" ||
+      (Array.isArray(value) && value.length === 0)
+    ) {
       delete newValues[key];
     } else {
       newValues[key] = value;
     }
-    
+
     onChange(newValues);
   };
 
@@ -59,7 +68,7 @@ export function AdvancedFilterPanel({
     const value = values[filter.key];
 
     switch (filter.type) {
-      case 'select':
+      case "select":
         return (
           <Select
             key={filter.key}
@@ -72,7 +81,7 @@ export function AdvancedFilterPanel({
           />
         );
 
-      case 'multiselect':
+      case "multiselect":
         return (
           <MultiSelect
             key={filter.key}
@@ -85,10 +94,11 @@ export function AdvancedFilterPanel({
           />
         );
 
-      case 'range':
-        const rangeValue: [number, number] = Array.isArray(value) && value.length === 2 
-          ? [value[0], value[1]] 
-          : [filter.min || 0, filter.max || 100];
+      case "range":
+        const rangeValue: [number, number] =
+          Array.isArray(value) && value.length === 2
+            ? [value[0], value[1]]
+            : [filter.min || 0, filter.max || 100];
         return (
           <Box key={filter.key}>
             <Text size="sm" fw={500} mb="xs">
@@ -104,36 +114,54 @@ export function AdvancedFilterPanel({
           </Box>
         );
 
-      case 'text':
+      case "text":
         return (
           <TextInput
             key={filter.key}
             label={filter.label}
-            placeholder={filter.placeholder || `Введите ${filter.label.toLowerCase()}`}
-            value={value || ''}
-            onChange={(event) => handleFilterChange(filter.key, event.currentTarget.value)}
+            placeholder={
+              filter.placeholder || `Введите ${filter.label.toLowerCase()}`
+            }
+            value={value || ""}
+            onChange={(event) =>
+              handleFilterChange(filter.key, event.currentTarget.value)
+            }
           />
         );
 
-      case 'boolean':
+      case "boolean":
         return (
           <Switch
             key={filter.key}
             label={filter.label}
             checked={Boolean(value)}
-            onChange={(event) => handleFilterChange(filter.key, event.currentTarget.checked)}
+            onChange={(event) =>
+              handleFilterChange(filter.key, event.currentTarget.checked)
+            }
           />
         );
 
-      case 'date':
+      case "date":
         return (
           <DateInput
             key={filter.key}
             label={filter.label}
             placeholder={`Выберите ${filter.label.toLowerCase()}`}
             value={value ? new Date(value) : null}
-            onChange={(date) => handleFilterChange(filter.key, date?.toISOString())}
+            onChange={(date) =>
+              handleFilterChange(filter.key, date?.toISOString())
+            }
             clearable
+            dateParser={(input) => {
+              const date = new Date(input);
+              return isNaN(date.getTime()) ? null : date;
+            }}
+            valueFormat="DD/MM/YYYY"
+            styles={{
+              calendar: {
+                zIndex: 1000,
+              },
+            }}
           />
         );
 
@@ -150,12 +178,14 @@ export function AdvancedFilterPanel({
         <Button
           variant="light"
           leftSection={<IconFilter size={16} />}
-          rightSection={opened ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+          rightSection={
+            opened ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />
+          }
           onClick={() => setOpened(!opened)}
         >
           Фильтры {activeFiltersCount > 0 && `(${activeFiltersCount})`}
         </Button>
-        
+
         {activeFiltersCount > 0 && (
           <Button
             variant="subtle"
@@ -169,9 +199,7 @@ export function AdvancedFilterPanel({
       </Group>
 
       <Collapse in={opened}>
-        <Stack gap="md">
-          {filters.map(renderFilter)}
-        </Stack>
+        <Stack gap="md">{filters.map(renderFilter)}</Stack>
       </Collapse>
     </Paper>
   );

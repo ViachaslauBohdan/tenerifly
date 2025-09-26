@@ -900,6 +900,13 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                   placeholder="Start date"
                   leftSection={<IconCalendar size={16} color="#64748b" />}
                   clearable
+                  dateParser={(input) => {
+                    const date = new Date(input);
+                    return isNaN(date.getTime()) ? null : date;
+                  }}
+                  valueFormat="DD/MM/YYYY"
+                  minDate={new Date()}
+                  maxDate={new Date(new Date().getFullYear() + 1, 11, 31)}
                   styles={{
                     input: {
                       border: "1px solid #e2e8f0",
@@ -911,6 +918,9 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                         boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
                       },
                     },
+                    calendar: {
+                      zIndex: 1000,
+                    },
                   }}
                 />
                 <DateInput
@@ -919,6 +929,13 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                   placeholder="End date"
                   leftSection={<IconCalendar size={16} color="#64748b" />}
                   clearable
+                  dateParser={(input) => {
+                    const date = new Date(input);
+                    return isNaN(date.getTime()) ? null : date;
+                  }}
+                  valueFormat="DD/MM/YYYY"
+                  minDate={startDate || new Date()}
+                  maxDate={new Date(new Date().getFullYear() + 1, 11, 31)}
                   styles={{
                     input: {
                       border: "1px solid #e2e8f0",
@@ -929,6 +946,9 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                         borderColor: "#3182ce",
                         boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
                       },
+                    },
+                    calendar: {
+                      zIndex: 1000,
                     },
                   }}
                 />

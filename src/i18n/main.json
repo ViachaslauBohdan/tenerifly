@@ -1,6 +1,5 @@
 {
   "de": {
-    "selectLanguage": "Sprache auswählen",
     "cta": {
       "title": "Wissen Sie nicht, wo Sie anfangen sollen?",
       "button": "In WhatsApp schreiben",
@@ -25,6 +24,7 @@
     "hero": {
       "cars": {
         "type": "Autotyp",
+        "brand": "Marke",
         "title": "Autos",
         "types": [
           {
@@ -47,24 +47,41 @@
         "pickup": "Abholdatum",
         "dropoff": "Rückgabedatum",
         "bodyType": "Karosserietyp",
-        "bodyTypeOptions": [
-          { "label": "Limousine", "value": "sedan" },
-          { "label": "SUV", "value": "suv" },
-          { "label": "Kombi", "value": "wagon" },
-          { "label": "Cabrio", "value": "convertible" }
-        ],
-        "brand": "Marke",
         "transmission": "Getriebe",
+        "bodyTypeOptions": [
+          {
+            "label": "Limousine",
+            "value": "sedan"
+          },
+          {
+            "label": "SUV",
+            "value": "suv"
+          },
+          {
+            "label": "Kombi",
+            "value": "wagon"
+          },
+          {
+            "label": "Cabrio",
+            "value": "convertible"
+          }
+        ],
         "transmissionOptions": [
-          { "label": "Automatik", "value": "automatic" },
-          { "label": "Manuell", "value": "manual" }
+          {
+            "label": "Automatik",
+            "value": "automatic"
+          },
+          {
+            "label": "Manuell",
+            "value": "manual"
+          }
         ]
       },
       "tabs": {
+        "blog": "Blog",
         "cars": "Autos",
         "excursions": "Ausflüge",
-        "accommodation": "Unterkunft",
-        "blog": "Blog"
+        "accommodation": "Unterkunft"
       },
       "title": "Willkommen auf Teneriffa",
       "search": "Suchen",
@@ -94,14 +111,27 @@
         "people": "Anzahl der Personen",
         "language": "Sprache",
         "languageOptions": [
-          { "label": "Deutsch", "value": "de" },
-          { "label": "Englisch", "value": "en" },
-          { "label": "Spanisch", "value": "es" },
-          { "label": "Französisch", "value": "fr" }
+          {
+            "label": "Deutsch",
+            "value": "de"
+          },
+          {
+            "label": "Englisch",
+            "value": "en"
+          },
+          {
+            "label": "Spanisch",
+            "value": "es"
+          },
+          {
+            "label": "Französisch",
+            "value": "fr"
+          }
         ]
       },
       "accommodation": {
         "type": "Immobilientyp",
+        "rooms": "Zimmer",
         "title": "Unterkunft",
         "types": [
           {
@@ -128,17 +158,29 @@
         "guests": "Gäste",
         "checkin": "Check-in",
         "checkout": "Check-out",
-        "rooms": "Zimmer",
         "roomsList": [
-          { "label": "1 Zimmer", "value": "1" },
-          { "label": "2 Zimmer", "value": "2" },
-          { "label": "3 Zimmer", "value": "3" },
-          { "label": "4+ Zimmer", "value": "4+" }
+          {
+            "label": "1 Zimmer",
+            "value": "1"
+          },
+          {
+            "label": "2 Zimmer",
+            "value": "2"
+          },
+          {
+            "label": "3 Zimmer",
+            "value": "3"
+          },
+          {
+            "label": "4+ Zimmer",
+            "value": "4+"
+          }
         ]
       }
     },
     "common": {
       "to": "Bis",
+      "all": "Alle",
       "per": "pro",
       "date": "Datum",
       "from": "Von",
@@ -151,28 +193,27 @@
       "rooms": "Zimmer",
       "adults": "Erwachsene",
       "guests": "Gäste",
+      "noData": "Keine Daten",
       "perDay": "/Tag",
       "rental": "Miete",
       "bookNow": "Buchen",
       "contact": "Kontakt",
       "loading": "Wird geladen...",
+      "priceTo": "Preis bis",
       "children": "Kinder",
       "currency": "€",
       "perNight": "/Nacht",
-      "whatsapp": "WhatsApp",
-      "noResults": "Keine Ergebnisse gefunden",
-      "backToHome": "Zurück zur Startseite",
-      "viewDetails": "Details anzeigen",
-      "serverError": "Serverfehler",
-      "noData": "Keine Daten",
-      "hideSearch": "Suche ausblenden",
-      "showSearch": "Suche anzeigen",
-      "priceFrom": "Preis von",
-      "priceTo": "Preis bis",
+      "readMore": "Weiterlesen",
       "typeRent": "Miete",
       "typeSale": "Verkauf",
-      "all": "Alle",
-      "readMore": "Weiterlesen"
+      "whatsapp": "WhatsApp",
+      "noResults": "Keine Ergebnisse gefunden",
+      "priceFrom": "Preis von",
+      "backToHome": "Zurück zur Startseite",
+      "hideSearch": "Suche ausblenden",
+      "showSearch": "Suche anzeigen",
+      "serverError": "Serverfehler",
+      "viewDetails": "Details anzeigen"
     },
     "footer": {
       "social": "Soziale Medien",
@@ -220,42 +261,42 @@
       "transmission": "Getriebe"
     },
     "sections": {
+      "blog": {
+        "title": "Blog",
+        "author": "Autor",
+        "viewAll": "Alle anzeigen",
+        "readTime": "Lesezeit",
+        "subtitle": "Aktuelle Nachrichten und Tipps",
+        "publishedDate": "Veröffentlicht am"
+      },
       "cars": {
         "year": "Jahr",
         "seats": "Sitze",
         "title": "Autovermietung",
+        "viewAll": "Alle anzeigen",
         "features": "Ausstattung",
         "fuelType": "Kraftstoffart",
         "subtitle": "Finden Sie das perfekte Auto für Abenteuer auf Teneriffa",
-        "transmission": "Getriebe",
-        "viewAll": "Alle anzeigen"
+        "transmission": "Getriebe"
       },
       "excursions": {
         "price": "Preis",
         "title": "Beliebte Ausflüge",
+        "viewAll": "Alle anzeigen",
         "duration": "Dauer",
         "language": "Sprache",
         "subtitle": "Entdecken Sie das Beste auf Teneriffa",
-        "groupSize": "Gruppengröße",
-        "viewAll": "Alle anzeigen"
-      },
-      "blog": {
-        "title": "Blog",
-        "subtitle": "Aktuelle Nachrichten und Tipps",
-        "viewAll": "Alle anzeigen",
-        "author": "Autor",
-        "readTime": "Lesezeit",
-        "publishedDate": "Veröffentlicht am"
+        "groupSize": "Gruppengröße"
       },
       "accommodation": {
         "area": "Fläche",
         "title": "Unterkünfte",
+        "viewAll": "Alle anzeigen",
         "bedrooms": "Schlafzimmer",
         "location": "Standort",
         "subtitle": "Finden Sie die perfekte Unterkunft auf Teneriffa",
         "amenities": "Ausstattung",
-        "bathrooms": "Badezimmer",
-        "viewAll": "Alle anzeigen"
+        "bathrooms": "Badezimmer"
       }
     },
     "navigation": {
@@ -266,6 +307,7 @@
       "excursions": "Ausflüge",
       "accommodation": "Unterkunft"
     },
+    "selectLanguage": "Sprache auswählen",
     "personalizedRequest": {
       "title": "Haben Sie eine persönliche Anfrage?",
       "button": "Anfrage senden",
@@ -274,7 +316,6 @@
     }
   },
   "en": {
-    "selectLanguage": "Select language",
     "cta": {
       "title": "Don't know where to start?",
       "button": "Write on WhatsApp",
@@ -299,6 +340,7 @@
     "hero": {
       "cars": {
         "type": "Car type",
+        "brand": "Brand",
         "title": "Cars",
         "types": [
           {
@@ -321,24 +363,41 @@
         "pickup": "Pick-up date",
         "dropoff": "Drop-off date",
         "bodyType": "Body Type",
-        "bodyTypeOptions": [
-          { "label": "Sedan", "value": "sedan" },
-          { "label": "SUV", "value": "suv" },
-          { "label": "Wagon", "value": "wagon" },
-          { "label": "Convertible", "value": "convertible" }
-        ],
-        "brand": "Brand",
         "transmission": "Transmission",
+        "bodyTypeOptions": [
+          {
+            "label": "Sedan",
+            "value": "sedan"
+          },
+          {
+            "label": "SUV",
+            "value": "suv"
+          },
+          {
+            "label": "Wagon",
+            "value": "wagon"
+          },
+          {
+            "label": "Convertible",
+            "value": "convertible"
+          }
+        ],
         "transmissionOptions": [
-          { "label": "Automatic", "value": "automatic" },
-          { "label": "Manual", "value": "manual" }
+          {
+            "label": "Automatic",
+            "value": "automatic"
+          },
+          {
+            "label": "Manual",
+            "value": "manual"
+          }
         ]
       },
       "tabs": {
+        "blog": "Blog",
         "cars": "Cars",
         "excursions": "Excursions",
-        "accommodation": "Accommodation",
-        "blog": "Blog"
+        "accommodation": "Accommodation"
       },
       "title": "Welcome to Tenerife",
       "search": "Search",
@@ -368,14 +427,27 @@
         "people": "Number of people",
         "language": "Language",
         "languageOptions": [
-          { "label": "English", "value": "en" },
-          { "label": "German", "value": "de" },
-          { "label": "Spanish", "value": "es" },
-          { "label": "French", "value": "fr" }
+          {
+            "label": "English",
+            "value": "en"
+          },
+          {
+            "label": "German",
+            "value": "de"
+          },
+          {
+            "label": "Spanish",
+            "value": "es"
+          },
+          {
+            "label": "French",
+            "value": "fr"
+          }
         ]
       },
       "accommodation": {
         "type": "Property type",
+        "rooms": "Rooms",
         "title": "Accommodation",
         "types": [
           {
@@ -402,17 +474,29 @@
         "guests": "Guests",
         "checkin": "Check-in",
         "checkout": "Check-out",
-        "rooms": "Rooms",
         "roomsList": [
-          { "label": "1 Room", "value": "1" },
-          { "label": "2 Rooms", "value": "2" },
-          { "label": "3 Rooms", "value": "3" },
-          { "label": "4+ Rooms", "value": "4+" }
+          {
+            "label": "1 Room",
+            "value": "1"
+          },
+          {
+            "label": "2 Rooms",
+            "value": "2"
+          },
+          {
+            "label": "3 Rooms",
+            "value": "3"
+          },
+          {
+            "label": "4+ Rooms",
+            "value": "4+"
+          }
         ]
       }
     },
     "common": {
       "to": "To",
+      "all": "All",
       "per": "per",
       "date": "Date",
       "from": "From",
@@ -425,28 +509,27 @@
       "rooms": "Rooms",
       "adults": "Adults",
       "guests": "Guests",
+      "noData": "No data",
       "perDay": "/day",
       "rental": "Rental",
       "bookNow": "Book",
       "contact": "Contact",
       "loading": "Loading...",
+      "priceTo": "Price to",
       "children": "Children",
       "currency": "€",
       "perNight": "/night",
-      "whatsapp": "WhatsApp",
-      "noResults": "No results found",
-      "backToHome": "Back to Home",
-      "viewDetails": "View Details",
-      "serverError": "Server Error",
-      "noData": "No data",
-      "hideSearch": "Hide search",
-      "showSearch": "Show search",
-      "priceFrom": "Price from",
-      "priceTo": "Price to",
+      "readMore": "Read more",
       "typeRent": "Rental",
       "typeSale": "Sale",
-      "all": "All",
-      "readMore": "Read more"
+      "whatsapp": "WhatsApp",
+      "noResults": "No results found",
+      "priceFrom": "Price from",
+      "backToHome": "Back to Home",
+      "hideSearch": "Hide search",
+      "showSearch": "Show search",
+      "serverError": "Server Error",
+      "viewDetails": "View Details"
     },
     "footer": {
       "social": "Social Media",
@@ -494,42 +577,42 @@
       "transmission": "Transmission"
     },
     "sections": {
+      "blog": {
+        "title": "Blog",
+        "author": "Author",
+        "viewAll": "View all",
+        "readTime": "Read time",
+        "subtitle": "Latest news and tips",
+        "publishedDate": "Published on"
+      },
       "cars": {
         "year": "Year",
         "seats": "Seats",
         "title": "Car Rental",
+        "viewAll": "View all",
         "features": "Features",
         "fuelType": "Fuel Type",
         "subtitle": "Find the perfect car for your Tenerife adventure",
-        "transmission": "Transmission",
-        "viewAll": "View all"
+        "transmission": "Transmission"
       },
       "excursions": {
         "price": "Price",
         "title": "Popular Excursions",
+        "viewAll": "View all",
         "duration": "Duration",
         "language": "Language",
         "subtitle": "Discover the best of Tenerife",
-        "groupSize": "Group Size",
-        "viewAll": "View all"
+        "groupSize": "Group Size"
       },
       "accommodation": {
         "area": "Area",
         "title": "Places to Stay",
+        "viewAll": "View all",
         "bedrooms": "Bedrooms",
         "location": "Location",
         "subtitle": "Find your perfect accommodation in Tenerife",
         "amenities": "Amenities",
-        "bathrooms": "Bathrooms",
-        "viewAll": "View all"
-      },
-      "blog": {
-        "title": "Blog",
-        "subtitle": "Latest news and tips",
-        "viewAll": "View all",
-        "author": "Author",
-        "readTime": "Read time",
-        "publishedDate": "Published on"
+        "bathrooms": "Bathrooms"
       }
     },
     "navigation": {
@@ -540,6 +623,7 @@
       "excursions": "Excursions",
       "accommodation": "Accommodation"
     },
+    "selectLanguage": "Select language",
     "personalizedRequest": {
       "title": "Have a personalized request?",
       "button": "Send Request",
@@ -548,7 +632,6 @@
     }
   },
   "es": {
-    "selectLanguage": "Seleccionar idioma",
     "cta": {
       "title": "¿No sabes por dónde empezar?",
       "button": "Escribir en WhatsApp",
@@ -573,6 +656,7 @@
     "hero": {
       "cars": {
         "type": "Tipo de coche",
+        "brand": "Marca",
         "title": "Coches",
         "types": [
           {
@@ -595,24 +679,41 @@
         "pickup": "Fecha de recogida",
         "dropoff": "Fecha de devolución",
         "bodyType": "Tipo de carrocería",
-        "bodyTypeOptions": [
-          { "label": "Sedán", "value": "sedan" },
-          { "label": "SUV", "value": "suv" },
-          { "label": "Familiar", "value": "wagon" },
-          { "label": "Descapotable", "value": "convertible" }
-        ],
-        "brand": "Marca",
         "transmission": "Transmisión",
+        "bodyTypeOptions": [
+          {
+            "label": "Sedán",
+            "value": "sedan"
+          },
+          {
+            "label": "SUV",
+            "value": "suv"
+          },
+          {
+            "label": "Familiar",
+            "value": "wagon"
+          },
+          {
+            "label": "Descapotable",
+            "value": "convertible"
+          }
+        ],
         "transmissionOptions": [
-          { "label": "Automático", "value": "automatic" },
-          { "label": "Manual", "value": "manual" }
+          {
+            "label": "Automático",
+            "value": "automatic"
+          },
+          {
+            "label": "Manual",
+            "value": "manual"
+          }
         ]
       },
       "tabs": {
+        "blog": "Blog",
         "cars": "Coches",
         "excursions": "Excursiones",
-        "accommodation": "Alojamiento",
-        "blog": "Blog"
+        "accommodation": "Alojamiento"
       },
       "title": "Bienvenido a Tenerife",
       "search": "Buscar",
@@ -642,14 +743,27 @@
         "people": "Número de personas",
         "language": "Idioma",
         "languageOptions": [
-          { "label": "Español", "value": "es" },
-          { "label": "Inglés", "value": "en" },
-          { "label": "Alemán", "value": "de" },
-          { "label": "Francés", "value": "fr" }
+          {
+            "label": "Español",
+            "value": "es"
+          },
+          {
+            "label": "Inglés",
+            "value": "en"
+          },
+          {
+            "label": "Alemán",
+            "value": "de"
+          },
+          {
+            "label": "Francés",
+            "value": "fr"
+          }
         ]
       },
       "accommodation": {
         "type": "Tipo de propiedad",
+        "rooms": "Habitaciones",
         "title": "Alojamiento",
         "types": [
           {
@@ -676,17 +790,29 @@
         "guests": "Huéspedes",
         "checkin": "Check-in",
         "checkout": "Check-out",
-        "rooms": "Habitaciones",
         "roomsList": [
-          { "label": "1 Habitación", "value": "1" },
-          { "label": "2 Habitaciones", "value": "2" },
-          { "label": "3 Habitaciones", "value": "3" },
-          { "label": "4+ Habitaciones", "value": "4+" }
+          {
+            "label": "1 Habitación",
+            "value": "1"
+          },
+          {
+            "label": "2 Habitaciones",
+            "value": "2"
+          },
+          {
+            "label": "3 Habitaciones",
+            "value": "3"
+          },
+          {
+            "label": "4+ Habitaciones",
+            "value": "4+"
+          }
         ]
       }
     },
     "common": {
       "to": "Hasta",
+      "all": "Todos",
       "per": "por",
       "date": "Fecha",
       "from": "Desde",
@@ -699,28 +825,27 @@
       "rooms": "Habitaciones",
       "adults": "Adultos",
       "guests": "Huéspedes",
+      "noData": "Sin datos",
       "perDay": "/día",
       "rental": "Alquiler",
       "bookNow": "Reservar",
       "contact": "Contacto",
       "loading": "Cargando...",
+      "priceTo": "Precio hasta",
       "children": "Niños",
       "currency": "€",
       "perNight": "/noche",
-      "whatsapp": "WhatsApp",
-      "noResults": "No se encontraron resultados",
-      "backToHome": "Volver al inicio",
-      "viewDetails": "Ver detalles",
-      "serverError": "Error del servidor",
-      "noData": "Sin datos",
-      "hideSearch": "Ocultar búsqueda",
-      "showSearch": "Mostrar búsqueda",
-      "priceFrom": "Precio desde",
-      "priceTo": "Precio hasta",
+      "readMore": "Leer más",
       "typeRent": "Alquiler",
       "typeSale": "Venta",
-      "all": "Todos",
-      "readMore": "Leer más"
+      "whatsapp": "WhatsApp",
+      "noResults": "No se encontraron resultados",
+      "priceFrom": "Precio desde",
+      "backToHome": "Volver al inicio",
+      "hideSearch": "Ocultar búsqueda",
+      "showSearch": "Mostrar búsqueda",
+      "serverError": "Error del servidor",
+      "viewDetails": "Ver detalles"
     },
     "footer": {
       "social": "Redes sociales",
@@ -768,42 +893,42 @@
       "transmission": "Transmisión"
     },
     "sections": {
+      "blog": {
+        "title": "Blog",
+        "author": "Autor",
+        "viewAll": "Ver todo",
+        "readTime": "Tiempo de lectura",
+        "subtitle": "Últimas noticias y consejos",
+        "publishedDate": "Publicado el"
+      },
       "cars": {
         "year": "Año",
         "seats": "Asientos",
         "title": "Alquiler de coches",
+        "viewAll": "Ver todo",
         "features": "Características",
         "fuelType": "Tipo de combustible",
         "subtitle": "Encuentra el coche perfecto para aventuras en Tenerife",
-        "transmission": "Transmisión",
-        "viewAll": "Ver todo"
+        "transmission": "Transmisión"
       },
       "excursions": {
         "price": "Precio",
         "title": "Excursiones populares",
+        "viewAll": "Ver todo",
         "duration": "Duración",
         "language": "Idioma",
         "subtitle": "Descubre lo mejor de Tenerife",
-        "groupSize": "Tamaño del grupo",
-        "viewAll": "Ver todo"
+        "groupSize": "Tamaño del grupo"
       },
       "accommodation": {
         "area": "Área",
         "title": "Alojamientos",
+        "viewAll": "Ver todo",
         "bedrooms": "Dormitorios",
         "location": "Ubicación",
         "subtitle": "Encuentra el alojamiento perfecto en Tenerife",
         "amenities": "Comodidades",
-        "bathrooms": "Baños",
-        "viewAll": "Ver todo"
-      },
-      "blog": {
-        "title": "Blog",
-        "subtitle": "Últimas noticias y consejos",
-        "viewAll": "Ver todo",
-        "author": "Autor",
-        "readTime": "Tiempo de lectura",
-        "publishedDate": "Publicado el"
+        "bathrooms": "Baños"
       }
     },
     "navigation": {
@@ -814,6 +939,7 @@
       "excursions": "Excursiones",
       "accommodation": "Alojamiento"
     },
+    "selectLanguage": "Seleccionar idioma",
     "personalizedRequest": {
       "title": "¿Tienes una solicitud personalizada?",
       "button": "Enviar solicitud",
@@ -822,7 +948,6 @@
     }
   },
   "fr": {
-    "selectLanguage": "Sélectionner la langue",
     "cta": {
       "title": "Vous ne savez pas par où commencer ?",
       "button": "Écrire sur WhatsApp",
@@ -847,6 +972,7 @@
     "hero": {
       "cars": {
         "type": "Type de voiture",
+        "brand": "Marque",
         "title": "Voitures",
         "types": [
           {
@@ -869,24 +995,41 @@
         "pickup": "Date de prise en charge",
         "dropoff": "Date de retour",
         "bodyType": "Type de carrosserie",
-        "bodyTypeOptions": [
-          { "label": "Berline", "value": "sedan" },
-          { "label": "SUV", "value": "suv" },
-          { "label": "Break", "value": "wagon" },
-          { "label": "Cabriolet", "value": "convertible" }
-        ],
-        "brand": "Marque",
         "transmission": "Transmission",
+        "bodyTypeOptions": [
+          {
+            "label": "Berline",
+            "value": "sedan"
+          },
+          {
+            "label": "SUV",
+            "value": "suv"
+          },
+          {
+            "label": "Break",
+            "value": "wagon"
+          },
+          {
+            "label": "Cabriolet",
+            "value": "convertible"
+          }
+        ],
         "transmissionOptions": [
-          { "label": "Automatique", "value": "automatic" },
-          { "label": "Manuelle", "value": "manual" }
+          {
+            "label": "Automatique",
+            "value": "automatic"
+          },
+          {
+            "label": "Manuelle",
+            "value": "manual"
+          }
         ]
       },
       "tabs": {
+        "blog": "Blog",
         "cars": "Voitures",
         "excursions": "Excursions",
-        "accommodation": "Hébergement",
-        "blog": "Blog"
+        "accommodation": "Hébergement"
       },
       "title": "Bienvenue à Tenerife",
       "search": "Rechercher",
@@ -916,14 +1059,27 @@
         "people": "Nombre de personnes",
         "language": "Langue",
         "languageOptions": [
-          { "label": "Français", "value": "fr" },
-          { "label": "Anglais", "value": "en" },
-          { "label": "Allemand", "value": "de" },
-          { "label": "Espagnol", "value": "es" }
+          {
+            "label": "Français",
+            "value": "fr"
+          },
+          {
+            "label": "Anglais",
+            "value": "en"
+          },
+          {
+            "label": "Allemand",
+            "value": "de"
+          },
+          {
+            "label": "Espagnol",
+            "value": "es"
+          }
         ]
       },
       "accommodation": {
         "type": "Type de propriété",
+        "rooms": "Chambres",
         "title": "Hébergement",
         "types": [
           {
@@ -950,17 +1106,29 @@
         "guests": "Invités",
         "checkin": "Arrivée",
         "checkout": "Départ",
-        "rooms": "Chambres",
         "roomsList": [
-          { "label": "1 Chambre", "value": "1" },
-          { "label": "2 Chambres", "value": "2" },
-          { "label": "3 Chambres", "value": "3" },
-          { "label": "4+ Chambres", "value": "4+" }
+          {
+            "label": "1 Chambre",
+            "value": "1"
+          },
+          {
+            "label": "2 Chambres",
+            "value": "2"
+          },
+          {
+            "label": "3 Chambres",
+            "value": "3"
+          },
+          {
+            "label": "4+ Chambres",
+            "value": "4+"
+          }
         ]
       }
     },
     "common": {
       "to": "À",
+      "all": "Tous",
       "per": "par",
       "date": "Date",
       "from": "De",
@@ -973,28 +1141,27 @@
       "rooms": "Chambres",
       "adults": "Adultes",
       "guests": "Invités",
+      "noData": "Aucune donnée",
       "perDay": "/jour",
       "rental": "Location",
       "bookNow": "Réserver",
       "contact": "Contact",
       "loading": "Chargement...",
+      "priceTo": "Prix jusqu'à",
       "children": "Enfants",
       "currency": "€",
       "perNight": "/nuit",
-      "whatsapp": "WhatsApp",
-      "noResults": "Aucun résultat trouvé",
-      "backToHome": "Retour à l'accueil",
-      "viewDetails": "Voir les détails",
-      "serverError": "Erreur du serveur",
-      "noData": "Aucune donnée",
-      "hideSearch": "Masquer la recherche",
-      "showSearch": "Afficher la recherche",
-      "priceFrom": "Prix à partir de",
-      "priceTo": "Prix jusqu'à",
+      "readMore": "Lire la suite",
       "typeRent": "Location",
       "typeSale": "Vente",
-      "all": "Tous",
-      "readMore": "Lire la suite"
+      "whatsapp": "WhatsApp",
+      "noResults": "Aucun résultat trouvé",
+      "priceFrom": "Prix à partir de",
+      "backToHome": "Retour à l'accueil",
+      "hideSearch": "Masquer la recherche",
+      "showSearch": "Afficher la recherche",
+      "serverError": "Erreur du serveur",
+      "viewDetails": "Voir les détails"
     },
     "footer": {
       "social": "Réseaux sociaux",
@@ -1042,42 +1209,42 @@
       "transmission": "Transmission"
     },
     "sections": {
+      "blog": {
+        "title": "Blog",
+        "author": "Auteur",
+        "viewAll": "Voir tout",
+        "readTime": "Temps de lecture",
+        "subtitle": "Dernières nouvelles et conseils",
+        "publishedDate": "Publié le"
+      },
       "cars": {
         "year": "Année",
         "seats": "Sièges",
         "title": "Location de voitures",
+        "viewAll": "Voir tout",
         "features": "Caractéristiques",
         "fuelType": "Type de carburant",
         "subtitle": "Trouvez la voiture parfaite pour votre aventure à Tenerife",
-        "transmission": "Transmission",
-        "viewAll": "Voir tout"
+        "transmission": "Transmission"
       },
       "excursions": {
         "price": "Prix",
         "title": "Excursions populaires",
+        "viewAll": "Voir tout",
         "duration": "Durée",
         "language": "Langue",
         "subtitle": "Découvrez le meilleur de Tenerife",
-        "groupSize": "Taille du groupe",
-        "viewAll": "Voir tout"
+        "groupSize": "Taille du groupe"
       },
       "accommodation": {
         "area": "Superficie",
         "title": "Lieux de séjour",
+        "viewAll": "Voir tout",
         "bedrooms": "Chambres",
         "location": "Localisation",
         "subtitle": "Trouvez votre hébergement parfait à Tenerife",
         "amenities": "Équipements",
-        "bathrooms": "Salles de bain",
-        "viewAll": "Voir tout"
-      },
-      "blog": {
-        "title": "Blog",
-        "subtitle": "Dernières nouvelles et conseils",
-        "viewAll": "Voir tout",
-        "author": "Auteur",
-        "readTime": "Temps de lecture",
-        "publishedDate": "Publié le"
+        "bathrooms": "Salles de bain"
       }
     },
     "navigation": {
@@ -1088,6 +1255,7 @@
       "excursions": "Excursions",
       "accommodation": "Hébergement"
     },
+    "selectLanguage": "Sélectionner la langue",
     "personalizedRequest": {
       "title": "Vous avez une demande personnalisée ?",
       "button": "Envoyer la demande",
@@ -1096,7 +1264,6 @@
     }
   },
   "pl": {
-    "selectLanguage": "Wybierz język",
     "cta": {
       "title": "Nie wiesz od czego zacząć?",
       "button": "Napisz na WhatsApp",
@@ -1121,6 +1288,7 @@
     "hero": {
       "cars": {
         "type": "Typ samochodu",
+        "brand": "Marka",
         "title": "Samochody",
         "types": [
           {
@@ -1143,24 +1311,41 @@
         "pickup": "Data odbioru",
         "dropoff": "Data zwrotu",
         "bodyType": "Typ nadwozia",
-        "bodyTypeOptions": [
-          { "label": "Sedan", "value": "sedan" },
-          { "label": "SUV", "value": "suv" },
-          { "label": "Kombi", "value": "wagon" },
-          { "label": "Kabriolet", "value": "convertible" }
-        ],
-        "brand": "Marka",
         "transmission": "Skrzynia biegów",
+        "bodyTypeOptions": [
+          {
+            "label": "Sedan",
+            "value": "sedan"
+          },
+          {
+            "label": "SUV",
+            "value": "suv"
+          },
+          {
+            "label": "Kombi",
+            "value": "wagon"
+          },
+          {
+            "label": "Kabriolet",
+            "value": "convertible"
+          }
+        ],
         "transmissionOptions": [
-          { "label": "Automatyczna", "value": "automatic" },
-          { "label": "Manualna", "value": "manual" }
+          {
+            "label": "Automatyczna",
+            "value": "automatic"
+          },
+          {
+            "label": "Manualna",
+            "value": "manual"
+          }
         ]
       },
       "tabs": {
+        "blog": "Blog",
         "cars": "Samochody",
         "excursions": "Wycieczki",
-        "accommodation": "Zakwaterowanie",
-        "blog": "Blog"
+        "accommodation": "Zakwaterowanie"
       },
       "title": "Witamy na Teneryfie",
       "search": "Szukaj",
@@ -1190,14 +1375,27 @@
         "people": "Liczba osób",
         "language": "Język",
         "languageOptions": [
-          { "label": "Polski", "value": "pl" },
-          { "label": "Angielski", "value": "en" },
-          { "label": "Niemiecki", "value": "de" },
-          { "label": "Hiszpański", "value": "es" }
+          {
+            "label": "Polski",
+            "value": "pl"
+          },
+          {
+            "label": "Angielski",
+            "value": "en"
+          },
+          {
+            "label": "Niemiecki",
+            "value": "de"
+          },
+          {
+            "label": "Hiszpański",
+            "value": "es"
+          }
         ]
       },
       "accommodation": {
         "type": "Typ zakwaterowania",
+        "rooms": "Pokoje",
         "title": "Zakwaterowanie",
         "types": [
           {
@@ -1224,17 +1422,29 @@
         "guests": "Goście",
         "checkin": "Zameldowanie",
         "checkout": "Wymeldowanie",
-        "rooms": "Pokoje",
         "roomsList": [
-          { "label": "1 Pokój", "value": "1" },
-          { "label": "2 Pokoje", "value": "2" },
-          { "label": "3 Pokoje", "value": "3" },
-          { "label": "4+ Pokoi", "value": "4+" }
+          {
+            "label": "1 Pokój",
+            "value": "1"
+          },
+          {
+            "label": "2 Pokoje",
+            "value": "2"
+          },
+          {
+            "label": "3 Pokoje",
+            "value": "3"
+          },
+          {
+            "label": "4+ Pokoi",
+            "value": "4+"
+          }
         ]
       }
     },
     "common": {
       "to": "Do",
+      "all": "Wszystkie",
       "per": "za",
       "date": "Data",
       "from": "Od",
@@ -1247,28 +1457,27 @@
       "rooms": "Pokoje",
       "adults": "Dorośli",
       "guests": "Goście",
+      "noData": "Brak danych",
       "perDay": "/dzień",
       "rental": "Wynajem",
       "bookNow": "Rezerwuj",
       "contact": "Kontakt",
       "loading": "Ładowanie...",
+      "priceTo": "Cena do",
       "children": "Dzieci",
       "currency": "€",
       "perNight": "/noc",
-      "whatsapp": "WhatsApp",
-      "noResults": "Brak wyników",
-      "backToHome": "Powrót do strony głównej",
-      "viewDetails": "Zobacz szczegóły",
-      "serverError": "Błąd serwera",
-      "noData": "Brak danych",
-      "hideSearch": "Ukryj wyszukiwanie",
-      "showSearch": "Pokaż wyszukiwanie",
-      "priceFrom": "Cena od",
-      "priceTo": "Cena do",
+      "readMore": "Czytaj więcej",
       "typeRent": "Wynajem",
       "typeSale": "Sprzedaż",
-      "all": "Wszystkie",
-      "readMore": "Czytaj więcej"
+      "whatsapp": "WhatsApp",
+      "noResults": "Brak wyników",
+      "priceFrom": "Cena od",
+      "backToHome": "Powrót do strony głównej",
+      "hideSearch": "Ukryj wyszukiwanie",
+      "showSearch": "Pokaż wyszukiwanie",
+      "serverError": "Błąd serwera",
+      "viewDetails": "Zobacz szczegóły"
     },
     "footer": {
       "social": "Media społecznościowe",
@@ -1316,42 +1525,42 @@
       "transmission": "Skrzynia biegów"
     },
     "sections": {
+      "blog": {
+        "title": "Blog",
+        "author": "Autor",
+        "viewAll": "Zobacz wszystkie",
+        "readTime": "Czas czytania",
+        "subtitle": "Najnowsze wiadomości i porady",
+        "publishedDate": "Opublikowano"
+      },
       "cars": {
         "year": "Rok",
         "seats": "Miejsca",
         "title": "Wynajem Samochodów",
+        "viewAll": "Zobacz wszystkie",
         "features": "Cechy",
         "fuelType": "Rodzaj paliwa",
         "subtitle": "Znajdź idealny samochód dla Twojej wycieczki na Teneryfę",
-        "transmission": "Skrzynia biegów",
-        "viewAll": "Zobacz wszystkie"
+        "transmission": "Skrzynia biegów"
       },
       "excursions": {
         "price": "Cena",
         "title": "Popularne wycieczki",
+        "viewAll": "Zobacz wszystkie",
         "duration": "Czas trwania",
         "language": "Język",
         "subtitle": "Odkryj najlepsze miejsca na Teneryfie",
-        "groupSize": "Rozmiar grupy",
-        "viewAll": "Zobacz wszystkie"
+        "groupSize": "Rozmiar grupy"
       },
       "accommodation": {
         "area": "Powierzchnia",
         "title": "Miejsca do Zamieszkania",
+        "viewAll": "Zobacz wszystkie",
         "bedrooms": "Sypialnie",
         "location": "Lokalizacja",
         "subtitle": "Znajdź idealne zakwaterowanie w Tenerife",
         "amenities": "Udogodnienia",
-        "bathrooms": "Łazienki",
-        "viewAll": "Zobacz wszystkie"
-      },
-      "blog": {
-        "title": "Blog",
-        "subtitle": "Najnowsze wiadomości i porady",
-        "viewAll": "Zobacz wszystkie",
-        "author": "Autor",
-        "readTime": "Czas czytania",
-        "publishedDate": "Opublikowano"
+        "bathrooms": "Łazienki"
       }
     },
     "navigation": {
@@ -1362,6 +1571,7 @@
       "excursions": "Wycieczki",
       "accommodation": "Zakwaterowanie"
     },
+    "selectLanguage": "Wybierz język",
     "personalizedRequest": {
       "title": "Masz spersonalizowaną prośbę?",
       "button": "Wyślij prośbę",
@@ -1370,7 +1580,6 @@
     }
   },
   "ru": {
-    "selectLanguage": "Выберите язык",
     "cta": {
       "title": "Не знаете с чего начать?",
       "button": "Написать в WhatsApp",
@@ -1395,6 +1604,7 @@
     "hero": {
       "cars": {
         "type": "Тип автомобиля",
+        "brand": "Марка",
         "title": "Автомобили",
         "types": [
           {
@@ -1417,24 +1627,41 @@
         "pickup": "Дата получения",
         "dropoff": "Дата возврата",
         "bodyType": "Тип кузова",
-        "bodyTypeOptions": [
-          { "label": "Седан", "value": "sedan" },
-          { "label": "SUV", "value": "suv" },
-          { "label": "Универсал", "value": "wagon" },
-          { "label": "Кабриолет", "value": "convertible" }
-        ],
-        "brand": "Марка",
         "transmission": "Коробка передач",
+        "bodyTypeOptions": [
+          {
+            "label": "Седан",
+            "value": "sedan"
+          },
+          {
+            "label": "SUV",
+            "value": "suv"
+          },
+          {
+            "label": "Универсал",
+            "value": "wagon"
+          },
+          {
+            "label": "Кабриолет",
+            "value": "convertible"
+          }
+        ],
         "transmissionOptions": [
-          { "label": "Автомат", "value": "automatic" },
-          { "label": "Механика", "value": "manual" }
+          {
+            "label": "Автомат",
+            "value": "automatic"
+          },
+          {
+            "label": "Механика",
+            "value": "manual"
+          }
         ]
       },
       "tabs": {
+        "blog": "Блог",
         "cars": "Автомобили",
         "excursions": "Экскурсии",
-        "accommodation": "Жилье",
-        "blog": "Блог"
+        "accommodation": "Жилье"
       },
       "title": "Добро пожаловать на Тенерифе",
       "search": "Поиск",
@@ -1464,14 +1691,27 @@
         "people": "Количество человек",
         "language": "Язык",
         "languageOptions": [
-          { "label": "Русский", "value": "ru" },
-          { "label": "Английский", "value": "en" },
-          { "label": "Немецкий", "value": "de" },
-          { "label": "Испанский", "value": "es" }
+          {
+            "label": "Русский",
+            "value": "ru"
+          },
+          {
+            "label": "Английский",
+            "value": "en"
+          },
+          {
+            "label": "Немецкий",
+            "value": "de"
+          },
+          {
+            "label": "Испанский",
+            "value": "es"
+          }
         ]
       },
       "accommodation": {
         "type": "Тип недвижимости",
+        "rooms": "Комнаты",
         "title": "Жилье",
         "types": [
           {
@@ -1498,17 +1738,29 @@
         "guests": "Гости",
         "checkin": "Заезд",
         "checkout": "Выезд",
-        "rooms": "Комнаты",
         "roomsList": [
-          { "label": "1 комната", "value": "1" },
-          { "label": "2 комнаты", "value": "2" },
-          { "label": "3 комнаты", "value": "3" },
-          { "label": "4+ комнат", "value": "4+" }
+          {
+            "label": "1 комната",
+            "value": "1"
+          },
+          {
+            "label": "2 комнаты",
+            "value": "2"
+          },
+          {
+            "label": "3 комнаты",
+            "value": "3"
+          },
+          {
+            "label": "4+ комнат",
+            "value": "4+"
+          }
         ]
       }
     },
     "common": {
       "to": "До",
+      "all": "Все",
       "per": "за",
       "date": "Дата",
       "from": "От",
@@ -1521,28 +1773,27 @@
       "rooms": "Комнаты",
       "adults": "Взрослые",
       "guests": "Гости",
+      "noData": "Нет данных",
       "perDay": "/день",
       "rental": "Аренда",
       "bookNow": "Бронь",
       "contact": "Контакт",
       "loading": "Загрузка...",
+      "priceTo": "Цена до",
       "children": "Дети",
       "currency": "€",
       "perNight": "/ночь",
-      "whatsapp": "WhatsApp",
-      "noResults": "Результаты не найдены",
-      "backToHome": "Вернуться на главную",
-      "viewDetails": "Подробнее",
-      "serverError": "Ошибка сервера",
-      "noData": "Нет данных",
-      "hideSearch": "Скрыть поиск",
-      "showSearch": "Показать поиск",
-      "priceFrom": "Цена от",
-      "priceTo": "Цена до",
+      "readMore": "Читать далее",
       "typeRent": "Аренда",
       "typeSale": "Продажа",
-      "all": "Все",
-      "readMore": "Читать далее"
+      "whatsapp": "WhatsApp",
+      "noResults": "Результаты не найдены",
+      "priceFrom": "Цена от",
+      "backToHome": "Вернуться на главную",
+      "hideSearch": "Скрыть поиск",
+      "showSearch": "Показать поиск",
+      "serverError": "Ошибка сервера",
+      "viewDetails": "Подробнее"
     },
     "footer": {
       "social": "Социальные сети",
@@ -1590,42 +1841,42 @@
       "transmission": "Коробка передач"
     },
     "sections": {
+      "blog": {
+        "title": "Блог",
+        "author": "Автор",
+        "viewAll": "Показать все",
+        "readTime": "Время чтения",
+        "subtitle": "Последние новости и советы",
+        "publishedDate": "Опубликовано"
+      },
       "cars": {
         "year": "Год",
         "seats": "Места",
         "title": "Аренда автомобилей",
+        "viewAll": "Показать все",
         "features": "Особенности",
         "fuelType": "Тип топлива",
         "subtitle": "Найдите идеальный автомобиль для приключений на Тенерифе",
-        "transmission": "Коробка передач",
-        "viewAll": "Показать все"
+        "transmission": "Коробка передач"
       },
       "excursions": {
         "price": "Цена",
         "title": "Популярные экскурсии",
+        "viewAll": "Показать все",
         "duration": "Продолжительность",
         "language": "Язык",
         "subtitle": "Откройте для себя лучшее на Тенерифе",
-        "groupSize": "Размер группы",
-        "viewAll": "Показать все"
+        "groupSize": "Размер группы"
       },
       "accommodation": {
         "area": "Площадь",
         "title": "Места для проживания",
+        "viewAll": "Показать все",
         "bedrooms": "Спальни",
         "location": "Местоположение",
         "subtitle": "Найдите идеальное жилье на Тенерифе",
         "amenities": "Удобства",
-        "bathrooms": "Ванные комнаты",
-        "viewAll": "Показать все"
-      },
-      "blog": {
-        "title": "Блог",
-        "subtitle": "Последние новости и советы",
-        "viewAll": "Показать все",
-        "author": "Автор",
-        "readTime": "Время чтения",
-        "publishedDate": "Опубликовано"
+        "bathrooms": "Ванные комнаты"
       }
     },
     "navigation": {
@@ -1636,6 +1887,7 @@
       "excursions": "Экскурсии",
       "accommodation": "Жилье"
     },
+    "selectLanguage": "Выберите язык",
     "personalizedRequest": {
       "title": "Есть персональный запрос?",
       "button": "Отправить запрос",
@@ -1644,7 +1896,6 @@
     }
   },
   "uk": {
-    "selectLanguage": "Оберіть мову",
     "cta": {
       "title": "Не знаєте з чого почати?",
       "button": "Написати в WhatsApp",
@@ -1669,6 +1920,7 @@
     "hero": {
       "cars": {
         "type": "Тип автомобіля",
+        "brand": "Марка",
         "title": "Автомобілі",
         "types": [
           {
@@ -1691,24 +1943,41 @@
         "pickup": "Дата отримання",
         "dropoff": "Дата повернення",
         "bodyType": "Тип кузова",
-        "bodyTypeOptions": [
-          { "label": "Седан", "value": "sedan" },
-          { "label": "SUV", "value": "suv" },
-          { "label": "Універсал", "value": "wagon" },
-          { "label": "Кабріолет", "value": "convertible" }
-        ],
-        "brand": "Марка",
         "transmission": "Коробка передач",
+        "bodyTypeOptions": [
+          {
+            "label": "Седан",
+            "value": "sedan"
+          },
+          {
+            "label": "SUV",
+            "value": "suv"
+          },
+          {
+            "label": "Універсал",
+            "value": "wagon"
+          },
+          {
+            "label": "Кабріолет",
+            "value": "convertible"
+          }
+        ],
         "transmissionOptions": [
-          { "label": "Автомат", "value": "automatic" },
-          { "label": "Механіка", "value": "manual" }
+          {
+            "label": "Автомат",
+            "value": "automatic"
+          },
+          {
+            "label": "Механіка",
+            "value": "manual"
+          }
         ]
       },
       "tabs": {
+        "blog": "Блог",
         "cars": "Автомобілі",
         "excursions": "Екскурсії",
-        "accommodation": "Житло",
-        "blog": "Блог"
+        "accommodation": "Житло"
       },
       "title": "Ласкаво просимо на Тенеріфе",
       "search": "Пошук",
@@ -1738,14 +2007,27 @@
         "people": "Кількість осіб",
         "language": "Мова",
         "languageOptions": [
-          { "label": "Українська", "value": "uk" },
-          { "label": "Англійська", "value": "en" },
-          { "label": "Німецька", "value": "de" },
-          { "label": "Іспанська", "value": "es" }
+          {
+            "label": "Українська",
+            "value": "uk"
+          },
+          {
+            "label": "Англійська",
+            "value": "en"
+          },
+          {
+            "label": "Німецька",
+            "value": "de"
+          },
+          {
+            "label": "Іспанська",
+            "value": "es"
+          }
         ]
       },
       "accommodation": {
         "type": "Тип нерухомості",
+        "rooms": "Кімнати",
         "title": "Житло",
         "types": [
           {
@@ -1772,17 +2054,29 @@
         "guests": "Гості",
         "checkin": "Заїзд",
         "checkout": "Виїзд",
-        "rooms": "Кімнати",
         "roomsList": [
-          { "label": "1 кімната", "value": "1" },
-          { "label": "2 кімнати", "value": "2" },
-          { "label": "3 кімнати", "value": "3" },
-          { "label": "4+ кімнат", "value": "4+" }
+          {
+            "label": "1 кімната",
+            "value": "1"
+          },
+          {
+            "label": "2 кімнати",
+            "value": "2"
+          },
+          {
+            "label": "3 кімнати",
+            "value": "3"
+          },
+          {
+            "label": "4+ кімнат",
+            "value": "4+"
+          }
         ]
       }
     },
     "common": {
       "to": "До",
+      "all": "Всі",
       "per": "за",
       "date": "Дата",
       "from": "Від",
@@ -1795,28 +2089,27 @@
       "rooms": "Кімнати",
       "adults": "Дорослі",
       "guests": "Гості",
+      "noData": "Немає даних",
       "perDay": "/день",
       "rental": "Оренда",
       "bookNow": "Бронь",
       "contact": "Контакт",
       "loading": "Завантаження...",
+      "priceTo": "Ціна до",
       "children": "Діти",
       "currency": "€",
       "perNight": "/ніч",
-      "whatsapp": "WhatsApp",
-      "noResults": "Результати не знайдено",
-      "backToHome": "Повернутися на головну",
-      "viewDetails": "Детальніше",
-      "serverError": "Помилка сервера",
-      "noData": "Немає даних",
-      "hideSearch": "Приховати пошук",
-      "showSearch": "Показати пошук",
-      "priceFrom": "Ціна від",
-      "priceTo": "Ціна до",
+      "readMore": "Читати далі",
       "typeRent": "Оренда",
       "typeSale": "Продаж",
-      "all": "Всі",
-      "readMore": "Читати далі"
+      "whatsapp": "WhatsApp",
+      "noResults": "Результати не знайдено",
+      "priceFrom": "Ціна від",
+      "backToHome": "Повернутися на головну",
+      "hideSearch": "Приховати пошук",
+      "showSearch": "Показати пошук",
+      "serverError": "Помилка сервера",
+      "viewDetails": "Детальніше"
     },
     "footer": {
       "social": "Соціальні мережі",
@@ -1864,42 +2157,42 @@
       "transmission": "Коробка передач"
     },
     "sections": {
+      "blog": {
+        "title": "Блог",
+        "author": "Автор",
+        "viewAll": "Показати все",
+        "readTime": "Час читання",
+        "subtitle": "Останні новини та поради",
+        "publishedDate": "Опубліковано"
+      },
       "cars": {
         "year": "Рік",
         "seats": "Місця",
         "title": "Оренда автомобілів",
+        "viewAll": "Показати все",
         "features": "Особливості",
         "fuelType": "Тип палива",
         "subtitle": "Знайдіть ідеальний автомобіль для пригод на Тенеріфе",
-        "transmission": "Коробка передач",
-        "viewAll": "Показати все"
+        "transmission": "Коробка передач"
       },
       "excursions": {
         "price": "Ціна",
         "title": "Популярні екскурсії",
+        "viewAll": "Показати все",
         "duration": "Тривалість",
         "language": "Мова",
         "subtitle": "Відкрийте для себе найкраще на Тенеріфе",
-        "groupSize": "Розмір групи",
-        "viewAll": "Показати все"
+        "groupSize": "Розмір групи"
       },
       "accommodation": {
         "area": "Площа",
         "title": "Місця для проживання",
+        "viewAll": "Показати все",
         "bedrooms": "Спальні",
         "location": "Місцезнаходження",
         "subtitle": "Знайдіть ідеальне житло на Тенеріфе",
         "amenities": "Зручності",
-        "bathrooms": "Ванні кімнати",
-        "viewAll": "Показати все"
-      },
-      "blog": {
-        "title": "Блог",
-        "subtitle": "Останні новини та поради",
-        "viewAll": "Показати все",
-        "author": "Автор",
-        "readTime": "Час читання",
-        "publishedDate": "Опубліковано"
+        "bathrooms": "Ванні кімнати"
       }
     },
     "navigation": {
@@ -1910,6 +2203,7 @@
       "excursions": "Екскурсії",
       "accommodation": "Житло"
     },
+    "selectLanguage": "Оберіть мову",
     "personalizedRequest": {
       "title": "Є персональний запит?",
       "button": "Надіслати запит",
