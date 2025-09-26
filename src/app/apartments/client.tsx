@@ -173,7 +173,9 @@ export default function ApartmentsPageClient({
   } = useFilterSync({
     pageType: "apartments",
     filters,
-    onFiltersChange: setFilters,
+    onFiltersChange: (newFilters) => {
+      setFilters(newFilters as ApartmentFilterParams);
+    },
     onFiltersChanged: () => setFiltersChanged(true),
   });
 

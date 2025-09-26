@@ -157,11 +157,6 @@ export function AdvancedFilterPanel({
               return isNaN(date.getTime()) ? null : date;
             }}
             valueFormat="DD/MM/YYYY"
-            styles={{
-              calendar: {
-                zIndex: 1000,
-              },
-            }}
           />
         );
 

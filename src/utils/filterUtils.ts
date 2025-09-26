@@ -64,16 +64,21 @@ export interface CarFilterParams {
 
 // Интерфейс для фильтров туров
 export interface TourFilterParams {
-  duration: string;
+  location: string;
+  tourType: string;
   priceFrom: string;
   priceTo: string;
-  difficulty: string;
-  location: string;
-  category: string;
+  duration: string;
+  durationType: string;
   availableFrom: string;
-  maxGroupSize: string;
-  includes: string;
-  tourStatus: string;
+  language: string;
+  category: string;
+  groupSize: string;
+  difficulty: string;
+  rating: string;
+  transport: boolean;
+  meals: boolean;
+  tickets: boolean;
   [key: string]: string | string[] | number | boolean | undefined;
 }
 

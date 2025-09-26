@@ -918,9 +918,6 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                         boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
                       },
                     },
-                    calendar: {
-                      zIndex: 1000,
-                    },
                   }}
                 />
                 <DateInput
@@ -946,9 +943,6 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                         borderColor: "#3182ce",
                         boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
                       },
-                    },
-                    calendar: {
-                      zIndex: 1000,
                     },
                   }}
                 />

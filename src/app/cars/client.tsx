@@ -185,7 +185,9 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
   } = useFilterSync({
     pageType: "cars",
     filters,
-    onFiltersChange: setFilters,
+    onFiltersChange: (newFilters) => {
+      setFilters(newFilters as CarFilterParams);
+    },
   });
 
   // Инициализация текущей страницы из URL параметров
@@ -307,7 +309,8 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
       airConditioner: false,
       rearCamera: false,
       multimedia: false,
-      type: "",
+      bluetooth: false,
+      gps: false,
       carStatus: "",
     });
   }, []);
