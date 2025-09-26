@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { openBookingWhatsApp } from "@/utils/whatsapp";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 
 interface PropertyData {
@@ -426,7 +425,6 @@ const ApartmentCard = ({
       </div>
     );
   }
-
 
   return (
     <div className="space-y-4">

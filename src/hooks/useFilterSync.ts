@@ -6,9 +6,10 @@ interface UseFilterSyncOptions {
   pageType: 'apartments' | 'cars' | 'tours';
   filters: FilterParams;
   onFiltersChange: (filters: FilterParams) => void;
+  onFiltersChanged?: () => void;
 }
 
-export const useFilterSync = ({ pageType, filters, onFiltersChange }: UseFilterSyncOptions) => {
+export const useFilterSync = ({ pageType, filters, onFiltersChange, onFiltersChanged }: UseFilterSyncOptions) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -28,14 +29,41 @@ export const useFilterSync = ({ pageType, filters, onFiltersChange }: UseFilterS
     const newFilters = { ...filters, [key]: value };
     onFiltersChange(newFilters);
     updateUrl(newFilters);
-  }, [filters, onFiltersChange, updateUrl]);
+    onFiltersChanged?.();
+  }, [filters, onFiltersChange, updateUrl, onFiltersChanged]);
 
   // Сброс фильтров
   const resetFilters = useCallback(() => {
-    const emptyFilters: FilterParams = {};
+    const emptyFilters: FilterParams = {
+      propertyType: "",
+      rooms: "",
+      areaFrom: "",
+      areaTo: "",
+      priceFrom: "",
+      priceTo: "",
+      floorFrom: "",
+      floorTo: "",
+      yearBuiltFrom: "",
+      yearBuiltTo: "",
+      condition: "",
+      city: "",
+      district: "",
+      balcony: false,
+      terrace: false,
+      garden: false,
+      parking: false,
+      furnished: false,
+      airConditioner: false,
+      wifi: false,
+      washingMachine: false,
+      dishwasher: false,
+      type: "",
+      propertyStatus: "",
+    };
     onFiltersChange(emptyFilters);
     router.replace(`/${pageType}`, { scroll: false });
-  }, [pageType, onFiltersChange, router]);
+    onFiltersChanged?.();
+  }, [pageType, onFiltersChange, router, onFiltersChanged]);
 
   // Синхронизация с URL при загрузке страницы
   useEffect(() => {
