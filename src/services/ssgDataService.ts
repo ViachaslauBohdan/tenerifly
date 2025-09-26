@@ -18,7 +18,10 @@ const getAuthHeaders = () => {
 };
 
 // Функция для получения URL изображения
-const getImageUrl = (item: { images?: Array<{ url: string }>; image?: { url: string } }): string => {
+const getImageUrl = (item: {
+  images?: Array<{ url: string }>;
+  image?: { url: string };
+}): string => {
   if (item.images && item.images.length > 0) {
     if (item.images[0].url.startsWith("http")) {
       return item.images[0].url;
@@ -163,7 +166,7 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
 
   try {
     const url = `${API_URL}/api${endpoint}`;
-    
+
     const response = await fetch(url, {
       headers: getAuthHeaders(),
       next: { revalidate: 3600 }, // Кэширование на уровне Next.js
@@ -190,13 +193,10 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
 
 // Получение всех апартаментов
 export async function getAllProperties() {
-  console.log("getAllProperties called");
-  const result = await fetchWithCache(
+  return fetchWithCache(
     "/properties?populate=*&pagination[pageSize]=1000",
     "all-properties"
   );
-  console.log("getAllProperties result:", result);
-  return result;
 }
 
 // Получение всех автомобилей
@@ -308,101 +308,164 @@ export async function getHomePageData(language: string = "en") {
     // Трансформация туров
     const tours =
       toursResult.status === "fulfilled"
-        ? toursResult.value.map((tour: { id: number; documentId: string; name?: string; title?: string; description?: string; duration?: string; price?: { amount: number }; cost?: number; pricing?: { amount: number }; maxGroupSize?: number; max_group_size?: number; images?: Array<{ url: string }> }) => ({
-            id: tour.id,
-            documentId: tour.documentId,
-            title: tour.name || tour.title || "Tour",
-            description:
-              tour.description || "Discover amazing places in Tenerife",
-            duration: tour.duration || "3 hours",
-            price: `€${tour.price?.amount || tour.cost || tour.pricing?.amount || 50}`,
-            rating: 4.8,
-            groupSize: `${getLocalizedText(language, "max")} ${tour.maxGroupSize || tour.max_group_size || 20} ${getLocalizedText(language, "people")}`,
-            image: getImageUrl(tour),
-          }))
+        ? toursResult.value.map(
+            (tour: {
+              id: number;
+              documentId: string;
+              name?: string;
+              title?: string;
+              description?: string;
+              duration?: string;
+              price?: { amount: number };
+              cost?: number;
+              pricing?: { amount: number };
+              maxGroupSize?: number;
+              max_group_size?: number;
+              images?: Array<{ url: string }>;
+            }) => ({
+              id: tour.id,
+              documentId: tour.documentId,
+              title: tour.name || tour.title || "Tour",
+              description:
+                tour.description || "Discover amazing places in Tenerife",
+              duration: tour.duration || "3 hours",
+              price: `€${tour.price?.amount || tour.cost || tour.pricing?.amount || 50}`,
+              rating: 4.8,
+              groupSize: `${getLocalizedText(language, "max")} ${tour.maxGroupSize || tour.max_group_size || 20} ${getLocalizedText(language, "people")}`,
+              image: getImageUrl(tour),
+            })
+          )
         : [];
 
     // Трансформация автомобилей
     const cars =
       carsResult.status === "fulfilled"
-        ? carsResult.value.map((car: { id: number; documentId: string; title?: string; description?: string; specifications?: { make?: string; model?: string; transmission?: string; seats?: number; fuel?: string; year?: number }; features?: { air_conditioning?: boolean; bluetooth?: boolean }; rental_prices?: { day_1?: number }; location?: { city?: string; region?: string }; type?: string; car_status?: string; images?: Array<{ url: string }> }) => ({
-            id: car.id,
-            documentId: car.documentId,
-            title:
-              car.title ||
-              `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
-            description: car.description || "Reliable car for your journey",
-            image: getImageUrl(car),
-            price: `€${car.rental_prices?.day_1 || 30}/${getLocalizedText(language, "day")}`,
-            transmission:
-              car.specifications?.transmission === "automatic"
-                ? getLocalizedText(language, "automatic")
-                : getLocalizedText(language, "manual"),
-            features: [
-              car.features?.air_conditioning &&
-                getLocalizedText(language, "airConditioning"),
-              `${car.specifications?.seats || 5} ${getLocalizedText(language, "seats")}`,
-              car.features?.bluetooth && "Bluetooth",
-              car.specifications?.fuel,
-              car.specifications?.year && `${car.specifications.year}`,
-            ]
-              .filter(Boolean)
-              .join(", "),
-            rating: 4.6,
-            specifications: car.specifications,
-            location: car.location,
-            rental_prices: car.rental_prices,
-            type: car.type,
-            car_status: car.car_status,
-          }))
+        ? carsResult.value.map(
+            (car: {
+              id: number;
+              documentId: string;
+              title?: string;
+              description?: string;
+              specifications?: {
+                make?: string;
+                model?: string;
+                transmission?: string;
+                seats?: number;
+                fuel?: string;
+                year?: number;
+              };
+              features?: { air_conditioning?: boolean; bluetooth?: boolean };
+              rental_prices?: { day_1?: number };
+              location?: { city?: string; region?: string };
+              type?: string;
+              car_status?: string;
+              images?: Array<{ url: string }>;
+            }) => ({
+              id: car.id,
+              documentId: car.documentId,
+              title:
+                car.title ||
+                `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
+              description: car.description || "Reliable car for your journey",
+              image: getImageUrl(car),
+              price: `€${car.rental_prices?.day_1 || 30}/${getLocalizedText(language, "day")}`,
+              transmission:
+                car.specifications?.transmission === "automatic"
+                  ? getLocalizedText(language, "automatic")
+                  : getLocalizedText(language, "manual"),
+              features: [
+                car.features?.air_conditioning &&
+                  getLocalizedText(language, "airConditioning"),
+                `${car.specifications?.seats || 5} ${getLocalizedText(language, "seats")}`,
+                car.features?.bluetooth && "Bluetooth",
+                car.specifications?.fuel,
+                car.specifications?.year && `${car.specifications.year}`,
+              ]
+                .filter(Boolean)
+                .join(", "),
+              rating: 4.6,
+              specifications: car.specifications,
+              location: car.location,
+              rental_prices: car.rental_prices,
+              type: car.type,
+              car_status: car.car_status,
+            })
+          )
         : [];
 
     // Трансформация недвижимости
     const properties =
       propertiesResult.status === "fulfilled"
-        ? propertiesResult.value.map((property: { id: number; documentId: string; title?: string; description?: string; type?: string; location?: { city?: string }; category?: string; specifications?: { bedrooms?: number; bathrooms?: number }; price?: { amount: number }; contact?: { name?: string; email?: string; phone?: string }; images?: Array<{ url: string }> }) => ({
-            id: property.id,
-            documentId: property.documentId,
-            title: property.title || "Property",
-            description:
-              property.description || "Beautiful accommodation in Tenerife",
-            image: getImageUrl(property),
-            price: `€${property.price?.amount || 0}/${property.type === "rent" ? getLocalizedText(language, "month") : getLocalizedText(language, "night")}`,
-            location: property.location?.city || "Tenerife",
-            amenities: [
-              "WiFi",
-              getLocalizedText(language, "airConditioning"),
-              property.specifications?.bedrooms &&
-                `${property.specifications.bedrooms} ${getLocalizedText(language, "bedrooms")}`,
-              property.specifications?.bathrooms &&
-                `${property.specifications.bathrooms} ${getLocalizedText(language, "bathrooms")}`,
-            ]
-              .filter(Boolean)
-              .join(", "),
-            rating: 4.5,
-            contact: property.contact,
-          }))
+        ? propertiesResult.value.map(
+            (property: {
+              id: number;
+              documentId: string;
+              title?: string;
+              description?: string;
+              type?: string;
+              location?: { city?: string };
+              category?: string;
+              specifications?: { bedrooms?: number; bathrooms?: number };
+              price?: { amount: number };
+              contact?: { name?: string; email?: string; phone?: string };
+              images?: Array<{ url: string }>;
+            }) => ({
+              id: property.id,
+              documentId: property.documentId,
+              title: property.title || "Property",
+              description:
+                property.description || "Beautiful accommodation in Tenerife",
+              image: getImageUrl(property),
+              price: `€${property.price?.amount || 0}/${property.type === "rent" ? getLocalizedText(language, "month") : getLocalizedText(language, "night")}`,
+              location: property.location?.city || "Tenerife",
+              amenities: [
+                "WiFi",
+                getLocalizedText(language, "airConditioning"),
+                property.specifications?.bedrooms &&
+                  `${property.specifications.bedrooms} ${getLocalizedText(language, "bedrooms")}`,
+                property.specifications?.bathrooms &&
+                  `${property.specifications.bathrooms} ${getLocalizedText(language, "bathrooms")}`,
+              ]
+                .filter(Boolean)
+                .join(", "),
+              rating: 4.5,
+              contact: property.contact,
+            })
+          )
         : [];
 
     // Трансформация блогов
     const blogs =
       blogsResult.status === "fulfilled"
-        ? blogsResult.value.map((blog: { id: number; documentId: string; title?: string; excerpt?: string; description?: string; author?: string; readTime?: number; read_time?: number; publishedAt?: string; images?: Array<{ url: string }> }) => ({
-            id: blog.id,
-            documentId: blog.documentId,
-            title: blog.title || "Blog Post",
-            description:
-              blog.excerpt ||
-              blog.description ||
-              "Interesting article about Tenerife",
-            image: getImageUrl(blog),
-            author: blog.author || "Admin",
-            readTime: `${blog.readTime || blog.read_time || 5} ${getLocalizedText(language, "minRead")}`,
-            publishedDate: blog.publishedAt
-              ? new Date(blog.publishedAt).toLocaleDateString()
-              : new Date().toLocaleDateString(),
-            rating: 4.7,
-          }))
+        ? blogsResult.value.map(
+            (blog: {
+              id: number;
+              documentId: string;
+              title?: string;
+              excerpt?: string;
+              description?: string;
+              author?: string;
+              readTime?: number;
+              read_time?: number;
+              publishedAt?: string;
+              images?: Array<{ url: string }>;
+            }) => ({
+              id: blog.id,
+              documentId: blog.documentId,
+              title: blog.title || "Blog Post",
+              description:
+                blog.excerpt ||
+                blog.description ||
+                "Interesting article about Tenerife",
+              image: getImageUrl(blog),
+              author: blog.author || "Admin",
+              readTime: `${blog.readTime || blog.read_time || 5} ${getLocalizedText(language, "minRead")}`,
+              publishedDate: blog.publishedAt
+                ? new Date(blog.publishedAt).toLocaleDateString()
+                : new Date().toLocaleDateString(),
+              rating: 4.7,
+            })
+          )
         : [];
 
     return {

@@ -28,13 +28,15 @@ export interface FilterParams {
 }
 
 // Парсинг URL параметров в объект фильтров
-export const parseUrlParams = (searchParams: URLSearchParams): Partial<FilterParams> => {
+export const parseUrlParams = (
+  searchParams: URLSearchParams
+): Partial<FilterParams> => {
   const filters: Partial<FilterParams> = {};
 
   for (const [key, value] of searchParams.entries()) {
     // Обработка булевых значений
-    if (value === 'true' || value === 'false') {
-      (filters as any)[key] = value === 'true';
+    if (value === "true" || value === "false") {
+      (filters as any)[key] = value === "true";
     }
     // Обработка чисел
     else if (!isNaN(Number(value))) {
@@ -50,16 +52,16 @@ export const parseUrlParams = (searchParams: URLSearchParams): Partial<FilterPar
 };
 
 // Преобразование фильтров в URL параметры
-export const filtersToUrlParams = (filters: FilterParams): URLSearchParams => {
+export const filtersToUrlParams = (filters: Partial<FilterParams>): URLSearchParams => {
   const params = new URLSearchParams();
 
   Object.entries(filters).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      if (typeof value === 'boolean') {
+    if (value !== undefined && value !== null && value !== "") {
+      if (typeof value === "boolean") {
         params.append(key, value.toString());
-      } else if (typeof value === 'number') {
+      } else if (typeof value === "number") {
         params.append(key, value.toString());
-      } else if (typeof value === 'string') {
+      } else if (typeof value === "string") {
         params.append(key, value);
       }
     }
@@ -71,7 +73,7 @@ export const filtersToUrlParams = (filters: FilterParams): URLSearchParams => {
 // Создание URL с фильтрами
 export const createFilteredUrl = (
   basePath: string,
-  filters: FilterParams
+  filters: Partial<FilterParams>
 ): string => {
   const params = filtersToUrlParams(filters);
   const queryString = params.toString();
@@ -79,12 +81,17 @@ export const createFilteredUrl = (
 };
 
 // Очистка пустых фильтров
-export const cleanEmptyFilters = (filters: FilterParams): FilterParams => {
-  const cleaned: FilterParams = {};
+export const cleanEmptyFilters = (filters: Partial<FilterParams>): Partial<FilterParams> => {
+  const cleaned: Partial<FilterParams> = {};
 
   Object.entries(filters).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '' && value !== false) {
-      cleaned[key] = value;
+    if (
+      value !== undefined &&
+      value !== null &&
+      value !== "" &&
+      value !== false
+    ) {
+      (cleaned as any)[key] = value;
     }
   });
 
