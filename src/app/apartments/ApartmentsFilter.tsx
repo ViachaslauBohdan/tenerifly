@@ -12,7 +12,7 @@ interface ApartmentsFilterProps {
   onResetFilters: () => void;
   onApartmentsUpdate: (apartments: any[]) => void;
   translations: any;
-  allApartments: unknown[]; // Добавляем проп для всех апартаментов
+  allApartments: any; // Добавляем проп для всех апартаментов
 }
 
 interface FilterOptions {
