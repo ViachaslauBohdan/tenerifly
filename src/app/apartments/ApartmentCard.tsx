@@ -104,6 +104,7 @@ interface ApartmentCardProps {
   };
   language: string;
   apartments?: PropertyData[];
+  allFilteredApartments?: PropertyData[];
 }
 
 const getFoundPropertiesText = (locale: string): string => {
@@ -136,6 +137,7 @@ const ApartmentCard = ({
   translations,
   language,
   apartments: providedApartments,
+  allFilteredApartments,
 }: ApartmentCardProps) => {
   const [apartments, setApartments] = useState<PropertyData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -413,13 +415,50 @@ const ApartmentCard = ({
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-12 text-center">
         <div className="text-gray-500 text-lg mb-2">
-          {providedApartments !== undefined && providedApartments.length > 0
-            ? "Нет недвижимости, соответствующей выбранным фильтрам"
-            : "No properties available"}
+          {allFilteredApartments && allFilteredApartments.length > 0
+            ? language === "en"
+              ? "No properties available on this page"
+              : language === "ru"
+                ? "Нет недвижимости на этой странице"
+                : language === "pl"
+                  ? "Brak nieruchomości na tej stronie"
+                  : language === "fr"
+                    ? "Aucune propriété disponible sur cette page"
+                    : "Немає нерухомості на цій сторінці"
+            : language === "en"
+              ? "No properties available"
+              : language === "ru"
+                ? "Нет доступной недвижимости"
+                : language === "pl"
+                  ? "Brak dostępnych nieruchomości"
+                  : language === "fr"
+                    ? "Aucune propriété disponible"
+                    : "Немає доступної нерухомості"}
         </div>
-        {providedApartments !== undefined && providedApartments.length > 0 && (
+        {allFilteredApartments && allFilteredApartments.length > 0 && (
           <div className="text-gray-400 text-sm">
-            Попробуйте изменить параметры фильтрации
+            {language === "en"
+              ? "Try changing the page or adjusting filters"
+              : language === "ru"
+                ? "Попробуйте изменить страницу или настройки фильтрации"
+                : language === "pl"
+                  ? "Spróbuj zmienić stronę lub dostosować filtry"
+                  : language === "fr"
+                    ? "Essayez de changer la page ou d'ajuster les filtres"
+                    : "Спробуйте змінити сторінку або налаштування фільтрів"}
+          </div>
+        )}
+        {(!allFilteredApartments || allFilteredApartments.length === 0) && (
+          <div className="text-gray-400 text-sm">
+            {language === "en"
+              ? "Try adjusting your search filters"
+              : language === "ru"
+                ? "Попробуйте изменить параметры фильтрации"
+                : language === "pl"
+                  ? "Spróbuj dostosować filtry wyszukiwania"
+                  : language === "fr"
+                    ? "Essayez d'ajuster vos filtres de recherche"
+                    : "Спробуйте змінити параметри фільтрації"}
           </div>
         )}
       </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ApartmentFilterParams } from "@/utils/filterUtils";
+import { PropertyData as PropertyDataType } from "@/types/apartments";
 
 // Используем ApartmentFilterParams из utils
 type FilterState = ApartmentFilterParams;
@@ -10,9 +11,9 @@ interface ApartmentsFilterProps {
   filters: FilterState;
   onFilterChange: (key: string, value: string | boolean) => void;
   onResetFilters: () => void;
-  onApartmentsUpdate: (apartments: any[]) => void;
-  translations: any;
-  allApartments: any; // Добавляем проп для всех апартаментов
+  onApartmentsUpdate: (apartments: PropertyDataType[]) => void;
+  translations: Record<string, string>;
+  allApartments: PropertyDataType[]; // Добавляем проп для всех апартаментов
 }
 
 interface FilterOptions {
@@ -20,20 +21,6 @@ interface FilterOptions {
   districts: string[];
   propertyTypes: string[];
   conditions: string[];
-}
-
-// Интерфейс для данных недвижимости из API
-interface PropertyData {
-  id: number;
-  documentId: string;
-  title: string;
-  category?: string;
-  location?: {
-    city?: string;
-    region?: string;
-    [key: string]: any;
-  };
-  [key: string]: any;
 }
 
 export default function ApartmentsFilter({
@@ -52,25 +39,16 @@ export default function ApartmentsFilter({
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  // Функция для создания заголовков с авторизацией
-  const getAuthHeaders = () => {
-    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-    return {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-    };
-  };
-
   // Загрузка опций фильтров из переданных данных
   useEffect(() => {
     if (allApartments && allApartments.length > 0) {
-      const properties: PropertyData[] = allApartments;
+      const properties: PropertyDataType[] = allApartments;
 
       // Извлекаем уникальные значения для фильтров
       const cities: string[] = [
         ...new Set(
           properties
-            .map((property: PropertyData) => property.location?.city)
+            .map((property: PropertyDataType) => property.location?.city)
             .filter(
               (value): value is string =>
                 Boolean(value) && typeof value === "string"
@@ -81,7 +59,7 @@ export default function ApartmentsFilter({
       const districts: string[] = [
         ...new Set(
           properties
-            .map((property: PropertyData) => property.location?.region)
+            .map((property: PropertyDataType) => property.location?.region)
             .filter(
               (value): value is string =>
                 Boolean(value) && typeof value === "string"
@@ -92,7 +70,7 @@ export default function ApartmentsFilter({
       const propertyTypes: string[] = [
         ...new Set(
           properties
-            .map((property: PropertyData) => property.category)
+            .map((property: PropertyDataType) => property.category)
             .filter(
               (value): value is string =>
                 Boolean(value) && typeof value === "string"
@@ -113,11 +91,15 @@ export default function ApartmentsFilter({
 
   // Мемоизированная функция фильтрации
   const applyFiltersToData = useCallback(
-    (apartments: PropertyData[], filterState: FilterState): PropertyData[] => {
+    (
+      apartments: PropertyDataType[],
+      filterState: FilterState
+    ): PropertyDataType[] => {
       return apartments.filter((property) => {
         // Фильтр по типу недвижимости
         if (
           filterState.propertyType &&
+          filterState.propertyType !== "" &&
           property.category !== filterState.propertyType
         ) {
           return false;
@@ -126,6 +108,7 @@ export default function ApartmentsFilter({
         // Фильтр по количеству комнат
         if (
           filterState.rooms &&
+          filterState.rooms !== "" &&
           property.specifications?.bedrooms?.toString() !== filterState.rooms
         ) {
           return false;
@@ -197,27 +180,39 @@ export default function ApartmentsFilter({
         }
 
         // Фильтр по типу (аренда/продажа)
-        if (filterState.type && property.type !== filterState.type) {
+        if (
+          filterState.type &&
+          filterState.type !== "" &&
+          property.type !== filterState.type
+        ) {
           return false;
         }
 
         // Фильтр по статусу недвижимости
         if (
           filterState.propertyStatus &&
+          filterState.propertyStatus !== "" &&
           property.property_status !== filterState.propertyStatus
         ) {
           return false;
         }
 
         // Фильтр по городу
-        if (filterState.city && property.location?.city !== filterState.city) {
+        if (
+          filterState.city &&
+          filterState.city !== "" &&
+          property.location?.city &&
+          property.location.city !== filterState.city
+        ) {
           return false;
         }
 
         // Фильтр по району
         if (
           filterState.district &&
-          property.location?.region !== filterState.district
+          filterState.district !== "" &&
+          property.location?.region &&
+          property.location.region !== filterState.district
         ) {
           return false;
         }
@@ -271,6 +266,21 @@ export default function ApartmentsFilter({
 
     // Добавляем небольшую задержку для оптимизации
     const timeoutId = setTimeout(() => {
+      // Проверяем, есть ли активные фильтры (не пустые значения)
+      const hasActiveFilters = Object.entries(filters).some(([, value]) => {
+        if (typeof value === "boolean") return value === true;
+        if (typeof value === "string") return value !== "";
+        if (typeof value === "number") return value > 0;
+        return false;
+      });
+
+      // Если нет активных фильтров, показываем все апартаменты
+      if (!hasActiveFilters) {
+        onApartmentsUpdate(allApartments);
+        setIsLoading(false);
+        return;
+      }
+
       const filteredApartments = applyFiltersToData(allApartments, filters);
       onApartmentsUpdate(filteredApartments);
       setIsLoading(false);
@@ -280,7 +290,7 @@ export default function ApartmentsFilter({
       clearTimeout(timeoutId);
       setIsLoading(false);
     };
-  }, [filters, allApartments, applyFiltersToData]); // Убираем onApartmentsUpdate из зависимостей
+  }, [filters, allApartments, applyFiltersToData, onApartmentsUpdate]);
 
   return (
     <div className="lg:w-80">
