@@ -169,7 +169,10 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
 
     const response = await fetch(url, {
       headers: getAuthHeaders(),
-      next: { revalidate: 3600 }, // Кэширование на уровне Next.js
+      next: { 
+        revalidate: 3600, // Кэширование на уровне Next.js (1 час)
+        tags: ['properties', 'apartments'] // Для инвалидации кэша
+      },
     });
 
     if (!response.ok) {
@@ -191,12 +194,33 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
   }
 }
 
-// Получение всех апартаментов
+// Получение всех апартаментов с оптимизированным SSG
 export async function getAllProperties() {
-  return fetchWithCache(
-    "/properties?populate=*&pagination[pageSize]=1000",
-    "all-properties"
-  );
+  try {
+    console.log("🔧 SSG: Fetching properties from API...");
+    const result = await fetchWithCache(
+      "/properties?populate=*&pagination[pageSize]=1000",
+      "all-properties"
+    );
+    console.log("✅ SSG: Successfully fetched", result?.length || 0, "properties");
+    return result;
+  } catch (error) {
+    console.error("❌ SSG: Error fetching properties:", error);
+    // Return empty array as fallback to prevent build failures
+    return [];
+  }
+}
+
+// Функция для принудительной инвалидации кэша апартаментов
+export async function revalidateProperties() {
+  try {
+    const { revalidateTag } = await import('next/cache');
+    await revalidateTag('properties');
+    await revalidateTag('apartments');
+    console.log("🔄 SSG: Cache invalidated for properties");
+  } catch (error) {
+    console.error("❌ SSG: Error invalidating cache:", error);
+  }
 }
 
 // Получение всех автомобилей

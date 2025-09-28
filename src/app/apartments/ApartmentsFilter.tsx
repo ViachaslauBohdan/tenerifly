@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ApartmentFilterParams } from "@/utils/filterUtils";
-import { PropertyData as PropertyDataType } from "@/types/apartments";
 
 // Используем ApartmentFilterParams из utils
 type FilterState = ApartmentFilterParams;
@@ -11,9 +10,9 @@ interface ApartmentsFilterProps {
   filters: FilterState;
   onFilterChange: (key: string, value: string | boolean) => void;
   onResetFilters: () => void;
-  onApartmentsUpdate: (apartments: PropertyDataType[]) => void;
+  onApartmentsUpdate: (apartments: any[]) => void;
   translations: Record<string, string>;
-  allApartments: PropertyDataType[]; // Добавляем проп для всех апартаментов
+  allApartments: any[]; // Добавляем проп для всех апартаментов
 }
 
 interface FilterOptions {
@@ -37,18 +36,17 @@ export default function ApartmentsFilter({
     propertyTypes: [],
     conditions: [],
   });
-  const [isLoading, setIsLoading] = useState(false);
 
   // Загрузка опций фильтров из переданных данных
   useEffect(() => {
     if (allApartments && allApartments.length > 0) {
-      const properties: PropertyDataType[] = allApartments;
+      const properties: any[] = allApartments;
 
       // Извлекаем уникальные значения для фильтров
       const cities: string[] = [
         ...new Set(
           properties
-            .map((property: PropertyDataType) => property.location?.city)
+            .map((property: any) => property.location?.city)
             .filter(
               (value): value is string =>
                 Boolean(value) && typeof value === "string"
@@ -59,7 +57,7 @@ export default function ApartmentsFilter({
       const districts: string[] = [
         ...new Set(
           properties
-            .map((property: PropertyDataType) => property.location?.region)
+            .map((property: any) => property.location?.region)
             .filter(
               (value): value is string =>
                 Boolean(value) && typeof value === "string"
@@ -70,7 +68,7 @@ export default function ApartmentsFilter({
       const propertyTypes: string[] = [
         ...new Set(
           properties
-            .map((property: PropertyDataType) => property.category)
+            .map((property: any) => property.category)
             .filter(
               (value): value is string =>
                 Boolean(value) && typeof value === "string"
@@ -91,10 +89,7 @@ export default function ApartmentsFilter({
 
   // Мемоизированная функция фильтрации
   const applyFiltersToData = useCallback(
-    (
-      apartments: PropertyDataType[],
-      filterState: FilterState
-    ): PropertyDataType[] => {
+    (apartments: any[], filterState: FilterState): any[] => {
       return apartments.filter((property) => {
         // Фильтр по типу недвижимости
         if (
@@ -256,16 +251,14 @@ export default function ApartmentsFilter({
     []
   );
 
-  // Применение фильтров локально без API запросов
+  // Optimized filter application with instant updates for pagination
   useEffect(() => {
     if (!allApartments || allApartments.length === 0) {
       return;
     }
 
-    setIsLoading(true);
-
-    // Добавляем небольшую задержку для оптимизации
-    const timeoutId = setTimeout(() => {
+    // Instant update for pagination (no delay)
+    const applyFilters = () => {
       // Проверяем, есть ли активные фильтры (не пустые значения)
       const hasActiveFilters = Object.entries(filters).some(([, value]) => {
         if (typeof value === "boolean") return value === true;
@@ -277,19 +270,15 @@ export default function ApartmentsFilter({
       // Если нет активных фильтров, показываем все апартаменты
       if (!hasActiveFilters) {
         onApartmentsUpdate(allApartments);
-        setIsLoading(false);
         return;
       }
 
       const filteredApartments = applyFiltersToData(allApartments, filters);
       onApartmentsUpdate(filteredApartments);
-      setIsLoading(false);
-    }, 300);
-
-    return () => {
-      clearTimeout(timeoutId);
-      setIsLoading(false);
     };
+
+    // Apply filters immediately for instant pagination
+    applyFilters();
   }, [filters, allApartments, applyFiltersToData, onApartmentsUpdate]);
 
   return (
@@ -310,11 +299,6 @@ export default function ApartmentsFilter({
             />
           </svg>
           <h2 className="text-lg font-semibold text-gray-900">{t.filters}</h2>
-          {isLoading && (
-            <div className="ml-auto">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-            </div>
-          )}
         </div>
 
         {/* Тип объявления */}
