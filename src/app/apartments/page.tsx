@@ -53,12 +53,24 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ApartmentsPage() {
-  // Получаем все данные апартаментов на сервере для SSG с кэшированием
-  const properties = await getAllProperties();
+  try {
+    // Получаем все данные апартаментов на сервере для SSG с кэшированием
+    const properties = await getAllProperties();
+    
+    console.log("🏠 SSG: Page loaded with", properties?.length || 0, "properties");
 
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ApartmentsPageClient initialProperties={properties} />
-    </Suspense>
-  );
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ApartmentsPageClient initialProperties={properties} />
+      </Suspense>
+    );
+  } catch (error) {
+    console.error("❌ SSG: Error in ApartmentsPage:", error);
+    // Return page with empty data to prevent build failure
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <ApartmentsPageClient initialProperties={[]} />
+      </Suspense>
+    );
+  }
 }

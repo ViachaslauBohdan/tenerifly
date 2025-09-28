@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import ApartmentCard from "./ApartmentCard";
@@ -200,46 +200,51 @@ export default function ApartmentsPageClient({
     };
   };
 
-  // Загружаем все апартаменты только если нет initialProperties
+  // SSG data initialization - use server data if available
   useEffect(() => {
-    if (initialProperties) {
+    if (initialProperties && initialProperties.length > 0) {
+      // Use SSG data - this is the primary path for production
+      console.log("🏠 Using SSG data:", initialProperties.length, "properties");
       setAllApartments(initialProperties);
       setFilteredApartments(initialProperties);
       setInitialLoadComplete(true);
-      return;
-    }
+    } else {
+      // Fallback: only load on client if no SSG data available
+      console.log("⚠️ No SSG data, loading on client as fallback");
+      const loadAllApartments = async () => {
+        try {
+          const apiUrl =
+            process.env.NEXT_PUBLIC_STRAPI_API_URL ||
+            "https://tenerifly-strapi-production.up.railway.app";
 
-    const loadAllApartments = async () => {
-      try {
-        const apiUrl =
-          process.env.NEXT_PUBLIC_STRAPI_API_URL ||
-          "https://tenerifly-strapi-production.up.railway.app";
+          const response = await fetch(
+            `${apiUrl}/api/properties?populate=*&pagination[pageSize]=1000`,
+            {
+              headers: getAuthHeaders(),
+              // Add client-side caching
+              next: { revalidate: 300 }, // 5 minutes
+            }
+          );
 
-        const response = await fetch(
-          `${apiUrl}/api/properties?populate=*&pagination[pageSize]=1000`,
-          {
-            headers: getAuthHeaders(),
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
-        );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const data = await response.json();
+
+          if (data.data) {
+            setAllApartments(data.data);
+            setFilteredApartments(data.data);
+          }
+        } catch (error) {
+          console.error("Error loading properties:", error);
+        } finally {
+          setInitialLoadComplete(true);
         }
+      };
 
-        const data = await response.json();
-
-        if (data.data) {
-          setAllApartments(data.data);
-          setFilteredApartments(data.data); // Изначально показываем все
-        }
-      } catch (error) {
-        console.error("Error loading properties:", error);
-      } finally {
-        setInitialLoadComplete(true);
-      }
-    };
-
-    loadAllApartments();
+      loadAllApartments();
+    }
   }, [initialProperties]);
 
   const t = translations[language];
@@ -306,56 +311,77 @@ export default function ApartmentsPageClient({
     }
   }, [filteredApartments.length, currentPage, itemsPerPage, updateUrlWithPage]);
 
-  // Мемоизированная функция обновления отфильтрованных апартаментов
+  // Optimized function for updating filtered apartments
   const handleApartmentsUpdate = useCallback(
     (updatedApartments: PropertyData[]) => {
-      setFilteredApartments(updatedApartments);
+      // Only update if the data actually changed
+      if (
+        JSON.stringify(updatedApartments) !== JSON.stringify(filteredApartments)
+      ) {
+        setFilteredApartments(updatedApartments);
 
-      // Сбрасываем страницу на первую только при изменении фильтров
-      if (filtersChanged) {
-        setCurrentPage(1);
-        updateUrlWithPage(1);
-        setFiltersChanged(false);
-      } else {
-        // Проверяем, что текущая страница не превышает общее количество страниц
-        const newTotalPages = Math.ceil(
-          updatedApartments.length / itemsPerPage
-        );
-        if (currentPage > newTotalPages && newTotalPages > 0) {
+        // Сбрасываем страницу на первую только при изменении фильтров
+        if (filtersChanged) {
           setCurrentPage(1);
           updateUrlWithPage(1);
+          setFiltersChanged(false);
+        } else {
+          // Проверяем, что текущая страница не превышает общее количество страниц
+          const newTotalPages = Math.ceil(
+            updatedApartments.length / itemsPerPage
+          );
+          if (currentPage > newTotalPages && newTotalPages > 0) {
+            setCurrentPage(1);
+            updateUrlWithPage(1);
+          }
         }
       }
     },
-    [currentPage, itemsPerPage, updateUrlWithPage, filtersChanged]
+    [
+      filteredApartments,
+      currentPage,
+      itemsPerPage,
+      updateUrlWithPage,
+      filtersChanged,
+    ]
   );
 
-  // Pagination logic
-  const totalPages = Math.ceil(filteredApartments.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentApartments = filteredApartments.slice(startIndex, endIndex);
+  // Memoized pagination logic for instant updates
+  const paginationData = useMemo(() => {
+    const totalPages = Math.ceil(filteredApartments.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentApartments = filteredApartments.slice(startIndex, endIndex);
 
-  // Pagination handlers
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-      updateUrlWithPage(page);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
+    return { totalPages, startIndex, endIndex, currentApartments };
+  }, [filteredApartments, currentPage, itemsPerPage]);
 
-  const handlePreviousPage = () => {
+  const { totalPages, startIndex, endIndex, currentApartments } =
+    paginationData;
+
+  // Optimized pagination handlers for instant updates
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (page >= 1 && page <= totalPages && page !== currentPage) {
+        setCurrentPage(page);
+        updateUrlWithPage(page);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    },
+    [currentPage, totalPages, updateUrlWithPage]
+  );
+
+  const handlePreviousPage = useCallback(() => {
     if (currentPage > 1) {
       handlePageChange(currentPage - 1);
     }
-  };
+  }, [currentPage, handlePageChange]);
 
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
     if (currentPage < totalPages) {
       handlePageChange(currentPage + 1);
     }
-  };
+  }, [currentPage, totalPages, handlePageChange]);
 
   return (
     <div className="min-h-screen bg-gray-50">
