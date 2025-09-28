@@ -488,6 +488,7 @@ export default function ApartmentsPageClient({
                   translations={t}
                   language={language}
                   apartments={currentApartments}
+                  allFilteredApartments={filteredApartments}
                 />
 
                 {/* Pagination */}
