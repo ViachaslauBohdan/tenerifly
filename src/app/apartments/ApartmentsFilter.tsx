@@ -253,6 +253,11 @@ export default function ApartmentsFilter({
 
   // Optimized filter application with instant updates for pagination
   useEffect(() => {
+    console.log("🔍 Filter useEffect triggered:", {
+      allApartmentsLength: allApartments?.length,
+      filtersKeys: Object.keys(filters),
+    });
+
     if (!allApartments || allApartments.length === 0) {
       return;
     }
@@ -267,19 +272,26 @@ export default function ApartmentsFilter({
         return false;
       });
 
+      console.log("🎯 Applying filters:", { hasActiveFilters });
+
       // Если нет активных фильтров, показываем все апартаменты
       if (!hasActiveFilters) {
+        console.log("✅ No active filters, showing all apartments");
         onApartmentsUpdate(allApartments);
         return;
       }
 
       const filteredApartments = applyFiltersToData(allApartments, filters);
+      console.log("🔧 Filters applied:", {
+        original: allApartments.length,
+        filtered: filteredApartments.length,
+      });
       onApartmentsUpdate(filteredApartments);
     };
 
     // Apply filters immediately for instant pagination
     applyFilters();
-  }, [filters, allApartments, applyFiltersToData, onApartmentsUpdate]);
+  }, [filters, allApartments, applyFiltersToData]); // Removed onApartmentsUpdate to prevent circular dependency
 
   return (
     <div className="lg:w-80">

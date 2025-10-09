@@ -56,8 +56,12 @@ export default async function ApartmentsPage() {
   try {
     // Получаем все данные апартаментов на сервере для SSG с кэшированием
     const properties = await getAllProperties();
-    
-    console.log("🏠 SSG: Page loaded with", properties?.length || 0, "properties");
+
+    console.log(
+      "🏠 SSG: Page loaded with",
+      properties?.length || 0,
+      "properties"
+    );
 
     return (
       <Suspense fallback={<div>Loading...</div>}>

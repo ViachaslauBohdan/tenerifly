@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-interface FilterState {
+export interface FilterState {
   location: string;
   tourType: string;
   priceFrom: string;
@@ -24,8 +24,10 @@ interface ToursFilterProps {
   filters: FilterState;
   onFilterChange: (key: string, value: string | boolean) => void;
   onResetFilters: () => void;
-  onToursUpdate: (tours: any[]) => void;
-  translations: any;
+  onToursUpdate: (tours: unknown[]) => void;
+  // optional initial tours from SSG — use to populate options and avoid client re-fetch
+  initialTours?: unknown[];
+  translations: Record<string, unknown>;
 }
 
 interface FilterOptions {
@@ -47,7 +49,7 @@ interface TourData {
     amount?: number;
   };
   duration?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export default function ToursFilter({
@@ -55,6 +57,7 @@ export default function ToursFilter({
   onFilterChange,
   onResetFilters,
   onToursUpdate,
+  initialTours,
   translations: t,
 }: ToursFilterProps) {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
@@ -81,18 +84,19 @@ export default function ToursFilter({
           process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
         console.log("ToursFilter API URL:", apiUrl); // Для отладки
 
-        const response = await fetch(`${apiUrl}/api/tours/?populate=*`, {
-          headers: getAuthHeaders(),
-        });
+        // Prefer using initialTours passed from SSG to avoid extra client fetch
+        const sourceTours: TourData[] = initialTours && Array.isArray(initialTours)
+          ? (initialTours as unknown as TourData[])
+          : await (async () => {
+              const response = await fetch(`${apiUrl}/api/tours/?populate=*&pagination[pageSize]=1000`, {
+                headers: getAuthHeaders(),
+              });
+              if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+              const data = await response.json();
+              return data.data && Array.isArray(data.data) ? data.data : [];
+            })();
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.data && Array.isArray(data.data)) {
-          const tours: TourData[] = data.data;
+        const tours: TourData[] = sourceTours;
 
           // Извлекаем уникальные значения для фильтров с проверкой типов
           const cities = [
@@ -133,14 +137,13 @@ export default function ToursFilter({
             regions,
             languages,
           });
-        }
       } catch (error) {
         console.error("Error loading filter options:", error);
       }
     };
 
     loadFilterOptions();
-  }, []);
+  }, [initialTours]);
 
   // Применение фильтров и загрузка отфильтрованных экскурсий
   useEffect(() => {
@@ -152,10 +155,40 @@ export default function ToursFilter({
         return false;
       });
 
-      // Если нет активных фильтров, не делаем запрос
+      // Если нет активных фильтров, загружаем все туры
       if (!hasActiveFilters) {
-        console.log("No active filters, skipping API call");
-        setIsLoading(false);
+        console.log("No active filters");
+        setIsLoading(true);
+
+        if (initialTours && Array.isArray(initialTours)) {
+          console.log("Using provided initialTours for update, count:", initialTours.length);
+          onToursUpdate(initialTours);
+          setIsLoading(false);
+          return;
+        }
+
+        try {
+          const apiUrl =
+            process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
+          const response = await fetch(`${apiUrl}/api/tours/?populate=*&pagination[pageSize]=1000`, {
+            headers: getAuthHeaders(),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log("Loaded all tours (no filters):", {
+            totalCount: data.data?.length || 0,
+          });
+          onToursUpdate(data.data || []);
+        } catch (error) {
+          console.error("Error loading all tours:", error);
+          onToursUpdate([]);
+        } finally {
+          setIsLoading(false);
+        }
         return;
       }
 
@@ -198,7 +231,9 @@ export default function ToursFilter({
 
         const apiUrl =
           process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
-        const url = `${apiUrl}/api/tours/?${params.toString()}`;
+  // Запрашиваем большой pageSize, чтобы получить все совпадающие экскурсии
+  params.append('pagination[pageSize]', '1000');
+  const url = `${apiUrl}/api/tours/?${params.toString()}`;
         console.log("Filter URL:", url); // Для отладки
 
         const response = await fetch(url, {
@@ -231,7 +266,7 @@ export default function ToursFilter({
     console.log("Filters changed, scheduling apply:", filters);
     const timeoutId = setTimeout(applyFilters, 300);
     return () => clearTimeout(timeoutId);
-  }, [filters, onToursUpdate, filterOptions]);
+  }, [filters, onToursUpdate, filterOptions, initialTours]);
 
   return (
     <div className="lg:w-80">
