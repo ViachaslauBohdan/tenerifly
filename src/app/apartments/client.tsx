@@ -314,14 +314,22 @@ export default function ApartmentsPageClient({
   // Optimized function for updating filtered apartments
   const handleApartmentsUpdate = useCallback(
     (updatedApartments: PropertyData[]) => {
+      console.log("🔄 handleApartmentsUpdate called:", {
+        updatedLength: updatedApartments.length,
+        currentLength: filteredApartments.length,
+        filtersChanged,
+      });
+
       // Only update if the data actually changed
       if (
         JSON.stringify(updatedApartments) !== JSON.stringify(filteredApartments)
       ) {
+        console.log("📝 Updating filtered apartments");
         setFilteredApartments(updatedApartments);
 
         // Сбрасываем страницу на первую только при изменении фильтров
         if (filtersChanged) {
+          console.log("🔧 Filters changed, resetting to page 1");
           setCurrentPage(1);
           updateUrlWithPage(1);
           setFiltersChanged(false);
@@ -331,10 +339,13 @@ export default function ApartmentsPageClient({
             updatedApartments.length / itemsPerPage
           );
           if (currentPage > newTotalPages && newTotalPages > 0) {
+            console.log("📄 Current page exceeds total, resetting to page 1");
             setCurrentPage(1);
             updateUrlWithPage(1);
           }
         }
+      } else {
+        console.log("⏭️ No update needed, data unchanged");
       }
     },
     [
@@ -348,10 +359,23 @@ export default function ApartmentsPageClient({
 
   // Memoized pagination logic for instant updates
   const paginationData = useMemo(() => {
+    console.log("🧮 Recalculating pagination:", {
+      filteredApartments: filteredApartments.length,
+      currentPage,
+      itemsPerPage,
+    });
+
     const totalPages = Math.ceil(filteredApartments.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentApartments = filteredApartments.slice(startIndex, endIndex);
+
+    console.log("📊 Pagination result:", {
+      totalPages,
+      startIndex,
+      endIndex,
+      currentApartments: currentApartments.length,
+    });
 
     return { totalPages, startIndex, endIndex, currentApartments };
   }, [filteredApartments, currentPage, itemsPerPage]);
@@ -363,9 +387,15 @@ export default function ApartmentsPageClient({
   const handlePageChange = useCallback(
     (page: number) => {
       if (page >= 1 && page <= totalPages && page !== currentPage) {
+        console.log("🔄 Page change:", currentPage, "->", page);
+        const startTime = performance.now();
+
         setCurrentPage(page);
         updateUrlWithPage(page);
         window.scrollTo({ top: 0, behavior: "smooth" });
+
+        const endTime = performance.now();
+        console.log("⚡ Page change completed in:", endTime - startTime, "ms");
       }
     },
     [currentPage, totalPages, updateUrlWithPage]

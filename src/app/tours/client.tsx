@@ -96,7 +96,7 @@ interface Tour {
 }
 
 interface ToursPageClientProps {
-  initialTours?: any[];
+  initialTours?: any[] | undefined;
 }
 
 export default function ToursPageClient({
@@ -148,7 +148,9 @@ export default function ToursPageClient({
     return 1;
   });
   // Исправляем тип для tours
-  const [tours, setTours] = useState<Tour[]>(initialTours || []);
+  const [tours, setTours] = useState<Tour[]>(
+    (initialTours as unknown as Tour[]) || []
+  );
   const [initialLoadComplete, setInitialLoadComplete] =
     useState(!!initialTours);
 
@@ -192,7 +194,7 @@ export default function ToursPageClient({
           process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
         console.log("Tours Page API URL:", apiUrl); // Для отладки
 
-        const response = await fetch(`${apiUrl}/api/tours/?populate=*`, {
+        const response = await fetch(`${apiUrl}/api/tours/?populate=*&pagination[pageSize]=1000`, {
           headers: getAuthHeaders(),
         });
 
@@ -449,11 +451,14 @@ export default function ToursPageClient({
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filters Sidebar */}
           <ToursFilter
-            filters={filters as any}
+            filters={filters as unknown as Record<string, unknown>}
             onFilterChange={handleFilterChange}
             onResetFilters={resetFilters}
-            onToursUpdate={handleToursUpdate}
-            translations={t}
+            onToursUpdate={(updated: unknown[]) =>
+              handleToursUpdate(updated as unknown as Tour[])
+            }
+            initialTours={initialTours}
+            translations={t as unknown as Record<string, unknown>}
           />
 
           {/* Tours Grid */}
