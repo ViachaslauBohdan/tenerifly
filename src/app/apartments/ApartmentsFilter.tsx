@@ -313,6 +313,44 @@ export default function ApartmentsFilter({
           <h2 className="text-lg font-semibold text-gray-900">{t.filters}</h2>
         </div>
 
+        {/* Район (регион) – поднят первым */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t.district}
+          </label>
+          <select
+            value={filters.district}
+            onChange={(e) => onFilterChange("district", e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+          >
+            <option value="">{t.allDistricts}</option>
+            {filterOptions.districts.map((district) => (
+              <option key={district} value={district}>
+                {district}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Город */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t.location}
+          </label>
+          <select
+            value={filters.city}
+            onChange={(e) => onFilterChange("city", e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+          >
+            <option value="">{t.allLocations}</option>
+            {filterOptions.cities.map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Тип объявления */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -509,43 +547,7 @@ export default function ApartmentsFilter({
           </select>
         </div>
 
-        {/* Город */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.location}
-          </label>
-          <select
-            value={filters.city}
-            onChange={(e) => onFilterChange("city", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-            <option value="">{t.allLocations}</option>
-            {filterOptions.cities.map((city) => (
-              <option key={city} value={city}>
-                {city}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Район */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.district}
-          </label>
-          <select
-            value={filters.district}
-            onChange={(e) => onFilterChange("district", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-            <option value="">{t.allDistricts}</option>
-            {filterOptions.districts.map((district) => (
-              <option key={district} value={district}>
-                {district}
-              </option>
-            ))}
-          </select>
-        </div>
+        
 
         {/* Дополнительные опции */}
         <div className="mb-6">
