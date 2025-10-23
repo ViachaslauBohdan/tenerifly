@@ -68,7 +68,14 @@
       "south": "Teneriffa Süd",
       "center": "Teneriffa Zentrum"
     },
-    "yearOfManufacture": "Baujahr"
+    "yearOfManufacture": "Baujahr",
+    "priceFrom": "AB",
+    "pricePerDay": "/TAG",
+    "currency": {
+      "EUR": "€",
+      "USD": "$",
+      "GBP": "£"
+    }
   },
   "en": {
     "to": "To",
@@ -139,7 +146,14 @@
       "south": "Tenerife South",
       "center": "Tenerife Center"
     },
-    "yearOfManufacture": "Year of manufacture"
+    "yearOfManufacture": "Year of manufacture",
+    "priceFrom": "FROM",
+    "pricePerDay": "/DAY",
+    "currency": {
+      "EUR": "€",
+      "USD": "$",
+      "GBP": "£"
+    }
   },
   "es": {
     "to": "Hasta",
@@ -210,7 +224,14 @@
       "south": "Tenerife Sur",
       "center": "Tenerife Centro"
     },
-    "yearOfManufacture": "Año de fabricación"
+    "yearOfManufacture": "Año de fabricación",
+    "priceFrom": "DESDE",
+    "pricePerDay": "/DÍA",
+    "currency": {
+      "EUR": "€",
+      "USD": "$",
+      "GBP": "£"
+    }
   },
   "fr": {
     "to": "À",
@@ -281,7 +302,14 @@
       "south": "Tenerife Sud",
       "center": "Tenerife Centre"
     },
-    "yearOfManufacture": "Année de fabrication"
+    "yearOfManufacture": "Année de fabrication",
+    "priceFrom": "À PARTIR DE",
+    "pricePerDay": "/JOUR",
+    "currency": {
+      "EUR": "€",
+      "USD": "$",
+      "GBP": "£"
+    }
   },
   "pl": {
     "to": "Do",
@@ -352,7 +380,14 @@
       "south": "Teneryfa Południe",
       "center": "Teneryfa Centrum"
     },
-    "yearOfManufacture": "Rok produkcji"
+    "yearOfManufacture": "Rok produkcji",
+    "priceFrom": "OD",
+    "pricePerDay": "/DZIEŃ",
+    "currency": {
+      "EUR": "€",
+      "USD": "$",
+      "GBP": "£"
+    }
   },
   "ru": {
     "to": "До",
@@ -423,7 +458,14 @@
       "south": "Тенерифе Юг",
       "center": "Тенерифе Центр"
     },
-    "yearOfManufacture": "Год выпуска"
+    "yearOfManufacture": "Год выпуска",
+    "priceFrom": "ОТ",
+    "pricePerDay": "/ДЕНЬ",
+    "currency": {
+      "EUR": "€",
+      "USD": "$",
+      "GBP": "£"
+    }
   },
   "uk": {
     "to": "До",
@@ -494,6 +536,13 @@
       "south": "Тенеріфе Південь",
       "center": "Тенеріфе Центр"
     },
-    "yearOfManufacture": "Рік випуску"
+    "yearOfManufacture": "Рік випуску",
+    "priceFrom": "ВІД",
+    "pricePerDay": "/ДЕНЬ",
+    "currency": {
+      "EUR": "€",
+      "USD": "$",
+      "GBP": "£"
+    }
   }
 }

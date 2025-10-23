@@ -1,4 +1,4 @@
-import { getAllCars } from "@/services/ssgDataService";
+import { getAllCarsAllLocales } from "@/services/ssgDataService";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import CarsPageClient from "./client";
@@ -53,12 +53,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CarsPage() {
-  // Получаем все данные автомобилей на сервере для SSG с кэшированием
-  const cars = await getAllCars();
-  
+  // Получаем автомобили для всех поддерживаемых локалей с группировкой
+  const carsByLocale = await getAllCarsAllLocales();
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <CarsPageClient initialCars={cars} />
+      <CarsPageClient
+        initialCarsByLocale={carsByLocale as Record<string, unknown[]>}
+      />
     </Suspense>
   );
 }

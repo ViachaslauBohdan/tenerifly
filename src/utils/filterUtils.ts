@@ -58,6 +58,7 @@ export interface CarFilterParams {
   multimedia: boolean;
   bluetooth: boolean;
   gps: boolean;
+  type: string;
   carStatus: string;
   [key: string]: string | string[] | number | boolean | undefined;
 }
