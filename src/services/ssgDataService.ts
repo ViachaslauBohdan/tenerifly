@@ -169,24 +169,18 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
 
     const response = await fetch(url, {
       headers: getAuthHeaders(),
-      next: { 
+      next: {
         revalidate: 3600, // Кэширование на уровне Next.js (1 час)
-        tags: ['properties', 'apartments'] // Для инвалидации кэша
+        tags: ["properties", "apartments", "cars"], // Для инвалидации кэша
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const data = await response.json();
-
     const result = data.data || data;
-    cache.set(cacheKey, {
-      data: result,
-      timestamp: now,
-    });
 
+    cache.set(cacheKey, { data: result, timestamp: now });
     return result;
   } catch (error) {
     console.error(`Error fetching ${endpoint}:`, error);
@@ -202,7 +196,6 @@ export async function getAllProperties() {
       "/properties?populate=*&pagination[pageSize]=1000",
       "all-properties"
     );
-    console.log("✅ SSG: Successfully fetched", result?.length || 0, "properties");
     return result;
   } catch (error) {
     console.error("❌ SSG: Error fetching properties:", error);
@@ -214,21 +207,118 @@ export async function getAllProperties() {
 // Функция для принудительной инвалидации кэша апартаментов
 export async function revalidateProperties() {
   try {
-    const { revalidateTag } = await import('next/cache');
-    await revalidateTag('properties');
-    await revalidateTag('apartments');
+    const { revalidateTag } = await import("next/cache");
+    await revalidateTag("properties");
+    await revalidateTag("apartments");
     console.log("🔄 SSG: Cache invalidated for properties");
   } catch (error) {
     console.error("❌ SSG: Error invalidating cache:", error);
   }
 }
 
-// Получение всех автомобилей
+// Получение всех автомобилей через Documents API (правильное отображение записей)
 export async function getAllCars() {
-  return fetchWithCache(
-    "/cars?populate=*&pagination[pageSize]=1000",
-    "all-cars"
-  );
+  const pageSize = 50;
+  let page = 1;
+  const allItems: unknown[] = [];
+
+  while (true) {
+    const params = new URLSearchParams();
+    params.set("populate", "*");
+    params.set("publicationState", "live");
+    params.set("sort", "title:ASC");
+    params.set("pagination[page]", String(page));
+    params.set("pagination[pageSize]", String(pageSize));
+
+    // Используем Documents API вместо обычного API
+    const url = `${API_URL}/api/cars?${params.toString()}`;
+
+    console.log(`🔍 Fetching cars page ${page} via Documents API:`, url);
+
+    const response = await fetch(url, {
+      headers: getAuthHeaders(),
+      next: {
+        revalidate: 3600,
+        tags: ["cars-all"],
+      },
+    });
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const json = await response.json();
+    const batch: Array<Record<string, unknown>> = json.data || [];
+
+    console.log(`📊 Page ${page}: got ${batch.length} cars`);
+    allItems.push(...batch);
+
+    const pageCount: number | undefined = json?.meta?.pagination?.pageCount;
+    const currentPage: number | undefined = json?.meta?.pagination?.page;
+    if (!pageCount || !currentPage || currentPage >= pageCount) break;
+    page += 1;
+  }
+
+  console.log(`✅ Total cars via Documents API: ${allItems.length}`);
+  return allItems;
+}
+
+// Получение автомобилей для всех поддерживаемых локалей (для SSG предзагрузки)
+export async function getAllCarsAllLocales() {
+  // Получаем ВСЕ автомобили один раз
+  const allCars = await getAllCars();
+
+  // Группируем по локалям на сервере с дедупликацией
+  const carsByLocale: Record<string, unknown[]> = {
+    en: [],
+    ru: [],
+    pl: [],
+    fr: [],
+    uk: [],
+    de: [],
+    es: [],
+  };
+
+  allCars.forEach((car: unknown) => {
+    const carData = car as {
+      id?: number;
+      locale?: string;
+      localizations?: Array<{ locale: string }>;
+    };
+
+    // Добавляем основную запись (текущая локаль)
+    const mainLocale = carData.locale || "en";
+    if (carsByLocale[mainLocale]) {
+      // Проверяем, нет ли уже автомобиля с таким id в этой локали
+      const existingCar = carsByLocale[mainLocale].find(
+        (existingCar: unknown) =>
+          (existingCar as { id?: number }).id === carData.id
+      );
+      if (!existingCar) {
+        carsByLocale[mainLocale].push(car);
+      }
+    }
+
+    // Добавляем локализованные версии
+    if (carData.localizations && Array.isArray(carData.localizations)) {
+      carData.localizations.forEach((localization: { locale: string }) => {
+        if (carsByLocale[localization.locale]) {
+          // Проверяем, нет ли уже автомобиля с таким id в этой локали
+          const existingCar = carsByLocale[localization.locale].find(
+            (existingCar: unknown) =>
+              (existingCar as { id?: number }).id === carData.id
+          );
+          if (!existingCar) {
+            carsByLocale[localization.locale].push(car);
+          }
+        }
+      });
+    }
+  });
+
+  // Логируем результат для отладки
+  console.log("🚗 Cars by locale summary:");
+  Object.entries(carsByLocale).forEach(([locale, cars]) => {
+    console.log(`  ${locale}: ${cars.length} cars`);
+  });
+
+  return carsByLocale;
 }
 
 // Получение всех экскурсий
@@ -288,7 +378,7 @@ export async function getTourById(id: string) {
   return tour;
 }
 
-// Получение машины по ID
+// Получение машины по ID через Documents API
 export async function getCarById(id: string) {
   const car = await fetchWithCache(`/cars/${id}?populate=*`, `car-${id}`);
 
@@ -297,7 +387,7 @@ export async function getCarById(id: string) {
   return car;
 }
 
-// Получение всех ID автомобилей для генерации статических путей
+// Получение всех ID автомобилей для генерации статических путей через Documents API
 export async function getAllCarIds() {
   return fetchWithCache("/cars?fields=id&pagination[pageSize]=1000", "car-ids");
 }
@@ -318,13 +408,60 @@ export async function getAllBlogIds() {
   );
 }
 
+// Получение автомобилей по массиву локалей
+// Пример использования:
+// const locales = ['en', 'ru', 'pl'];
+// const cars = await getCarsByLocales(locales);
+export async function getCarsByLocales() {
+  // Получаем ВСЕ автомобили одним запросом (как в getAllCars)
+  const pageSize = 50;
+  let page = 1;
+  const allItems: unknown[] = [];
+
+  while (true) {
+    const params = new URLSearchParams();
+    params.set("populate", "*");
+    params.set("publicationState", "live");
+    params.set("sort", "title:ASC");
+    params.set("pagination[page]", String(page));
+    params.set("pagination[pageSize]", String(pageSize));
+
+    const url = `${API_URL}/api/cars?${params.toString()}`;
+
+    console.log(`🔍 Fetching cars page ${page} via Documents API:`, url);
+
+    const response = await fetch(url, {
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      console.warn(`⚠️ Failed to fetch cars page ${page}: ${response.status}`);
+      break;
+    }
+
+    const json = await response.json();
+    const batch: Array<Record<string, unknown>> = json.data || [];
+
+    console.log(`📊 Page ${page}: got ${batch.length} cars`);
+    allItems.push(...batch);
+
+    const pageCount: number | undefined = json?.meta?.pagination?.pageCount;
+    const currentPage: number | undefined = json?.meta?.pagination?.page;
+    if (!pageCount || !currentPage || currentPage >= pageCount) break;
+    page += 1;
+  }
+
+  console.log(`✅ Total cars from all pages: ${allItems.length}`);
+  return allItems;
+}
+
 // Получение данных для главной страницы с трансформацией
 export async function getHomePageData(language: string = "en") {
   try {
     const [toursResult, carsResult, propertiesResult, blogsResult] =
       await Promise.allSettled([
         getAllTours(),
-        getAllCars(),
+        getAllCars(), // Получаем все автомобили для главной страницы
         getAllProperties(),
         getAllBlogs(),
       ]);
@@ -362,60 +499,79 @@ export async function getHomePageData(language: string = "en") {
         : [];
 
     // Трансформация автомобилей
-    const cars =
-      carsResult.status === "fulfilled"
-        ? carsResult.value.map(
-            (car: {
-              id: number;
-              documentId: string;
-              title?: string;
-              description?: string;
-              specifications?: {
-                make?: string;
-                model?: string;
-                transmission?: string;
-                seats?: number;
-                fuel?: string;
-                year?: number;
-              };
-              features?: { air_conditioning?: boolean; bluetooth?: boolean };
-              rental_prices?: { day_1?: number };
-              location?: { city?: string; region?: string };
-              type?: string;
-              car_status?: string;
-              images?: Array<{ url: string }>;
-            }) => ({
-              id: car.id,
-              documentId: car.documentId,
-              title:
-                car.title ||
-                `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
-              description: car.description || "Reliable car for your journey",
-              image: getImageUrl(car),
-              price: `€${car.rental_prices?.day_1 || 30}/${getLocalizedText(language, "day")}`,
-              transmission:
-                car.specifications?.transmission === "automatic"
-                  ? getLocalizedText(language, "automatic")
-                  : getLocalizedText(language, "manual"),
-              features: [
-                car.features?.air_conditioning &&
-                  getLocalizedText(language, "airConditioning"),
-                `${car.specifications?.seats || 5} ${getLocalizedText(language, "seats")}`,
-                car.features?.bluetooth && "Bluetooth",
-                car.specifications?.fuel,
-                car.specifications?.year && `${car.specifications.year}`,
-              ]
-                .filter(Boolean)
-                .join(", "),
-              rating: 4.6,
-              specifications: car.specifications,
-              location: car.location,
-              rental_prices: car.rental_prices,
-              type: car.type,
-              car_status: car.car_status,
-            })
-          )
-        : [];
+    type CarItem = {
+      id: number;
+      documentId: string;
+      title?: string;
+      description?: string;
+      specifications?: {
+        make?: string;
+        model?: string;
+        transmission?: string;
+        seats?: number;
+        fuel?: string;
+        year?: number;
+      };
+      features?: { air_conditioning?: boolean; bluetooth?: boolean };
+      rental_prices?: { day_1?: number };
+      location?: { city?: string; region?: string };
+      type?: string;
+      car_status?: string;
+      images?: Array<{ url: string }>;
+    };
+    const carsRaw: CarItem[] =
+      carsResult.status === "fulfilled" ? (carsResult.value as CarItem[]) : [];
+    const cars = carsRaw.map(
+      (car: {
+        id: number;
+        documentId: string;
+        title?: string;
+        description?: string;
+        specifications?: {
+          make?: string;
+          model?: string;
+          transmission?: string;
+          seats?: number;
+          fuel?: string;
+          year?: number;
+        };
+        features?: { air_conditioning?: boolean; bluetooth?: boolean };
+        rental_prices?: { day_1?: number };
+        location?: { city?: string; region?: string };
+        type?: string;
+        car_status?: string;
+        images?: Array<{ url: string }>;
+      }) => ({
+        id: car.id,
+        documentId: car.documentId,
+        title:
+          car.title ||
+          `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
+        description: car.description || "Reliable car for your journey",
+        image: getImageUrl(car),
+        price: `€${car.rental_prices?.day_1 || 30}/${getLocalizedText(language, "day")}`,
+        transmission:
+          car.specifications?.transmission === "automatic"
+            ? getLocalizedText(language, "automatic")
+            : getLocalizedText(language, "manual"),
+        features: [
+          car.features?.air_conditioning &&
+            getLocalizedText(language, "airConditioning"),
+          `${car.specifications?.seats || 5} ${getLocalizedText(language, "seats")}`,
+          car.features?.bluetooth && "Bluetooth",
+          car.specifications?.fuel,
+          car.specifications?.year && `${car.specifications.year}`,
+        ]
+          .filter(Boolean)
+          .join(", "),
+        rating: 4.6,
+        specifications: car.specifications,
+        location: car.location,
+        rental_prices: car.rental_prices,
+        type: car.type,
+        car_status: car.car_status,
+      })
+    );
 
     // Трансформация недвижимости
     const properties =

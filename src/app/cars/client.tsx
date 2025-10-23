@@ -7,7 +7,6 @@ import CarCard from "./CarCard";
 import CarsFilter from "./CarsFilter";
 import { parseUrlParams, CarFilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
-import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translations from "@/i18n/cars.json";
 
 const getLoadingCarsText = (language: string) => {
@@ -34,7 +33,6 @@ const languages = [
   { code: "es", name: "Español", flag: "🇪🇸" },
 ];
 
-// Определяем интерфейс для автомобиля
 interface CarData {
   id: number;
   documentId: string;
@@ -47,6 +45,7 @@ interface CarData {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+  locale?: string;
   images: Array<{
     id: number;
     url: string;
@@ -101,12 +100,15 @@ interface CarData {
 }
 
 interface CarsPageClientProps {
-  initialCars?: any[];
+  initialCarsByLocale?: Record<string, unknown[]>;
 }
 
-export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
+export default function CarsPageClient({
+  initialCarsByLocale,
+}: CarsPageClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
+
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   >("en");
@@ -139,6 +141,7 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
         multimedia: (urlFilters.multimedia as boolean) || false,
         bluetooth: (urlFilters.bluetooth as boolean) || false,
         gps: (urlFilters.gps as boolean) || false,
+        type: (urlFilters.type as string) || "",
         carStatus: (urlFilters.carStatus as string) || "",
       };
     }
@@ -165,18 +168,26 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
       multimedia: false,
       bluetooth: false,
       gps: false,
+      type: "",
       carStatus: "",
     };
   });
 
   // Состояния для всех и отфильтрованных автомобилей
-  const [allCars, setAllCars] = useState<CarData[]>(initialCars || []);
-  const [filteredCars, setFilteredCars] = useState<CarData[]>(
-    initialCars || []
-  );
-  const [initialLoadComplete, setInitialLoadComplete] = useState(!!initialCars);
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [bookingItem, setBookingItem] = useState<any>(null);
+  const [allCarsByLocale, setAllCarsByLocale] = useState<
+    Record<string, unknown[]>
+  >(initialCarsByLocale || {});
+  const [filteredCars, setFilteredCars] = useState<CarData[]>(() => {
+    if (initialCarsByLocale && initialCarsByLocale[language]) {
+      // Берем автомобили для текущего языка напрямую из объекта
+      return (initialCarsByLocale[language] as CarData[]) || [];
+    }
+    return [];
+  });
+  const [initialLoadComplete, setInitialLoadComplete] =
+    useState(!!initialCarsByLocale);
+  // const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  // const [bookingItem, setBookingItem] = useState<CarData | null>(null);
 
   // Используем хук синхронизации фильтров с URL
   const {
@@ -209,46 +220,152 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
     };
   };
 
-  // Загружаем все автомобили только если нет initialCars
-  useEffect(() => {
-    if (initialCars) {
-      setAllCars(initialCars);
-      setFilteredCars(initialCars);
-      setInitialLoadComplete(true);
-      return;
-    }
+  // Функция для обновления URL с пагинацией
+  const updateUrlWithPage = useCallback(
+    (page: number) => {
+      const params = new URLSearchParams(searchParams?.toString() || "");
+      if (page === 1) {
+        params.delete("page");
+      } else {
+        params.set("page", page.toString());
+      }
+      const queryString = params.toString();
+      const path = "/cars";
+      const url = queryString ? `${path}?${queryString}` : path;
+      router.replace(url, { scroll: false });
+    },
+    [searchParams, router]
+  );
 
-    const loadAllCars = async () => {
-      try {
-        const apiUrl =
-          process.env.NEXT_PUBLIC_STRAPI_API_URL ||
-          "https://tenerifly-strapi-production.up.railway.app";
+  // Функция для обновления отфильтрованных автомобилей — используется в CarsFilter
+  const handleCarsUpdate = useCallback(
+    (updatedCars: CarData[]) => {
+      setFilteredCars(updatedCars);
+      // Сбрасываем страницу только если количество автомобилей изменилось
+      const newTotalPages = Math.ceil(updatedCars.length / itemsPerPage);
+      if (currentPage > newTotalPages) {
+        setCurrentPage(1);
+        updateUrlWithPage(1);
+      }
+    },
+    [currentPage, itemsPerPage, updateUrlWithPage]
+  );
+
+  // Функция для загрузки автомобилей по локалям
+  const loadCarsByLocales = useCallback(async () => {
+    try {
+      const apiUrl =
+        process.env.NEXT_PUBLIC_STRAPI_API_URL ||
+        "https://tenerifly-strapi-production.up.railway.app";
+
+      // Получаем ВСЕ автомобили одним запросом (как в getAllCars)
+      const pageSize = 50;
+      let page = 1;
+      const allItems: unknown[] = [];
+
+      while (true) {
+        const params = new URLSearchParams();
+        params.set("populate", "*");
+        params.set("publicationState", "live");
+        params.set("sort", "title:ASC");
+        params.set("pagination[page]", String(page));
+        params.set("pagination[pageSize]", String(pageSize));
 
         const response = await fetch(
-          `${apiUrl}/api/cars?populate=*&pagination[pageSize]=1000`,
+          `${apiUrl}/api/documents/cars?${params.toString()}`,
           {
             headers: getAuthHeaders(),
           }
         );
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          console.warn(`Failed to fetch cars page ${page}: ${response.status}`);
+          break;
         }
 
         const data = await response.json();
-        if (data.data) {
-          setAllCars(data.data);
-          setFilteredCars(data.data);
-        }
-      } catch (error) {
-        console.error("Error loading cars:", error);
-      } finally {
-        setInitialLoadComplete(true);
-      }
-    };
+        const batch = data.data || [];
+        allItems.push(...batch);
 
-    loadAllCars();
-  }, [initialCars]);
+        const pageCount = data?.meta?.pagination?.pageCount;
+        const currentPage = data?.meta?.pagination?.page;
+        if (!pageCount || !currentPage || currentPage >= pageCount) break;
+        page += 1;
+      }
+
+      console.log(`✅ Total cars from all pages: ${allItems.length}`);
+
+      // Группируем автомобили по локалям
+      const carsByLocale: Record<string, unknown[]> = {
+        en: [],
+        ru: [],
+        pl: [],
+        fr: [],
+        uk: [],
+        de: [],
+        es: [],
+      };
+
+      allItems.forEach((car: unknown) => {
+        const carData = car as {
+          id?: number;
+          locale?: string;
+          localizations?: Array<{ locale: string }>;
+        };
+
+        // Добавляем основную запись (текущая локаль)
+        const mainLocale = carData.locale || "en";
+        if (carsByLocale[mainLocale]) {
+          // Проверяем, нет ли уже автомобиля с таким id в этой локали
+          const existingCar = carsByLocale[mainLocale].find(
+            (existingCar: unknown) =>
+              (existingCar as { id?: number }).id === carData.id
+          );
+          if (!existingCar) {
+            carsByLocale[mainLocale].push(car);
+          }
+        }
+
+        // Добавляем локализованные версии
+        if (carData.localizations && Array.isArray(carData.localizations)) {
+          carData.localizations.forEach((localization: { locale: string }) => {
+            if (carsByLocale[localization.locale]) {
+              // Проверяем, нет ли уже автомобиля с таким id в этой локали
+              const existingCar = carsByLocale[localization.locale].find(
+                (existingCar: unknown) =>
+                  (existingCar as { id?: number }).id === carData.id
+              );
+              if (!existingCar) {
+                carsByLocale[localization.locale].push(car);
+              }
+            }
+          });
+        }
+      });
+
+      setAllCarsByLocale(carsByLocale);
+      setFilteredCars((carsByLocale[language] as CarData[]) || []);
+    } catch (error) {
+      console.error("Error loading cars by locales:", error);
+    } finally {
+      setInitialLoadComplete(true);
+    }
+  }, [language]);
+
+  // Загружаем все автомобили только если нет initialCarsByLocale
+  useEffect(() => {
+    if (initialCarsByLocale && Object.keys(initialCarsByLocale).length > 0) {
+      // Сохраняем все автомобили по локалям
+      setAllCarsByLocale(initialCarsByLocale);
+      // Устанавливаем автомобили для текущего языка
+      setFilteredCars((initialCarsByLocale[language] as CarData[]) || []);
+      setInitialLoadComplete(true);
+      return;
+    }
+
+    // Fallback: загружаем автомобили для всех локалей
+    loadCarsByLocales();
+  }, [initialCarsByLocale, language, loadCarsByLocales]);
 
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
@@ -266,6 +383,11 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
     }
   }, []);
 
+  // Обновляем отфильтрованные данные при смене языка (без догрузки)
+  useEffect(() => {
+    setFilteredCars((allCarsByLocale[language] as CarData[]) || []);
+  }, [language, allCarsByLocale]);
+
   // Синхронизация текущей страницы с URL при изменении searchParams
   useEffect(() => {
     if (searchParams) {
@@ -277,82 +399,21 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
     }
   }, [searchParams, currentPage]);
 
-  // Сохранение языка в localStorage
+  // Сохранение языка в localStorage и фильтрация по локали
   const handleLanguageChange = (
     langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   ) => {
     setLanguage(langCode);
     localStorage.setItem("selectedLanguage", langCode);
     setIsLanguageDropdownOpen(false);
+    // Устанавливаем автомобили для выбранного языка
+    setFilteredCars((allCarsByLocale[langCode] as CarData[]) || []);
   };
 
   // Мемоизированная функция сброса фильтров
-  const resetFilters = useCallback(() => {
-    setFilters({
-      brand: "",
-      model: "",
-      yearFrom: "",
-      yearTo: "",
-      priceFrom: "",
-      priceTo: "",
-      mileageFrom: "",
-      mileageTo: "",
-      fuel: "",
-      transmission: "",
-      bodyType: "",
-      color: "",
-      doors: "",
-      powerFrom: "",
-      powerTo: "",
-      location: "",
-      availableFrom: "",
-      airConditioner: false,
-      rearCamera: false,
-      multimedia: false,
-      bluetooth: false,
-      gps: false,
-      carStatus: "",
-    });
-  }, []);
-
-  // Мемоизированная функция изменения фильтров
-  const handleFilterChange = useCallback(
-    (key: string, value: string | boolean) => {
-      setFilters((prev) => ({ ...prev, [key]: value }));
-    },
-    []
-  );
-
-  // Функция для обновления URL с пагинацией
-  const updateUrlWithPage = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (page === 1) {
-      params.delete("page");
-    } else {
-      params.set("page", page.toString());
-    }
-    const queryString = params.toString();
-    const path = "/cars";
-    const url = queryString ? `${path}?${queryString}` : path;
-    router.replace(url, { scroll: false });
-  };
-
-  // Мемоизированная функция обновления отфильтрованных автомобилей
-  const handleCarsUpdate = useCallback(
-    (updatedCars: CarData[]) => {
-      setFilteredCars(updatedCars);
-      // Сбрасываем страницу только если количество автомобилей изменилось
-      const newTotalPages = Math.ceil(updatedCars.length / itemsPerPage);
-      if (currentPage > newTotalPages) {
-        setCurrentPage(1);
-        updateUrlWithPage(1);
-      }
-    },
-    [currentPage, itemsPerPage]
-  );
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredCars.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredCars.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentCars = filteredCars.slice(startIndex, endIndex);
@@ -376,6 +437,9 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
     }
   };
 
+  console.log("allCarsByLocale:", allCarsByLocale);
+  console.log("filteredCars:", filteredCars);
+  console.log("filteredCars:", initialCarsByLocale);
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-6">
@@ -491,12 +555,12 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filters Sidebar - передаем все автомобили в компонент фильтра */}
           <CarsFilter
-            filters={filters as any}
+            filters={filters}
             onFilterChange={handleFilterChangeSync}
             onResetFilters={resetFiltersSync}
             onCarsUpdate={handleCarsUpdate}
             translations={t}
-            allCars={allCars}
+            allCars={(allCarsByLocale[language] as CarData[]) || []}
           />
 
           {/* Cars Grid - показываем отфильтрованные автомобили */}
@@ -515,18 +579,18 @@ export default function CarsPageClient({ initialCars }: CarsPageClientProps) {
                     {/* Results info */}
                     <div className="text-sm text-gray-600">
                       {language === "en"
-                        ? `Showing ${startIndex + 1}-${Math.min(endIndex, filteredCars.length)} of ${filteredCars.length} cars`
+                        ? `Showing ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} of ${filteredCars.length} cars`
                         : language === "ru"
                           ? `Показано ${startIndex + 1}-${Math.min(endIndex, filteredCars.length)} из ${filteredCars.length} автомобилей`
                           : language === "pl"
-                            ? `Pokazano ${startIndex + 1}-${Math.min(endIndex, filteredCars.length)} z ${filteredCars.length} samochodów`
+                            ? `Pokazano ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} z ${filteredCars.length} samochodów`
                             : language === "fr"
-                              ? `Affichage de ${startIndex + 1}-${Math.min(endIndex, filteredCars.length)} sur ${filteredCars.length} voitures`
+                              ? `Affichage de ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} sur ${filteredCars.length} voitures`
                               : language === "uk"
-                                ? `Показано ${startIndex + 1}-${Math.min(endIndex, filteredCars.length)} з ${filteredCars.length} автомобілів`
+                                ? `Показано ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} з ${filteredCars.length} автомобілів`
                                 : language === "de"
-                                  ? `Zeige ${startIndex + 1}-${Math.min(endIndex, filteredCars.length)} von ${filteredCars.length} Autos`
-                                  : `Mostrando ${startIndex + 1}-${Math.min(endIndex, filteredCars.length)} de ${filteredCars.length} coches`}
+                                  ? `Zeige ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} von ${filteredCars.length} Autos`
+                                  : `Mostrando ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} de ${filteredCars.length} coches`}
                     </div>
 
                     {/* Pagination controls */}
