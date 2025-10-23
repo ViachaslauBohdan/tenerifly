@@ -195,7 +195,6 @@ const CarCard = ({
     setSelectedCar(null);
   };
 
-
   const getImageUrl = (car: CarData) => {
     if (car.images && car.images.length > 0) {
       // Если URL уже полный (начинается с http), возвращаем как есть
@@ -226,7 +225,10 @@ const CarCard = ({
 
   const getLocalizedCurrency = (car: CarData) => {
     const currency = getCurrency(car);
-    return translations.currency[currency as keyof typeof translations.currency] || currency;
+    return (
+      translations.currency[currency as keyof typeof translations.currency] ||
+      currency
+    );
   };
 
   const getLocation = (car: CarData) => {
@@ -617,7 +619,9 @@ const CarCard = ({
                 {car.type === "rent" && (
                   <div className="text-right">
                     <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {translations.priceFrom} {getLocalizedCurrency(car)} {getPrice(car)}{translations.pricePerDay}
+                      {translations.priceFrom} {getLocalizedCurrency(car)}{" "}
+                      {getPrice(car)}
+                      {translations.pricePerDay}
                     </span>
                   </div>
                 )}
