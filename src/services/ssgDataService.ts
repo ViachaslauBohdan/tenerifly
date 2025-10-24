@@ -487,63 +487,64 @@ export async function getHomePageData(language: string = "en") {
       images?: Array<{ url: string }>;
     };
 
-    // Получаем автомобили для текущего языка из результата getAllCarsAllLocales
     const carsByLocale =
       carsResult.status === "fulfilled"
         ? (carsResult.value as Record<string, CarItem[]>)
         : {};
     const carsRaw: CarItem[] = carsByLocale[language] || [];
-    const cars = carsRaw.map(
-      (car: {
-        id: number;
-        documentId: string;
-        title?: string;
-        description?: string;
-        specifications?: {
-          make?: string;
-          model?: string;
-          transmission?: string;
-          seats?: number;
-          fuel?: string;
-          year?: number;
-        };
-        features?: { air_conditioning?: boolean; bluetooth?: boolean };
-        rental_prices?: { day_1?: number };
-        location?: { city?: string; region?: string };
-        type?: string;
-        car_status?: string;
-        images?: Array<{ url: string }>;
-      }) => ({
-        id: car.id,
-        documentId: car.documentId,
-        title:
-          car.title ||
-          `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
-        description: car.description || "Reliable car for your journey",
-        image: getImageUrl(car),
-        price: `€${car.rental_prices?.day_1 || 30}/${getLocalizedText(language, "day")}`,
-        transmission:
-          car.specifications?.transmission === "automatic"
-            ? getLocalizedText(language, "automatic")
-            : getLocalizedText(language, "manual"),
-        features: [
-          car.features?.air_conditioning &&
-            getLocalizedText(language, "airConditioning"),
-          `${car.specifications?.seats || 5} ${getLocalizedText(language, "seats")}`,
-          car.features?.bluetooth && "Bluetooth",
-          car.specifications?.fuel,
-          car.specifications?.year && `${car.specifications.year}`,
-        ]
-          .filter(Boolean)
-          .join(", "),
-        rating: 4.6,
-        specifications: car.specifications,
-        location: car.location,
-        rental_prices: car.rental_prices,
-        type: car.type,
-        car_status: car.car_status,
-      })
-    );
+    // const cars = carsRaw.map(
+    //   (car: {
+    //     id: number;
+    //     documentId: string;
+    //     title?: string;
+    //     description?: string;
+    //     specifications?: {
+    //       make?: string;
+    //       model?: string;
+    //       transmission?: string;
+    //       seats?: number;
+    //       fuel?: string;
+    //       year?: number;
+    //     };
+    //     features?: { air_conditioning?: boolean; bluetooth?: boolean };
+    //     rental_prices?: { day_1?: number };
+    //     location?: { city?: string; region?: string };
+    //     type?: string;
+    //     car_status?: string;
+    //     images?: Array<{ url: string }>;
+    //   }) => ({
+    //     id: car.id,
+    //     documentId: car.documentId,
+    //     title:
+    //       car.title ||
+    //       `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
+    //     description: car.description || "Reliable car for your journey",
+    //     image: getImageUrl(car),
+    //     price: `€${car.rental_prices?.day_1 || 30}/${getLocalizedText(language, "day")}`,
+    //     transmission:
+    //       car.specifications?.transmission === "automatic"
+    //         ? getLocalizedText(language, "automatic")
+    //         : getLocalizedText(language, "manual"),
+    //     features: [
+    //       car.features?.air_conditioning &&
+    //         getLocalizedText(language, "airConditioning"),
+    //       `${car.specifications?.seats || 5} ${getLocalizedText(language, "seats")}`,
+    //       car.features?.bluetooth && "Bluetooth",
+    //       car.specifications?.fuel,
+    //       car.specifications?.year && `${car.specifications.year}`,
+    //     ]
+    //       .filter(Boolean)
+    //       .join(", "),
+    //     rating: 4.6,
+    //     specifications: car.specifications,
+    //     location: car.location,
+    //     rental_prices: car.rental_prices,
+    //     type: car.type,
+    //     car_status: car.car_status,
+    //   })
+    // );
+
+    const cars = carsByLocale;
 
     // Трансформация недвижимости
     const properties =
@@ -630,7 +631,7 @@ export async function getHomePageData(language: string = "en") {
     console.error("Error loading home page data:", error);
     return {
       properties: [],
-      cars: [],
+      cars: {},
       tours: [],
       blogs: [],
     };
