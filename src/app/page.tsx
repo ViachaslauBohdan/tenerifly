@@ -55,7 +55,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootPage() {
   // Получаем данные на сервере для SSG с трансформацией
   // По умолчанию английский, но LocalePageClient будет переключать языки динамически
-  const homeData = await getHomePageData("en");
+  const homeData = await getHomePageData();
 
   return <LocalePageClient initialData={homeData} />;
 }

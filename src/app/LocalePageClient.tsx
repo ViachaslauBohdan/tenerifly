@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -46,7 +46,7 @@ type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
 interface LocalePageClientProps {
   initialData?: {
     properties: any[];
-    cars: any[];
+    cars: any;
     tours: any[];
     blogs: any[];
   };
@@ -62,6 +62,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   // State for component
   const [mounted, setMounted] = useState(false);
 
+  console.log("initialData", initialData);
   // State for search filters
   const [activeTab, setActiveTab] = useState("accommodation");
   const [dates, setDates] = useState(["", ""]);
@@ -137,18 +138,95 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
 
+  // Helper function to format car features
+  const getCarFeatures = (car: any) => {
+    const features = [];
+    if (car.features) {
+      if (car.features.air_conditioning) features.push("Air Conditioner");
+      if (car.features.bluetooth) features.push("Bluetooth");
+      if (car.features.navigation) features.push("Navigation");
+      if (car.features.parking_sensors) features.push("Parking Sensors");
+      if (car.features.other_features)
+        features.push(car.features.other_features);
+    }
+    return features.length > 0 ? features.join(", ") : "—";
+  };
+
+  // Helper function to get car price (like in CarCard)
+  const getCarPrice = (car: any) => {
+    if (car.rental_prices && car.rental_prices.day_1) {
+      return car.rental_prices.day_1;
+    }
+    return 45; // default price like in CarCard
+  };
+
+  // Helper function to get car currency (like in CarCard)
+  const getCarCurrency = (car: any) => {
+    if (car.rental_prices && car.rental_prices.currency) {
+      return car.rental_prices.currency;
+    }
+    return "EUR"; // default currency like in CarCard
+  };
+
+  // Helper function to get localized currency (like in CarCard)
+  const getLocalizedCurrency = (car: any) => {
+    const currency = getCarCurrency(car);
+    // Simple currency mapping
+    const currencyMap: Record<string, string> = {
+      EUR: "€",
+      USD: "$",
+      GBP: "£",
+    };
+    return currencyMap[currency] || currency;
+  };
+
+  // Helper function to get localized "day" text
+  const getDayText = () => {
+    switch (language) {
+      case "ru":
+        return "день";
+      case "pl":
+        return "dzień";
+      case "fr":
+        return "jour";
+      case "uk":
+        return "день";
+      case "de":
+        return "Tag";
+      case "es":
+        return "día";
+      default:
+        return "day";
+    }
+  };
+
+  // Helper function to get car image
+  const getCarImage = (car: any) => {
+    if (car.images && car.images.length > 0) {
+      // Try to get the main image URL
+      return car.images[0].url;
+    }
+    return "/placeholder.svg";
+  };
+
   // Используем initialData если доступно, иначе загружаем через хук
   const dataFromHook = useDataLoader(mounted, language);
-  const { excursions, cars, accommodation, blogPosts, dataLoading } =
-    initialData
-      ? {
-          excursions: initialData.tours || [],
-          cars: initialData.cars || [],
-          accommodation: initialData.properties || [],
-          blogPosts: initialData.blogs || [],
-          dataLoading: false,
-        }
-      : dataFromHook;
+  const { excursions, accommodation, blogPosts, dataLoading } = initialData
+    ? {
+        excursions: initialData.tours || [],
+        accommodation: initialData.properties || [],
+        blogPosts: initialData.blogs || [],
+        dataLoading: false,
+      }
+    : dataFromHook;
+  // Получаем cars для выбранного языка
+  const cars = useMemo(() => {
+    return initialData
+      ? (initialData.cars &&
+          initialData.cars[language as keyof typeof initialData.cars]) ||
+          []
+      : dataFromHook.cars || [];
+  }, [initialData, language, dataFromHook.cars]);
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
@@ -1413,7 +1491,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     >
                       <div className="aspect-video relative overflow-hidden">
                         <img
-                          src={car.image || "/placeholder.svg"}
+                          src={getCarImage(car)}
                           alt={car.title}
                           className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                           onClick={() => router.push(`/cars/${car.documentId}`)}
@@ -1460,18 +1538,22 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           <div className="flex items-center gap-2 text-sm text-gray-600">
                             <Car className="w-4 h-4" />
                             <span>
-                              {t.sections.cars.transmission}: {car.transmission}
+                              {t.sections.cars.transmission}:{" "}
+                              {car.specifications?.transmission || "—"}
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-600">
                             <Home className="w-4 h-4" />
                             <span>
-                              {t.sections.cars.features}: {car.features}
+                              {t.sections.cars.features}: {getCarFeatures(car)}
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-gray-600">
                             <Euro className="w-4 h-4" />
-                            <span>{car.price}</span>
+                            <span>
+                              {getLocalizedCurrency(car)}
+                              {getCarPrice(car)}/{getDayText()}
+                            </span>
                           </div>
                         </div>
                         <div className="flex gap-3">
@@ -1479,9 +1561,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             onClick={() =>
                               openBookingModal("car", {
                                 title: car.title,
-                                price: car.price,
-                                brand: car.brand,
-                                model: car.model,
+                                price: `${getLocalizedCurrency(car)}${getCarPrice(car)}/${getDayText()}`,
+                                brand: car.specifications?.make,
+                                model: car.specifications?.model,
                                 duration: car.duration,
                                 language: car.language,
                                 contact: car.contact,
@@ -1529,11 +1611,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {(() => {
-                console.log(
-                  "🎨 Rendering excursions, count:",
-                  excursions.length
-                );
-                console.log("🎨 Excursions data:", excursions);
                 return excursions.map(
                   (excursion, index) =>
                     index < 3 && (
