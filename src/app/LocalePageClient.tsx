@@ -232,68 +232,68 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   useEffect(() => {
     if (mounted && accommodation && cars && excursions) {
       // Extract property types from accommodation data
-      const propertyTypesArray = [
-        ...new Set(
+      const propertyTypesArray = Array.from(
+        new Set(
           accommodation
             .map((property: { category?: string }) => property.category)
             .filter(
-              (value): value is string =>
+              (value: string | undefined): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        ),
-      ].sort();
+        )
+      ).sort() as string[];
 
       // Extract car filter options from cars data
-      const carTypesArray = [
-        ...new Set(
+      const carTypesArray = Array.from(
+        new Set(
           cars
             .map((car: { type?: string }) => car.type)
             .filter(
               (value: string | undefined): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        ),
-      ].sort();
+        )
+      ).sort() as string[];
 
-      const carBrandsArray = [
-        ...new Set(
+      const carBrandsArray = Array.from(
+        new Set(
           cars
             .map(
               (car: { specifications?: { make?: string } }) =>
                 car.specifications?.make
             )
             .filter(
-              (value): value is string =>
+              (value: string | undefined): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        ),
-      ].sort();
+        )
+      ).sort() as string[];
 
-      const carTransmissionsArray = [
-        ...new Set(
+      const carTransmissionsArray = Array.from(
+        new Set(
           cars
             .map(
               (car: { specifications?: { transmission?: string } }) =>
                 car.specifications?.transmission
             )
             .filter(
-              (value): value is string =>
+              (value: string | undefined): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        ),
-      ].sort();
+        )
+      ).sort() as string[];
 
       // Extract tour filter options from excursions data
-      const tourDurationsArray = [
-        ...new Set(
+      const tourDurationsArray = Array.from(
+        new Set(
           excursions
             .map((tour: { duration?: string }) => tour.duration)
             .filter(
-              (value): value is string =>
+              (value: string | undefined): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        ),
-      ].sort();
+        )
+      ).sort() as string[];
 
       // Set all filter options (simple string arrays like individual pages)
       setPropertyTypes(propertyTypesArray);
@@ -1483,7 +1483,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {cars.map(
-                (car, index) =>
+                (car: any, index: number) =>
                   index < 3 && (
                     <div
                       key={car.id || index}
