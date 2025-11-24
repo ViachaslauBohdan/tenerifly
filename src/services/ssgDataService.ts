@@ -225,14 +225,15 @@ export async function getAllCars() {
   while (true) {
     const params = new URLSearchParams();
     params.set("populate", "*");
+    params.set("publicationState", "live");
     params.set("sort", "title:ASC");
     params.set("pagination[page]", String(page));
     params.set("pagination[pageSize]", String(pageSize));
 
-    // Используем Documents API вместо обычного API
+    // Используем обычный API для серверной стороны
     const url = `${API_URL}/api/cars?${params.toString()}`;
 
-    console.log(`🔍 Fetching cars page ${page} via Documents API:`, url);
+    console.log(`🔍 Fetching cars page ${page} via API:`, url);
 
     const response = await fetch(url, {
       headers: getAuthHeaders(),
@@ -277,6 +278,7 @@ export async function getAllCarsAllLocales() {
   allCars.forEach((car: unknown) => {
     const carData = car as {
       id?: number;
+      documentId?: string;
       locale?: string;
       localizations?: Array<{
         id: number;
@@ -288,27 +290,61 @@ export async function getAllCarsAllLocales() {
       }>;
     };
 
+    // Используем documentId для дедупликации (одинаковый для всех локалей одного автомобиля)
+    const carDocumentId = carData.documentId;
+    const carTitle = (carData as { title?: string }).title;
+
     // Добавляем основную запись (текущая локаль)
     const mainLocale = carData.locale || "en";
-    if (carsByLocale[mainLocale]) {
-      // Проверяем, нет ли уже автомобиля с таким id в этой локали
+    if (carsByLocale[mainLocale] && carDocumentId) {
+      // Проверяем, нет ли уже автомобиля с таким documentId или title в этой локали
       const existingCar = carsByLocale[mainLocale].find(
-        (existingCar: unknown) =>
-          (existingCar as { id?: number }).id === carData.id
+        (existingCar: unknown) => {
+          const existing = existingCar as {
+            documentId?: string;
+            title?: string;
+          };
+          return (
+            existing.documentId === carDocumentId ||
+            (carTitle && existing.title === carTitle)
+          );
+        }
       );
       if (!existingCar) {
         carsByLocale[mainLocale].push(car);
       }
     }
 
-    // Добавляем локализованные версии
+    // Добавляем локализованные версии ТОЛЬКО для других локалей (не для основной локали)
+    // НЕ добавляем локализации для английского языка (en) - только основные записи с locale="en"
     if (carData.localizations && Array.isArray(carData.localizations)) {
       carData.localizations.forEach((localization) => {
-        if (carsByLocale[localization.locale]) {
-          // Проверяем, нет ли уже автомобиля с таким id в этой локали
+        // Пропускаем локализацию, если она для той же локали, что и основная запись
+        if (localization.locale === mainLocale) {
+          return;
+        }
+
+        // НЕ добавляем локализации для английского языка
+        // Английский язык должен содержать только записи с основной локалью "en"
+        if (localization.locale === "en") {
+          return;
+        }
+
+        if (carsByLocale[localization.locale] && localization.documentId) {
+          // Проверяем, нет ли уже автомобиля с таким documentId или title в этой локали
+          // Проверяем как по documentId локализации, так и по основному documentId и title
           const existingCar = carsByLocale[localization.locale].find(
-            (existingCar: unknown) =>
-              (existingCar as { id?: number }).id === carData.id
+            (existingCar: unknown) => {
+              const existing = existingCar as {
+                documentId?: string;
+                title?: string;
+              };
+              return (
+                existing.documentId === localization.documentId ||
+                existing.documentId === carDocumentId ||
+                (localization.title && existing.title === localization.title)
+              );
+            }
           );
           if (!existingCar) {
             // Создаем гибридный объект: локализованные title и description + остальное из оригинала
@@ -318,6 +354,7 @@ export async function getAllCarsAllLocales() {
               title: localization.title, // Перезаписываем title локализованной версией
               description: localization.description, // Перезаписываем description локализованной версией
               locale: localization.locale, // Устанавливаем правильную локаль
+              documentId: localization.documentId, // Используем documentId из локализации
             };
             carsByLocale[localization.locale].push(hybridCar);
           }

@@ -249,7 +249,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           cars
             .map((car: { type?: string }) => car.type)
             .filter(
-              (value): value is string =>
+              (value: string | undefined): value is string =>
                 Boolean(value) && typeof value === "string"
             )
         ),
