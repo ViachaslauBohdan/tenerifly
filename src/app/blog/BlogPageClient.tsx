@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useTranslation } from "@/hooks/useTranslation";
 import translations from "@/i18n/blog.json";
 // Языки с флагами
 const languages = [
@@ -37,9 +38,10 @@ interface BlogPageClientProps {
 }
 
 export default function BlogPageClient({ initialBlogs }: BlogPageClientProps) {
+  const { locale, switchLocale, createLocaleLink } = useTranslation();
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-  >("en");
+  >(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>(initialBlogs || []);
   const [loading, setLoading] = useState(!initialBlogs);
@@ -48,18 +50,10 @@ export default function BlogPageClient({ initialBlogs }: BlogPageClientProps) {
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
 
-  // Загрузка сохраненного языка из localStorage
+  // Синхронизируем язык с URL
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("selectedLanguage");
-    if (
-      savedLanguage &&
-      translations[savedLanguage as keyof typeof translations]
-    ) {
-      setLanguage(
-        savedLanguage as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-      );
-    }
-  }, []);
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+  }, [locale]);
 
   // Загрузка блогов только если нет initialBlogs
   useEffect(() => {
@@ -105,12 +99,11 @@ export default function BlogPageClient({ initialBlogs }: BlogPageClientProps) {
     fetchBlogs();
   }, [language, initialBlogs]);
 
-  // Сохранение языка в localStorage
+  // Переключение языка через URL
   const handleLanguageChange = (
     langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   ) => {
-    setLanguage(langCode);
-    localStorage.setItem("selectedLanguage", langCode);
+    switchLocale(langCode);
     setIsLanguageDropdownOpen(false);
   };
 
@@ -175,7 +168,7 @@ export default function BlogPageClient({ initialBlogs }: BlogPageClientProps) {
         {/* Header with Language Switcher */}
         <div className="flex justify-between items-center mb-6">
           <Link
-            href="/"
+            href={createLocaleLink("/")}
             className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
           >
             <svg
@@ -345,7 +338,7 @@ export default function BlogPageClient({ initialBlogs }: BlogPageClientProps) {
 
                   {/* Read More Button */}
                   <Link
-                    href={`/blog/${post.documentId}`}
+                    href={createLocaleLink(`/blog/${post.documentId}`)}
                     className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
                   >
                     {t.readMore}

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useTranslation } from "@/hooks/useTranslation";
 import {
   Carousel,
   CarouselContent,
@@ -93,25 +94,22 @@ interface CarData {
 }
 
 export default function CarDetailPageClient({ car }: { car: CarData }) {
-  const [language, setLanguage] = useState<LanguageCode>("en");
+  const { locale, switchLocale, createLocaleLink } = useTranslation();
+  const [language, setLanguage] = useState<LanguageCode>(locale as LanguageCode);
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
 
-  // Загрузка сохраненного языка из localStorage
+  // Синхронизируем язык с URL
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("selectedLanguage");
-    if (savedLanguage && translations[savedLanguage as LanguageCode]) {
-      setLanguage(savedLanguage as LanguageCode);
-    }
-  }, []);
+    setLanguage(locale as LanguageCode);
+  }, [locale]);
 
-  // Сохранение языка в localStorage
+  // Переключение языка через URL
   const handleLanguageChange = (langCode: LanguageCode) => {
-    setLanguage(langCode);
-    localStorage.setItem("selectedLanguage", langCode);
+    switchLocale(langCode);
     setIsLanguageDropdownOpen(false);
   };
 
@@ -574,7 +572,7 @@ export default function CarDetailPageClient({ car }: { car: CarData }) {
         {/* Header with Language Switcher */}
         <div className="flex justify-between items-center mb-6">
           <Link
-            href="/cars"
+            href={createLocaleLink("/cars")}
             className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
           >
             <svg

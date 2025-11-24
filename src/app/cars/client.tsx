@@ -7,6 +7,7 @@ import CarCard from "./CarCard";
 import CarsFilter from "./CarsFilter";
 import { parseUrlParams, CarFilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
+import { useTranslation } from "@/hooks/useTranslation";
 import translations from "@/i18n/cars.json";
 
 const getLoadingCarsText = (language: string) => {
@@ -108,11 +109,17 @@ export default function CarsPageClient({
 }: CarsPageClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { locale, switchLocale, createLocaleLink } = useTranslation();
 
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-  >("en");
+  >(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
+
+  // Синхронизируем язык с URL
+  useEffect(() => {
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+  }, [locale]);
 
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<CarFilterParams>(() => {
@@ -428,18 +435,10 @@ export default function CarsPageClient({
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
 
-  // Загрузка сохраненного языка из localStorage
+  // Синхронизируем язык с URL
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("selectedLanguage");
-    if (
-      savedLanguage &&
-      translations[savedLanguage as keyof typeof translations]
-    ) {
-      setLanguage(
-        savedLanguage as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-      );
-    }
-  }, []);
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+  }, [locale]);
 
   // Обновляем отфильтрованные данные при смене языка (без догрузки)
   useEffect(() => {
@@ -457,15 +456,12 @@ export default function CarsPageClient({
     }
   }, [searchParams, currentPage]);
 
-  // Сохранение языка в localStorage и фильтрация по локали
+  // Переключение языка через URL
   const handleLanguageChange = (
     langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   ) => {
-    setLanguage(langCode);
-    localStorage.setItem("selectedLanguage", langCode);
+    switchLocale(langCode);
     setIsLanguageDropdownOpen(false);
-    // Устанавливаем автомобили для выбранного языка
-    setFilteredCars((allCarsByLocale[langCode] as CarData[]) || []);
   };
 
   // Мемоизированная функция сброса фильтров
@@ -504,7 +500,7 @@ export default function CarsPageClient({
         {/* Header with Language Switcher */}
         <div className="flex justify-between items-center mb-6">
           <Link
-            href="/"
+            href={createLocaleLink("/")}
             className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
           >
             <svg

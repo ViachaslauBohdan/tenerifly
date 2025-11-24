@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface BlogPost {
   id: number;
@@ -40,6 +41,7 @@ interface BlogDetailPageClientProps {
 export default function BlogDetailPageClient({
   blog,
 }: BlogDetailPageClientProps) {
+  const { createLocaleLink } = useTranslation();
   // Функция для получения URL изображения (динамическая загрузка)
   const getImageUrl = (post: BlogPost) => {
     // Приоритет: новые images -> featured_image
@@ -95,7 +97,7 @@ export default function BlogDetailPageClient({
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <Link
-            href="/blog"
+            href={createLocaleLink("/blog")}
             className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm transition-colors"
           >
             <svg

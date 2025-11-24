@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "@/hooks/useTranslation";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 
 interface PropertyData {
@@ -209,8 +211,11 @@ const ApartmentCard = ({
     }
   }, [providedApartments]);
 
+  const router = useRouter();
+  const { createLocaleLink } = useTranslation();
+  
   const handleViewDetails = (propertyDocumentId: string) => {
-    window.location.href = `/apartments/${propertyDocumentId}`;
+    router.push(createLocaleLink(`/apartments/${propertyDocumentId}`));
   };
 
   const handleBookNow = (property: PropertyData) => {

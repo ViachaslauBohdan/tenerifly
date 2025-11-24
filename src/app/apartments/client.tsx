@@ -7,6 +7,7 @@ import ApartmentCard from "./ApartmentCard";
 import ApartmentsFilter from "./ApartmentsFilter";
 import { parseUrlParams, ApartmentFilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
+import { useTranslation } from "@/hooks/useTranslation";
 import translations from "@/i18n/apartments.json";
 
 const getLoadingPropertiesText = (language: string) => {
@@ -111,9 +112,10 @@ export default function ApartmentsPageClient({
 }: ApartmentsPageClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { locale, switchLocale, createLocaleLink } = useTranslation();
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-  >("en");
+  >(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
   // Инициализация фильтров из URL параметров
@@ -250,18 +252,10 @@ export default function ApartmentsPageClient({
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
 
-  // Загрузка сохраненного языка из localStorage
+  // Синхронизируем язык с URL
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("selectedLanguage");
-    if (
-      savedLanguage &&
-      translations[savedLanguage as keyof typeof translations]
-    ) {
-      setLanguage(
-        savedLanguage as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-      );
-    }
-  }, []);
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+  }, [locale]);
 
   // Синхронизация текущей страницы с URL при изменении searchParams
   useEffect(() => {
@@ -274,12 +268,11 @@ export default function ApartmentsPageClient({
     }
   }, [searchParams, currentPage]);
 
-  // Сохранение языка в localStorage
+  // Переключение языка через URL
   const handleLanguageChange = (
     langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   ) => {
-    setLanguage(langCode);
-    localStorage.setItem("selectedLanguage", langCode);
+    switchLocale(langCode);
     setIsLanguageDropdownOpen(false);
   };
 
@@ -295,11 +288,11 @@ export default function ApartmentsPageClient({
         params.set("page", page.toString());
       }
       const queryString = params.toString();
-      const path = "/apartments";
+      const path = createLocaleLink("/apartments");
       const url = queryString ? `${path}?${queryString}` : path;
       router.replace(url, { scroll: false });
     },
-    [searchParams, router]
+    [searchParams, router, createLocaleLink]
   );
 
   // Дополнительная проверка для корректной работы пагинации
@@ -419,7 +412,7 @@ export default function ApartmentsPageClient({
         {/* Header with Language Switcher */}
         <div className="flex justify-between items-center mb-6">
           <Link
-            href="/"
+            href={createLocaleLink("/")}
             className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
           >
             <svg

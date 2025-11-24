@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function NotFound() {
+  const { createLocaleLink } = useTranslation();
+  
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="text-center max-w-md mx-auto px-4">
@@ -16,7 +21,7 @@ export default function NotFound() {
 
         <div className="space-y-4">
           <Link
-            href="/apartments"
+            href={createLocaleLink("/apartments")}
             className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
           >
             Browse All Properties
@@ -24,7 +29,7 @@ export default function NotFound() {
 
           <div>
             <Link
-              href="/"
+              href={createLocaleLink("/")}
               className="text-blue-600 hover:text-blue-800 underline"
             >
               Back to Home
