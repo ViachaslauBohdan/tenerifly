@@ -58,7 +58,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const { locale, switchLocale, createLocaleLink } = useTranslation();
 
   // State для языка - инициализируем из URL или по умолчанию английский
-  const [language, setLanguage] = useState<LanguageCode>((locale || "en") as LanguageCode);
+  const [language, setLanguage] = useState<LanguageCode>(
+    (locale || "en") as LanguageCode
+  );
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
   // State for component
@@ -1363,13 +1365,21 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           alt={place.title}
                           className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                           onClick={() =>
-                            router.push(createLocaleLink(`/apartments/${place.documentId}`))
+                            router.push(
+                              createLocaleLink(
+                                `/apartments/${place.documentId}`
+                              )
+                            )
                           }
                         />
                         <div className="absolute top-2 right-2">
                           <button
                             onClick={() =>
-                              router.push(createLocaleLink(`/apartments/${place.documentId}`))
+                              router.push(
+                                createLocaleLink(
+                                  `/apartments/${place.documentId}`
+                                )
+                              )
                             }
                             className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
                           >
@@ -1491,12 +1501,18 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           src={getCarImage(car)}
                           alt={car.title}
                           className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                          onClick={() => router.push(createLocaleLink(`/cars/${car.documentId}`))}
+                          onClick={() =>
+                            router.push(
+                              createLocaleLink(`/cars/${car.documentId}`)
+                            )
+                          }
                         />
                         <div className="absolute top-2 right-2">
                           <button
                             onClick={() =>
-                              router.push(createLocaleLink(`/cars/${car.documentId}`))
+                              router.push(
+                                createLocaleLink(`/cars/${car.documentId}`)
+                              )
                             }
                             className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
                           >
@@ -1622,7 +1638,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                             onClick={() =>
                               router.push(
-                                createLocaleLink(`/tours/${excursion.documentId || index + 1}`)
+                                createLocaleLink(
+                                  `/tours/${excursion.documentId || index + 1}`
+                                )
                               )
                             }
                           />
@@ -1756,7 +1774,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           alt={post.title}
                           className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                           onClick={() =>
-                            router.push(createLocaleLink(`/blog/${post.documentId || index + 1}`))
+                            router.push(
+                              createLocaleLink(
+                                `/blog/${post.documentId || index + 1}`
+                              )
+                            )
                           }
                         />
                         <div className="absolute top-2 right-2">
