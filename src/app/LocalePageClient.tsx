@@ -239,7 +239,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           accommodation
             .map((property: { category?: string }) => property.category)
             .filter(
-              (value): value is string =>
+              (value: unknown): value is string =>
                 Boolean(value) && typeof value === "string"
             )
         ),
@@ -265,7 +265,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 car.specifications?.make
             )
             .filter(
-              (value): value is string =>
+              (value: unknown): value is string =>
                 Boolean(value) && typeof value === "string"
             )
         ),
@@ -279,7 +279,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 car.specifications?.transmission
             )
             .filter(
-              (value): value is string =>
+              (value: unknown): value is string =>
                 Boolean(value) && typeof value === "string"
             )
         ),
@@ -291,7 +291,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           excursions
             .map((tour: { duration?: string }) => tour.duration)
             .filter(
-              (value): value is string =>
+              (value: unknown): value is string =>
                 Boolean(value) && typeof value === "string"
             )
         ),

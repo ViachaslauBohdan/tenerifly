@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { LOCALES } from './src/types/locale';
+import { LOCALES, type Locale } from './src/types/locale';
 
-const locales = LOCALES.map(locale => locale.code);
-const defaultLocale = 'en';
+const locales = LOCALES.map(locale => locale.code) as Locale[];
+const defaultLocale: Locale = 'en';
 
 // Пути, которые не требуют локализации
 const publicPaths = ['/api', '/_next', '/static', '/favicon.ico', '/robots.txt', '/sitemap.xml'];
@@ -38,7 +38,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.redirect(newUrl);
 }
 
-function getLocale(request: NextRequest): string | null {
+function getLocale(request: NextRequest): Locale | null {
   // Проверяем Accept-Language заголовок
   const acceptLanguage = request.headers.get('accept-language');
   if (acceptLanguage) {
@@ -54,8 +54,8 @@ function getLocale(request: NextRequest): string | null {
 
     // Ищем первую поддерживаемую локаль
     for (const lang of languages) {
-      if (locales.includes(lang.code)) {
-        return lang.code;
+      if (locales.includes(lang.code as Locale)) {
+        return lang.code as Locale;
       }
     }
   }

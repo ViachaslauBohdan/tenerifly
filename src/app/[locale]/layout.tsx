@@ -70,7 +70,20 @@ export async function generateMetadata({
           alt: "Tenerifly.io - Your Guide to Tenerife",
         },
       ],
-      locale: locale === "en" ? "en_US" : locale === "ru" ? "ru_RU" : locale === "pl" ? "pl_PL" : locale === "fr" ? "fr_FR" : locale === "uk" ? "uk_UA" : locale === "de" ? "de_DE" : "es_ES",
+      locale:
+        locale === "en"
+          ? "en_US"
+          : locale === "ru"
+            ? "ru_RU"
+            : locale === "pl"
+              ? "pl_PL"
+              : locale === "fr"
+                ? "fr_FR"
+                : locale === "uk"
+                  ? "uk_UA"
+                  : locale === "de"
+                    ? "de_DE"
+                    : "es_ES",
       type: "website",
     },
     twitter: {
@@ -88,7 +101,10 @@ export async function generateMetadata({
     alternates: {
       canonical: `https://tenerifly.io/${locale}`,
       languages: Object.fromEntries(
-        LOCALES.map((loc) => [`${loc.code}`, `https://tenerifly.io/${loc.code}`])
+        LOCALES.map((loc) => [
+          `${loc.code}`,
+          `https://tenerifly.io/${loc.code}`,
+        ])
       ),
     },
     robots: {
@@ -150,4 +166,3 @@ export default function LocaleLayout({
     </html>
   );
 }
-
