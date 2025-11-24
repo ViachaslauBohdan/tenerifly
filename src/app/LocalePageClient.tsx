@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import { useTranslation } from "@/hooks/useTranslation";
 import {
   ChevronDown,
   Check,
@@ -54,9 +55,12 @@ interface LocalePageClientProps {
 
 export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const router = useRouter();
+  const { locale, switchLocale, createLocaleLink } = useTranslation();
 
-  // State для языка
-  const [language, setLanguage] = useState<LanguageCode>("ru");
+  // State для языка - инициализируем из URL или по умолчанию английский
+  const [language, setLanguage] = useState<LanguageCode>(
+    (locale || "en") as LanguageCode
+  );
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
   // State for component
@@ -322,19 +326,14 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     setIsBookingModalOpen(true);
   };
 
-  // Загрузка сохраненного языка из localStorage
   useEffect(() => {
     setMounted(true);
-    const savedLanguage = localStorage.getItem("selectedLanguage");
-    if (savedLanguage && translations[savedLanguage as LanguageCode]) {
-      setLanguage(savedLanguage as LanguageCode);
-    }
-  }, []);
+    setLanguage(locale as LanguageCode);
+  }, [locale]);
 
-  // Сохранение языка в localStorage
+  // Переключение языка через URL
   const handleLanguageChange = (langCode: LanguageCode) => {
-    setLanguage(langCode);
-    localStorage.setItem("selectedLanguage", langCode);
+    switchLocale(langCode);
     setIsLanguageDropdownOpen(false);
   };
 
@@ -370,7 +369,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           params.append("language", excursionFilters.language);
         if (excursionFilters.category)
           params.append("category", excursionFilters.category);
-        router.push(`/tours?${params.toString()}`);
+        router.push(`${createLocaleLink("/tours")}?${params.toString()}`);
         break;
 
       case "cars":
@@ -388,7 +387,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           params.append("transmission", carFilters.transmission);
         if (carFilters.location) params.append("location", carFilters.location);
         if (carFilters.type) params.append("type", carFilters.type);
-        router.push(`/cars?${params.toString()}`);
+        router.push(`${createLocaleLink("/cars")}?${params.toString()}`);
         break;
 
       case "accommodation":
@@ -408,11 +407,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         if (accommodationFilters.type)
           params.append("type", accommodationFilters.type);
         if (guests) params.append("guests", guests.toString());
-        router.push(`/apartments?${params.toString()}`);
+        router.push(`${createLocaleLink("/apartments")}?${params.toString()}`);
         break;
 
       case "blog":
-        router.push(`/blog`);
+        router.push(createLocaleLink("/blog"));
         break;
     }
   };
@@ -1288,7 +1287,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                   : "Читайте про найкращі місця, поради та враження на Тенеріфе"}
                   </p>
                   <button
-                    onClick={() => router.push("/blog")}
+                    onClick={() => router.push(createLocaleLink("/blog"))}
                     className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
                   >
                     <BookOpen className="w-4 h-4" />
@@ -1339,7 +1338,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </p>
             </div>
             <button
-              onClick={() => router.push("/apartments")}
+              onClick={() => router.push(createLocaleLink("/apartments"))}
               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
             >
               {t.sections.accommodation.viewAll}
@@ -1366,13 +1365,21 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           alt={place.title}
                           className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                           onClick={() =>
-                            router.push(`/apartments/${place.documentId}`)
+                            router.push(
+                              createLocaleLink(
+                                `/apartments/${place.documentId}`
+                              )
+                            )
                           }
                         />
                         <div className="absolute top-2 right-2">
                           <button
                             onClick={() =>
-                              router.push(`/apartments/${place.documentId}`)
+                              router.push(
+                                createLocaleLink(
+                                  `/apartments/${place.documentId}`
+                                )
+                              )
                             }
                             className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
                           >
@@ -1468,7 +1475,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </p>
             </div>
             <button
-              onClick={() => router.push("/cars")}
+              onClick={() => router.push(createLocaleLink("/cars"))}
               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
             >
               {t.sections.cars.viewAll}
@@ -1494,12 +1501,18 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           src={getCarImage(car)}
                           alt={car.title}
                           className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                          onClick={() => router.push(`/cars/${car.documentId}`)}
+                          onClick={() =>
+                            router.push(
+                              createLocaleLink(`/cars/${car.documentId}`)
+                            )
+                          }
                         />
                         <div className="absolute top-2 right-2">
                           <button
                             onClick={() =>
-                              router.push(`/cars/${car.documentId}`)
+                              router.push(
+                                createLocaleLink(`/cars/${car.documentId}`)
+                              )
                             }
                             className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
                           >
@@ -1596,7 +1609,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </p>
             </div>
             <button
-              onClick={() => router.push("/tours")}
+              onClick={() => router.push(createLocaleLink("/tours"))}
               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
             >
               {t.sections.excursions.viewAll}
@@ -1625,7 +1638,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                             onClick={() =>
                               router.push(
-                                `/tours/${excursion.documentId || index + 1}`
+                                createLocaleLink(
+                                  `/tours/${excursion.documentId || index + 1}`
+                                )
                               )
                             }
                           />
@@ -1732,7 +1747,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </p>
             </div>
             <button
-              onClick={() => router.push("/blog")}
+              onClick={() => router.push(createLocaleLink("/blog"))}
               className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
             >
               {t.sections.blog.viewAll}
@@ -1759,7 +1774,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           alt={post.title}
                           className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                           onClick={() =>
-                            router.push(`/blog/${post.documentId || index + 1}`)
+                            router.push(
+                              createLocaleLink(
+                                `/blog/${post.documentId || index + 1}`
+                              )
+                            )
                           }
                         />
                         <div className="absolute top-2 right-2">
@@ -1931,25 +1950,25 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </h4>
               <div className="space-y-3">
                 <Link
-                  href="/cars"
+                  href={createLocaleLink("/cars")}
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Airport Transfers
                 </Link>
                 <Link
-                  href="/tours"
+                  href={createLocaleLink("/tours")}
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Excursions & Tours
                 </Link>
                 <Link
-                  href="/apartments"
+                  href={createLocaleLink("/apartments")}
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Property Rental & Sales
                 </Link>
                 <Link
-                  href="/cars"
+                  href={createLocaleLink("/cars")}
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Car Rental Services

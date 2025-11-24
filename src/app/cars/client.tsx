@@ -7,6 +7,7 @@ import CarCard from "./CarCard";
 import CarsFilter from "./CarsFilter";
 import { parseUrlParams, CarFilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
+import { useTranslation } from "@/hooks/useTranslation";
 import translations from "@/i18n/cars.json";
 
 const getLoadingCarsText = (language: string) => {
@@ -108,11 +109,17 @@ export default function CarsPageClient({
 }: CarsPageClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { locale, switchLocale, createLocaleLink } = useTranslation();
 
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-  >("en");
+  >(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
+
+  // Синхронизируем язык с URL
+  useEffect(() => {
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+  }, [locale]);
 
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<CarFilterParams>(() => {
@@ -309,38 +316,96 @@ export default function CarsPageClient({
       allItems.forEach((car: unknown) => {
         const carData = car as {
           id?: number;
+          documentId?: string;
           locale?: string;
-          localizations?: Array<{ locale: string }>;
+          localizations?: Array<{
+            id: number;
+            locale: string;
+            documentId: string;
+            title: string;
+            description: string;
+            [key: string]: unknown;
+          }>;
         };
+
+        // Используем documentId для дедупликации (одинаковый для всех локалей одного автомобиля)
+        const carDocumentId = carData.documentId;
+        const carTitle = (carData as { title?: string }).title;
 
         // Добавляем основную запись (текущая локаль)
         const mainLocale = carData.locale || "en";
-        if (carsByLocale[mainLocale]) {
-          // Проверяем, нет ли уже автомобиля с таким id в этой локали
+        if (carsByLocale[mainLocale] && carDocumentId) {
+          // Проверяем, нет ли уже автомобиля с таким documentId или title в этой локали
           const existingCar = carsByLocale[mainLocale].find(
-            (existingCar: unknown) =>
-              (existingCar as { id?: number }).id === carData.id
+            (existingCar: unknown) => {
+              const existing = existingCar as {
+                documentId?: string;
+                title?: string;
+              };
+              return (
+                existing.documentId === carDocumentId ||
+                (carTitle && existing.title === carTitle)
+              );
+            }
           );
           if (!existingCar) {
             carsByLocale[mainLocale].push(car);
           }
         }
 
-        // Добавляем локализованные версии
+        // Добавляем локализованные версии ТОЛЬКО для других локалей (не для основной локали)
+        // НЕ добавляем локализации для английского языка (en) - только основные записи с locale="en"
         if (carData.localizations && Array.isArray(carData.localizations)) {
-          carData.localizations.forEach((localization: { locale: string }) => {
-            if (carsByLocale[localization.locale]) {
-              // Проверяем, нет ли уже автомобиля с таким id в этой локали
+          carData.localizations.forEach((localization) => {
+            // Пропускаем локализацию, если она для той же локали, что и основная запись
+            if (localization.locale === mainLocale) {
+              return;
+            }
+
+            // НЕ добавляем локализации для английского языка
+            // Английский язык должен содержать только записи с основной локалью "en"
+            if (localization.locale === "en") {
+              return;
+            }
+
+            if (carsByLocale[localization.locale] && localization.documentId) {
+              // Проверяем, нет ли уже автомобиля с таким documentId или title в этой локали
+              // Проверяем как по documentId локализации, так и по основному documentId и title
               const existingCar = carsByLocale[localization.locale].find(
-                (existingCar: unknown) =>
-                  (existingCar as { id?: number }).id === carData.id
+                (existingCar: unknown) => {
+                  const existing = existingCar as {
+                    documentId?: string;
+                    title?: string;
+                  };
+                  return (
+                    existing.documentId === localization.documentId ||
+                    existing.documentId === carDocumentId ||
+                    (localization.title &&
+                      existing.title === localization.title)
+                  );
+                }
               );
               if (!existingCar) {
-                carsByLocale[localization.locale].push(car);
+                // Создаем гибридный объект: локализованные title и description + остальное из оригинала
+                const originalCar = car as Record<string, unknown>;
+                const hybridCar = {
+                  ...originalCar, // Берем все из оригинального объекта
+                  title: localization.title, // Перезаписываем title локализованной версией
+                  description: localization.description, // Перезаписываем description локализованной версией
+                  locale: localization.locale, // Устанавливаем правильную локаль
+                  documentId: localization.documentId, // Используем documentId из локализации
+                };
+                carsByLocale[localization.locale].push(hybridCar);
               }
             }
           });
         }
+      });
+
+      // Логируем результат для отладки
+      console.log("🚗 Cars by locale summary (client):");
+      Object.entries(carsByLocale).forEach(([locale, cars]) => {
+        console.log(`  ${locale}: ${cars.length} cars`);
       });
 
       setAllCarsByLocale(carsByLocale);
@@ -370,18 +435,10 @@ export default function CarsPageClient({
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
 
-  // Загрузка сохраненного языка из localStorage
+  // Синхронизируем язык с URL
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("selectedLanguage");
-    if (
-      savedLanguage &&
-      translations[savedLanguage as keyof typeof translations]
-    ) {
-      setLanguage(
-        savedLanguage as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-      );
-    }
-  }, []);
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+  }, [locale]);
 
   // Обновляем отфильтрованные данные при смене языка (без догрузки)
   useEffect(() => {
@@ -399,15 +456,12 @@ export default function CarsPageClient({
     }
   }, [searchParams, currentPage]);
 
-  // Сохранение языка в localStorage и фильтрация по локали
+  // Переключение языка через URL
   const handleLanguageChange = (
     langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   ) => {
-    setLanguage(langCode);
-    localStorage.setItem("selectedLanguage", langCode);
+    switchLocale(langCode);
     setIsLanguageDropdownOpen(false);
-    // Устанавливаем автомобили для выбранного языка
-    setFilteredCars((allCarsByLocale[langCode] as CarData[]) || []);
   };
 
   // Мемоизированная функция сброса фильтров
@@ -446,7 +500,7 @@ export default function CarsPageClient({
         {/* Header with Language Switcher */}
         <div className="flex justify-between items-center mb-6">
           <Link
-            href="/"
+            href={createLocaleLink("/")}
             className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
           >
             <svg

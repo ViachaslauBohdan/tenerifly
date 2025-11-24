@@ -1,10 +1,11 @@
 import { useEffect, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
   BaseFilterParams,
   filtersToUrlParams,
   parseUrlParams,
 } from "@/utils/filterUtils";
+import { LOCALES, type Locale } from "@/types/locale";
 
 interface UseFilterSyncOptions {
   pageType: "apartments" | "cars" | "tours";
@@ -21,19 +22,26 @@ export const useFilterSync = ({
 }: UseFilterSyncOptions) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  // Получаем локаль из пути
+  const pathSegments = pathname.split("/");
+  const localeFromPath = pathSegments[1] as Locale;
+  const currentLocale: Locale =
+    LOCALES.find((l) => l.code === localeFromPath)?.code || "en";
 
   // Синхронизация фильтров с URL при изменении фильтров
   const updateUrl = useCallback(
     (newFilters: BaseFilterParams) => {
       const params = filtersToUrlParams(newFilters);
       const queryString = params.toString();
-      const path = `/${pageType}`;
+      const path = `/${currentLocale}/${pageType}`;
       const url = queryString ? `${path}?${queryString}` : path;
 
       // Обновляем URL без перезагрузки страницы
       router.replace(url, { scroll: false });
     },
-    [pageType, router]
+    [pageType, router, currentLocale]
   );
 
   // Обработка изменения фильтров
@@ -51,9 +59,9 @@ export const useFilterSync = ({
   const resetFilters = useCallback(() => {
     const emptyFilters: BaseFilterParams = {};
     onFiltersChange(emptyFilters);
-    router.replace(`/${pageType}`, { scroll: false });
+    router.replace(`/${currentLocale}/${pageType}`, { scroll: false });
     onFiltersChanged?.();
-  }, [pageType, onFiltersChange, router, onFiltersChanged]);
+  }, [pageType, onFiltersChange, router, onFiltersChanged, currentLocale]);
 
   // Синхронизация с URL при загрузке страницы
   useEffect(() => {

@@ -1,0 +1,177 @@
+{
+  "totalCars": 37,
+  "duplicateGroups": 11,
+  "totalToDelete": 12,
+  "duplicates": [
+    {
+      "title": "ac citroën grand picasso (7 plazas)",
+      "keep": {
+        "id": 293,
+        "documentId": "350",
+        "title": "AC Citroën Grand Picasso (7 plazas)"
+      },
+      "delete": [
+        {
+          "id": 392,
+          "documentId": "c49k0lpl1542p253is1plscb",
+          "title": "AC Citroën Grand Picasso (7 plazas)"
+        },
+        {
+          "id": 243,
+          "documentId": "307",
+          "title": "AC Citroën Grand Picasso (7 plazas)"
+        }
+      ]
+    },
+    {
+      "title": "kia picanto",
+      "keep": {
+        "id": 78,
+        "documentId": "349",
+        "title": "Kia Picanto"
+      },
+      "delete": [
+        {
+          "id": 956,
+          "documentId": "on6l7f9exl9gjx1sr90qgud1",
+          "title": "Kia Picanto"
+        }
+      ]
+    },
+    {
+      "title": "mercedes-benz b class",
+      "keep": {
+        "id": 86,
+        "documentId": "334",
+        "title": "Mercedes-Benz B Class"
+      },
+      "delete": [
+        {
+          "id": 963,
+          "documentId": "x4d276m4ce7i5hon6qlum81m",
+          "title": "Mercedes-Benz B Class"
+        }
+      ]
+    },
+    {
+      "title": "mini cooper cabrio",
+      "keep": {
+        "id": 87,
+        "documentId": "337",
+        "title": "Mini Cooper Cabrio"
+      },
+      "delete": [
+        {
+          "id": 887,
+          "documentId": "w1kck3zy75naa2uqw3qugatg",
+          "title": "Mini Cooper Cabrio"
+        }
+      ]
+    },
+    {
+      "title": "opel corsa",
+      "keep": {
+        "id": 82,
+        "documentId": "322",
+        "title": "Opel Corsa"
+      },
+      "delete": [
+        {
+          "id": 919,
+          "documentId": "m9qrm02p3eok6k2p366ojl6b",
+          "title": "Opel Corsa"
+        }
+      ]
+    },
+    {
+      "title": "opel mokka x",
+      "keep": {
+        "id": 83,
+        "documentId": "316",
+        "title": "Opel Mokka X"
+      },
+      "delete": [
+        {
+          "id": 781,
+          "documentId": "gm9uys4kf19uufuayekij7at",
+          "title": "Opel Mokka X"
+        }
+      ]
+    },
+    {
+      "title": "toyota auris hybrid",
+      "keep": {
+        "id": 839,
+        "documentId": "nt7p9dupgemhkf6r5lv8u8n0",
+        "title": "Toyota Auris Hybrid"
+      },
+      "delete": [
+        {
+          "id": 91,
+          "documentId": "343",
+          "title": "Toyota Auris Hybrid"
+        }
+      ]
+    },
+    {
+      "title": "toyota aygo x",
+      "keep": {
+        "id": 947,
+        "documentId": "ptu66lgl91iqtznxaiudha5r",
+        "title": "Toyota Aygo X"
+      },
+      "delete": [
+        {
+          "id": 79,
+          "documentId": "346",
+          "title": "Toyota Aygo X"
+        }
+      ]
+    },
+    {
+      "title": "toyota yaris hybrid",
+      "keep": {
+        "id": 934,
+        "documentId": "qdetwkgbn8noo18mtji5ssv8",
+        "title": "Toyota Yaris Hybrid"
+      },
+      "delete": [
+        {
+          "id": 84,
+          "documentId": "325",
+          "title": "Toyota Yaris Hybrid"
+        }
+      ]
+    },
+    {
+      "title": "volkswagen caddy",
+      "keep": {
+        "id": 89,
+        "documentId": "340",
+        "title": "Volkswagen Caddy"
+      },
+      "delete": [
+        {
+          "id": 901,
+          "documentId": "gh26fgd03x1mmbnoo3tst1nr",
+          "title": "Volkswagen Caddy"
+        }
+      ]
+    },
+    {
+      "title": "volkswagen polo 2023",
+      "keep": {
+        "id": 85,
+        "documentId": "331",
+        "title": "Volkswagen Polo 2023"
+      },
+      "delete": [
+        {
+          "id": 880,
+          "documentId": "iaxughhs0dnhzd70kfuojtvy",
+          "title": "Volkswagen Polo 2023"
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useTranslation } from "@/hooks/useTranslation"
 
 const getFoundText = (locale: string): string => {
     const texts: Record<string, string> = {
@@ -235,8 +237,11 @@ const TourCard = ({ translations, language, tours: filteredTours }: TourCardProp
         }
     }, [filteredTours])
 
+    const router = useRouter()
+    const { createLocaleLink } = useTranslation()
+    
     const handleViewDetails = (tourDocumentId: string) => {
-        window.location.href = `/tours/${tourDocumentId}`
+        router.push(createLocaleLink(`/tours/${tourDocumentId}`))
     }
 
     const getImageUrl = (tour: TourData) => {

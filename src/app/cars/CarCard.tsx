@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "@/hooks/useTranslation";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 
 interface CarData {
@@ -181,8 +183,11 @@ const CarCard = ({
     }
   }, [filteredCars]);
 
+  const router = useRouter();
+  const { createLocaleLink } = useTranslation();
+  
   const handleViewDetails = (carDocumentId: string) => {
-    window.location.href = `/cars/${carDocumentId}`;
+    router.push(createLocaleLink(`/cars/${carDocumentId}`));
   };
 
   const handleOpenBookingModal = (car: CarData) => {

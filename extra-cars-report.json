@@ -1,0 +1,15 @@
+{
+  "totalRussianCars": 57,
+  "totalEnglishCars": 37,
+  "matchedPairs": 36,
+  "extraEnglishCars": 1,
+  "deleted": 1,
+  "failed": 0,
+  "extraCars": [
+    {
+      "id": 90,
+      "documentId": "310",
+      "title": "Dacia Sandero 2023"
+    }
+  ]
+}

@@ -32,6 +32,11 @@
     "filters": "Filter",
     "allTypes": "Alle Arten",
     "bodyType": "Karosserietyp",
+    "currency": {
+      "EUR": "€",
+      "GBP": "£",
+      "USD": "$"
+    },
     "electric": "Elektrisch",
     "fuelType": "Kraftstoffart",
     "location": "Standort",
@@ -44,12 +49,13 @@
     "bluetooth": "Bluetooth",
     "hatchback": "Kombi",
     "mileageKm": "Kilometerstand (km)",
+    "priceFrom": "AB",
     "backToHome": "Zurück zur Startseite",
     "rearCamera": "Rückfahrkamera",
     "allStatuses": "Alle Status",
     "convertible": "Cabrio",
     "enginePower": "Motorleistung (PS)",
-    "pricePerDay": "Preis (€/Tag)",
+    "pricePerDay": "/TAG",
     "viewDetails": "Details anzeigen",
     "allLocations": "Alle Standorte",
     "resetFilters": "Filter zurücksetzen",
@@ -68,14 +74,7 @@
       "south": "Teneriffa Süd",
       "center": "Teneriffa Zentrum"
     },
-    "yearOfManufacture": "Baujahr",
-    "priceFrom": "AB",
-    "pricePerDay": "/TAG",
-    "currency": {
-      "EUR": "€",
-      "USD": "$",
-      "GBP": "£"
-    }
+    "yearOfManufacture": "Baujahr"
   },
   "en": {
     "to": "To",
@@ -110,6 +109,11 @@
     "filters": "Filters",
     "allTypes": "All types",
     "bodyType": "Body type",
+    "currency": {
+      "EUR": "€",
+      "GBP": "£",
+      "USD": "$"
+    },
     "electric": "Electric",
     "fuelType": "Fuel type",
     "location": "Location",
@@ -122,12 +126,13 @@
     "bluetooth": "Bluetooth",
     "hatchback": "Hatchback",
     "mileageKm": "Mileage (km)",
+    "priceFrom": "FROM",
     "backToHome": "Back to Home",
     "rearCamera": "Rear camera",
     "allStatuses": "All statuses",
     "convertible": "Convertible",
     "enginePower": "Engine power (hp)",
-    "pricePerDay": "Price (€/day)",
+    "pricePerDay": "/DAY",
     "viewDetails": "View Details",
     "allLocations": "All locations",
     "resetFilters": "Reset filters",
@@ -146,14 +151,7 @@
       "south": "Tenerife South",
       "center": "Tenerife Center"
     },
-    "yearOfManufacture": "Year of manufacture",
-    "priceFrom": "FROM",
-    "pricePerDay": "/DAY",
-    "currency": {
-      "EUR": "€",
-      "USD": "$",
-      "GBP": "£"
-    }
+    "yearOfManufacture": "Year of manufacture"
   },
   "es": {
     "to": "Hasta",
@@ -188,6 +186,11 @@
     "filters": "Filtros",
     "allTypes": "Todos los tipos",
     "bodyType": "Tipo de carrocería",
+    "currency": {
+      "EUR": "€",
+      "GBP": "£",
+      "USD": "$"
+    },
     "electric": "Eléctrico",
     "fuelType": "Tipo de combustible",
     "location": "Ubicación",
@@ -200,12 +203,13 @@
     "bluetooth": "Bluetooth",
     "hatchback": "Hatchback",
     "mileageKm": "Kilometraje (km)",
+    "priceFrom": "DESDE",
     "backToHome": "Volver al inicio",
     "rearCamera": "Cámara trasera",
     "allStatuses": "Todos los estados",
     "convertible": "Descapotable",
     "enginePower": "Potencia del motor (CV)",
-    "pricePerDay": "Precio (€/día)",
+    "pricePerDay": "/DÍA",
     "viewDetails": "Ver detalles",
     "allLocations": "Todas las ubicaciones",
     "resetFilters": "Restablecer filtros",
@@ -224,14 +228,7 @@
       "south": "Tenerife Sur",
       "center": "Tenerife Centro"
     },
-    "yearOfManufacture": "Año de fabricación",
-    "priceFrom": "DESDE",
-    "pricePerDay": "/DÍA",
-    "currency": {
-      "EUR": "€",
-      "USD": "$",
-      "GBP": "£"
-    }
+    "yearOfManufacture": "Año de fabricación"
   },
   "fr": {
     "to": "À",
@@ -266,6 +263,11 @@
     "filters": "Filtres",
     "allTypes": "Tous les types",
     "bodyType": "Type de carrosserie",
+    "currency": {
+      "EUR": "€",
+      "GBP": "£",
+      "USD": "$"
+    },
     "electric": "Électrique",
     "fuelType": "Type de carburant",
     "location": "Emplacement",
@@ -278,12 +280,13 @@
     "bluetooth": "Bluetooth",
     "hatchback": "Berline compacte",
     "mileageKm": "Kilométrage (km)",
+    "priceFrom": "À PARTIR DE",
     "backToHome": "Retour à l'accueil",
     "rearCamera": "Caméra de recul",
     "allStatuses": "Tous les statuts",
     "convertible": "Cabriolet",
     "enginePower": "Puissance (ch)",
-    "pricePerDay": "Prix (€/jour)",
+    "pricePerDay": "/JOUR",
     "viewDetails": "Voir les détails",
     "allLocations": "Tous les emplacements",
     "resetFilters": "Réinitialiser les filtres",
@@ -302,14 +305,7 @@
       "south": "Tenerife Sud",
       "center": "Tenerife Centre"
     },
-    "yearOfManufacture": "Année de fabrication",
-    "priceFrom": "À PARTIR DE",
-    "pricePerDay": "/JOUR",
-    "currency": {
-      "EUR": "€",
-      "USD": "$",
-      "GBP": "£"
-    }
+    "yearOfManufacture": "Année de fabrication"
   },
   "pl": {
     "to": "Do",
@@ -344,6 +340,11 @@
     "filters": "Filtry",
     "allTypes": "Wszystkie typy",
     "bodyType": "Typ nadwozia",
+    "currency": {
+      "EUR": "€",
+      "GBP": "£",
+      "USD": "$"
+    },
     "electric": "Elektryczny",
     "fuelType": "Rodzaj paliwa",
     "location": "Lokalizacja",
@@ -356,12 +357,13 @@
     "bluetooth": "Bluetooth",
     "hatchback": "Kombi",
     "mileageKm": "Przebieg (km)",
+    "priceFrom": "OD",
     "backToHome": "Powrót do strony głównej",
     "rearCamera": "Kamera cofania",
     "allStatuses": "Wszystkie statusy",
     "convertible": "Kabriolet",
     "enginePower": "Moc silnika (KM)",
-    "pricePerDay": "Cena (€/dzień)",
+    "pricePerDay": "/DZIEŃ",
     "viewDetails": "Zobacz szczegóły",
     "allLocations": "Wszystkie lokalizacje",
     "resetFilters": "Resetuj filtry",
@@ -380,14 +382,7 @@
       "south": "Teneryfa Południe",
       "center": "Teneryfa Centrum"
     },
-    "yearOfManufacture": "Rok produkcji",
-    "priceFrom": "OD",
-    "pricePerDay": "/DZIEŃ",
-    "currency": {
-      "EUR": "€",
-      "USD": "$",
-      "GBP": "£"
-    }
+    "yearOfManufacture": "Rok produkcji"
   },
   "ru": {
     "to": "До",
@@ -422,6 +417,11 @@
     "filters": "Фильтры",
     "allTypes": "Все типы",
     "bodyType": "Тип кузова",
+    "currency": {
+      "EUR": "€",
+      "GBP": "£",
+      "USD": "$"
+    },
     "electric": "Электрический",
     "fuelType": "Тип топлива",
     "location": "Локация",
@@ -434,12 +434,13 @@
     "bluetooth": "Bluetooth",
     "hatchback": "Хэтчбек",
     "mileageKm": "Пробег (км)",
+    "priceFrom": "ОТ",
     "backToHome": "Назад на главную",
     "rearCamera": "Камера заднего вида",
     "allStatuses": "Все статусы",
     "convertible": "Кабриолет",
     "enginePower": "Мощность (л.с.)",
-    "pricePerDay": "Цена (€/день)",
+    "pricePerDay": "/ДЕНЬ",
     "viewDetails": "Подробнее",
     "allLocations": "Все локации",
     "resetFilters": "Сбросить фильтры",
@@ -458,14 +459,7 @@
       "south": "Тенерифе Юг",
       "center": "Тенерифе Центр"
     },
-    "yearOfManufacture": "Год выпуска",
-    "priceFrom": "ОТ",
-    "pricePerDay": "/ДЕНЬ",
-    "currency": {
-      "EUR": "€",
-      "USD": "$",
-      "GBP": "£"
-    }
+    "yearOfManufacture": "Год выпуска"
   },
   "uk": {
     "to": "До",
@@ -500,6 +494,11 @@
     "filters": "Фільтри",
     "allTypes": "Всі типи",
     "bodyType": "Тип кузова",
+    "currency": {
+      "EUR": "€",
+      "GBP": "£",
+      "USD": "$"
+    },
     "electric": "Електричний",
     "fuelType": "Тип палива",
     "location": "Локація",
@@ -512,12 +511,13 @@
     "bluetooth": "Bluetooth",
     "hatchback": "Хетчбек",
     "mileageKm": "Пробіг (км)",
+    "priceFrom": "ВІД",
     "backToHome": "Повернутися на головну",
     "rearCamera": "Камера заднього виду",
     "allStatuses": "Всі статуси",
     "convertible": "Кабріолет",
     "enginePower": "Потужність (к.с.)",
-    "pricePerDay": "Ціна (€/день)",
+    "pricePerDay": "/ДЕНЬ",
     "viewDetails": "Детальніше",
     "allLocations": "Всі локації",
     "resetFilters": "Скинути фільтри",
@@ -536,13 +536,6 @@
       "south": "Тенеріфе Південь",
       "center": "Тенеріфе Центр"
     },
-    "yearOfManufacture": "Рік випуску",
-    "priceFrom": "ВІД",
-    "pricePerDay": "/ДЕНЬ",
-    "currency": {
-      "EUR": "€",
-      "USD": "$",
-      "GBP": "£"
-    }
+    "yearOfManufacture": "Рік випуску"
   }
 }

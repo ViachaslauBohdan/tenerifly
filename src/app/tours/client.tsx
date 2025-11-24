@@ -7,6 +7,7 @@ import ToursFilter from "./ToursFilter";
 import TourCard from "./TourCard";
 import { parseUrlParams, TourFilterParams } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
+import { useTranslation } from "@/hooks/useTranslation";
 import translations from "@/i18n/tours.json";
 // Переводы для всех языков
 
@@ -104,10 +105,16 @@ export default function ToursPageClient({
 }: ToursPageClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { locale, switchLocale, createLocaleLink } = useTranslation();
   const [language, setLanguage] = useState<
     "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-  >("en");
+  >(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
+
+  // Синхронизируем язык с URL
+  useEffect(() => {
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+  }, [locale]);
 
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<TourFilterParams>(() => {
@@ -224,18 +231,10 @@ export default function ToursPageClient({
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
 
-  // Загрузка сохраненного языка из localStorage
+  // Синхронизируем язык с URL
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("selectedLanguage");
-    if (
-      savedLanguage &&
-      translations[savedLanguage as keyof typeof translations]
-    ) {
-      setLanguage(
-        savedLanguage as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-      );
-    }
-  }, []);
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+  }, [locale]);
 
   // Синхронизация текущей страницы с URL при изменении searchParams
   useEffect(() => {
@@ -248,12 +247,11 @@ export default function ToursPageClient({
     }
   }, [searchParams, currentPage]);
 
-  // Сохранение языка в localStorage
+  // Переключение языка через URL
   const handleLanguageChange = (
     langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
   ) => {
-    setLanguage(langCode);
-    localStorage.setItem("selectedLanguage", langCode);
+    switchLocale(langCode);
     setIsLanguageDropdownOpen(false);
   };
 
@@ -342,7 +340,7 @@ export default function ToursPageClient({
         {/* Header with Language Switcher */}
         <div className="flex justify-between items-center mb-6">
           <Link
-            href="/"
+            href={createLocaleLink("/")}
             className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
           >
             <svg
