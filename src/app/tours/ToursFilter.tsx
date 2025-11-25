@@ -27,7 +27,7 @@ interface ToursFilterProps {
   onToursUpdate: (tours: unknown[]) => void;
   // optional initial tours from SSG — use to populate options and avoid client re-fetch
   initialTours?: unknown[];
-  translations: Record<string, unknown>;
+  translations: Record<string, string>;
 }
 
 interface FilterOptions {

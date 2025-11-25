@@ -449,14 +449,14 @@ export default function ToursPageClient({
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filters Sidebar */}
           <ToursFilter
-            filters={filters as unknown as Record<string, unknown>}
+            filters={filters as unknown as import('./ToursFilter').FilterState}
             onFilterChange={handleFilterChange}
             onResetFilters={resetFilters}
             onToursUpdate={(updated: unknown[]) =>
               handleToursUpdate(updated as unknown as Tour[])
             }
             initialTours={initialTours}
-            translations={t as unknown as Record<string, unknown>}
+            translations={t as unknown as Record<string, string>}
           />
 
           {/* Tours Grid */}
