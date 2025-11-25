@@ -262,11 +262,14 @@ export default function ApartmentsPageClient({
     if (searchParams) {
       const page = searchParams.get("page");
       const newPage = page ? parseInt(page, 10) : 1;
-      if (newPage !== currentPage && newPage >= 1) {
-        setCurrentPage(newPage);
+      // Проверяем валидность страницы перед установкой
+      const maxPages = Math.max(1, Math.ceil(filteredApartments.length / itemsPerPage));
+      const validPage = newPage >= 1 && newPage <= maxPages ? newPage : 1;
+      if (validPage !== currentPage) {
+        setCurrentPage(validPage);
       }
     }
-  }, [searchParams, currentPage]);
+  }, [searchParams, currentPage, filteredApartments.length, itemsPerPage]);
 
   // Переключение языка через URL
   const handleLanguageChange = (

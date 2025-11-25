@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import ToursFilter from "./ToursFilter";
@@ -241,11 +241,14 @@ export default function ToursPageClient({
     if (searchParams) {
       const page = searchParams.get("page");
       const newPage = page ? parseInt(page, 10) : 1;
-      if (newPage !== currentPage) {
-        setCurrentPage(newPage);
+      // Проверяем валидность страницы перед установкой
+      const maxPages = Math.max(1, Math.ceil(tours.length / itemsPerPage));
+      const validPage = newPage >= 1 && newPage <= maxPages ? newPage : 1;
+      if (validPage !== currentPage) {
+        setCurrentPage(validPage);
       }
     }
-  }, [searchParams, currentPage]);
+  }, [searchParams, currentPage, tours.length, itemsPerPage]);
 
   // Переключение языка через URL
   const handleLanguageChange = (
@@ -259,33 +262,9 @@ export default function ToursPageClient({
     resetFiltersSync();
   };
 
-  const handleFilterChange = (key: string, value: string | boolean) => {
-    handleFilterChangeSync(key, value);
-    // Сбрасываем страницу при изменении фильтров
-    if (currentPage !== 1) {
-      setCurrentPage(1);
-      updateUrlWithPage(1);
-    }
-  };
-
-  // Теперь функция принимает правильный тип
-  const handleToursUpdate = (updatedTours: Tour[]) => {
-    console.log("Updating tours:", {
-      previousCount: tours.length,
-      newCount: updatedTours.length,
-      currentPage,
-    });
-    setTours(updatedTours);
-    // Сбрасываем страницу только если количество туров изменилось
-    const newTotalPages = Math.ceil(updatedTours.length / itemsPerPage);
-    if (currentPage > newTotalPages) {
-      setCurrentPage(1);
-      updateUrlWithPage(1);
-    }
-  };
-
-  // Функция для обновления URL с пагинацией
+  // Функция для обновления URL с пагинацией (объявляем раньше, чтобы использовать в других функциях)
   const updateUrlWithPage = useCallback((page: number) => {
+    if (page < 1) return;
     const params = new URLSearchParams(searchParams.toString());
     if (page === 1) {
       params.delete("page");
@@ -298,8 +277,42 @@ export default function ToursPageClient({
     router.replace(url, { scroll: false });
   }, [searchParams, router, createLocaleLink]);
 
+  const handleFilterChange = (key: string, value: string | boolean) => {
+    handleFilterChangeSync(key, value);
+    // Сбрасываем страницу при изменении фильтров
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+      updateUrlWithPage(1);
+    }
+  };
+
+  // Теперь функция принимает правильный тип
+  const handleToursUpdate = useCallback((updatedTours: Tour[]) => {
+    console.log("Updating tours:", {
+      previousCount: tours.length,
+      newCount: updatedTours.length,
+      currentPage,
+    });
+    setTours(updatedTours);
+    // Сбрасываем страницу только если количество туров изменилось
+    const newTotalPages = Math.ceil(updatedTours.length / itemsPerPage);
+    if (currentPage > newTotalPages && newTotalPages > 0) {
+      setCurrentPage(1);
+      updateUrlWithPage(1);
+    }
+  }, [tours.length, currentPage, itemsPerPage, updateUrlWithPage]);
+
   // Pagination logic
-  const totalPages = Math.ceil(tours.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(tours.length / itemsPerPage));
+  
+  // Проверка валидности текущей страницы
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(1);
+      updateUrlWithPage(1);
+    }
+  }, [totalPages, currentPage, updateUrlWithPage]);
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentTours = tours.slice(startIndex, endIndex);
@@ -316,11 +329,13 @@ export default function ToursPageClient({
   });
 
   // Pagination handlers
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    updateUrlWithPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const handlePageChange = useCallback((page: number) => {
+    if (page >= 1 && page <= totalPages && page !== currentPage) {
+      setCurrentPage(page);
+      updateUrlWithPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [currentPage, totalPages, updateUrlWithPage]);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {

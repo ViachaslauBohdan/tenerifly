@@ -230,6 +230,7 @@ export default function CarsPageClient({
   // Функция для обновления URL с пагинацией
   const updateUrlWithPage = useCallback(
     (page: number) => {
+      if (page < 1) return;
       const params = new URLSearchParams(searchParams?.toString() || "");
       if (page === 1) {
         params.delete("page");
@@ -445,11 +446,14 @@ export default function CarsPageClient({
     if (searchParams) {
       const page = searchParams.get("page");
       const newPage = page ? parseInt(page, 10) : 1;
-      if (newPage !== currentPage) {
-        setCurrentPage(newPage);
+      // Проверяем валидность страницы перед установкой
+      const maxPages = Math.max(1, Math.ceil(filteredCars.length / itemsPerPage));
+      const validPage = newPage >= 1 && newPage <= maxPages ? newPage : 1;
+      if (validPage !== currentPage) {
+        setCurrentPage(validPage);
       }
     }
-  }, [searchParams, currentPage]);
+  }, [searchParams, currentPage, filteredCars.length, itemsPerPage]);
 
   // Переключение языка через URL
   const handleLanguageChange = (
@@ -463,16 +467,27 @@ export default function CarsPageClient({
 
   // Pagination logic
   const totalPages = Math.max(1, Math.ceil(filteredCars.length / itemsPerPage));
+  
+  // Проверка валидности текущей страницы
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(1);
+      updateUrlWithPage(1);
+    }
+  }, [totalPages, currentPage, updateUrlWithPage]);
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentCars = filteredCars.slice(startIndex, endIndex);
 
   // Pagination handlers
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    updateUrlWithPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const handlePageChange = useCallback((page: number) => {
+    if (page >= 1 && page <= totalPages && page !== currentPage) {
+      setCurrentPage(page);
+      updateUrlWithPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [currentPage, totalPages, updateUrlWithPage]);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
