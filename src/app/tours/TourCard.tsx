@@ -239,7 +239,7 @@ const TourCard = ({ translations, language, tours: filteredTours }: TourCardProp
 
     const router = useRouter()
     const { createLocaleLink } = useTranslation()
-    
+
     const handleViewDetails = (tourDocumentId: string) => {
         router.push(createLocaleLink(`/tours/${tourDocumentId}`))
     }

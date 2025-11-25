@@ -2,6 +2,7 @@ import { Card, Image, Text, Badge, Button, Group, Stack, rem } from '@mantine/co
 import { IconCar, IconUsers, IconGasStation, IconSettings, IconPhone, IconEye } from '@tabler/icons-react';
 import { Locale } from '@/types/locale';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface CarTileProps {
   id: string;
@@ -41,9 +42,10 @@ export function CarTile({
   currentLocale
 }: CarTileProps) {
   const router = useRouter();
+  const { createLocaleLink } = useTranslation();
 
   const handleViewDetails = () => {
-    router.push(`/cars/${id}`);
+    router.push(createLocaleLink(`/cars/${id}`));
   };
   const typeLabels = {
     rent: {

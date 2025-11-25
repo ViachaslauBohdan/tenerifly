@@ -213,7 +213,7 @@ const ApartmentCard = ({
 
   const router = useRouter();
   const { createLocaleLink } = useTranslation();
-  
+
   const handleViewDetails = (propertyDocumentId: string) => {
     router.push(createLocaleLink(`/apartments/${propertyDocumentId}`));
   };

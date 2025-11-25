@@ -185,7 +185,7 @@ const CarCard = ({
 
   const router = useRouter();
   const { createLocaleLink } = useTranslation();
-  
+
   const handleViewDetails = (carDocumentId: string) => {
     router.push(createLocaleLink(`/cars/${carDocumentId}`));
   };

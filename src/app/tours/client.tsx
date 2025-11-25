@@ -285,7 +285,7 @@ export default function ToursPageClient({
   };
 
   // Функция для обновления URL с пагинацией
-  const updateUrlWithPage = (page: number) => {
+  const updateUrlWithPage = useCallback((page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     if (page === 1) {
       params.delete("page");
@@ -293,10 +293,10 @@ export default function ToursPageClient({
       params.set("page", page.toString());
     }
     const queryString = params.toString();
-    const path = "/tours";
+    const path = createLocaleLink("/tours");
     const url = queryString ? `${path}?${queryString}` : path;
     router.replace(url, { scroll: false });
-  };
+  }, [searchParams, router, createLocaleLink]);
 
   // Pagination logic
   const totalPages = Math.ceil(tours.length / itemsPerPage);

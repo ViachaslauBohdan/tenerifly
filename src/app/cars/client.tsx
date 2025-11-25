@@ -237,11 +237,11 @@ export default function CarsPageClient({
         params.set("page", page.toString());
       }
       const queryString = params.toString();
-      const path = "/cars";
+      const path = createLocaleLink("/cars");
       const url = queryString ? `${path}?${queryString}` : path;
       router.replace(url, { scroll: false });
     },
-    [searchParams, router]
+    [searchParams, router, createLocaleLink]
   );
 
   // Функция для обновления отфильтрованных автомобилей — используется в CarsFilter
@@ -434,11 +434,6 @@ export default function CarsPageClient({
 
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
-
-  // Синхронизируем язык с URL
-  useEffect(() => {
-    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
-  }, [locale]);
 
   // Обновляем отфильтрованные данные при смене языка (без догрузки)
   useEffect(() => {
