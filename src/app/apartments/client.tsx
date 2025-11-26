@@ -263,7 +263,10 @@ export default function ApartmentsPageClient({
       const page = searchParams.get("page");
       const newPage = page ? parseInt(page, 10) : 1;
       // Проверяем валидность страницы перед установкой
-      const maxPages = Math.max(1, Math.ceil(filteredApartments.length / itemsPerPage));
+      const maxPages = Math.max(
+        1,
+        Math.ceil(filteredApartments.length / itemsPerPage)
+      );
       const validPage = newPage >= 1 && newPage <= maxPages ? newPage : 1;
       if (validPage !== currentPage) {
         setCurrentPage(validPage);
