@@ -16,10 +16,13 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const localeConfig = LOCALES.find((l) => l.code === locale) || LOCALES[0];
+  const localeCode = LOCALES.some((l) => l.code === locale)
+    ? (locale as Locale)
+    : LOCALES[0].code;
+  const localeConfig = LOCALES.find((l) => l.code === localeCode) || LOCALES[0];
 
   return {
     title: "Tenerifly.io - Your Gateway to Tenerife",
@@ -38,7 +41,7 @@ export async function generateMetadata({
       title: "Tenerifly.io - Your Gateway to Tenerife",
       description:
         "Discover the best of Tenerife with Tenerifly.io. Find accommodation, rent cars, book tours, and explore the Canary Islands.",
-      url: `https://tenerifly.io/${locale}`,
+      url: `https://tenerifly.io/${localeCode}`,
       siteName: "Tenerifly.io",
       images: [
         {
@@ -48,11 +51,24 @@ export async function generateMetadata({
           alt: "Tenerife - Canary Islands",
         },
       ],
-      locale: locale === "en" ? "en_US" : locale === "ru" ? "ru_RU" : locale === "pl" ? "pl_PL" : locale === "fr" ? "fr_FR" : locale === "uk" ? "uk_UA" : locale === "de" ? "de_DE" : "es_ES",
+      locale:
+        localeCode === "en"
+          ? "en_US"
+          : localeCode === "ru"
+            ? "ru_RU"
+            : localeCode === "pl"
+              ? "pl_PL"
+              : localeCode === "fr"
+                ? "fr_FR"
+                : localeCode === "uk"
+                  ? "uk_UA"
+                  : localeCode === "de"
+                    ? "de_DE"
+                    : "es_ES",
       type: "website",
     },
     alternates: {
-      canonical: `https://tenerifly.io/${locale}`,
+      canonical: `https://tenerifly.io/${localeCode}`,
       languages: Object.fromEntries(
         LOCALES.map((loc) => [`${loc.code}`, `https://tenerifly.io/${loc.code}`])
       ),
@@ -63,11 +79,14 @@ export async function generateMetadata({
 export default async function LocaleRootPage({
   params,
 }: {
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const localeCode = LOCALES.some((l) => l.code === locale)
+    ? (locale as Locale)
+    : LOCALES[0].code;
   // Получаем данные на сервере для SSG с трансформацией
-  const homeData = await getHomePageData();
+  const homeData = await getHomePageData(localeCode);
 
   return <LocalePageClient initialData={homeData} />;
 }

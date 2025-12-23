@@ -47,7 +47,7 @@ type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
 interface LocalePageClientProps {
   initialData?: {
     properties: any[];
-    cars: any;
+    cars: any[];
     tours: any[];
     blogs: any[];
   };
@@ -66,7 +66,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   // State for component
   const [mounted, setMounted] = useState(false);
 
-  console.log("initialData", initialData);
   // State for search filters
   const [activeTab, setActiveTab] = useState("accommodation");
   const [dates, setDates] = useState(["", ""]);
@@ -142,125 +141,80 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
 
-  // Helper function to format car features
-  const getCarFeatures = (car: any) => {
-    const features = [];
-    if (car.features) {
-      if (car.features.air_conditioning) features.push("Air Conditioner");
-      if (car.features.bluetooth) features.push("Bluetooth");
-      if (car.features.navigation) features.push("Navigation");
-      if (car.features.parking_sensors) features.push("Parking Sensors");
-      if (car.features.other_features)
-        features.push(car.features.other_features);
-    }
-    return features.length > 0 ? features.join(", ") : "—";
+  const getCarImage = (car: any) => {
+    const apiUrl =
+      process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://tenerifly.io";
+    const rawUrl = car.image || car.images?.[0]?.url;
+    if (!rawUrl) return "/placeholder.svg?height=400&width=600";
+    if (typeof rawUrl === "string" && rawUrl.startsWith("http")) return rawUrl;
+    return `${apiUrl}${rawUrl}`;
   };
 
-  // Helper function to get car price (like in CarCard)
-  const getCarPrice = (car: any) => {
-    if (car.rental_prices && car.rental_prices.day_1) {
-      return car.rental_prices.day_1;
-    }
-    return 45; // default price like in CarCard
-  };
+  const getCarPrice = (car: any) =>
+    car?.rental_prices?.day_1 ?? car?.price ?? 0;
 
-  // Helper function to get car currency (like in CarCard)
-  const getCarCurrency = (car: any) => {
-    if (car.rental_prices && car.rental_prices.currency) {
-      return car.rental_prices.currency;
-    }
-    return "EUR"; // default currency like in CarCard
-  };
+  const getDayText = () =>
+    (t as any)?.sections?.cars?.pricePerDay || "day";
 
-  // Helper function to get localized currency (like in CarCard)
   const getLocalizedCurrency = (car: any) => {
-    const currency = getCarCurrency(car);
-    // Simple currency mapping
-    const currencyMap: Record<string, string> = {
-      EUR: "€",
-      USD: "$",
-      GBP: "£",
-    };
+    const currency = car?.rental_prices?.currency || "€";
+    const currencyMap = (t as any)?.sections?.cars?.currency || {};
     return currencyMap[currency] || currency;
   };
 
-  // Helper function to get localized "day" text
-  const getDayText = () => {
-    switch (language) {
-      case "ru":
-        return "день";
-      case "pl":
-        return "dzień";
-      case "fr":
-        return "jour";
-      case "uk":
-        return "день";
-      case "de":
-        return "Tag";
-      case "es":
-        return "día";
-      default:
-        return "day";
-    }
-  };
-
-  // Helper function to get car image
-  const getCarImage = (car: any) => {
-    if (car.images && car.images.length > 0) {
-      // Try to get the main image URL
-      return car.images[0].url;
-    }
-    return "/placeholder.svg";
+  const getCarFeatures = (car: any) => {
+    const parts = [
+      car?.specifications?.make,
+      car?.specifications?.model,
+      car?.type,
+      car?.specifications?.fuel,
+      car?.specifications?.transmission,
+    ].filter(Boolean);
+    return parts.join(" • ") || "—";
   };
 
   // Используем initialData если доступно, иначе загружаем через хук
   const dataFromHook = useDataLoader(mounted, language);
-  const { excursions, accommodation, blogPosts, dataLoading } = initialData
-    ? {
-        excursions: initialData.tours || [],
-        accommodation: initialData.properties || [],
-        blogPosts: initialData.blogs || [],
-        dataLoading: false,
-      }
-    : dataFromHook;
-  // Получаем cars для выбранного языка
-  const cars = useMemo(() => {
-    return initialData
-      ? (initialData.cars &&
-          initialData.cars[language as keyof typeof initialData.cars]) ||
-          []
-      : dataFromHook.cars || [];
-  }, [initialData, language, dataFromHook.cars]);
+  const { excursions, cars, accommodation, blogPosts, dataLoading } =
+    initialData
+      ? {
+          excursions: initialData.tours || [],
+          cars: initialData.cars || [],
+          accommodation: initialData.properties || [],
+          blogPosts: initialData.blogs || [],
+          dataLoading: false,
+        }
+      : dataFromHook;
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
     if (mounted && accommodation && cars && excursions) {
       // Extract property types from accommodation data
-      const propertyTypesArray = Array.from(
-        new Set(
+      const propertyTypesArray = [
+        ...new Set(
           accommodation
             .map((property: { category?: string }) => property.category)
             .filter(
-              (value: string | undefined): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        )
-      ).sort() as string[];
+        ),
+      ].sort();
 
       // Extract car filter options from cars data
-      const carTypesArray = Array.from(
-        new Set(
+      const carTypesArray = [
+        ...new Set(
           cars
             .map((car: { type?: string }) => car.type)
             .filter(
-              (value: string | undefined): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        )
-      ).sort() as string[];
+        ),
+      ].sort();
 
-      const carBrandsArray = Array.from(
-        new Set(
+      const carBrandsArray = [
+        ...new Set(
           cars
             .map(
               (car: { specifications?: { make?: string } }) =>
@@ -270,34 +224,34 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               (value: string | undefined): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        )
-      ).sort() as string[];
+        ),
+      ].sort();
 
-      const carTransmissionsArray = Array.from(
-        new Set(
+      const carTransmissionsArray = [
+        ...new Set(
           cars
             .map(
               (car: { specifications?: { transmission?: string } }) =>
                 car.specifications?.transmission
             )
             .filter(
-              (value: string | undefined): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        )
-      ).sort() as string[];
+        ),
+      ].sort();
 
       // Extract tour filter options from excursions data
-      const tourDurationsArray = Array.from(
-        new Set(
+      const tourDurationsArray = [
+        ...new Set(
           excursions
             .map((tour: { duration?: string }) => tour.duration)
             .filter(
-              (value: string | undefined): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        )
-      ).sort() as string[];
+        ),
+      ].sort();
 
       // Set all filter options (simple string arrays like individual pages)
       setPropertyTypes(propertyTypesArray);
@@ -1490,7 +1444,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {cars.map(
-                (car: any, index: number) =>
+                (car, index) =>
                   index < 3 && (
                     <div
                       key={car.id || index}

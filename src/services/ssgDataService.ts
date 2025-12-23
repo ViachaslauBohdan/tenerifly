@@ -581,7 +581,7 @@ export async function getHomePageData(language: string = "en") {
     //   })
     // );
 
-    const cars = carsByLocale;
+    const cars = carsRaw;
 
     // Трансформация недвижимости
     const properties =
@@ -668,7 +668,7 @@ export async function getHomePageData(language: string = "en") {
     console.error("Error loading home page data:", error);
     return {
       properties: [],
-      cars: {},
+      cars: [],
       tours: [],
       blogs: [],
     };
