@@ -24,6 +24,7 @@ import {
   Calendar,
   User,
   ArrowRight,
+  ExternalLink,
 } from "lucide-react";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
@@ -1685,6 +1686,94 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               })()}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Мини-секция Atlántico Excursiones */}
+      <section className="py-12 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-100 hover:shadow-2xl transition-all duration-300">
+            <div className="md:flex items-center">
+              <div className="md:w-1/3 bg-gradient-to-br from-blue-600 to-indigo-700 p-8 md:p-12 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+                    <MapPin className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    Atlántico Excursiones
+                  </h3>
+                  <p className="text-blue-100 text-sm">
+                    {language === "ru" 
+                      ? "Больше туров и активностей"
+                      : language === "pl"
+                      ? "Więcej wycieczek i aktywności"
+                      : language === "fr"
+                      ? "Plus de visites et d'activités"
+                      : language === "de"
+                      ? "Mehr Touren & Aktivitäten"
+                      : language === "es"
+                      ? "Más tours y actividades"
+                      : language === "uk"
+                      ? "Більше турів та активностей"
+                      : "More Tours & Activities"}
+                  </p>
+                </div>
+              </div>
+              <div className="md:w-2/3 p-8 md:p-12">
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                  {language === "ru"
+                    ? "Откройте для себя больше экскурсий на Тенерифе"
+                    : language === "pl"
+                    ? "Odkryj więcej wycieczek na Teneryfie"
+                    : language === "fr"
+                    ? "Découvrez plus d'excursions à Tenerife"
+                    : language === "de"
+                    ? "Entdecken Sie mehr Ausflüge auf Teneriffa"
+                    : language === "es"
+                    ? "Descubre más excursiones en Tenerife"
+                    : language === "uk"
+                    ? "Відкрийте для себе більше екскурсій на Тенерифі"
+                    : "Discover More Excursions in Tenerife"}
+                </h4>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  {language === "ru"
+                    ? "Исследуйте широкий выбор автобусных туров, тематических парков, морских прогулок, приключенческих мероприятий и VIP-экскурсий. Забронируйте билеты на лучшие развлечения на Тенерифе с Atlántico Excursiones."
+                    : language === "pl"
+                    ? "Odkryj szeroki wybór wycieczek autokarowych, parków tematycznych, rejsów łodzią, aktywności przygodowych i doświadczeń VIP. Zarezerwuj bilety na najlepsze atrakcje na Teneryfie z Atlántico Excursiones."
+                    : language === "fr"
+                    ? "Explorez une large sélection de visites en bus, de parcs à thème, de croisières, d'activités d'aventure et d'expériences VIP. Réservez des billets pour les meilleures activités à Tenerife avec Atlántico Excursiones."
+                    : language === "de"
+                    ? "Entdecken Sie eine große Auswahl an Busreisen, Themenparks, Bootsfahrten, Abenteueraktivitäten und VIP-Erlebnissen. Buchen Sie Tickets für die besten Aktivitäten auf Teneriffa mit Atlántico Excursiones."
+                    : language === "es"
+                    ? "Explora una amplia selección de excursiones en autobús, parques temáticos, paseos en barco, actividades de aventura y experiencias VIP. Reserva entradas para las mejores actividades en Tenerife con Atlántico Excursiones."
+                    : language === "uk"
+                    ? "Дослідіть широкий вибір автобусних турів, тематичних парків, морських прогулянок, пригодницьких заходів та VIP-екскурсій. Забронюйте квитки на найкращі розваги на Тенерифі з Atlántico Excursiones."
+                    : "Explore a wide selection of coach tours, theme parks, boat trips, adventure activities, and VIP experiences. Book tickets for the best activities in Tenerife with Atlántico Excursiones."}
+                </p>
+                <a
+                  href="https://en.atlanticoexcursiones.com/index.php?afId=3609"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+                >
+                  {language === "ru"
+                    ? "Посмотреть все туры"
+                    : language === "pl"
+                    ? "Zobacz wszystkie wycieczki"
+                    : language === "fr"
+                    ? "Voir toutes les visites"
+                    : language === "de"
+                    ? "Alle Touren anzeigen"
+                    : language === "es"
+                    ? "Ver todos los tours"
+                    : language === "uk"
+                    ? "Переглянути всі тури"
+                    : "View All Tours"}
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
