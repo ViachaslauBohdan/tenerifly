@@ -1,184 +1,160 @@
 import fs from "fs";
-import path from "path";
+import readline from  "readline";
 import inquirer from "inquirer";
-import fetch from "node-fetch";
 
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://tenerifly-strapi-production.up.railway.app";
-const API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN || "1f096171636a9e46b82d7c8ac34dcbc324143a8add19966e3ecffc2149cf563249efee0d2c47ef478fa643dd2fdd1d2964b0a3ff2f865086f8038e86a54d188ffbf8b5f7545d2778dcfc164ff41e5c62d399b5f1b2ba472fd4f4696fe273a526d87580ec3663d6ea9b86ac567d96645982668cc62e5efcda2b8f5636762f8d1d";
+const API_URL = "https://tenerifly-strapi-production.up.railway.app";
+const API_TOKEN = "1f096171636a9e46b82d7c8ac34dcbc324143a8add19966e3ecffc2149cf563249efee0d2c47ef478fa643dd2fdd1d2964b0a3ff2f865086f8038e86a54d188ffbf8b5f7545d2778dcfc164ff41e5c62d399b5f1b2ba472fd4f4696fe273a526d87580ec3663d6ea9b86ac567d96645982668cc62e5efcda2b8f5636762f8d1d";
 
-const HEADERS = {
-    "Authorization": `Bearer ${API_TOKEN}`,
-    "Content-Type": "application/json"
-};
+const RED = "\x1b[31m", GREEN = "\x1b[32m", RESET = "\x1b[0m", YELLOW = "\x1b[33m", CYAN = "\x1b[36m", DIM = "\x1b[2m";
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+const ask = (q) => new Promise((res) => rl.question(q, res));
 
-const RED = "\x1b[31m";
-const GREEN = "\x1b[32m";
-const RESET = "\x1b[0m";
-const CYAN = "\x1b[36m";
 
-function normalizeString(str) {
-    if (!str) return "";
-    return str.toLowerCase().trim()
-        .replace(/[^\w\s-а-яё]/gi, '')
-        .replace(/\s+/g, ' ');
+function isEmpty(field, val) {
+    if (!val) return true;
+    if (typeof val === 'object') {
+        if (Object.keys(val).length === 0) return true;
+        if (field === 'specifications') return !val.total_area && !val.bedrooms;
+        if (field === 'location') return !val.address || val.address.length < 3;
+    }
+    return false;
 }
 
-function findMatchingFolder(propertyTitle, basePath) {
-    const normalizedTitle = normalizeString(propertyTitle);
-    if (!normalizedTitle) return null;
-    try {
-        const folders = fs.readdirSync(basePath, { withFileTypes: true }).filter(item => item.isDirectory());
-        for (const folder of folders) {
-            const normalizedFolder = normalizeString(folder.name);
-            if (normalizedFolder === normalizedTitle || normalizedFolder.includes(normalizedTitle) || normalizedTitle.includes(normalizedFolder)) {
-                return path.join(basePath, folder.name);
-            }
+function cleanData(field, data) {
+    if (!data) return null;
+
+    if (field === 'features') {
+        return {
+            has_pool: !!data.has_pool,
+            has_air_conditioning: !!(data.has_ac || data.has_air_conditioning),
+            has_internet: !!data.has_internet,
+            furnished: !!data.furnished
+        };
+    }
+
+    if (field === 'specifications') {
+        return {
+            total_area: parseFloat(data.total_area) || 0,
+            bedrooms: parseInt(data.bedrooms) || 0,
+            bathrooms: parseInt(data.bathrooms) || 0,
+            floor: parseInt(data.floor) || 0
+        };
+    }
+
+    if (field === 'location') {
+        let rawAddr = String(data.address || "");
+        let cleanAddr = rawAddr.split(/[\n\t\r]/)[0].trim();
+        const parts = cleanAddr.split(',');
+        if (parts.length > 4 && parts[0].trim() === parts[Math.floor(parts.length/2)].trim()) {
+            cleanAddr = parts.slice(0, Math.floor(parts.length/2)).join(',').trim();
         }
-    } catch (e) { return null; }
-    return null;
-}
 
-function createSpinner(text) {
-    const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
-    let i = 0;
-    const interval = setInterval(() => {
-        process.stdout.write(`\r${CYAN}${frames[i++ % frames.length]}${RESET} ${text}`);
-    }, 80);
-    return () => {
-        clearInterval(interval);
-        process.stdout.write('\r\x1b[K');
-    };
-}
+        return {
+            address: cleanAddr || "Tenerife",
+            city: String(data.city || "").split(/[\n\t]/)[0].trim(),
+            region: String(data.region || "Tenerife").trim()
+        };
+    }
 
-async function updatePropertyData(property, jsonData) {
-    const targetId = property.documentId || property.id;
-    const url = `${API_URL}/api/properties/${targetId}`;
-
-    try {
-        const res = await fetch(url, {
-            method: "PUT",
-            headers: HEADERS,
-            body: JSON.stringify({
-                data: {
-                    address: jsonData.address,
-                    specifications: jsonData.specifications,
-                    contact: jsonData.contact,
-                }
-            }),
-        });
-        return res.ok;
-    } catch (error) { return false; }
+    if (field === 'contact') {
+        return {
+            name:'Adam Savytskyi',
+            phone:"+34613211069",
+            whatsapp:"+34613211069",
+            email:"adamsavitskiy@gmail.com",
+            telegram:"@adamsvts",
+            preferred_contact:"telegram",
+        };
+    }
+    return data;
 }
 
 async function main() {
-    console.clear();
-    const stopInitialLoad = createSpinner("Загрузка данных из Strapi...");
+    console.log(`${CYAN}Загрузка...${RESET}`);
+    const res = await fetch(`${API_URL}/api/properties?populate=*&pagination[limit]=100`, {
+        headers: { "Authorization": `Bearer ${API_TOKEN}` }
+    });
+    const { data: props } = await res.json();
 
-    try {
-        const response = await fetch(`${API_URL}/api/properties?pagination[pageSize]=1000`, { headers: HEADERS });
-        const json = await response.json();
-        stopInitialLoad();
+    const targets = props.filter(p => {
+        const a = p.attributes || p;
+        return ['description', 'specifications', 'features', 'location', 'contact'].some(f => isEmpty(f, a[f]));
+    }).map(p => {
+        const a = p.attributes || p;
+        return { id: p.id, docId: p.documentId || p.id, title: a.title, attr: a };
+    });
 
-        const properties = json.data || [];
-
-        const emptyFields = properties.filter(p => {
-            const attr = p.attributes || p;
-            return !attr.address || !attr.specifications;
-        });
-
-        if (emptyFields.length === 0) {
-            console.log(`${GREEN}Все объекты уже заполнены данными.${RESET}`);
-            return;
-        }
-
-        console.log(`\nНАЙДЕНО ${emptyFields.length} ОБЪЕКТОВ С ПУСТЫМИ ПОЛЯМИ:`);
-        emptyFields.forEach((p, i) => {
-            const attr = p.attributes || p;
-            console.log(`${i + 1}. [ID: ${p.id}] ${attr.title || 'Без названия'}`);
-        });
-
-        const { textsPath } = await inquirer.prompt([{
-            type: 'input',
-            name: 'textsPath',
-            prefix: '',
-            message: 'Введите путь к папке:',
-            validate: (input) => {
-                if (!input || !input.trim()) {
-                    return 'Путь не может быть пустым';
-                }
-                return true;
-            }
-        }]);
-
-        const absolutePath = path.resolve(textsPath);
-
-        const { confirmAction } = await inquirer.prompt([{
-            type: 'rawlist',
-            name: 'confirmAction',
-            message: `Начать заполнение данных для ${emptyFields.length} объектов?`,
-            prefix: '',
-            choices: [
-                {
-                    name: 'Да',
-                    value: true
-                },
-                {
-                    name: 'Нет',
-                    value: false
-                }
-            ],
-            default: 0,
-        }]);
-
-        if (!confirmAction) return;
-
-        let successCount = 0;
-
-        for (const [index, prop] of emptyFields.entries()) {
-            const attr = prop.attributes || prop;
-            const title = attr.title || `ID: ${prop.id}`;
-            console.log(`\n[${index + 1}/${emptyFields.length}] Обработка: ${title}`);
-
-            const folder = findMatchingFolder(title, absolutePath);
-
-            if (!folder) {
-                console.log(`${RED}  ❌ Папка для "${title}" не найдена в ${absolutePath}${RESET}`);
-                continue;
-            }
-
-            const jsonFilePath = path.join(folder, 'info.json');
-
-            if (!fs.existsSync(jsonFilePath)) {
-                console.log(`${RED}  ❌ Файл info.json не найден в ${path.basename(folder)}${RESET}`);
-                continue;
-            }
-
-            try {
-                const fileContent = fs.readFileSync(jsonFilePath, 'utf-8');
-                const jsonData = JSON.parse(fileContent);
-
-                const stopUpdateSpinner = createSpinner("Обновление данных в Strapi...");
-                const success = await updatePropertyData(prop, jsonData);
-                stopUpdateSpinner();
-
-                if (success) {
-                    console.log(`${GREEN}Данные успешно обновлены!${RESET}`);
-                    successCount++;
-                } else {
-                    console.log(`${RED}  ❌ Ошибка при сохранении в Strapi${RESET}`);
-                }
-            } catch (err) {
-                console.log(`${RED}  ❌ Ошибка чтения JSON: ${err.message}${RESET}`);
-            }
-        }
-
-        console.log(`\n${GREEN}ОБРАБОТКА ЗАВЕРШЕНА!${RESET}`);
-        console.log(`Обновлено объектов: ${successCount}`);
-        console.log(`Пропущено: ${emptyFields.length - successCount}`);
-
-    } catch (err) {
-        console.error(`\n${RED}Критическая ошибка: ${err.message}${RESET}`);
+    if (targets.length === 0) {
+        console.log(`${GREEN}Все данные заполнены.${RESET}`);
+        process.exit();
     }
+    console.log(`${YELLOW}Найдены с пустыми полями:${RESET}`);
+
+    targets.forEach((t, i) => console.log(`${DIM} ${t.title}${RESET}`));
+    const confirm = await ask(`\n${YELLOW}Заполнить эти объекты? (Y/N): ${RESET}`);
+    if (!['д', 'y', 'Y','l', 'да', 'yes'].includes(confirm.toLowerCase())) {
+        console.log("Отменено.");
+        process.exit();
+    }
+
+    const { filePath } = await inquirer.prompt([{
+        type: 'input',
+        name: 'filePath',
+        prefix: '',
+        message: 'Введите путь к файле (*.json) :',
+        default: './data/properties.json'
+    }]);
+    try {
+        const raw = fs.readFileSync(filePath, 'utf-8');
+        const data = JSON.parse(raw);
+        for (const item of targets) {
+            data.some(apart => {
+                if(apart?.title === item.title) {
+                    let updateData = {};
+                    ['description', 'specifications', 'features', 'location', 'contact'].forEach(f => {
+                        if (isEmpty(f, item.attr[f]) && apart[f]) {
+                            updateData[f] = cleanData(f, apart[f]);
+                        }
+                    });
+                    const updated = save(item.docId, updateData);
+                    if(updated) {
+                        console.log(`${GREEN}[ОБНОВЛЕНО]${RESET} ${item.title}`);
+                    }else{
+                        console.log(`${GREEN}[ОШИБКА]${RESET} ${item.title}`);
+                    }
+                    return true;
+                }
+                return false;
+            });
+        }
+    } catch (err) {
+        console.error('JSON error:', err.message);
+        return;
+    }
+    process.exit();
+}
+async function save(id, data)
+{
+    console.log(`${GREEN}[save...]${RESET}`);
+    try {
+        const putRes = await fetch(`${API_URL}/api/properties/${id}`, {
+            method: 'PUT',
+            headers: { "Authorization": `Bearer ${API_TOKEN}`, "Content-Type": "application/json" },
+            body: JSON.stringify({ data: data })
+        });
+
+        if (putRes.ok) {
+            console.log(`${GREEN}[ОБНОВЛЕНО]${RESET} ${id}`);
+            return true;
+        } else {
+            const err = await putRes.json();
+            console.log(`${RED}[ОШИБКА ${putRes.status}]${RESET} ${id}`);
+            console.log(`${DIM}Причина: ${err.error?.message || "Internal Error"}${RESET}`);
+        }
+    } catch (e) {
+        console.log(`${RED}[ОШИБКА] ${e.error?.message} ${RESET} ${id}`);
+    }
+    return false;
 }
 
-main();
+main().catch(console.error);

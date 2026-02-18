@@ -14,21 +14,27 @@ const GREEN = "\x1b[32m";
 const RESET = "\x1b[0m";
 const CYAN = "\x1b[36m";
 
-function normalizeString(str) {
-    if (!str) return "";
-    return str.toLowerCase().trim()
-        .replace(/[^\w\s-а-яё]/gi, '')
-        .replace(/\s+/g, ' ');
+function slugify(text) {
+    return text
+        .toString()                     // Cast to string
+        .toLowerCase()                  // Convert the string to lowercase letters
+        .normalize('NFD')               // Split accented letters into the base letter and the accent
+        .replace(/[\u0300-\u036f]/g, '') // Remove all previously split accents (diacritical marks)
+        .replace(/[^a-z0-9 -]/g, '')    // Remove all chars not letters, numbers, and spaces (to be replaced)
+        .trim()                         // Trim leading and trailing whitespace
+        .replace(/\s+/g, '-')           // Replace spaces with a single hyphen
+        .replace(/-+/g, '-');           // Replace multiple hyphens with a single hyphen
 }
 
-function findMatchingFolder(propertyTitle, basePath) {
-    const normalizedTitle = normalizeString(propertyTitle);
-    if (!normalizedTitle) return null;
+function findMatchingFolder(propertySlug, basePath) {
+    // const normalizedTitle = slugify(propertySlug);
+    // if (!normalizedTitle) return null;
     try {
         const folders = fs.readdirSync(basePath, { withFileTypes: true }).filter(item => item.isDirectory());
         for (const folder of folders) {
-            const normalizedFolder = normalizeString(folder.name);
-            if (normalizedFolder === normalizedTitle || normalizedFolder.includes(normalizedTitle) || normalizedTitle.includes(normalizedFolder)) {
+            const normalizedFolder = slugify(folder.name);
+            if (normalizedFolder === propertySlug || normalizedFolder.includes(propertySlug) || propertySlug.includes(normalizedFolder)) {
+                console.log(folder.name)
                 return path.join(basePath, folder.name);
             }
         }
@@ -74,7 +80,6 @@ async function uploadImageToStrapi(filePath) {
 async function updatePropertyImages(property, imageIds) {
     const targetId = property.documentId || property.id;
     const url = `${API_URL}/api/properties/${targetId}`;
-
     try {
         const res = await fetch(url, {
             method: "PUT",
@@ -124,7 +129,7 @@ async function main() {
             name: 'photosPath',
             prefix: '',
             message: 'Введите путь к папке с изображениями:',
-            default: 'data/images'
+            default: '../images'
         }]);
 
         const absolutePath = path.resolve(photosPath);
@@ -147,11 +152,11 @@ async function main() {
 
         for (const [index, prop] of broken.entries()) {
             const attr = prop.attributes || prop;
-            const title = attr.title || `ID: ${prop.id}`;
-            const folder = findMatchingFolder(title, absolutePath);
-
+            const slug = attr.slug;
+            const folder = findMatchingFolder(slug, absolutePath);
+            console.log(folder + " folder");
             if (!folder) {
-                console.log(`${RED}  ❌[${index + 1}/${broken.length}] По названию ${title} папка не обнаружена в  указанной папке.${RESET}`);
+                console.log(`${RED}  ❌[${index + 1}/${broken.length}] По названию ${slug} папка не обнаружена в  указанной папке.${RESET}`);
                 continue;
             }
 
