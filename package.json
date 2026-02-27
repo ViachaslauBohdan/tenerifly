@@ -2,7 +2,6 @@
   "name": "tenerife-app",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "npm run fetch-translations && next dev",
     "build": "npm run fetch-translations && next build",
