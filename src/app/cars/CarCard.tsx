@@ -62,30 +62,8 @@ interface CarData {
 }
 
 interface CarCardProps {
-  translations: {
-    available: string;
-    viewDetails: string;
-    bookNow: string;
-    sportyDescription: string;
-    petrol: string;
-    diesel: string;
-    hybrid: string;
-    electric: string;
-    automatic: string;
-    manual: string;
-    priceFrom: string;
-    pricePerDay: string;
-    currency: {
-      EUR: string;
-      USD: string;
-      GBP: string;
-    };
-    tenerifeLocations: {
-      south: string;
-      north: string;
-      center: string;
-    };
-  };
+  // Переводы приходят из Strapi и могут меняться по структуре
+  translations: any;
   language: string;
   cars?: CarData[]; // Добавляем пропс для отфильтрованных машин
 }
@@ -230,10 +208,9 @@ const CarCard = ({
 
   const getLocalizedCurrency = (car: CarData) => {
     const currency = getCurrency(car);
-    return (
-      translations.currency[currency as keyof typeof translations.currency] ||
-      currency
-    );
+    const currencyMap =
+      (translations as { currency?: Record<string, string> }).currency || {};
+    return currencyMap[currency] || currency;
   };
 
   const getLocation = (car: CarData) => {

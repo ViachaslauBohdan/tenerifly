@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import { ExternalLink, MapPin } from "lucide-react";
 import ToursFilter from "./ToursFilter";
 import TourCard from "./TourCard";
 import { parseUrlParams, TourFilterParams } from "@/utils/filterUtils";
@@ -459,6 +460,62 @@ export default function ToursPageClient({
           <h1 className="text-3xl font-bold text-gray-900">
             {t.toursInTenerife}
           </h1>
+        </div>
+
+        {/* Мини-секция Atlántico Excursiones */}
+        <div className="mb-6">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+            <div className="flex items-center gap-4 p-4 md:p-5">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center">
+                  <MapPin className="w-6 h-6 md:w-7 md:h-7 text-white" />
+                </div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-1">
+                  Atlántico Excursiones
+                </h3>
+                <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                  {language === "ru"
+                    ? "Откройте для себя больше экскурсий: автобусные туры, тематические парки, морские прогулки и VIP-экскурсии"
+                    : language === "pl"
+                    ? "Odkryj więcej wycieczek: wycieczki autokarowe, parki tematyczne, rejsy i doświadczenia VIP"
+                    : language === "fr"
+                    ? "Découvrez plus d'excursions: visites en bus, parcs à thème, croisières et expériences VIP"
+                    : language === "de"
+                    ? "Entdecken Sie mehr Ausflüge: Busreisen, Themenparks, Bootsfahrten und VIP-Erlebnisse"
+                    : language === "es"
+                    ? "Descubre más excursiones: tours en autobús, parques temáticos, paseos en barco y experiencias VIP"
+                    : language === "uk"
+                    ? "Відкрийте для себе більше екскурсій: автобусні тури, тематичні парки, морські прогулянки та VIP-екскурсії"
+                    : "Discover more excursions: coach tours, theme parks, boat trips, and VIP experiences"}
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <a
+                  href="https://en.atlanticoexcursiones.com/index.php?afId=3609"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md whitespace-nowrap"
+                >
+                  {language === "ru"
+                    ? "Все туры"
+                    : language === "pl"
+                    ? "Wszystkie wycieczki"
+                    : language === "fr"
+                    ? "Toutes les visites"
+                    : language === "de"
+                    ? "Alle Touren"
+                    : language === "es"
+                    ? "Todos los tours"
+                    : language === "uk"
+                    ? "Всі тури"
+                    : "View All Tours"}
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">

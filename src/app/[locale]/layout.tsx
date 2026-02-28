@@ -24,10 +24,13 @@ export const revalidate = 86400; // Обновление каждые 24 час�
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const localeConfig = LOCALES.find((l) => l.code === locale) || LOCALES[0];
+  const localeCode = LOCALES.some((l) => l.code === locale)
+    ? (locale as Locale)
+    : LOCALES[0].code;
+  const localeConfig = LOCALES.find((l) => l.code === localeCode) || LOCALES[0];
 
   return {
     title: {
@@ -60,7 +63,7 @@ export async function generateMetadata({
       title: "Tenerifly.io - Your Guide to Tenerife",
       description:
         "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
-      url: `https://tenerifly.io/${locale}`,
+      url: `https://tenerifly.io/${localeCode}`,
       siteName: "Tenerifly.io",
       images: [
         {
@@ -71,17 +74,17 @@ export async function generateMetadata({
         },
       ],
       locale:
-        locale === "en"
+        localeCode === "en"
           ? "en_US"
-          : locale === "ru"
+          : localeCode === "ru"
             ? "ru_RU"
-            : locale === "pl"
+            : localeCode === "pl"
               ? "pl_PL"
-              : locale === "fr"
+              : localeCode === "fr"
                 ? "fr_FR"
-                : locale === "uk"
+                : localeCode === "uk"
                   ? "uk_UA"
-                  : locale === "de"
+                  : localeCode === "de"
                     ? "de_DE"
                     : "es_ES",
       type: "website",
@@ -99,7 +102,7 @@ export async function generateMetadata({
     },
     metadataBase: new URL("https://tenerifly.io"),
     alternates: {
-      canonical: `https://tenerifly.io/${locale}`,
+      canonical: `https://tenerifly.io/${localeCode}`,
       languages: Object.fromEntries(
         LOCALES.map((loc) => [
           `${loc.code}`,
@@ -127,15 +130,20 @@ export function generateStaticParams() {
   }));
 }
 
-export default function LocaleLayout({
+export default async function LocaleLayout({
   children,
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
+  const localeCode = LOCALES.some((l) => l.code === locale)
+    ? (locale as Locale)
+    : LOCALES[0].code;
+
   return (
-    <html suppressHydrationWarning>
+    <html suppressHydrationWarning lang={localeCode}>
       <head>
         <ColorSchemeScript defaultColorScheme="light" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

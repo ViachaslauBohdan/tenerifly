@@ -24,6 +24,7 @@ import {
   Calendar,
   User,
   ArrowRight,
+  ExternalLink,
 } from "lucide-react";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
@@ -47,7 +48,7 @@ type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
 interface LocalePageClientProps {
   initialData?: {
     properties: any[];
-    cars: any;
+    cars: any[];
     tours: any[];
     blogs: any[];
   };
@@ -66,7 +67,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   // State for component
   const [mounted, setMounted] = useState(false);
 
-  console.log("initialData", initialData);
   // State for search filters
   const [activeTab, setActiveTab] = useState("accommodation");
   const [dates, setDates] = useState(["", ""]);
@@ -142,125 +142,80 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
 
-  // Helper function to format car features
-  const getCarFeatures = (car: any) => {
-    const features = [];
-    if (car.features) {
-      if (car.features.air_conditioning) features.push("Air Conditioner");
-      if (car.features.bluetooth) features.push("Bluetooth");
-      if (car.features.navigation) features.push("Navigation");
-      if (car.features.parking_sensors) features.push("Parking Sensors");
-      if (car.features.other_features)
-        features.push(car.features.other_features);
-    }
-    return features.length > 0 ? features.join(", ") : "—";
+  const getCarImage = (car: any) => {
+    const apiUrl =
+      process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://tenerifly.io";
+    const rawUrl = car.image || car.images?.[0]?.url;
+    if (!rawUrl) return "/placeholder.svg?height=400&width=600";
+    if (typeof rawUrl === "string" && rawUrl.startsWith("http")) return rawUrl;
+    return `${apiUrl}${rawUrl}`;
   };
 
-  // Helper function to get car price (like in CarCard)
-  const getCarPrice = (car: any) => {
-    if (car.rental_prices && car.rental_prices.day_1) {
-      return car.rental_prices.day_1;
-    }
-    return 45; // default price like in CarCard
-  };
+  const getCarPrice = (car: any) =>
+    car?.rental_prices?.day_1 ?? car?.price ?? 0;
 
-  // Helper function to get car currency (like in CarCard)
-  const getCarCurrency = (car: any) => {
-    if (car.rental_prices && car.rental_prices.currency) {
-      return car.rental_prices.currency;
-    }
-    return "EUR"; // default currency like in CarCard
-  };
+  const getDayText = () =>
+    (t as any)?.sections?.cars?.pricePerDay || "day";
 
-  // Helper function to get localized currency (like in CarCard)
   const getLocalizedCurrency = (car: any) => {
-    const currency = getCarCurrency(car);
-    // Simple currency mapping
-    const currencyMap: Record<string, string> = {
-      EUR: "€",
-      USD: "$",
-      GBP: "£",
-    };
+    const currency = car?.rental_prices?.currency || "€";
+    const currencyMap = (t as any)?.sections?.cars?.currency || {};
     return currencyMap[currency] || currency;
   };
 
-  // Helper function to get localized "day" text
-  const getDayText = () => {
-    switch (language) {
-      case "ru":
-        return "день";
-      case "pl":
-        return "dzień";
-      case "fr":
-        return "jour";
-      case "uk":
-        return "день";
-      case "de":
-        return "Tag";
-      case "es":
-        return "día";
-      default:
-        return "day";
-    }
-  };
-
-  // Helper function to get car image
-  const getCarImage = (car: any) => {
-    if (car.images && car.images.length > 0) {
-      // Try to get the main image URL
-      return car.images[0].url;
-    }
-    return "/placeholder.svg";
+  const getCarFeatures = (car: any) => {
+    const parts = [
+      car?.specifications?.make,
+      car?.specifications?.model,
+      car?.type,
+      car?.specifications?.fuel,
+      car?.specifications?.transmission,
+    ].filter(Boolean);
+    return parts.join(" • ") || "—";
   };
 
   // Используем initialData если доступно, иначе загружаем через хук
   const dataFromHook = useDataLoader(mounted, language);
-  const { excursions, accommodation, blogPosts, dataLoading } = initialData
-    ? {
-        excursions: initialData.tours || [],
-        accommodation: initialData.properties || [],
-        blogPosts: initialData.blogs || [],
-        dataLoading: false,
-      }
-    : dataFromHook;
-  // Получаем cars для выбранного языка
-  const cars = useMemo(() => {
-    return initialData
-      ? (initialData.cars &&
-          initialData.cars[language as keyof typeof initialData.cars]) ||
-          []
-      : dataFromHook.cars || [];
-  }, [initialData, language, dataFromHook.cars]);
+  const { excursions, cars, accommodation, blogPosts, dataLoading } =
+    initialData
+      ? {
+          excursions: initialData.tours || [],
+          cars: initialData.cars || [],
+          accommodation: initialData.properties || [],
+          blogPosts: initialData.blogs || [],
+          dataLoading: false,
+        }
+      : dataFromHook;
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
     if (mounted && accommodation && cars && excursions) {
       // Extract property types from accommodation data
-      const propertyTypesArray = Array.from(
-        new Set(
+      const propertyTypesArray = [
+        ...new Set(
           accommodation
             .map((property: { category?: string }) => property.category)
             .filter(
-              (value: string | undefined): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        )
-      ).sort() as string[];
+        ),
+      ].sort();
 
       // Extract car filter options from cars data
-      const carTypesArray = Array.from(
-        new Set(
+      const carTypesArray = [
+        ...new Set(
           cars
             .map((car: { type?: string }) => car.type)
             .filter(
-              (value: string | undefined): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        )
-      ).sort() as string[];
+        ),
+      ].sort();
 
-      const carBrandsArray = Array.from(
-        new Set(
+      const carBrandsArray = [
+        ...new Set(
           cars
             .map(
               (car: { specifications?: { make?: string } }) =>
@@ -270,34 +225,34 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               (value: string | undefined): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        )
-      ).sort() as string[];
+        ),
+      ].sort();
 
-      const carTransmissionsArray = Array.from(
-        new Set(
+      const carTransmissionsArray = [
+        ...new Set(
           cars
             .map(
               (car: { specifications?: { transmission?: string } }) =>
                 car.specifications?.transmission
             )
             .filter(
-              (value: string | undefined): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        )
-      ).sort() as string[];
+        ),
+      ].sort();
 
       // Extract tour filter options from excursions data
-      const tourDurationsArray = Array.from(
-        new Set(
+      const tourDurationsArray = [
+        ...new Set(
           excursions
             .map((tour: { duration?: string }) => tour.duration)
             .filter(
-              (value: string | undefined): value is string =>
+              (value): value is string =>
                 Boolean(value) && typeof value === "string"
             )
-        )
-      ).sort() as string[];
+        ),
+      ].sort();
 
       // Set all filter options (simple string arrays like individual pages)
       setPropertyTypes(propertyTypesArray);
@@ -1490,7 +1445,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {cars.map(
-                (car: any, index: number) =>
+                (car, index) =>
                   index < 3 && (
                     <div
                       key={car.id || index}
@@ -1740,6 +1695,94 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               })()}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Мини-секция Atlántico Excursiones */}
+      <section className="py-12 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-100 hover:shadow-2xl transition-all duration-300">
+            <div className="md:flex items-center">
+              <div className="md:w-1/3 bg-gradient-to-br from-blue-600 to-indigo-700 p-8 md:p-12 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+                    <MapPin className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">
+                    Atlántico Excursiones
+                  </h3>
+                  <p className="text-blue-100 text-sm">
+                    {language === "ru" 
+                      ? "Больше туров и активностей"
+                      : language === "pl"
+                      ? "Więcej wycieczek i aktywności"
+                      : language === "fr"
+                      ? "Plus de visites et d'activités"
+                      : language === "de"
+                      ? "Mehr Touren & Aktivitäten"
+                      : language === "es"
+                      ? "Más tours y actividades"
+                      : language === "uk"
+                      ? "Більше турів та активностей"
+                      : "More Tours & Activities"}
+                  </p>
+                </div>
+              </div>
+              <div className="md:w-2/3 p-8 md:p-12">
+                <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                  {language === "ru"
+                    ? "Откройте для себя больше экскурсий на Тенерифе"
+                    : language === "pl"
+                    ? "Odkryj więcej wycieczek na Teneryfie"
+                    : language === "fr"
+                    ? "Découvrez plus d'excursions à Tenerife"
+                    : language === "de"
+                    ? "Entdecken Sie mehr Ausflüge auf Teneriffa"
+                    : language === "es"
+                    ? "Descubre más excursiones en Tenerife"
+                    : language === "uk"
+                    ? "Відкрийте для себе більше екскурсій на Тенерифі"
+                    : "Discover More Excursions in Tenerife"}
+                </h4>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  {language === "ru"
+                    ? "Исследуйте широкий выбор автобусных туров, тематических парков, морских прогулок, приключенческих мероприятий и VIP-экскурсий. Забронируйте билеты на лучшие развлечения на Тенерифе с Atlántico Excursiones."
+                    : language === "pl"
+                    ? "Odkryj szeroki wybór wycieczek autokarowych, parków tematycznych, rejsów łodzią, aktywności przygodowych i doświadczeń VIP. Zarezerwuj bilety na najlepsze atrakcje na Teneryfie z Atlántico Excursiones."
+                    : language === "fr"
+                    ? "Explorez une large sélection de visites en bus, de parcs à thème, de croisières, d'activités d'aventure et d'expériences VIP. Réservez des billets pour les meilleures activités à Tenerife avec Atlántico Excursiones."
+                    : language === "de"
+                    ? "Entdecken Sie eine große Auswahl an Busreisen, Themenparks, Bootsfahrten, Abenteueraktivitäten und VIP-Erlebnissen. Buchen Sie Tickets für die besten Aktivitäten auf Teneriffa mit Atlántico Excursiones."
+                    : language === "es"
+                    ? "Explora una amplia selección de excursiones en autobús, parques temáticos, paseos en barco, actividades de aventura y experiencias VIP. Reserva entradas para las mejores actividades en Tenerife con Atlántico Excursiones."
+                    : language === "uk"
+                    ? "Дослідіть широкий вибір автобусних турів, тематичних парків, морських прогулянок, пригодницьких заходів та VIP-екскурсій. Забронюйте квитки на найкращі розваги на Тенерифі з Atlántico Excursiones."
+                    : "Explore a wide selection of coach tours, theme parks, boat trips, adventure activities, and VIP experiences. Book tickets for the best activities in Tenerife with Atlántico Excursiones."}
+                </p>
+                <a
+                  href="https://en.atlanticoexcursiones.com/index.php?afId=3609"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+                >
+                  {language === "ru"
+                    ? "Посмотреть все туры"
+                    : language === "pl"
+                    ? "Zobacz wszystkie wycieczki"
+                    : language === "fr"
+                    ? "Voir toutes les visites"
+                    : language === "de"
+                    ? "Alle Touren anzeigen"
+                    : language === "es"
+                    ? "Ver todos los tours"
+                    : language === "uk"
+                    ? "Переглянути всі тури"
+                    : "View All Tours"}
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
