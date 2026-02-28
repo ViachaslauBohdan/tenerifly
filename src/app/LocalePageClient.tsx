@@ -1418,7 +1418,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       </section>
 
       {/* Секция автомобилей */}
-      <section className="py-20 bg-white">
+      <section className="pt-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
@@ -1548,6 +1548,15 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               )}
             </div>
           )}
+        </div>
+        <div className="flex justify-center items-center gap-2 py-10">
+          <span className="text-xl text-gray-600">Powered by</span>
+          <Link
+              href="https://rentacar.canarias.com/"
+              className="text-xl text-blue-600 hover:text-blue-600"
+          >
+            Canarias.com
+          </Link>
         </div>
       </section>
 
@@ -2013,7 +2022,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   Property Rental & Sales
                 </Link>
                 <Link
-                  href={createLocaleLink("/cars")}
+                  href="https://rentacar.canarias.com/"
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Car Rental Services
