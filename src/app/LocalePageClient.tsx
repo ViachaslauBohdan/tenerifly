@@ -1550,9 +1550,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           )}
         </div>
         <div className="flex justify-center items-center gap-2 py-10">
-          <span className="text-xl text-gray-600">Powered by</span>
+          <span className="text-xl text-gray-600">Rent a car - </span>
           <Link
-              href="https://rentacar.canarias.com/"
+              href="https://rentacar.canarias.com/en?affiliateid=VA20022026"
               className="text-xl text-blue-600 hover:text-blue-600"
           >
             Canarias.com
@@ -2022,7 +2022,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   Property Rental & Sales
                 </Link>
                 <Link
-                  href="https://rentacar.canarias.com/"
+                  href="https://rentacar.canarias.com/en?affiliateid=VA20022026"
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Car Rental Services

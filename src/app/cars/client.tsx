@@ -616,9 +616,9 @@ export default function CarsPageClient({
           </h1>
         </div>
         <div className="flex justify-start items-center gap-2 py-2">
-          <span className="ps-1 text-sm text-gray-600">Powered by</span>
+          <span className="ps-1 text-sm text-gray-600">Rent a car</span>
           <Link
-              href="https://rentacar.canarias.com/"
+              href="https://rentacar.canarias.com/en?affiliateid=VA20022026"
               className="text-sm text-blue-600 hover:text-blue-600"
           >
             Canarias.com
