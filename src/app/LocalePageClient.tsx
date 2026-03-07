@@ -1438,6 +1438,22 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             </button>
           </div>
 
+          {/* Баннер партнерского сервиса аренды авто (Canarias.com) */}
+          <div className="flex justify-center mb-10">
+            <a
+              href="https://rentacar.canarias.com/de?affiliateid=VA20022026"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <img
+                src="https://rentacar.canarias.com/Content/images/banner/afiliados-themes/1/dim6DE.jpg"
+                alt="rentacar canarias.com"
+                className="max-w-full h-auto"
+              />
+            </a>
+          </div>
+
           {dataLoading ? (
             <EmptyState type="loading" />
           ) : cars.length === 0 ? (
@@ -1548,15 +1564,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               )}
             </div>
           )}
-        </div>
-        <div className="flex justify-center items-center gap-2 py-10">
-          <span className="text-xl text-gray-600">Rent a car - </span>
-          <Link
-              href="https://rentacar.canarias.com/en?affiliateid=VA20022026"
-              className="text-xl text-blue-600 hover:text-blue-600"
-          >
-            Canarias.com
-          </Link>
         </div>
       </section>
 

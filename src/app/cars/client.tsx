@@ -652,6 +652,21 @@ export default function CarsPageClient({
 
           {/* Cars Grid - показываем отфильтрованные автомобили */}
           <div className="flex-1">
+            {/* Баннер Canarias.com рядом с верхней линией списка машин (на уровне с левым сайдбаром), выровнен по центру колонки */}
+            <div className="mb-6 flex justify-center lg:justify-center">
+              <a
+                href="https://rentacar.canarias.com/de?affiliateid=VA20022026"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <img
+                  src="https://rentacar.canarias.com/Content/images/banner/afiliados-themes/1/dim6DE.jpg"
+                  alt="rentacar canarias.com"
+                  className="max-w-full h-auto"
+                />
+              </a>
+            </div>
             {initialLoadComplete ? (
               <>
                 <CarCard
@@ -662,24 +677,7 @@ export default function CarsPageClient({
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    {/* Results info */}
-                    <div className="text-sm text-gray-600">
-                      {language === "en"
-                        ? `Showing ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} of ${filteredCars.length} cars`
-                        : language === "ru"
-                          ? `Показано ${startIndex + 1}-${Math.min(endIndex, filteredCars.length)} из ${filteredCars.length} автомобилей`
-                          : language === "pl"
-                            ? `Pokazano ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} z ${filteredCars.length} samochodów`
-                            : language === "fr"
-                              ? `Affichage de ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} sur ${filteredCars.length} voitures`
-                              : language === "uk"
-                                ? `Показано ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} з ${filteredCars.length} автомобілів`
-                                : language === "de"
-                                  ? `Zeige ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} von ${filteredCars.length} Autos`
-                                  : `Mostrando ${filteredCars.length === 0 ? 0 : startIndex + 1}-${Math.min(endIndex, filteredCars.length)} de ${filteredCars.length} coches`}
-                    </div>
-
+                  <div className="mt-8 flex flex-col sm:flex-row items-center justify-end gap-4">
                     {/* Pagination controls */}
                     <div className="flex items-center gap-2">
                       {/* Previous button */}
