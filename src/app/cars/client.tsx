@@ -409,6 +409,20 @@ export default function CarsPageClient({
         console.log(`  ${locale}: ${cars.length} cars`);
       });
 
+      // ВАЖНО: исключаем "лишние" английские автомобили, у которых нет пары в RU по documentId.
+      // (такие записи часто воспринимаются как "встроенные", потому что не видны в RU локали в CMS)
+      const ruDocIds = new Set(
+        (carsByLocale.ru || [])
+          .map((c: unknown) => (c as { documentId?: string }).documentId)
+          .filter((id): id is string => Boolean(id))
+      );
+      if (ruDocIds.size > 0 && Array.isArray(carsByLocale.en)) {
+        carsByLocale.en = carsByLocale.en.filter((c: unknown) => {
+          const docId = (c as { documentId?: string }).documentId;
+          return Boolean(docId) && ruDocIds.has(docId as string);
+        });
+      }
+
       setAllCarsByLocale(carsByLocale);
       setFilteredCars((carsByLocale[language] as CarData[]) || []);
     } catch (error) {

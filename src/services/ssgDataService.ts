@@ -363,6 +363,21 @@ export async function getAllCarsAllLocales() {
     }
   });
 
+  // ВАЖНО: исключаем "лишние" английские автомобили, у которых нет пары в RU по documentId.
+  // Это ровно те записи, которые видны на EN сайте, но "не существуют" в CMS при просмотре RU локали.
+  // См. scripts/show-extra-english-cars-by-docid.js
+  const ruDocIds = new Set(
+    (carsByLocale.ru || [])
+      .map((c: unknown) => (c as { documentId?: string }).documentId)
+      .filter((id): id is string => Boolean(id))
+  );
+  if (ruDocIds.size > 0 && Array.isArray(carsByLocale.en)) {
+    carsByLocale.en = carsByLocale.en.filter((c: unknown) => {
+      const docId = (c as { documentId?: string }).documentId;
+      return Boolean(docId) && ruDocIds.has(docId as string);
+    });
+  }
+
   // Логируем результат для отладки
   console.log("🚗 Cars by locale summary:");
   Object.entries(carsByLocale).forEach(([locale, cars]) => {
