@@ -71,7 +71,7 @@ export function SimpleBookingPopup({
       firstName: "First Name",
       lastName: "Last Name",
       phone: "Phone Number",
-      email: "Email (Optional)",
+      email: "Email",
       whatsapp: "WhatsApp (Optional)",
       telegram: "Telegram (Optional)",
       preferredContact: "Preferred contact",
@@ -93,6 +93,7 @@ export function SimpleBookingPopup({
       next: "Next",
       back: "Back",
     },
+  
     ru: {
       title: "Предварительное бронирование",
       itemName: "Объект",
@@ -101,7 +102,7 @@ export function SimpleBookingPopup({
       firstName: "Имя",
       lastName: "Фамилия",
       phone: "Номер телефона",
-      email: "Email (Необязательно)",
+      email: "Email",
       whatsapp: "WhatsApp (Необязательно)",
       telegram: "Telegram (Необязательно)",
       preferredContact: "Предпочтительный способ связи",
@@ -124,6 +125,7 @@ export function SimpleBookingPopup({
       next: "Далее",
       back: "Назад",
     },
+  
     pl: {
       title: "Przedwstępna rezerwacja",
       itemName: "Nieruchomość",
@@ -132,7 +134,7 @@ export function SimpleBookingPopup({
       firstName: "Imię",
       lastName: "Nazwisko",
       phone: "Numer telefonu",
-      email: "Email (Opcjonalnie)",
+      email: "Email",
       whatsapp: "WhatsApp (Opcjonalnie)",
       telegram: "Telegram (Opcjonalnie)",
       preferredContact: "Preferowana metoda kontaktu",
@@ -155,6 +157,7 @@ export function SimpleBookingPopup({
       next: "Dalej",
       back: "Wstecz",
     },
+  
     fr: {
       title: "Pré-réserver",
       itemName: "Propriété",
@@ -163,7 +166,7 @@ export function SimpleBookingPopup({
       firstName: "Prénom",
       lastName: "Nom de famille",
       phone: "Numéro de téléphone",
-      email: "Email (Optionnel)",
+      email: "Email",
       whatsapp: "WhatsApp (Optionnel)",
       telegram: "Telegram (Optionnel)",
       preferredContact: "Méthode de contact préférée",
@@ -187,6 +190,7 @@ export function SimpleBookingPopup({
       next: "Suivant",
       back: "Retour",
     },
+  
     uk: {
       title: "Попереднє бронювання",
       itemName: "Об'єкт",
@@ -195,7 +199,7 @@ export function SimpleBookingPopup({
       firstName: "Ім'я",
       lastName: "Прізвище",
       phone: "Номер телефону",
-      email: "Email (Необов'язково)",
+      email: "Email",
       whatsapp: "WhatsApp (Необов'язково)",
       telegram: "Telegram (Необов'язково)",
       preferredContact: "Бажаний спосіб зв'язку",
@@ -218,6 +222,7 @@ export function SimpleBookingPopup({
       next: "Далі",
       back: "Назад",
     },
+  
     de: {
       title: "Vorab-Buchung",
       itemName: "Objekt",
@@ -226,7 +231,7 @@ export function SimpleBookingPopup({
       firstName: "Vorname",
       lastName: "Nachname",
       phone: "Telefonnummer",
-      email: "E-Mail (Optional)",
+      email: "E-Mail",
       whatsapp: "WhatsApp (Optional)",
       telegram: "Telegram (Optional)",
       preferredContact: "Bevorzugte Kontaktmethode",
@@ -250,6 +255,7 @@ export function SimpleBookingPopup({
       next: "Weiter",
       back: "Zurück",
     },
+  
     es: {
       title: "Reserva anticipada",
       itemName: "Propiedad",
@@ -258,7 +264,7 @@ export function SimpleBookingPopup({
       firstName: "Nombre",
       lastName: "Apellido",
       phone: "Número de teléfono",
-      email: "Email (Opcional)",
+      email: "Email",
       whatsapp: "WhatsApp (Opcional)",
       telegram: "Telegram (Opcional)",
       preferredContact: "Método de contacto preferido",
@@ -292,7 +298,7 @@ export function SimpleBookingPopup({
       firstName: "First Name",
       lastName: "Last Name",
       phone: "Phone Number",
-      email: "Email (Optional)",
+      email: "Email",
       whatsapp: "WhatsApp (Optional)",
       telegram: "Telegram (Optional)",
       preferredContact: "Preferred contact",
@@ -314,6 +320,7 @@ export function SimpleBookingPopup({
       next: "Next",
       back: "Back",
     },
+  
     ru: {
       title: "Предварительное бронирование",
       itemName: "Объект",
@@ -322,7 +329,7 @@ export function SimpleBookingPopup({
       firstName: "Имя",
       lastName: "Фамилия",
       phone: "Номер телефона",
-      email: "Email (Необязательно)",
+      email: "Email",
       whatsapp: "WhatsApp (Необязательно)",
       telegram: "Telegram (Необязательно)",
       preferredContact: "Предпочтительный способ связи",
@@ -345,6 +352,7 @@ export function SimpleBookingPopup({
       next: "Далее",
       back: "Назад",
     },
+  
     pl: {
       title: "Przedwstępna rezerwacja",
       itemName: "Nieruchomość",
@@ -353,7 +361,7 @@ export function SimpleBookingPopup({
       firstName: "Imię",
       lastName: "Nazwisko",
       phone: "Numer telefonu",
-      email: "Email (Opcjonalnie)",
+      email: "Email",
       whatsapp: "WhatsApp (Opcjonalnie)",
       telegram: "Telegram (Opcjonalnie)",
       preferredContact: "Preferowana metoda kontaktu",
@@ -376,6 +384,7 @@ export function SimpleBookingPopup({
       next: "Dalej",
       back: "Wstecz",
     },
+  
     fr: {
       title: "Pré-réserver",
       itemName: "Propriété",
@@ -384,7 +393,7 @@ export function SimpleBookingPopup({
       firstName: "Prénom",
       lastName: "Nom de famille",
       phone: "Numéro de téléphone",
-      email: "Email (Optionnel)",
+      email: "Email",
       whatsapp: "WhatsApp (Optionnel)",
       telegram: "Telegram (Optionnel)",
       preferredContact: "Méthode de contact préférée",
@@ -408,6 +417,7 @@ export function SimpleBookingPopup({
       next: "Suivant",
       back: "Retour",
     },
+  
     uk: {
       title: "Попереднє бронювання",
       itemName: "Об'єкт",
@@ -416,7 +426,7 @@ export function SimpleBookingPopup({
       firstName: "Ім'я",
       lastName: "Прізвище",
       phone: "Номер телефону",
-      email: "Email (Необов'язково)",
+      email: "Email",
       whatsapp: "WhatsApp (Необов'язково)",
       telegram: "Telegram (Необов'язково)",
       preferredContact: "Бажаний спосіб зв'язку",
@@ -439,6 +449,7 @@ export function SimpleBookingPopup({
       next: "Далі",
       back: "Назад",
     },
+  
     de: {
       title: "Vorab-Buchung",
       itemName: "Objekt",
@@ -447,7 +458,7 @@ export function SimpleBookingPopup({
       firstName: "Vorname",
       lastName: "Nachname",
       phone: "Telefonnummer",
-      email: "E-Mail (Optional)",
+      email: "E-Mail",
       whatsapp: "WhatsApp (Optional)",
       telegram: "Telegram (Optional)",
       preferredContact: "Bevorzugte Kontaktmethode",
@@ -471,6 +482,7 @@ export function SimpleBookingPopup({
       next: "Weiter",
       back: "Zurück",
     },
+  
     es: {
       title: "Reserva anticipada",
       itemName: "Propiedad",
@@ -479,7 +491,7 @@ export function SimpleBookingPopup({
       firstName: "Nombre",
       lastName: "Apellido",
       phone: "Número de teléfono",
-      email: "Email (Opcional)",
+      email: "Email",
       whatsapp: "WhatsApp (Opcional)",
       telegram: "Telegram (Opcional)",
       preferredContact: "Método de contacto preferido",
