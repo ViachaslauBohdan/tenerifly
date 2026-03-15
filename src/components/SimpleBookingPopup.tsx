@@ -8,25 +8,24 @@ import {
   Textarea,
   TextInput,
   Select,
-  Badge,
-  Divider,
+  Stepper,
+  Box,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import {
   IconMessage,
   IconSend,
   IconCalendar,
-  IconHome,
   IconUser,
   IconPhone,
   IconBrandWhatsapp,
   IconBrandTelegram,
   IconCheck,
-  IconStar,
-  IconClock,
   IconMapPin,
+  IconArrowRight,
+  IconArrowLeft,
 } from "@tabler/icons-react";
-import { openBookingWhatsApp } from "../utils/whatsapp";
+import type { Locale } from "@/types/locale";
 
 interface SimpleBookingPopupProps {
   opened: boolean;
@@ -38,6 +37,8 @@ interface SimpleBookingPopupProps {
     contactEmail?: string;
   };
   mode?: "contact" | "booking";
+  /** Current locale for translations. Defaults to "en" if not provided. */
+  currentLocale?: Locale;
 }
 
 export function SimpleBookingPopup({
@@ -45,6 +46,7 @@ export function SimpleBookingPopup({
   onClose,
   item,
   mode = "booking",
+  currentLocale = "en",
 }: SimpleBookingPopupProps) {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -58,10 +60,11 @@ export function SimpleBookingPopup({
   const [preferredContact, setPreferredContact] = useState<string>("");
   const [isSending, setIsSending] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [step, setStep] = useState(0);
 
   const contactTranslations = {
     en: {
-      title: "Contact",
+      title: "Pre-Book",
       itemName: "Property",
       price: "Price",
       contactInfo: "Contact Information",
@@ -87,9 +90,11 @@ export function SimpleBookingPopup({
       premium: "Premium Service",
       instantResponse: "Instant Response",
       secureBooking: "Secure Booking",
+      next: "Next",
+      back: "Back",
     },
     ru: {
-      title: "Связаться",
+      title: "Предварительное бронирование",
       itemName: "Объект",
       price: "Цена",
       contactInfo: "Контактная информация",
@@ -116,9 +121,11 @@ export function SimpleBookingPopup({
       premium: "Премиум сервис",
       instantResponse: "Мгновенный ответ",
       secureBooking: "Безопасное бронирование",
+      next: "Далее",
+      back: "Назад",
     },
     pl: {
-      title: "Kontakt",
+      title: "Przedwstępna rezerwacja",
       itemName: "Nieruchomość",
       price: "Cena",
       contactInfo: "Informacje kontaktowe",
@@ -145,9 +152,11 @@ export function SimpleBookingPopup({
       premium: "Usługa Premium",
       instantResponse: "Natychmiastowa odpowiedź",
       secureBooking: "Bezpieczna rezerwacja",
+      next: "Dalej",
+      back: "Wstecz",
     },
     fr: {
-      title: "Contact",
+      title: "Pré-réserver",
       itemName: "Propriété",
       price: "Prix",
       contactInfo: "Informations de contact",
@@ -175,9 +184,11 @@ export function SimpleBookingPopup({
       premium: "Service Premium",
       instantResponse: "Réponse Instantanée",
       secureBooking: "Réservation Sécurisée",
+      next: "Suivant",
+      back: "Retour",
     },
     uk: {
-      title: "Зв'язатися",
+      title: "Попереднє бронювання",
       itemName: "Об'єкт",
       price: "Ціна",
       contactInfo: "Контактна інформація",
@@ -204,9 +215,11 @@ export function SimpleBookingPopup({
       premium: "Преміум сервіс",
       instantResponse: "Миттєва відповідь",
       secureBooking: "Безпечне бронювання",
+      next: "Далі",
+      back: "Назад",
     },
     de: {
-      title: "Kontakt",
+      title: "Vorab-Buchung",
       itemName: "Objekt",
       price: "Preis",
       contactInfo: "Kontaktinformationen",
@@ -234,9 +247,11 @@ export function SimpleBookingPopup({
       premium: "Premium-Service",
       instantResponse: "Sofortige Antwort",
       secureBooking: "Sichere Buchung",
+      next: "Weiter",
+      back: "Zurück",
     },
     es: {
-      title: "Contactar",
+      title: "Reserva anticipada",
       itemName: "Propiedad",
       price: "Precio",
       contactInfo: "Información de contacto",
@@ -263,6 +278,8 @@ export function SimpleBookingPopup({
       premium: "Servicio Premium",
       instantResponse: "Respuesta Instantánea",
       secureBooking: "Reserva Segura",
+      next: "Siguiente",
+      back: "Atrás",
     },
   };
 
@@ -294,6 +311,8 @@ export function SimpleBookingPopup({
       premium: "Premium Service",
       instantResponse: "Instant Response",
       secureBooking: "Secure Booking",
+      next: "Next",
+      back: "Back",
     },
     ru: {
       title: "Предварительное бронирование",
@@ -323,6 +342,8 @@ export function SimpleBookingPopup({
       premium: "Премиум сервис",
       instantResponse: "Мгновенный ответ",
       secureBooking: "Безопасное бронирование",
+      next: "Далее",
+      back: "Назад",
     },
     pl: {
       title: "Przedwstępna rezerwacja",
@@ -352,6 +373,8 @@ export function SimpleBookingPopup({
       premium: "Usługa Premium",
       instantResponse: "Natychmiastowa odpowiedź",
       secureBooking: "Bezpieczna rezerwacja",
+      next: "Dalej",
+      back: "Wstecz",
     },
     fr: {
       title: "Pré-réserver",
@@ -382,6 +405,8 @@ export function SimpleBookingPopup({
       premium: "Service Premium",
       instantResponse: "Réponse Instantanée",
       secureBooking: "Réservation Sécurisée",
+      next: "Suivant",
+      back: "Retour",
     },
     uk: {
       title: "Попереднє бронювання",
@@ -411,6 +436,8 @@ export function SimpleBookingPopup({
       premium: "Преміум сервіс",
       instantResponse: "Миттєва відповідь",
       secureBooking: "Безпечне бронювання",
+      next: "Далі",
+      back: "Назад",
     },
     de: {
       title: "Vorab-Buchung",
@@ -441,6 +468,8 @@ export function SimpleBookingPopup({
       premium: "Premium-Service",
       instantResponse: "Sofortige Antwort",
       secureBooking: "Sichere Buchung",
+      next: "Weiter",
+      back: "Zurück",
     },
     es: {
       title: "Reserva anticipada",
@@ -470,6 +499,8 @@ export function SimpleBookingPopup({
       premium: "Servicio Premium",
       instantResponse: "Respuesta Instantánea",
       secureBooking: "Reserva Segura",
+      next: "Siguiente",
+      back: "Atrás",
     },
   };
 
@@ -477,8 +508,8 @@ export function SimpleBookingPopup({
   const translations =
     mode === "contact" ? contactTranslations : bookingTranslations;
 
-  // Default to English for now - you can add language detection logic
-  const t = translations.en;
+  // Use current locale; fallback to English if locale not in map
+  const t = translations[currentLocale] ?? translations.en;
 
   const handleSend = async () => {
     if (!firstName || !lastName || !phone || !email) return;
@@ -530,6 +561,7 @@ ${comments ? `Дополнительная информация: ${comments}` : 
         // Reset form after successful submission
         setTimeout(() => {
           setShowSuccess(false);
+          setStep(0);
           onClose();
           // Reset form
           setStartDate(null);
@@ -577,486 +609,136 @@ ${comments ? `Дополнительная информация: ${comments}` : 
     isValidEmail(email) &&
     isValidPhone(phone);
 
+  const inputStyles = {
+    input: {
+      border: "1px solid #e2e8f0",
+      borderRadius: "6px",
+      fontSize: "14px",
+      transition: "all 0.2s",
+      "&:focus": { borderColor: "#3182ce", boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)" },
+    },
+    label: { fontWeight: 500, color: "#4a5568", marginBottom: "4px" },
+  };
+
   return (
     <Modal
       opened={opened}
-      onClose={onClose}
+      onClose={() => { setStep(0); onClose(); }}
       title={null}
-      size="xl"
+      size="md"
       centered
-      fullScreen={false}
       withCloseButton={false}
       styles={{
-        body: {
-          padding: 0,
-          maxHeight: "90vh",
-          overflowY: "auto",
-        },
+        body: { padding: 0 },
         content: {
-          maxWidth: "95vw",
-          width: "700px",
-          borderRadius: "8px",
+          maxWidth: "min(520px, 95vw)",
+          borderRadius: "12px",
           overflow: "hidden",
-          boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
+          boxShadow: "0 20px 40px -10px rgba(0, 0, 0, 0.15)",
           border: "1px solid #e2e8f0",
         },
       }}
     >
-      {/* Clean Header */}
-      <div
-        style={{
-          background: "#f8fafc",
-          padding: "24px",
-          borderBottom: "1px solid #e2e8f0",
-        }}
-      >
+      {/* Header with stepper */}
+      <Box px="md" pt="md" pb="xs">
         <Group justify="space-between" align="center">
-          <Group gap="sm">
-            <IconHome size={24} color="#3182ce" />
-            <div>
-              <Text size="xl" fw={600} c="#1a202c">
-                {t.title}
-              </Text>
-              <Text size="sm" c="#64748b">
-                Complete your booking request
-              </Text>
-            </div>
-          </Group>
-
-          <Button
-            variant="subtle"
-            onClick={onClose}
-            style={{
-              background: "transparent",
-              border: "1px solid #e2e8f0",
-              borderRadius: "6px",
-              width: "32px",
-              height: "32px",
-              padding: 0,
-              minWidth: "auto",
-              color: "#64748b",
-            }}
-          >
-            ✕
-          </Button>
+          <Text size="lg" fw={600} c="#1a202c">
+            {t.title}
+          </Text>
+          <Button variant="subtle" color="gray" size="sm" onClick={() => { setStep(0); onClose(); }}>✕</Button>
         </Group>
-      </div>
+        <Stepper
+          size="xs"
+          active={step}
+          onStepClick={setStep}
+          mt="sm"
+          allowNextStepsSelect={false}
+          styles={{ stepBody: { display: "none" }, separator: { marginLeft: 4, marginRight: 4 } }}
+        >
+          <Stepper.Step label={t.contactInfo} />
+          <Stepper.Step label={t.selectDates} />
+        </Stepper>
+      </Box>
 
-      {/* Main Content */}
-      <div style={{ padding: "24px" }}>
-        <Stack gap="lg">
-          {/* Item Info Card */}
-          <div
-            style={{
-              background: "#f8fafc",
-              padding: "20px",
-              borderRadius: "6px",
-              border: "1px solid #e2e8f0",
-            }}
-          >
-            <Group gap="xs" mb="sm">
-              <IconMapPin size={18} color="#3182ce" />
-              <Text
-                size="sm"
-                fw={600}
-                c="#4a5568"
-                tt="uppercase"
-                style={{ letterSpacing: "0.05em" }}
-              >
-                {t.itemName}
-              </Text>
-            </Group>
-            <Text size="lg" fw={600} c="#1a202c" mb="xs">
-              {item.name}
+      {/* Success state */}
+      {showSuccess ? (
+        <Box p="xl" py="48px">
+          <Stack align="center" gap="md">
+            <IconCheck size={48} color="#22c55e" stroke={2.5} />
+            <Text size="lg" fw={500} c="#166534" ta="center">
+              {t.success}
             </Text>
-            {item.price && (
-              <Text size="md" fw={500} c="#3182ce">
-                {item.price}
-              </Text>
-            )}
-          </div>
+          </Stack>
+        </Box>
+      ) : (
+        <Box px="md" pb="md">
+          {/* Step 0: Contact */}
+          {step === 0 && (
+            <Stack gap="sm">
+              <Group gap="xs" mb={4}>
+                <IconMapPin size={16} color="#3182ce" />
+                <Text size="sm" fw={500} c="dimmed">{item.name}{item.price ? ` · ${item.price}` : ""}</Text>
+              </Group>
+              <Group grow>
+                <TextInput label={t.firstName} placeholder={t.firstName} value={firstName} onChange={(e) => setFirstName(e.target.value)} required withAsterisk styles={inputStyles} />
+                <TextInput label={t.lastName} placeholder={t.lastName} value={lastName} onChange={(e) => setLastName(e.target.value)} required withAsterisk styles={inputStyles} />
+              </Group>
+              <TextInput label={t.phone} placeholder={t.phone} value={phone} onChange={(e) => setPhone(e.target.value)} required withAsterisk error={phone && !isValidPhone(phone) ? t.phoneError : undefined} styles={inputStyles} />
+              <TextInput label={t.email} placeholder={t.email} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required withAsterisk error={email && !isValidEmail(email) ? t.emailError : undefined} styles={inputStyles} />
+              <Group grow>
+                <TextInput placeholder={t.whatsapp} value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} leftSection={<IconBrandWhatsapp size={16} color="#25D366" />} styles={inputStyles} />
+                <TextInput placeholder={t.telegram} value={telegram} onChange={(e) => setTelegram(e.target.value)} leftSection={<IconBrandTelegram size={16} color="#0088cc" />} styles={inputStyles} />
+              </Group>
+              <Select placeholder={t.preferredContact} value={preferredContact} onChange={(v) => setPreferredContact(v || "")} data={[{ value: "email", label: t.emailLabel }, { value: "whatsapp", label: t.whatsappLabel }, { value: "telegram", label: t.telegramLabel }]} styles={inputStyles} />
+              <Group justify="space-between" mt="md">
+                <Button variant="subtle" color="gray" onClick={onClose}>{t.close}</Button>
+                <Button rightSection={<IconArrowRight size={16} />} onClick={() => setStep(1)} disabled={!isFormValid}>
+                  {t.next}
+                </Button>
+              </Group>
+            </Stack>
+          )}
 
-          {/* Contact Information */}
-          <div>
-            <Group gap="xs" mb="md">
-              <IconUser size={18} color="#3182ce" />
-              <Text size="md" fw={600} c="#1a202c">
-                {t.contactInfo}
-              </Text>
-            </Group>
-
-            <div
-              style={{
-                background: "white",
-                padding: "20px",
-                borderRadius: "6px",
-                border: "1px solid #e2e8f0",
-              }}
-            >
-              <Stack gap="md">
-                <Group grow>
-                  <TextInput
-                    leftSection={<IconUser size={16} color="#64748b" />}
-                    placeholder="First Name"
-                    label="First Name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                    withAsterisk
-                    styles={{
-                      input: {
-                        border: "1px solid #e2e8f0",
-                        borderRadius: "6px",
-                        fontSize: "14px",
-                        transition: "all 0.2s",
-                        "&:focus": {
-                          borderColor: "#3182ce",
-                          boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
-                        },
-                      },
-                      label: {
-                        fontWeight: 500,
-                        color: "#4a5568",
-                        marginBottom: "6px",
-                      },
-                    }}
-                  />
-                  <TextInput
-                    leftSection={<IconUser size={16} color="#64748b" />}
-                    placeholder="Last Name"
-                    label="Last Name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                    withAsterisk
-                    styles={{
-                      input: {
-                        border: "1px solid #e2e8f0",
-                        borderRadius: "6px",
-                        fontSize: "14px",
-                        transition: "all 0.2s",
-                        "&:focus": {
-                          borderColor: "#3182ce",
-                          boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
-                        },
-                      },
-                      label: {
-                        fontWeight: 500,
-                        color: "#4a5568",
-                        marginBottom: "6px",
-                      },
-                    }}
-                  />
-                </Group>
-                <TextInput
-                  leftSection={<IconPhone size={16} color="#64748b" />}
-                  placeholder="Phone Number"
-                  label="Phone Number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                  withAsterisk
-                  error={
-                    phone && !isValidPhone(phone) ? t.phoneError : undefined
-                  }
-                  styles={{
-                    input: {
-                      border: "1px solid #e2e8f0",
-                      borderRadius: "6px",
-                      fontSize: "14px",
-                      transition: "all 0.2s",
-                      "&:focus": {
-                        borderColor: "#3182ce",
-                        boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
-                      },
-                    },
-                    label: {
-                      fontWeight: 500,
-                      color: "#4a5568",
-                      marginBottom: "6px",
-                    },
-                  }}
-                />
-                <TextInput
-                  leftSection={<IconMessage size={16} color="#64748b" />}
-                  placeholder="Email"
-                  label="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                  required
-                  withAsterisk
-                  error={
-                    email && !isValidEmail(email) ? t.emailError : undefined
-                  }
-                  styles={{
-                    input: {
-                      border: "1px solid #e2e8f0",
-                      borderRadius: "6px",
-                      fontSize: "14px",
-                      transition: "all 0.2s",
-                      "&:focus": {
-                        borderColor: "#3182ce",
-                        boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
-                      },
-                    },
-                    label: {
-                      fontWeight: 500,
-                      color: "#4a5568",
-                      marginBottom: "6px",
-                    },
-                  }}
-                />
-                <Group grow>
-                  <TextInput
-                    leftSection={
-                      <IconBrandWhatsapp size={16} color="#25D366" />
-                    }
-                    placeholder={t.whatsapp}
-                    value={whatsapp}
-                    onChange={(e) => setWhatsapp(e.target.value)}
-                    styles={{
-                      input: {
-                        border: "1px solid #e2e8f0",
-                        borderRadius: "6px",
-                        fontSize: "14px",
-                        transition: "all 0.2s",
-                        "&:focus": {
-                          borderColor: "#25D366",
-                          boxShadow: "0 0 0 3px rgba(37, 211, 102, 0.1)",
-                        },
-                      },
-                    }}
-                  />
-                  <TextInput
-                    leftSection={
-                      <IconBrandTelegram size={16} color="#0088cc" />
-                    }
-                    placeholder={t.telegram}
-                    value={telegram}
-                    onChange={(e) => setTelegram(e.target.value)}
-                    styles={{
-                      input: {
-                        border: "1px solid #e2e8f0",
-                        borderRadius: "6px",
-                        fontSize: "14px",
-                        transition: "all 0.2s",
-                        "&:focus": {
-                          borderColor: "#0088cc",
-                          boxShadow: "0 0 0 3px rgba(0, 136, 204, 0.1)",
-                        },
-                      },
-                    }}
-                  />
-                </Group>
-                <Select
-                  leftSection={<IconMessage size={16} color="#64748b" />}
-                  placeholder={t.preferredContact}
-                  value={preferredContact}
-                  onChange={(value) => setPreferredContact(value || "")}
-                  data={[
-                    { value: "email", label: t.emailLabel },
-                    { value: "whatsapp", label: t.whatsappLabel },
-                    { value: "telegram", label: t.telegramLabel },
-                  ]}
-                  styles={{
-                    input: {
-                      border: "1px solid #e2e8f0",
-                      borderRadius: "6px",
-                      fontSize: "14px",
-                      transition: "all 0.2s",
-                      "&:focus": {
-                        borderColor: "#3182ce",
-                        boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
-                      },
-                    },
-                  }}
-                />
-              </Stack>
-            </div>
-          </div>
-
-          {/* Date Selection */}
-          <div>
-            <Group gap="xs" mb="md">
-              <IconCalendar size={18} color="#3182ce" />
-              <Text size="md" fw={600} c="#1a202c">
-                {t.selectDates}
-              </Text>
-            </Group>
-
-            <div
-              style={{
-                background: "white",
-                padding: "20px",
-                borderRadius: "6px",
-                border: "1px solid #e2e8f0",
-              }}
-            >
+          {/* Step 1: Dates & comments */}
+          {step === 1 && (
+            <Stack gap="sm">
               <Group grow>
                 <DateInput
                   value={startDate}
                   onChange={setStartDate}
                   placeholder="Start date"
-                  leftSection={<IconCalendar size={16} color="#64748b" />}
+                  leftSection={<IconCalendar size={16} />}
                   clearable
-                  dateParser={(input) => {
-                    const date = new Date(input);
-                    return isNaN(date.getTime()) ? null : date;
-                  }}
                   valueFormat="DD/MM/YYYY"
                   minDate={new Date()}
                   maxDate={new Date(new Date().getFullYear() + 1, 11, 31)}
-                  styles={{
-                    input: {
-                      border: "1px solid #e2e8f0",
-                      borderRadius: "6px",
-                      fontSize: "14px",
-                      transition: "all 0.2s",
-                      "&:focus": {
-                        borderColor: "#3182ce",
-                        boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
-                      },
-                    },
-                  }}
+                  styles={inputStyles}
                 />
                 <DateInput
                   value={endDate}
                   onChange={setEndDate}
                   placeholder="End date"
-                  leftSection={<IconCalendar size={16} color="#64748b" />}
+                  leftSection={<IconCalendar size={16} />}
                   clearable
-                  dateParser={(input) => {
-                    const date = new Date(input);
-                    return isNaN(date.getTime()) ? null : date;
-                  }}
                   valueFormat="DD/MM/YYYY"
                   minDate={startDate || new Date()}
                   maxDate={new Date(new Date().getFullYear() + 1, 11, 31)}
-                  styles={{
-                    input: {
-                      border: "1px solid #e2e8f0",
-                      borderRadius: "6px",
-                      fontSize: "14px",
-                      transition: "all 0.2s",
-                      "&:focus": {
-                        borderColor: "#3182ce",
-                        boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
-                      },
-                    },
-                  }}
+                  styles={inputStyles}
                 />
               </Group>
-            </div>
-          </div>
-
-          {/* Comments */}
-          <div>
-            <Group gap="xs" mb="md">
-              <IconMessage size={18} color="#3182ce" />
-              <Text size="md" fw={600} c="#1a202c">
-                {t.comments}
-              </Text>
-            </Group>
-
-            <div
-              style={{
-                background: "white",
-                padding: "20px",
-                borderRadius: "6px",
-                border: "1px solid #e2e8f0",
-              }}
-            >
-              <Textarea
-                placeholder={t.commentsPlaceholder}
-                value={comments}
-                onChange={(e) => setComments(e.target.value)}
-                rows={3}
-                styles={{
-                  input: {
-                    border: "1px solid #e2e8f0",
-                    borderRadius: "6px",
-                    fontSize: "14px",
-                    transition: "all 0.2s",
-                    resize: "none",
-                    "&:focus": {
-                      borderColor: "#3182ce",
-                      boxShadow: "0 0 0 3px rgba(49, 130, 206, 0.1)",
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Success Message */}
-          {showSuccess && (
-            <div
-              style={{
-                background: "#f0fff4",
-                border: "1px solid #9ae6b4",
-                borderRadius: "6px",
-                padding: "16px",
-                textAlign: "center",
-              }}
-            >
-              <Group justify="center" gap="xs" mb="xs">
-                <IconCheck size={18} color="#25D366" />
-                <Text c="#22543d" fw={500}>
-                  {t.success}
-                </Text>
+              <Textarea placeholder={t.commentsPlaceholder} value={comments} onChange={(e) => setComments(e.target.value)} minRows={2} maxRows={3} autosize styles={{ ...inputStyles, input: { ...inputStyles.input, resize: "none" } }} />
+              <Group justify="space-between" mt="md">
+                <Button variant="subtle" leftSection={<IconArrowLeft size={16} />} onClick={() => setStep(0)}>
+                  {t.back}
+                </Button>
+                <Button leftSection={<IconSend size={16} />} onClick={handleSend} disabled={!isFormValid || isSending} loading={isSending}>
+                  {t.send}
+                </Button>
               </Group>
-            </div>
+            </Stack>
           )}
-
-          {/* Action Buttons */}
-          <Group justify="space-between" gap="md">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              disabled={isSending}
-              size="md"
-              style={{
-                border: "1px solid #e2e8f0",
-                borderRadius: "6px",
-                fontWeight: 500,
-                color: "#4a5568",
-                transition: "all 0.2s",
-                "&:hover": {
-                  borderColor: "#3182ce",
-                  color: "#3182ce",
-                  background: "rgba(49, 130, 206, 0.05)",
-                },
-              }}
-            >
-              {t.close}
-            </Button>
-            <Button
-              leftSection={<IconSend size={16} />}
-              onClick={handleSend}
-              disabled={!isFormValid || isSending}
-              loading={isSending}
-              size="md"
-              style={{
-                background: "#3182ce",
-                color: "white",
-                borderRadius: "6px",
-                fontWeight: 500,
-                border: "none",
-                transition: "all 0.2s",
-                "&:hover": {
-                  background: "#2c5aa0",
-                },
-                "&:disabled": {
-                  background: "#cbd5e0",
-                },
-              }}
-            >
-              {t.send}
-            </Button>
-          </Group>
-        </Stack>
-      </div>
+        </Box>
+      )}
     </Modal>
   );
 }

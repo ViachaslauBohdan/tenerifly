@@ -2084,6 +2084,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             contactEmail: bookingItem.contact?.email,
           }}
           mode="contact"
+          currentLocale={locale}
         />
       )}
     </main>

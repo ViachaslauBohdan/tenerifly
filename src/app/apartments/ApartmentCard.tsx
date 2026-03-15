@@ -212,7 +212,7 @@ const ApartmentCard = ({
   }, [providedApartments]);
 
   const router = useRouter();
-  const { createLocaleLink } = useTranslation();
+  const { createLocaleLink, locale } = useTranslation();
 
   const handleViewDetails = (propertyDocumentId: string) => {
     router.push(createLocaleLink(`/apartments/${propertyDocumentId}`));
@@ -710,6 +710,7 @@ const ApartmentCard = ({
             currency: selectedProperty.price?.currency,
             contactEmail: selectedProperty.contact?.email,
           }}
+          currentLocale={locale}
         />
       )}
     </div>

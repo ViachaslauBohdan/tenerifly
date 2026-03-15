@@ -534,6 +534,7 @@ export default function TourDetailPageClient({ tour }: { tour: TourData }) {
               currency: tour.price?.currency,
               contactEmail: tour.contact?.email,
             }}
+            currentLocale={locale}
           />
         )}
       </div>

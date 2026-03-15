@@ -7,6 +7,7 @@ import { ColorSchemeScript } from "@mantine/core";
 import { MantineProvider } from "@/components/providers/MantineProvider";
 
 import { ReferralCodeClient } from "@/components/ReferralCodeClient";
+import { WhatsAppFloatingButton } from "@/components/WhatsAppFloatingButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -136,6 +137,7 @@ export default function RootLayout({
         <MantineProvider>
           <ReferralCodeClient />
           {children}
+          <WhatsAppFloatingButton />
         </MantineProvider>
       </body>
     </html>

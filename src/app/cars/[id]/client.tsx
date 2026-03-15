@@ -745,6 +745,7 @@ export default function CarDetailPageClient({ car }: { car: CarData }) {
               currency: car.rental_prices?.currency,
               contactEmail: car.contact?.email,
             }}
+            currentLocale={locale}
           />
         )}
       </div>

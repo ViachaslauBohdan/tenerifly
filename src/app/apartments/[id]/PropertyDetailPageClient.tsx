@@ -1005,6 +1005,7 @@ export default function PropertyDetailPage({
               currency: property.price?.currency,
               contactEmail: property.contact?.email,
             }}
+            currentLocale={locale}
           />
         )}
       </div>

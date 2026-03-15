@@ -162,7 +162,7 @@ const CarCard = ({
   }, [filteredCars]);
 
   const router = useRouter();
-  const { createLocaleLink } = useTranslation();
+  const { createLocaleLink, locale } = useTranslation();
 
   const handleViewDetails = (carDocumentId: string) => {
     router.push(createLocaleLink(`/cars/${carDocumentId}`));
@@ -652,6 +652,7 @@ const CarCard = ({
             currency: selectedCar.rental_prices?.currency,
             contactEmail: selectedCar.contact?.email,
           }}
+          currentLocale={locale}
         />
       )}
     </div>
