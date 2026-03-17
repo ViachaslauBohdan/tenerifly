@@ -492,7 +492,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
       {/* Hero Section */}
       <section
-        className="relative h-[70vh] bg-cover bg-center bg-no-repeat"
+        className="relative h-screen min-[381px]:h-[80vh] sm:h-[70vh] bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}
@@ -500,7 +500,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
           {/* Title - moved higher */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg pt-4 sm:pt-0">
               {t.hero.title}
             </h1>
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto drop-shadow-md">
@@ -2031,6 +2031,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 <Link
                   href="https://rentacar.canarias.com/en?affiliateid=VA20022026"
                   className="block text-gray-400 hover:text-white transition-colors"
+                  target="_blank"
+                  rel="nofollow"
                 >
                   Car Rental Services
                 </Link>

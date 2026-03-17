@@ -634,6 +634,8 @@ export default function CarsPageClient({
           <Link
               href="https://rentacar.canarias.com/en?affiliateid=VA20022026"
               className="text-sm text-blue-600 hover:text-blue-600"
+              target="_blank"
+              rel="nofollow"
           >
             Canarias.com
           </Link>
