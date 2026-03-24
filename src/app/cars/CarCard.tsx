@@ -349,13 +349,13 @@ const CarCard = ({
       case "en":
         return "seats";
       case "ru":
-        return "сиденья";
+        return "места";
       case "pl":
         return "miejsca";
       case "fr":
-        return "sièges";
+        return "places";
       case "uk":
-        return "сидіння";
+        return "місця";
       default:
         return "seats";
     }
