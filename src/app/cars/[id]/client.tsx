@@ -282,44 +282,44 @@ export default function CarDetailPageClient({ car }: { car: CarData }) {
               {getTransmissionText(car.specifications.transmission) || t.noData}
             </span>
           </div>
-          <div className="flex justify-between py-2 border-b border-gray-100">
-            <span className="text-gray-600">{t.power}:</span>
-            <span className="font-medium text-gray-900">
-              {car.specifications.power
-                ? `${car.specifications.power} ${t.hp}`
-                : t.noData}
-            </span>
-          </div>
-          <div className="flex justify-between py-2 border-b border-gray-100">
-            <span className="text-gray-600">{t.doors}:</span>
-            <span className="font-medium text-gray-900">
-              {car.specifications.doors || t.noData}
-            </span>
-          </div>
+          {/*<div className="flex justify-between py-2 border-b border-gray-100">*/}
+          {/*  <span className="text-gray-600">{t.power}:</span>*/}
+          {/*  <span className="font-medium text-gray-900">*/}
+          {/*    {car.specifications.power*/}
+          {/*      ? `${car.specifications.power} ${t.hp}`*/}
+          {/*      : t.noData}*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          {/*<div className="flex justify-between py-2 border-b border-gray-100">*/}
+          {/*  <span className="text-gray-600">{t.doors}:</span>*/}
+          {/*  <span className="font-medium text-gray-900">*/}
+          {/*    {car.specifications.doors || t.noData}*/}
+          {/*  </span>*/}
+          {/*</div>*/}
           <div className="flex justify-between py-2 border-b border-gray-100">
             <span className="text-gray-600">{t.seats}:</span>
             <span className="font-medium text-gray-900">
               {car.specifications.seats || t.noData}
             </span>
           </div>
-          <div className="flex justify-between py-2 border-b border-gray-100">
-            <span className="text-gray-600">{t.color}:</span>
-            <span className="font-medium text-gray-900">
-              {car.specifications.color || t.noData}
-            </span>
-          </div>
-          <div className="flex justify-between py-2 border-b border-gray-100">
-            <span className="text-gray-600">{t.bodyType}:</span>
-            <span className="font-medium text-gray-900">
-              {car.specifications.body_type || t.noData}
-            </span>
-          </div>
-          <div className="flex justify-between py-2 border-b border-gray-100">
-            <span className="text-gray-600">{t.driveType}:</span>
-            <span className="font-medium text-gray-900">
-              {car.specifications.drive_type || t.noData}
-            </span>
-          </div>
+          {/*<div className="flex justify-between py-2 border-b border-gray-100">*/}
+          {/*  <span className="text-gray-600">{t.color}:</span>*/}
+          {/*  <span className="font-medium text-gray-900">*/}
+          {/*    {car.specifications.color || t.noData}*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          {/*<div className="flex justify-between py-2 border-b border-gray-100">*/}
+          {/*  <span className="text-gray-600">{t.bodyType}:</span>*/}
+          {/*  <span className="font-medium text-gray-900">*/}
+          {/*    {car.specifications.body_type || t.noData}*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          {/*<div className="flex justify-between py-2 border-b border-gray-100">*/}
+          {/*  <span className="text-gray-600">{t.driveType}:</span>*/}
+          {/*  <span className="font-medium text-gray-900">*/}
+          {/*    {car.specifications.drive_type || t.noData}*/}
+          {/*  </span>*/}
+          {/*</div>*/}
         </div>
       </div>
     );

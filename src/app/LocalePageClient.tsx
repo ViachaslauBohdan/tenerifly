@@ -492,7 +492,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
       {/* Hero Section */}
       <section
-        className="relative h-screen min-[381px]:h-[80vh] sm:h-[70vh] bg-cover bg-center bg-no-repeat"
+        className="relative h-screen min-[360px]:h-[110vh] min-[381px]:h-[80vh] sm:h-[70vh] bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}

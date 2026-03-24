@@ -31,13 +31,13 @@ async function askPaths() {
             type: "input",
             name: "jsonPath",
             message: "Enter path to JSON file:",
-            default: './imports/cars/cars_with_locales.json'
+            default: './imports/cars/Aliscars/cars_with_locales.json'
         },
         {
             type: "input",
             name: "imagesPath",
             message: "Enter path to images folder:",
-            default: './imports/cars/images'
+            default: './imports/cars/Aliscars/images'
         },
     ]);
 }
@@ -59,22 +59,76 @@ async function uploadImageToStrapi(filePath) {
         return [];
     }
 }
-
-function getImagesByCar(directory, car) {
+async function findImageBySlug(slug, directoryPath) {
     try {
+        const files = await fs.promises.readdir(directoryPath);
+        const slugRegex = new RegExp(slug.replaceAll("-", "_"), 'i');
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
+        const foundImage = files.find(file => {
+            const ext = path.extname(file).toLowerCase();
+            return slugRegex.test(file) && imageExtensions.includes(ext);
+        });
+
+        if (foundImage) {
+            const imagePath = path.join(directoryPath, foundImage);
+            return {
+                found: true,
+                filename: foundImage,
+                path: imagePath,
+                fullPath: path.resolve(imagePath)
+            };
+        } else {
+            console.log(`❌ Изображение для "${slug.replaceAll("-", "_")}" не найдено в директории ${directoryPath}`);
+            return {
+                found: false,
+                message: `Изображение для "${slug.replaceAll("-", "_")}" не найдено`
+            };
+        }
+    } catch (error) {
+        console.error(`❌ Ошибка при чтении директории ${directoryPath}:`, error.message);
+        return {
+            found: false,
+            error: error.message
+        };
+    }
+}
+
+async function getImagesByCar(directory, car) {
+    try {
+        const image = await findImageBySlug(car.slug, directory);
+        if (image?.found === true) {
+            return [image.fullPath];
+        }
         let formatedFolder = formatCarImageFolderName(car);
-        if (!fs.existsSync(path.join(directory, formatedFolder)) && car.specifications.transmission === 'automatic') {
-            car.specifications.transmission = 'manual';
-            return getImagesByCar(directory, car);
+        let folderPath = path.join(directory, formatedFolder);
+
+        if (fs.existsSync(folderPath)) {
+            return fs.readdirSync(folderPath)
+                .filter(file => ['.jpg', '.jpeg', '.png', '.webp'].includes(path.extname(file).toLowerCase()))
+                .map(file => path.join(folderPath, file));
         }
-        if (!fs.existsSync(path.join(directory, formatedFolder))) {
-            console.error(`❌ directory not found: ${path.join(directory, formatedFolder)}`);
-            return [];
+        if (car.specifications.transmission === 'automatic') {
+            const manualCar = {
+                ...car,
+                specifications: {
+                    ...car.specifications,
+                    transmission: 'manual'
+                }
+            };
+
+            const manualFolder = formatCarImageFolderName(manualCar);
+            const manualFolderPath = path.join(directory, manualFolder);
+
+            if (fs.existsSync(manualFolderPath)) {
+                console.log(`${CYAN}⚠️ Using manual folder for automatic car: ${manualFolder}${RESET}`);
+                return fs.readdirSync(manualFolderPath)
+                    .filter(file => ['.jpg', '.jpeg', '.png', '.webp'].includes(path.extname(file).toLowerCase()))
+                    .map(file => path.join(manualFolderPath, file));
+            }
         }
-        const folderPath = path.join(directory, formatedFolder);
-        return fs.readdirSync(folderPath)
-            .filter(file => ['.jpg', '.jpeg', '.png', '.webp'].includes(path.extname(file).toLowerCase()))
-            .map(file => path.join(folderPath, file));
+        console.error(`❌ Directory not found: ${folderPath}`);
+        return [];
+
     } catch (error) {
         console.error('❌ Error on read directory:', error.message);
         return [];
@@ -83,20 +137,24 @@ function getImagesByCar(directory, car) {
 
 const formatCarImageFolderName = (car) => {
     if (!car?.specifications) return '';
+
     const {make, model, transmission, year} = car.specifications;
     if (!make || !model || !year) return '';
+
     const processedMake = make === 'Volkswagen' ? 'VW' : make;
     const baseString = `${processedMake}_${model}`.replace(/\s+/g, '_');
+
     if (transmission?.toLowerCase() === 'automatic') {
-        const transmissionFormatted = transmission.charAt(0).toUpperCase() + transmission.slice(1);
-        return `${baseString}_${year}_${transmissionFormatted}`;
+        return `${baseString}_${year}_Automatic`;
     }
+
     return `${baseString}_${year}`;
 };
 
 async function uploadImages(dir, car) {
     const imagesIds = [];
-    const images = getImagesByCar(dir, car);
+    const images = await getImagesByCar(dir, car);
+    console.log(images);
     if (images.length > 0) {
         for (const img of images) {
             const stopUploadSpinner = createSpinner(`Upload images to strapi...`);
@@ -113,9 +171,10 @@ async function uploadImages(dir, car) {
 }
 
 async function createAndPublish(car, imageIds) {
+    const slug_prefix = '';
     const payload = {
         title: car.title,
-        slug: car.slug,
+        slug: slug_prefix + car.slug,
         description: car.description.en,
         type: car.type,
         car_status: "available",
@@ -146,8 +205,7 @@ async function createAndPublish(car, imageIds) {
         },
         contact: {
             name: car.contact.name,
-            phone: car.contact.phone,
-            telegram: "https://t.me/santiagorent24",
+            phone: car.contact.phone
         }
     };
 
@@ -169,7 +227,7 @@ async function createAndPublish(car, imageIds) {
         return draft.data.documentId
     } catch (error) {
         console.error('❌ Create Error:', error.message);
-        return;
+        return process.exit(1);
     }
 }
 
@@ -196,15 +254,16 @@ async function createCarLocaleRequest(data, documentId, locale) {
 async function processImportCars() {
     const {jsonPath, imagesPath} = await askPaths();
     const cars = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-
     for (const car of cars) {
         console.log(`${GREEN} ${car.title} ${RESET}`);
         const imagesIds = await uploadImages(imagesPath, car);
         if (imagesIds.length > 0) {
             const id = await createAndPublish(car, imagesIds.reverse());
             console.log(`${GREEN} DocID: ${id} ${RESET}`);
+            console.log(`${GREEN} --- Successfully published ---  ${RESET}`);
+        }else{
+            console.log(`${RED} !!! images did not uploaded  !!!  ${RESET}`);
         }
-        console.log(`${GREEN} --- Successfully published ---  ${RESET}`);
     }
 }
 

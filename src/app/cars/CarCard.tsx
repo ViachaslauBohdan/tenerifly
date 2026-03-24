@@ -260,6 +260,13 @@ const CarCard = ({
     return "—";
   };
 
+  const getSeats = (car: CarData) => {
+    if (car.specifications && car.specifications.seats) {
+      return car.specifications.seats;
+    }
+    return "—";
+  };
+
   const getPower = (car: CarData) => {
     if (car.specifications && car.specifications.power) {
       return car.specifications.power;
@@ -335,6 +342,22 @@ const CarCard = ({
         return "двері";
       default:
         return "doors";
+    }
+  };
+  const getSeatsText = () => {
+    switch (language) {
+      case "en":
+        return "seats";
+      case "ru":
+        return "места";
+      case "pl":
+        return "miejsca";
+      case "fr":
+        return "places";
+      case "uk":
+        return "місця";
+      default:
+        return "seats";
     }
   };
 
@@ -477,16 +500,16 @@ const CarCard = ({
               <div className="grid grid-cols-2 gap-2 mb-4 text-sm text-gray-600">
                 <div className="flex items-center">
                   <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                      className="w-4 h-4 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                   >
                     <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 18.657A8 8 0 716.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 3h8a1 1 0 011 1v16H3V4a1 1 0 011-1zm10 2l3 3v8a2 2 0 002 2"
                     />
                   </svg>
                   {getFuelType(car)}
@@ -515,81 +538,99 @@ const CarCard = ({
                 </div>
                 <div className="flex items-center">
                   <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                      className="w-4 h-4 mr-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                   >
                     <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 14a4 4 0 100-8 4 4 0 000 8zm-7 7a7 7 0 0114 0H5z"
                     />
                   </svg>
-                  {getDoors(car) === "—"
-                    ? "—"
-                    : `${getDoors(car)} ${getDoorsText()}`}
+                  {getSeats(car) === "—"
+                      ? "—"
+                      : `${getSeats(car)} ${getSeatsText()}`}
                 </div>
-                <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
-                  </svg>
-                  {getPower(car) === "—"
-                    ? "—"
-                    : `${getPower(car)} ${getPowerUnit()}`}
-                </div>
-                <div className="flex items-center col-span-2">
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  {getLocation(car)}
-                </div>
+                {/*<div className="flex items-center">*/}
+                {/*  <svg*/}
+                {/*    className="w-4 h-4 mr-1"*/}
+                {/*    fill="none"*/}
+                {/*    stroke="currentColor"*/}
+                {/*    viewBox="0 0 24 24"*/}
+                {/*  >*/}
+                {/*    <path*/}
+                {/*      strokeLinecap="round"*/}
+                {/*      strokeLinejoin="round"*/}
+                {/*      strokeWidth={2}*/}
+                {/*      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"*/}
+                {/*    />*/}
+                {/*  </svg>*/}
+                {/*  {getDoors(car) === "—"*/}
+                {/*    ? "—"*/}
+                {/*    : `${getDoors(car)} ${getDoorsText()}`}*/}
+                {/*</div>*/}
+                {/*<div className="flex items-center">*/}
+                {/*  <svg*/}
+                {/*    className="w-4 h-4 mr-1"*/}
+                {/*    fill="none"*/}
+                {/*    stroke="currentColor"*/}
+                {/*    viewBox="0 0 24 24"*/}
+                {/*  >*/}
+                {/*    <path*/}
+                {/*      strokeLinecap="round"*/}
+                {/*      strokeLinejoin="round"*/}
+                {/*      strokeWidth={2}*/}
+                {/*      d="M13 10V3L4 14h7v7l9-11h-7z"*/}
+                {/*    />*/}
+                {/*  </svg>*/}
+                {/*  {getPower(car) === "—"*/}
+                {/*    ? "—"*/}
+                {/*    : `${getPower(car)} ${getPowerUnit()}`}*/}
+                {/*</div>*/}
+                {/*<div className="flex items-center col-span-2">*/}
+                {/*  <svg*/}
+                {/*    className="w-4 h-4 mr-1"*/}
+                {/*    fill="none"*/}
+                {/*    stroke="currentColor"*/}
+                {/*    viewBox="0 0 24 24"*/}
+                {/*  >*/}
+                {/*    <path*/}
+                {/*      strokeLinecap="round"*/}
+                {/*      strokeLinejoin="round"*/}
+                {/*      strokeWidth={2}*/}
+                {/*      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"*/}
+                {/*    />*/}
+                {/*    <path*/}
+                {/*      strokeLinecap="round"*/}
+                {/*      strokeLinejoin="round"*/}
+                {/*      strokeWidth={2}*/}
+                {/*      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"*/}
+                {/*    />*/}
+                {/*  </svg>*/}
+                {/*  {getLocation(car)}*/}
+                {/*</div>*/}
               </div>
 
               {/* Features */}
-              <div className="flex flex-wrap gap-1 mb-4">
-                {getFeatures(car)
-                  .slice(0, 3)
-                  .map((feature, index) => (
-                    <span
-                      key={index}
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        feature === "—"
-                          ? "bg-gray-100 text-gray-500"
-                          : "bg-blue-100 text-blue-800"
-                      }`}
-                    >
-                      {feature}
-                    </span>
-                  ))}
-              </div>
+              {/*<div className="flex flex-wrap gap-1 mb-4">*/}
+              {/*  {getFeatures(car)*/}
+              {/*    .slice(0, 3)*/}
+              {/*    .map((feature, index) => (*/}
+              {/*      <span*/}
+              {/*        key={index}*/}
+              {/*        className={`px-2 py-1 rounded-full text-xs ${*/}
+              {/*          feature === "—"*/}
+              {/*            ? "bg-gray-100 text-gray-500"*/}
+              {/*            : "bg-blue-100 text-blue-800"*/}
+              {/*        }`}*/}
+              {/*      >*/}
+              {/*        {feature}*/}
+              {/*      </span>*/}
+              {/*    ))}*/}
+              {/*</div>*/}
 
               {/* Availability and Price */}
               <div className="flex items-center justify-between mb-4">
