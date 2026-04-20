@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -412,6 +412,17 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     switchLocale(langCode);
   };
 
+  const scrollToSection = useCallback(
+    (sectionId: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    },
+    []
+  );
+
   // Показываем загрузку до инициализации
   if (!mounted) {
     return null;
@@ -565,6 +576,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           <div className="flex w-full min-w-0 items-center justify-between gap-2 md:contents">
             <a
               href="#home"
+              onClick={scrollToSection("home")}
               className="min-w-0 max-w-[calc(100%-7.5rem)] truncate text-sm font-semibold tracking-tight text-white drop-shadow-sm transition-opacity hover:opacity-90 min-[400px]:max-w-[calc(100%-8rem)] sm:text-base md:order-1 md:max-w-none md:shrink-0 lg:text-lg"
             >
               Tenerifly.io
@@ -614,27 +626,55 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             aria-label="Page sections"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            <a href="#home" className={headerAnchorClass}>
+            <a
+              href="#home"
+              onClick={scrollToSection("home")}
+              className={headerAnchorClass}
+            >
               {headerNavHome[language]}
             </a>
-            <a href="#accommodation" className={headerAnchorClass}>
+            <a
+              href="#accommodation"
+              onClick={scrollToSection("accommodation")}
+              className={headerAnchorClass}
+            >
               {t.hero.tabs.accommodation}
             </a>
-            <a href="#cars" className={headerAnchorClass}>
+            <a
+              href="#cars"
+              onClick={scrollToSection("cars")}
+              className={headerAnchorClass}
+            >
               {t.hero.tabs.cars}
             </a>
             {transfers.length > 0 && (
-              <a href="#transfers" className={headerAnchorClass}>
+              <a
+                href="#transfers"
+                onClick={scrollToSection("transfers")}
+                className={headerAnchorClass}
+              >
                 {headerNavTransfers[language]}
               </a>
             )}
-            <a href="#excursions" className={headerAnchorClass}>
+            <a
+              href="#excursions"
+              onClick={scrollToSection("excursions")}
+              className={headerAnchorClass}
+            >
               {t.hero.tabs.excursions}
             </a>
-            <a href="#blog" className={headerAnchorClass}>
+            <a
+              href="#blog"
+              onClick={scrollToSection("blog")}
+              className={headerAnchorClass}
+            >
               {t.hero.tabs.blog}
             </a>
-            <a href="#faq" className={headerAnchorClass}>
+            <a
+              href="#faq"
+              onClick={scrollToSection("faq")}
+              className={headerAnchorClass}
+            >
               {headerNavFaq[language]}
             </a>
           </nav>

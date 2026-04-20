@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Глобальные стили для улучшения дизайна сайта */
 [data-selected="true"] {
 /* Основные стили для HTML и body */
