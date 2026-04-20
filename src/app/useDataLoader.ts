@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Transfer } from "@/lib/transfers";
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
 
@@ -148,6 +149,10 @@ const fetchFromStrapi = async (endpoint: string) => {
 
 // Функция для получения URL изображения (по образцу CarCard.tsx)
 const getImageUrl = (item: any): string => {
+  if (typeof item.image === "string") {
+    return item.image;
+  }
+
   if (item.images && item.images.length > 0) {
     // Если URL уже полный (начинается с http), возвращаем как есть
     if (item.images[0].url.startsWith("http")) {
@@ -179,6 +184,7 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
   const [cars, setCars] = useState<any[]>([]);
   const [accommodation, setAccommodation] = useState<any[]>([]);
   const [blogPosts, setBlogPosts] = useState<any[]>([]);
+  const [transfers, setTransfers] = useState<Transfer[]>([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -191,12 +197,19 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
         setHasError(false);
 
         // Параллельная загрузка всех данных
-        const [toursResult, carsResult, propertiesResult, blogsResult] =
+        const [
+          toursResult,
+          carsResult,
+          propertiesResult,
+          blogsResult,
+          transfersResult,
+        ] =
           await Promise.allSettled([
             fetchFromStrapi("/tours/?populate=*&pagination[pageSize]=1000"),
             fetchFromStrapi("/cars/?populate=*&pagination[pageSize]=1000"),
             fetchFromStrapi("/properties/?populate=*&pagination[pageSize]=1000"),
             fetchFromStrapi("/blog-posts/?populate=*&pagination[pageSize]=1000"),
+            fetchFromStrapi("/transfers/?populate=*&pagination[pageSize]=100"),
           ]);
 
         // Обработка туров
@@ -316,6 +329,33 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
           }));
           setBlogPosts(transformedBlogs);
         }
+
+        if (transfersResult.status === "fulfilled") {
+          const transfersData = Array.isArray(transfersResult.value?.data)
+            ? transfersResult.value.data
+            : [];
+          setTransfers(
+            transfersData.map((transfer: any) => ({
+              id: transfer.id,
+              documentId: transfer.documentId,
+              title: transfer.title || "Airport transfer",
+              description:
+                transfer.description || "Private airport transfer in Tenerife",
+              seats: Number(transfer.seats || 0),
+              price_south_airport: Number(transfer.price_south_airport || 50),
+              price_north_airport: Number(transfer.price_north_airport || 100),
+              currency: transfer.currency || "EUR",
+              image:
+                typeof transfer.image === "string" && transfer.image.length > 0
+                  ? transfer.image
+                  : undefined,
+              images: transfer.images,
+              contact: transfer.contact,
+            }))
+          );
+        } else {
+          setTransfers([]);
+        }
       } catch (error) {
         setHasError(true);
       } finally {
@@ -333,6 +373,7 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
     cars,
     accommodation,
     blogPosts,
+    transfers,
     dataLoading,
     hasError,
   };

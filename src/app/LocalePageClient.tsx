@@ -25,10 +25,17 @@ import {
   User,
   ArrowRight,
   ExternalLink,
+  Plane,
 } from "lucide-react";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
+import {
+  formatTransferPrice,
+  getTransferImage,
+  getTransferLocaleText,
+  Transfer,
+} from "@/lib/transfers";
 // Переводы для всех языков
 const translations = translationsJson;
 
@@ -51,6 +58,7 @@ interface LocalePageClientProps {
     cars: any[];
     tours: any[];
     blogs: any[];
+    transfers?: Transfer[];
   };
 }
 
@@ -140,6 +148,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [showAdvancedTours, setShowAdvancedTours] = useState(false);
 
   const t = translations[language];
+  const transferCopy = getTransferLocaleText(language);
   const currentLanguage = languages.find((lang) => lang.code === language);
 
   const getCarImage = (car: any) => {
@@ -176,13 +185,14 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   // Используем initialData если доступно, иначе загружаем через хук
   const dataFromHook = useDataLoader(mounted, language);
-  const { excursions, cars, accommodation, blogPosts, dataLoading } =
+  const { excursions, cars, accommodation, blogPosts, transfers, dataLoading } =
     initialData
       ? {
           excursions: initialData.tours || [],
           cars: initialData.cars || [],
           accommodation: initialData.properties || [],
           blogPosts: initialData.blogs || [],
+          transfers: initialData.transfers || [],
           dataLoading: false,
         }
       : dataFromHook;
@@ -265,7 +275,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   // Функция для открытия модального окна бронирования
   const openBookingModal = (
-    type: "excursion" | "car" | "accommodation",
+    type: "excursion" | "car" | "accommodation" | "transfer",
     item: {
       title: string;
       price?: string;
@@ -1567,8 +1577,122 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         </div>
       </section>
 
+      {/* Секция трансферов */}
+      {transfers.length > 0 && (
+        <section id="transfers" className="py-20 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                {transferCopy.sectionTitle}
+              </h2>
+              <p className="text-xl text-gray-600">
+                {transferCopy.sectionSubtitle}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {transfers.slice(0, 2).map((transfer) => (
+                <div
+                  key={transfer.documentId || transfer.id}
+                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="aspect-video relative overflow-hidden bg-gray-100">
+                    <img
+                      src={getTransferImage(transfer)}
+                      alt={transfer.title}
+                      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                      onClick={() =>
+                        router.push(
+                          createLocaleLink(`/transfers/${transfer.documentId}`)
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900">
+                          {transfer.title}
+                        </h3>
+                        <div className="mt-2 inline-flex items-center gap-2 text-sm text-gray-600">
+                          <Users className="w-4 h-4" />
+                          <span>
+                            {transfer.seats} {transferCopy.seats}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-blue-700">
+                        <Plane className="w-4 h-4" />
+                        <span className="text-sm font-medium">
+                          {transferCopy.from}{" "}
+                          {formatTransferPrice(transfer, "south")}
+                        </span>
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-gray-600 mb-5 line-clamp-2">
+                      {transfer.description}
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                      <div className="rounded-lg border border-gray-200 p-4">
+                        <div className="text-sm text-gray-500 mb-1">
+                          {transferCopy.southAirport}
+                        </div>
+                        <div className="text-lg font-semibold text-gray-900">
+                          {formatTransferPrice(transfer, "south")}
+                        </div>
+                      </div>
+                      <div className="rounded-lg border border-gray-200 p-4">
+                        <div className="text-sm text-gray-500 mb-1">
+                          {transferCopy.northAirport}
+                        </div>
+                        <div className="text-lg font-semibold text-gray-900">
+                          {formatTransferPrice(transfer, "north")}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <button
+                        onClick={() =>
+                          router.push(
+                            createLocaleLink(`/transfers/${transfer.documentId}`)
+                          )
+                        }
+                        className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                      >
+                        {transferCopy.viewDetails}
+                      </button>
+                      <button
+                        onClick={() =>
+                          openBookingModal("transfer", {
+                            title: transfer.title,
+                            price: `${transferCopy.southAirport}: ${formatTransferPrice(
+                              transfer,
+                              "south"
+                            )}, ${transferCopy.northAirport}: ${formatTransferPrice(
+                              transfer,
+                              "north"
+                            )}`,
+                            contact: transfer.contact,
+                          })
+                        }
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        {transferCopy.bookNow}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Секция экскурсий */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
@@ -2011,7 +2135,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </h4>
               <div className="space-y-3">
                 <Link
-                  href={createLocaleLink("/cars")}
+                  href={createLocaleLink("/#transfers")}
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Airport Transfers

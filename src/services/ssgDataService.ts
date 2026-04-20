@@ -1,5 +1,7 @@
 // Сервис для получения данных на сервере для SSG
 
+import { Transfer } from "@/lib/transfers";
+
 const API_URL =
   process.env.NEXT_PUBLIC_STRAPI_API_URL ||
   "https://tenerifly-strapi-production.up.railway.app";
@@ -20,7 +22,7 @@ const getAuthHeaders = () => {
 // Функция для получения URL изображения
 const getImageUrl = (item: {
   images?: Array<{ url: string }>;
-  image?: { url: string };
+  image?: { url: string } | string;
 }): string => {
   if (item.images && item.images.length > 0) {
     if (item.images[0].url.startsWith("http")) {
@@ -29,8 +31,12 @@ const getImageUrl = (item: {
     return `${API_URL}${item.images[0].url}`;
   }
 
+  if (typeof item.image === "string") {
+    return item.image;
+  }
+
   if (item.image?.url) {
-    if (item.image.url.startsWith("http")) {
+    if (item.image.url.startsWith("http") || item.image.url.startsWith("/")) {
       return item.image.url;
     }
     return `${API_URL}${item.image.url}`;
@@ -186,6 +192,20 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
     console.error(`Error fetching ${endpoint}:`, error);
     throw error;
   }
+}
+
+async function fetchTransfersQuiet(endpoint: string) {
+  const response = await fetch(`${API_URL}/api${endpoint}`, {
+    headers: getAuthHeaders(),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Transfers API error (${response.status}) for ${endpoint}`);
+  }
+
+  const data = await response.json();
+  return data.data || data;
 }
 
 // Получение всех апартаментов с оптимизированным SSG
@@ -395,6 +415,17 @@ export async function getAllTours() {
   );
 }
 
+export async function getAllTransfers() {
+  try {
+    const transfers = await fetchTransfersQuiet(
+      "/transfers?populate=*&pagination[pageSize]=100"
+    );
+    return Array.isArray(transfers) ? transfers : [];
+  } catch (error) {
+    return [];
+  }
+}
+
 // Получение блогов
 export async function getAllBlogs() {
   return fetchWithCache(
@@ -444,6 +475,17 @@ export async function getTourById(id: string) {
   return tour;
 }
 
+export async function getTransferById(id: string) {
+  try {
+    const transfer = await fetchTransfersQuiet(`/transfers/${id}?populate=*`);
+    if (transfer) return transfer;
+  } catch (error) {
+    // Ignore and return not found below.
+  }
+
+  throw new Error(`Transfer not found: ${id}`);
+}
+
 // Получение машины по ID через Documents API
 export async function getCarById(id: string) {
   const car = await fetchWithCache(`/cars/${id}?populate=*`, `car-${id}`);
@@ -466,6 +508,18 @@ export async function getAllTourIds() {
   );
 }
 
+export async function getAllTransferIds() {
+  try {
+    const transfers = await fetchTransfersQuiet(
+      "/transfers?fields=id&pagination[pageSize]=1000"
+    );
+    if (Array.isArray(transfers)) return transfers;
+  } catch (error) {
+    // Ignore and return empty list below.
+  }
+  return [];
+}
+
 // Получение всех ID блогов для генерации статических путей
 export async function getAllBlogIds() {
   return fetchWithCache(
@@ -477,12 +531,19 @@ export async function getAllBlogIds() {
 // Получение данных для главной страницы с трансформацией
 export async function getHomePageData(language: string = "en") {
   try {
-    const [toursResult, carsResult, propertiesResult, blogsResult] =
+    const [
+      toursResult,
+      carsResult,
+      propertiesResult,
+      blogsResult,
+      transfersResult,
+    ] =
       await Promise.allSettled([
         getAllTours(),
         getAllCarsAllLocales(), // Получаем все автомобили для главной страницы
         getAllProperties(),
         getAllBlogs(),
+        getAllTransfers(),
       ]);
 
     // Трансформация туров
@@ -673,11 +734,36 @@ export async function getHomePageData(language: string = "en") {
           )
         : [];
 
+    const normalizeTransfer = (transfer: Transfer) => ({
+      id: transfer.id,
+      documentId: transfer.documentId,
+      title: transfer.title || "Airport transfer",
+      description:
+        transfer.description || "Private airport transfer in Tenerife",
+      seats: Number(transfer.seats || 0),
+      price_south_airport: Number(transfer.price_south_airport || 50),
+      price_north_airport: Number(transfer.price_north_airport || 100),
+      currency: transfer.currency || "EUR",
+      image:
+        typeof transfer.image === "string" && transfer.image.length > 0
+          ? transfer.image
+          : undefined,
+      images: transfer.images,
+      contact: transfer.contact,
+    });
+
+    const transfers =
+      transfersResult.status === "fulfilled" &&
+      Array.isArray(transfersResult.value)
+        ? transfersResult.value.map(normalizeTransfer)
+        : [];
+
     return {
       properties,
       cars,
       tours,
       blogs,
+      transfers,
     };
   } catch (error) {
     console.error("Error loading home page data:", error);
@@ -686,6 +772,7 @@ export async function getHomePageData(language: string = "en") {
       cars: [],
       tours: [],
       blogs: [],
+      transfers: [],
     };
   }
 }
