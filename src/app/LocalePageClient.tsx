@@ -15,7 +15,6 @@ import {
   Eye,
   BookOpen,
   Search,
-  Mail,
   AlertCircle,
   Wifi,
   WifiOff,
@@ -2439,18 +2438,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </h4>
               <div className="space-y-3">
                 <a
-                  href="tel:+34656641433"
+                  href="tel:+34613211069"
                   className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                 >
                   <Phone className="w-4 h-4" />
-                  +34656641433
-                </a>
-                <a
-                  href="mailto:info@tenerifly.io"
-                  className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
-                >
-                  <Mail className="w-4 h-4" />
-                  info@tenerifly.io
+                  +34613211069
                 </a>
               </div>
             </div>
