@@ -24,6 +24,7 @@ import {
   ArrowRight,
   ExternalLink,
   Plane,
+  Languages,
 } from "lucide-react";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
@@ -211,7 +212,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const advancedToggleClass =
     "inline-flex h-9 items-center gap-2 rounded-xl border border-blue-100 bg-blue-50/70 px-3.5 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100";
   const headerAnchorClass =
-    "text-xs font-medium text-white/90 hover:text-white whitespace-nowrap rounded-lg px-1.5 py-1.5 transition-colors hover:bg-white/10 sm:px-2.5 sm:text-sm";
+    "touch-manipulation text-[10px] font-medium leading-tight text-white/90 hover:text-white whitespace-nowrap rounded-md px-1 py-1 transition-colors hover:bg-white/10 min-[400px]:text-[11px] min-[400px]:px-1.5 sm:rounded-lg sm:px-2.5 sm:text-sm sm:leading-normal md:py-1.5";
   const getMobileTabLabel = (key: string, fallback: string) => {
     const labels: Record<LanguageCode, Record<string, string>> = {
       en: {
@@ -559,17 +560,57 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   return (
     <main>
-      <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 backdrop-blur-md">
-        <div className="mx-auto flex w-full min-w-0 max-w-7xl items-center gap-1.5 px-2 py-2.5 sm:gap-2 sm:px-3 sm:py-3 md:gap-3 md:px-4">
-          <a
-            href="#home"
-            className="shrink-0 font-semibold tracking-tight text-white drop-shadow-sm transition-opacity hover:opacity-90 sm:text-lg"
-          >
-            Tenerifly.io
-          </a>
+      <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 backdrop-blur-md pt-[env(safe-area-inset-top,0px)]">
+        <div className="mx-auto flex w-full min-w-0 max-w-7xl flex-col gap-1.5 px-2 pb-2 pt-1.5 min-[400px]:gap-2 min-[400px]:px-2.5 min-[400px]:pb-2.5 sm:px-3 md:flex-row md:items-center md:gap-2 md:py-2 md:pb-2 lg:gap-3 lg:px-4">
+          <div className="flex w-full min-w-0 items-center justify-between gap-2 md:contents">
+            <a
+              href="#home"
+              className="min-w-0 max-w-[calc(100%-7.5rem)] truncate text-sm font-semibold tracking-tight text-white drop-shadow-sm transition-opacity hover:opacity-90 min-[400px]:max-w-[calc(100%-8rem)] sm:text-base md:order-1 md:max-w-none md:shrink-0 lg:text-lg"
+            >
+              Tenerifly.io
+            </a>
+
+            <div
+              className="relative shrink-0 [color-scheme:dark] md:order-3"
+              title={languages.find((l) => l.code === language)?.name}
+            >
+              <div className="flex h-7 items-stretch overflow-hidden rounded-full border border-white/20 bg-black/25 shadow-sm backdrop-blur-md min-[400px]:h-8 sm:h-9">
+                <span
+                  className="flex items-center border-r border-white/10 bg-white/[0.06] px-1.5 text-white/70 min-[400px]:px-2"
+                  aria-hidden
+                >
+                  <Languages className="h-3 w-3 min-[400px]:h-3.5 min-[400px]:w-3.5 sm:h-4 sm:w-4" />
+                </span>
+                <div className="relative min-w-[2.85rem] min-[400px]:min-w-[3.15rem]">
+                  <select
+                    value={language}
+                    onChange={(e) =>
+                      handleLanguageChange(e.target.value as LanguageCode)
+                    }
+                    aria-label={t.selectLanguage}
+                    className="h-full w-full min-w-[2.85rem] cursor-pointer appearance-none bg-transparent py-0 pl-1.5 pr-6 text-[10px] font-semibold uppercase tracking-wide text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/25 min-[400px]:min-w-[3.15rem] min-[400px]:pl-2 min-[400px]:pr-7 min-[400px]:text-[11px] sm:min-w-[3.35rem] sm:pl-2.5 sm:pr-8 sm:text-sm"
+                  >
+                    {languages.map((lang) => (
+                      <option
+                        key={lang.code}
+                        value={lang.code}
+                        className="bg-slate-900 text-white"
+                      >
+                        {`${lang.flag} ${lang.code.toUpperCase()}`}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    aria-hidden
+                    className="pointer-events-none absolute right-0.5 top-1/2 h-3 w-3 -translate-y-1/2 text-white/45 min-[400px]:right-1 min-[400px]:h-3.5 min-[400px]:w-3.5 sm:right-1.5 sm:h-4 sm:w-4"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
 
           <nav
-            className="flex min-w-0 flex-1 items-center justify-center gap-0.5 overflow-x-auto overscroll-x-contain sm:gap-1 md:justify-start [&::-webkit-scrollbar]:hidden"
+            className="-mx-2 flex min-h-[2.25rem] min-w-0 w-full touch-pan-x flex-nowrap items-center gap-0 overflow-x-auto overscroll-x-contain px-2 [-ms-overflow-style:none] [scrollbar-width:none] min-[400px]:min-h-[2.5rem] min-[400px]:gap-px sm:mx-0 sm:gap-0.5 sm:px-0 md:order-2 md:min-h-0 md:flex-1 md:justify-start md:overflow-x-auto md:overflow-y-visible [&::-webkit-scrollbar]:hidden"
             aria-label="Page sections"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
@@ -597,36 +638,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               {headerNavFaq[language]}
             </a>
           </nav>
-
-          <div
-            className="flex min-w-0 max-w-[42%] shrink-0 items-center justify-end sm:max-w-none"
-            role="group"
-            aria-label={t.selectLanguage}
-          >
-            <div className="flex max-w-full items-center gap-px overflow-x-auto overscroll-x-contain rounded-md bg-white/5 p-0.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-px sm:p-0.5 [&::-webkit-scrollbar]:hidden">
-              {languages.map((lang) => {
-                const active = language === lang.code;
-                return (
-                  <button
-                    key={lang.code}
-                    type="button"
-                    onClick={() =>
-                      handleLanguageChange(lang.code as LanguageCode)
-                    }
-                    className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide transition-colors sm:px-2 sm:text-xs ${
-                      active
-                        ? "bg-white/25 text-white shadow-sm"
-                        : "text-white/55 hover:bg-white/10 hover:text-white"
-                    }`}
-                    aria-current={active ? "true" : undefined}
-                    title={lang.name}
-                  >
-                    {lang.code.toUpperCase()}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
       </header>
 
@@ -638,7 +649,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}
       >
-        <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 pb-6 pt-16 sm:pb-8 sm:pt-20">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-3 pb-6 pt-[6.75rem] min-[400px]:px-4 sm:pb-8 md:pt-20">
           {/* Title - moved higher */}
           <div className="text-center mb-5 sm:mb-8">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg pt-2 sm:pt-0">
@@ -1490,7 +1501,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       {/* Секция недвижимости */}
       <section
         id="accommodation"
-        className="scroll-mt-14 py-20 sm:scroll-mt-16 bg-gray-50"
+        className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-gray-50"
       >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
@@ -1633,7 +1644,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       {/* Секция автомобилей */}
       <section
         id="cars"
-        className="scroll-mt-14 pt-20 sm:scroll-mt-16 bg-white"
+        className="scroll-mt-[6.5rem] pt-20 md:scroll-mt-16 bg-white"
       >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
@@ -1788,7 +1799,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       {transfers.length > 0 && (
         <section
           id="transfers"
-          className="scroll-mt-14 py-20 sm:scroll-mt-16 bg-gray-50"
+          className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-gray-50"
         >
           <div className="max-w-7xl mx-auto px-4">
             <div className="text-center mb-16">
@@ -1904,7 +1915,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       {/* Секция экскурсий */}
       <section
         id="excursions"
-        className="scroll-mt-14 py-20 sm:scroll-mt-16 bg-white"
+        className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-white"
       >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
@@ -2134,7 +2145,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       {/* Секция блогов */}
       <section
         id="blog"
-        className="scroll-mt-14 py-20 sm:scroll-mt-16 bg-white"
+        className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-white"
       >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
@@ -2298,7 +2309,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       {/* FAQ секция */}
       <section
         id="faq"
-        className="scroll-mt-14 py-20 sm:scroll-mt-16 bg-white"
+        className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-white"
       >
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-16">
