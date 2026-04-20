@@ -134,8 +134,7 @@ const tourFilterKeys = Object.keys(defaultTourFilters) as Array<
 >;
 
 const normalizeTourFilters = (
-  rawFilters: Record<string, any>,
-  currentLocale?: string
+  rawFilters: Record<string, any>
 ): TourFilterParams => {
   const normalizedFilters = { ...defaultTourFilters };
 
@@ -150,11 +149,7 @@ const normalizeTourFilters = (
       ? normalizedFilters.language
       : "";
   const loweredLanguageValue = languageValue.toLowerCase();
-  const isLowercaseLocaleCode = languageValue === loweredLanguageValue;
-  const isLocaleParam =
-    isLowercaseLocaleCode &&
-    loweredLanguageValue === (currentLocale || "").toLowerCase() &&
-    loweredLanguageValue in tourLanguageMap;
+  const isLocaleParam = languageValue === loweredLanguageValue && loweredLanguageValue in tourLanguageMap;
   const normalizedLanguage = isLocaleParam
     ? ""
     : tourLanguageMap[loweredLanguageValue] || languageValue.toUpperCase();
@@ -200,16 +195,11 @@ export default function ToursPageClient({
   >(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
-  // Синхронизируем язык с URL
-  useEffect(() => {
-    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
-  }, [locale]);
-
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<TourFilterParams>(() => {
     if (searchParams) {
       const urlFilters = parseUrlParams(searchParams);
-      return normalizeTourFilters(urlFilters, locale);
+      return normalizeTourFilters(urlFilters);
     }
     return defaultTourFilters;
   });
@@ -238,8 +228,7 @@ export default function ToursPageClient({
     filters,
     onFiltersChange: (newFilters) => {
       const normalizedFilters = normalizeTourFilters(
-        newFilters as Record<string, any>,
-        locale
+        newFilters as Record<string, any>
       );
       setFilters((currentFilters) =>
         areTourFiltersEqual(currentFilters, normalizedFilters)
@@ -310,6 +299,12 @@ export default function ToursPageClient({
   // Синхронизируем язык с URL
   useEffect(() => {
     setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+    setFilters((currentFilters) => {
+      const normalizedFilters = normalizeTourFilters(currentFilters);
+      return areTourFiltersEqual(currentFilters, normalizedFilters)
+        ? currentFilters
+        : normalizedFilters;
+    });
   }, [locale]);
 
   // Синхронизация текущей страницы с URL при изменении searchParams

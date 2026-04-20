@@ -160,15 +160,14 @@ export default function ToursFilter({
       // Apply only filters that are backed by the current Strapi tour schema.
       if (!hasSupportedApiFilters(filters)) {
         console.log("No active filters");
-        setIsLoading(true);
 
         if (initialTours && Array.isArray(initialTours)) {
           console.log("Using provided initialTours for update, count:", initialTours.length);
           onToursUpdate(initialTours);
-          setIsLoading(false);
           return;
         }
 
+        setIsLoading(true);
         try {
           const apiUrl =
             process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
