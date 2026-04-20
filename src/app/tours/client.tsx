@@ -150,7 +150,9 @@ const normalizeTourFilters = (
       ? normalizedFilters.language
       : "";
   const loweredLanguageValue = languageValue.toLowerCase();
+  const isLowercaseLocaleCode = languageValue === loweredLanguageValue;
   const isLocaleParam =
+    isLowercaseLocaleCode &&
     loweredLanguageValue === (currentLocale || "").toLowerCase() &&
     loweredLanguageValue in tourLanguageMap;
   const normalizedLanguage = isLocaleParam
