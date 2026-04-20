@@ -683,12 +683,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative h-screen min-[360px]:h-[105vh] min-[381px]:h-[82vh] sm:h-[70vh] bg-cover bg-center bg-no-repeat"
+        className="relative flex min-h-dvh flex-col bg-cover bg-center bg-no-repeat sm:min-h-[70vh]"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}
       >
-        <div className="relative z-10 flex h-full flex-col items-center justify-center px-3 pb-6 pt-[6.75rem] min-[400px]:px-4 sm:pb-8 md:pt-20">
+        <div className="relative z-10 flex w-full flex-1 flex-col items-center justify-center px-3 pt-[6.75rem] min-[400px]:px-4 md:pt-20 pb-[max(2rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
           {/* Title - moved higher */}
           <div className="text-center mb-5 sm:mb-8">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg pt-2 sm:pt-0">
