@@ -502,15 +502,15 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
       {/* Hero Section */}
       <section
-        className="relative h-screen min-[360px]:h-[110vh] min-[381px]:h-[80vh] sm:h-[70vh] bg-cover bg-center bg-no-repeat"
+        className="relative h-screen min-[360px]:h-[105vh] min-[381px]:h-[82vh] sm:h-[70vh] bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}
       >
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
           {/* Title - moved higher */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg pt-4 sm:pt-0">
+          <div className="text-center mb-5 sm:mb-8">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg pt-2 sm:pt-0">
               {t.hero.title}
             </h1>
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto drop-shadow-md">
@@ -519,10 +519,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           </div>
 
           {/* Search Card - centered */}
-          <div className="w-full max-w-5xl xl:max-w-6xl bg-white/95 backdrop-blur-xl rounded-3xl border border-white/60 shadow-[0_24px_80px_rgba(15,23,42,0.28)] overflow-hidden">
+          <div className="w-full max-w-5xl xl:max-w-6xl bg-white/95 backdrop-blur-xl rounded-[2rem] border border-white/60 shadow-[0_24px_80px_rgba(15,23,42,0.28)] overflow-hidden">
             {/* Tabs - изменен порядок, accommodation теперь первый */}
-            <div className="border-b border-gray-200/80 bg-gray-50/60 px-2 pt-2 sm:px-3 sm:pt-3">
-              <nav className="flex gap-2 overflow-x-auto md:overflow-visible">
+            <div className="border-b border-gray-200/80 bg-gray-50/60 px-1.5 pt-1.5 sm:px-3 sm:pt-3">
+              <nav className="flex gap-1.5 sm:gap-2 overflow-x-auto md:overflow-visible">
                 {[
                   {
                     key: "accommodation",
@@ -540,7 +540,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   <button
                     key={key}
                     onClick={() => setActiveTab(key)}
-                    className={`min-w-[128px] md:min-w-0 flex-1 flex items-center justify-center gap-2 rounded-t-xl px-3 py-3 sm:px-4 sm:py-3.5 lg:px-5 lg:py-4 text-sm md:text-base font-semibold transition-all duration-200 ${
+                    className={`min-w-[114px] md:min-w-0 flex-1 flex items-center justify-center gap-1.5 sm:gap-2 rounded-t-xl px-2.5 py-2.5 sm:px-4 sm:py-3.5 lg:px-5 lg:py-4 text-sm md:text-base font-semibold transition-all duration-200 ${
                       activeTab === key
                         ? "text-blue-700 bg-white border border-gray-200 border-b-white shadow-sm"
                         : "text-gray-600 hover:text-gray-800 hover:bg-white/70 border border-transparent"
@@ -554,7 +554,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             </div>
 
             {/* Form Content */}
-            <div className="bg-white p-4 sm:p-6 lg:p-8 pb-8 lg:pb-10">
+            <div className="bg-white px-4 pt-3 pb-5 sm:p-6 sm:pb-7 lg:p-8 lg:pb-9">
               {/* Accommodation Tab */}
               {activeTab === "accommodation" && (
                 <div className="space-y-4 lg:space-y-5">
@@ -1279,7 +1279,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               {activeTab !== "blog" && (
                 <button
                   onClick={handleSearch}
-                  className="mt-5 mb-3 w-full md:w-auto md:min-w-[260px] mx-auto bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-base shadow-lg hover:shadow-xl"
+                  className="mt-4 mb-0 w-full md:w-auto md:min-w-[260px] mx-auto bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-base shadow-lg hover:shadow-xl"
                 >
                   <Search className="w-5 h-5" />
                   {t.hero.search}
