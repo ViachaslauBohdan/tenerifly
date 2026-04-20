@@ -220,6 +220,8 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
           const transformedTours = toursResult.value.data.map((tour: any) => ({
             id: tour.id,
             documentId: tour.documentId,
+            slug: tour.slug,
+            isPopular: tour.isPopular === true,
             title: tour.name || tour.title || "Tour",
             description:
               tour.description || "Discover amazing places in Tenerife",

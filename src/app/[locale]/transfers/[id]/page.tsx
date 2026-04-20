@@ -7,6 +7,11 @@ import {
 import TransferDetailPageClient from "../../../transfers/[id]/client";
 import { getTransferImage } from "@/lib/transfers";
 import { LOCALES, type Locale } from "@/types/locale";
+import {
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  ogLocale,
+} from "@/lib/seo";
 
 export const revalidate = 86400;
 
@@ -44,33 +49,15 @@ export async function generateMetadata({
       openGraph: {
         title,
         description,
-        url: `https://tenerifly.io/${locale}/transfers/${id}`,
+        url: absoluteUrlForLocale(locale, `/transfers/${id}`),
         siteName: "Tenerifly.io",
         images: [{ url: imageUrl, width: 1200, height: 630, alt: title }],
-        locale:
-          locale === "en"
-            ? "en_US"
-            : locale === "ru"
-              ? "ru_RU"
-              : locale === "pl"
-                ? "pl_PL"
-                : locale === "fr"
-                  ? "fr_FR"
-                  : locale === "uk"
-                    ? "uk_UA"
-                    : locale === "de"
-                      ? "de_DE"
-                      : "es_ES",
+        locale: ogLocale(locale),
         type: "website",
       },
       alternates: {
-        canonical: `https://tenerifly.io/${locale}/transfers/${id}`,
-        languages: Object.fromEntries(
-          LOCALES.map((loc) => [
-            loc.code,
-            `https://tenerifly.io/${loc.code}/transfers/${id}`,
-          ])
-        ),
+        canonical: absoluteUrlForLocale(locale, `/transfers/${id}`),
+        languages: hreflangAlternates(`/transfers/${id}`),
       },
     };
   } catch (error) {

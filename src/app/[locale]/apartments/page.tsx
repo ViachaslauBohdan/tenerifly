@@ -3,6 +3,13 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import ApartmentsPageClient from "../../apartments/client";
 import { LOCALES, type Locale } from "@/types/locale";
+import {
+  DEFAULT_OG_IMAGE,
+  SEO_APARTMENTS,
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  ogLocale,
+} from "@/lib/seo";
 
 // ISR настройки - обновление каждые 6 часов
 export const revalidate = 21600;
@@ -20,41 +27,31 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const seo = SEO_APARTMENTS[locale];
 
   return {
-    title: "Accommodation in Tenerife | Tenerifly.io",
-    description:
-      "Find your perfect accommodation in Tenerife. Browse apartments, villas, and houses for rent or sale. Book directly with local providers.",
-    keywords: [
-      "Tenerife accommodation",
-      "Tenerife apartments",
-      "Tenerife villas",
-      "Tenerife rental",
-      "Tenerife property",
-      "Canary Islands accommodation",
-    ],
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
     openGraph: {
-      title: "Accommodation in Tenerife | Tenerifly.io",
-      description:
-        "Find your perfect accommodation in Tenerife. Browse apartments, villas, and houses for rent or sale.",
-      url: `https://tenerifly.io/${locale}/apartments`,
+      title: seo.title,
+      description: seo.description,
+      url: absoluteUrlForLocale(locale, "/apartments"),
       siteName: "Tenerifly.io",
       images: [
         {
-          url: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: "Tenerife Accommodation",
         },
       ],
-      locale: locale === "en" ? "en_US" : locale === "ru" ? "ru_RU" : locale === "pl" ? "pl_PL" : locale === "fr" ? "fr_FR" : locale === "uk" ? "uk_UA" : locale === "de" ? "de_DE" : "es_ES",
+      locale: ogLocale(locale),
       type: "website",
     },
     alternates: {
-      canonical: `https://tenerifly.io/${locale}/apartments`,
-      languages: Object.fromEntries(
-        LOCALES.map((loc) => [`${loc.code}`, `https://tenerifly.io/${loc.code}/apartments`])
-      ),
+      canonical: absoluteUrlForLocale(locale, "/apartments"),
+      languages: hreflangAlternates("/apartments"),
     },
   };
 }
@@ -89,4 +86,3 @@ export default async function ApartmentsPage({
     );
   }
 }
-

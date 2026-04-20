@@ -3,6 +3,13 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import CarsPageClient from "../../cars/client";
 import { LOCALES, type Locale } from "@/types/locale";
+import {
+  DEFAULT_OG_IMAGE,
+  SEO_CARS,
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  ogLocale,
+} from "@/lib/seo";
 
 // ISR настройки - обновление каждые 6 часов
 export const revalidate = 21600;
@@ -20,47 +27,37 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const seo = SEO_CARS[locale];
 
   return {
-    title: "Car Rental in Tenerife | Tenerifly.io",
-    description:
-      "Rent a car in Tenerife. Browse our selection of cars for rent or sale. From economy to luxury vehicles, find your perfect car for exploring the Canary Islands.",
-    keywords: [
-      "Tenerife car rental",
-      "Tenerife car hire",
-      "Canary Islands car rental",
-      "Tenerife airport car rental",
-      "Tenerife car sales",
-      "Tenerife vehicle rental",
-    ],
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
     openGraph: {
-      title: "Car Rental in Tenerife | Tenerifly.io",
-      description:
-        "Rent a car in Tenerife. Browse our selection of cars for rent or sale. From economy to luxury vehicles.",
-      url: `https://tenerifly.io/${locale}/cars`,
+      title: seo.title,
+      description: seo.description,
+      url: absoluteUrlForLocale(locale, "/cars"),
       siteName: "Tenerifly.io",
       images: [
         {
-          url: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: "Tenerife Car Rental",
         },
       ],
-      locale: locale === "en" ? "en_US" : locale === "ru" ? "ru_RU" : locale === "pl" ? "pl_PL" : locale === "fr" ? "fr_FR" : locale === "uk" ? "uk_UA" : locale === "de" ? "de_DE" : "es_ES",
+      locale: ogLocale(locale),
       type: "website",
     },
     alternates: {
-      canonical: `https://tenerifly.io/${locale}/cars`,
-      languages: Object.fromEntries(
-        LOCALES.map((loc) => [`${loc.code}`, `https://tenerifly.io/${loc.code}/cars`])
-      ),
+      canonical: absoluteUrlForLocale(locale, "/cars"),
+      languages: hreflangAlternates("/cars"),
     },
   };
 }
 
 export default async function CarsPage({
-  params,
+  params: _params,
 }: {
   params: Promise<{ locale: Locale }>;
 }) {
@@ -75,4 +72,3 @@ export default async function CarsPage({
     </Suspense>
   );
 }
-

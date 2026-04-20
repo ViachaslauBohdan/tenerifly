@@ -6,6 +6,11 @@ import {
 } from "@/services/ssgDataService";
 import TransferDetailPageClient from "./client";
 import { getTransferImage } from "@/lib/transfers";
+import {
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  ogLocale,
+} from "@/lib/seo";
 
 export const revalidate = 86400;
 
@@ -40,14 +45,15 @@ export async function generateMetadata({
       openGraph: {
         title,
         description,
-        url: `https://tenerifly.io/transfers/${id}`,
+        url: absoluteUrlForLocale("en", `/transfers/${id}`),
         siteName: "Tenerifly.io",
         images: [{ url: imageUrl, width: 1200, height: 630, alt: title }],
-        locale: "en_US",
+        locale: ogLocale("en"),
         type: "website",
       },
       alternates: {
-        canonical: `https://tenerifly.io/transfers/${id}`,
+        canonical: absoluteUrlForLocale("en", `/transfers/${id}`),
+        languages: hreflangAlternates(`/transfers/${id}`),
       },
     };
   } catch (error) {

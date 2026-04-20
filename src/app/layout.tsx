@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../styles/globals.css";
 import "@mantine/core/styles.css";
@@ -8,6 +9,13 @@ import { MantineProvider } from "@/components/providers/MantineProvider";
 
 import { ReferralCodeClient } from "@/components/ReferralCodeClient";
 import { WhatsAppFloatingButton } from "@/components/WhatsAppFloatingButton";
+import {
+  DEFAULT_OG_IMAGE,
+  SEO_HOME,
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  organizationAndWebsiteJsonLd,
+} from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,25 +31,14 @@ const geistMono = Geist_Mono({
 export const revalidate = 86400; // Обновление каждые 24 часа для основного layout
 
 export async function generateMetadata(): Promise<Metadata> {
+  const seo = SEO_HOME.en;
   return {
     title: {
       default: "Tenerifly.io - Accommodation, Tours and Car Rental in Tenerife",
       template: "%s | Tenerifly.io",
     },
-    description:
-      "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
-    keywords: [
-      "Tenerife accommodation",
-      "Tenerife tours",
-      "Tenerife car rental",
-      "Tenerife vacation",
-      "Tenerife holiday",
-      "Tenerife apartments",
-      "Tenerife villas",
-      "Tenerife activities",
-      "Tenerife sightseeing",
-      "Tenerife travel",
-    ],
+    description: seo.description,
+    keywords: seo.keywords,
     authors: [{ name: "Tenerifly.io" }],
     creator: "Tenerifly.io",
     publisher: "Tenerifly.io",
@@ -52,13 +49,12 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       title: "Tenerifly.io - Your Guide to Tenerife",
-      description:
-        "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
-      url: "https://tenerifly.io",
+      description: seo.description,
+      url: absoluteUrlForLocale("en", ""),
       siteName: "Tenerifly.io",
       images: [
         {
-          url: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: "Tenerifly.io - Your Guide to Tenerife",
@@ -70,26 +66,15 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "Tenerifly.io - Your Guide to Tenerife",
-      description:
-        "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
-      images: [
-        "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
-      ],
+      description: seo.description,
+      images: [DEFAULT_OG_IMAGE],
       creator: "@tenerifly",
       site: "@tenerifly",
     },
     metadataBase: new URL("https://tenerifly.io"),
     alternates: {
-      canonical: "https://tenerifly.io",
-      languages: {
-        en: "https://tenerifly.io/en",
-        pl: "https://tenerifly.io/pl",
-        fr: "https://tenerifly.io/fr",
-        ru: "https://tenerifly.io/ru",
-        uk: "https://tenerifly.io/uk",
-        de: "https://tenerifly.io/de",
-        es: "https://tenerifly.io/es",
-      },
+      canonical: absoluteUrlForLocale("en", ""),
+      languages: hreflangAlternates(""),
     },
     robots: {
       index: true,
@@ -105,14 +90,23 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const htmlLang = headersList.get("x-locale") ?? "en";
+
   return (
-    <html suppressHydrationWarning>
+    <html lang={htmlLang} suppressHydrationWarning>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationAndWebsiteJsonLd()),
+          }}
+        />
         <ColorSchemeScript defaultColorScheme="light" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -124,11 +118,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
           rel="stylesheet"
         />
-        <link
-          rel="preload"
-          href="https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg"
-          as="image"
-        />
+        <link rel="preload" href={DEFAULT_OG_IMAGE} as="image" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable}`}

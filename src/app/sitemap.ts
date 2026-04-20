@@ -4,100 +4,103 @@ import {
   getAllCarIds,
   getAllTourIds,
   getAllBlogIds,
+  getAllTransferIds,
 } from "@/services/ssgDataService";
+import { LOCALES } from "@/types/locale";
+import { absoluteUrlForLocale } from "@/lib/seo";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://tenerifly.io";
-
-  // Получаем все ID для динамических страниц
-  const [propertyIds, carIds, tourIds, blogIds] = await Promise.all([
+  const [
+    propertyIds,
+    carIds,
+    tourIds,
+    blogIds,
+    transferIds,
+  ] = await Promise.all([
     getAllPropertyIds().catch(() => []),
     getAllCarIds().catch(() => []),
     getAllTourIds().catch(() => []),
     getAllBlogIds().catch(() => []),
+    getAllTransferIds().catch(() => []),
   ]);
 
-  // Основные страницы для всех языков
-  const mainPages = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/apartments`,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/tours`,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/cars`,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
-    },
-  ];
+  const now = new Date();
 
-  // Языковые версии основных страниц
-  const languages = ["en", "ru", "pl", "fr", "uk", "de", "es"];
-  const languagePages = languages.map((lang) => ({
-    url: `${baseUrl}/${lang}`,
-    lastModified: new Date(),
-    changeFrequency: "daily" as const,
-    priority: 0.8,
-  }));
+  const staticPaths = ["", "/apartments", "/tours", "/cars", "/blog"];
 
-  // Динамические страницы апартаментов
-  const propertyPages = propertyIds.map((property: { documentId: string }) => ({
-    url: `${baseUrl}/apartments/${property.documentId}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
+  const staticPages: MetadataRoute.Sitemap = LOCALES.flatMap((locale) =>
+    staticPaths.map((path) => ({
+      url: absoluteUrlForLocale(locale.code, path),
+      lastModified: now,
+      changeFrequency:
+        path === "" || path === "/apartments" || path === "/tours" || path === "/cars"
+          ? ("daily" as const)
+          : ("weekly" as const),
+      priority:
+        path === ""
+          ? 1
+          : path === "/blog"
+            ? 0.75
+            : 0.9,
+    }))
+  );
 
-  // Динамические страницы автомобилей
-  // const carPages = carIds.map((car: { id: string | number }) => ({
-  //   url: `${baseUrl}/cars/${car.id}`,
-  //   lastModified: new Date(),
-  //   changeFrequency: "weekly" as const,
-  //   priority: 0.7,
-  // }));
+  const propertyPages: MetadataRoute.Sitemap = propertyIds.flatMap(
+    (property: { documentId: string }) =>
+      LOCALES.map((locale) => ({
+        url: absoluteUrlForLocale(locale.code, `/apartments/${property.documentId}`),
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      }))
+  );
 
-  // // Динамические страницы экскурсий
-  // const tourPages = tourIds.map((tour: { id: string | number }) => ({
-  //   url: `${baseUrl}/tours/${tour.id}`,
-  //   lastModified: new Date(),
-  //   changeFrequency: "weekly" as const,
-  //   priority: 0.7,
-  // }));
+  const carPages: MetadataRoute.Sitemap = carIds.flatMap(
+    (car: { documentId: string }) =>
+      LOCALES.map((locale) => ({
+        url: absoluteUrlForLocale(locale.code, `/cars/${car.documentId}`),
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      }))
+  );
 
-  // Динамические страницы блогов
-  // const blogPages = blogIds.map((blog: { id: string | number }) => ({
-  //   url: `${baseUrl}/blog/${blog.id}`,
-  //   lastModified: new Date(),
-  //   changeFrequency: "monthly" as const,
-  //   priority: 0.6,
-  // }));
+  const tourPages: MetadataRoute.Sitemap = tourIds.flatMap(
+    (tour: { documentId: string }) =>
+      LOCALES.map((locale) => ({
+        url: absoluteUrlForLocale(locale.code, `/tours/${tour.documentId}`),
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      }))
+  );
+
+  const blogPages: MetadataRoute.Sitemap = blogIds.flatMap(
+    (blog: { documentId: string }) =>
+      LOCALES.map((locale) => ({
+        url: absoluteUrlForLocale(locale.code, `/blog/${blog.documentId}`),
+        lastModified: now,
+        changeFrequency: "monthly" as const,
+        priority: 0.65,
+      }))
+  );
+
+  const transferPages: MetadataRoute.Sitemap = transferIds.flatMap(
+    (transfer: { documentId: string }) =>
+      LOCALES.map((locale) => ({
+        url: absoluteUrlForLocale(locale.code, `/transfers/${transfer.documentId}`),
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.68,
+      }))
+  );
 
   return [
-    ...mainPages,
-    ...languagePages,
+    ...staticPages,
     ...propertyPages,
-    // ...carPages,
-    // ...tourPages,
-    // ...blogPages,
+    ...carPages,
+    ...tourPages,
+    ...blogPages,
+    ...transferPages,
   ];
 }

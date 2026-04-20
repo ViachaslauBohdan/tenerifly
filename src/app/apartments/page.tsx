@@ -2,52 +2,44 @@ import { getAllProperties } from "@/services/ssgDataService";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import ApartmentsPageClient from "./client";
+import {
+  DEFAULT_OG_IMAGE,
+  SEO_APARTMENTS,
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  ogLocale,
+} from "@/lib/seo";
 
 // ISR настройки - обновление каждые 6 часов
 export const revalidate = 21600;
 
 // Генерация метаданных для страницы
 export async function generateMetadata(): Promise<Metadata> {
+  const seo = SEO_APARTMENTS.en;
+
   return {
-    title: "Accommodation in Tenerife | Tenerifly.io",
-    description:
-      "Find your perfect accommodation in Tenerife. Browse apartments, villas, and houses for rent or sale. Book directly with local providers.",
-    keywords: [
-      "Tenerife accommodation",
-      "Tenerife apartments",
-      "Tenerife villas",
-      "Tenerife rental",
-      "Tenerife property",
-      "Canary Islands accommodation",
-    ],
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
     openGraph: {
-      title: "Accommodation in Tenerife | Tenerifly.io",
-      description:
-        "Find your perfect accommodation in Tenerife. Browse apartments, villas, and houses for rent or sale.",
-      url: "https://tenerifly.io/apartments",
+      title: seo.title,
+      description: seo.description,
+      url: absoluteUrlForLocale("en", "/apartments"),
       siteName: "Tenerifly.io",
       images: [
         {
-          url: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: "Tenerife Accommodation",
         },
       ],
-      locale: "en_US",
+      locale: ogLocale("en"),
       type: "website",
     },
     alternates: {
-      canonical: "https://tenerifly.io/apartments",
-      languages: {
-        en: "https://tenerifly.io/apartments",
-        pl: "https://tenerifly.io/apartments",
-        fr: "https://tenerifly.io/apartments",
-        ru: "https://tenerifly.io/apartments",
-        uk: "https://tenerifly.io/apartments",
-        de: "https://tenerifly.io/apartments",
-        es: "https://tenerifly.io/apartments",
-      },
+      canonical: absoluteUrlForLocale("en", "/apartments"),
+      languages: hreflangAlternates("/apartments"),
     },
   };
 }

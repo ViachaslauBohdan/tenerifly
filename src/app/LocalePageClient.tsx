@@ -12,7 +12,6 @@ import {
   Star,
   Clock,
   Users,
-  Euro,
   Phone,
   Eye,
   BookOpen,
@@ -36,6 +35,17 @@ import {
   getTransferLocaleText,
   Transfer,
 } from "@/lib/transfers";
+import {
+  getCanariasRentacarAffiliateUrl,
+  getCanariasRentacarBannerImageUrl,
+} from "@/lib/canariasAffiliate";
+import { pickFeaturedHomeTours } from "@/lib/featuredHomeTours";
+import {
+  TileCarPrice,
+  TilePriceBadge,
+  formatTileAmount,
+} from "@/components/TilePriceBadge";
+import type { Locale } from "@/types/locale";
 // Переводы для всех языков
 const translations = translationsJson;
 
@@ -52,11 +62,43 @@ const languages = [
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
 
+const headerNavHome: Record<LanguageCode, string> = {
+  en: "Home",
+  ru: "Главная",
+  pl: "Start",
+  fr: "Accueil",
+  uk: "Головна",
+  de: "Start",
+  es: "Inicio",
+};
+
+const headerNavFaq: Record<LanguageCode, string> = {
+  en: "FAQ",
+  ru: "Вопросы",
+  pl: "FAQ",
+  fr: "FAQ",
+  uk: "Питання",
+  de: "FAQ",
+  es: "FAQ",
+};
+
+const headerNavTransfers: Record<LanguageCode, string> = {
+  en: "Transfers",
+  ru: "Трансферы",
+  pl: "Transfery",
+  fr: "Transferts",
+  uk: "Трансфери",
+  de: "Transfers",
+  es: "Traslados",
+};
+
 interface LocalePageClientProps {
   initialData?: {
     properties: any[];
     cars: any[];
     tours: any[];
+    /** Three tours for the home “featured excursions” grid; full `tours` stays for filters */
+    featuredTours?: any[];
     blogs: any[];
     transfers?: Transfer[];
   };
@@ -150,6 +192,78 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const t = translations[language];
   const transferCopy = getTransferLocaleText(language);
   const currentLanguage = languages.find((lang) => lang.code === language);
+  const datePlaceholder =
+    language === "ru"
+      ? "Выберите дату"
+      : language === "pl"
+        ? "Wybierz datę"
+        : language === "fr"
+          ? "Choisir une date"
+          : language === "uk"
+            ? "Оберіть дату"
+            : language === "de"
+              ? "Datum wählen"
+              : language === "es"
+                ? "Elegir fecha"
+                : "Choose date";
+  const fieldLabelClass =
+    "block text-[13px] font-semibold text-gray-700 mb-1.5";
+  const fieldControlClass =
+    "h-12 w-full rounded-xl border border-gray-300 bg-white px-3 text-base text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-gray-400";
+  const iconFieldControlClass =
+    "h-12 w-full rounded-xl border border-gray-300 bg-white pl-10 pr-3 text-base text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-gray-400";
+  const advancedToggleClass =
+    "inline-flex h-9 items-center gap-2 rounded-xl border border-blue-100 bg-blue-50/70 px-3.5 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100";
+  const headerAnchorClass =
+    "text-xs font-medium text-white/90 hover:text-white whitespace-nowrap rounded-lg px-1.5 py-1.5 transition-colors hover:bg-white/10 sm:px-2.5 sm:text-sm";
+  const getMobileTabLabel = (key: string, fallback: string) => {
+    const labels: Record<LanguageCode, Record<string, string>> = {
+      en: {
+        accommodation: "Stay",
+        cars: "Cars",
+        excursions: "Tours",
+        blog: "Blog",
+      },
+      ru: {
+        accommodation: "Жилье",
+        cars: "Авто",
+        excursions: "Экскурсии",
+        blog: "Блог",
+      },
+      pl: {
+        accommodation: "Nocleg",
+        cars: "Auta",
+        excursions: "Wycieczki",
+        blog: "Blog",
+      },
+      fr: {
+        accommodation: "Séjour",
+        cars: "Autos",
+        excursions: "Sorties",
+        blog: "Blog",
+      },
+      uk: {
+        accommodation: "Житло",
+        cars: "Авто",
+        excursions: "Екскурсії",
+        blog: "Блог",
+      },
+      de: {
+        accommodation: "Unterkunft",
+        cars: "Autos",
+        excursions: "Touren",
+        blog: "Blog",
+      },
+      es: {
+        accommodation: "Estancia",
+        cars: "Coches",
+        excursions: "Tours",
+        blog: "Blog",
+      },
+    };
+
+    return labels[language]?.[key] || fallback;
+  };
 
   const getCarImage = (car: any) => {
     const apiUrl =
@@ -162,9 +276,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   const getCarPrice = (car: any) =>
     car?.rental_prices?.day_1 ?? car?.price ?? 0;
-
-  const getDayText = () =>
-    (t as any)?.sections?.cars?.pricePerDay || "day";
 
   const getLocalizedCurrency = (car: any) => {
     const currency = car?.rental_prices?.currency || "€";
@@ -196,6 +307,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           dataLoading: false,
         }
       : dataFromHook;
+
+  const homeFeaturedExcursions =
+    initialData?.featuredTours ?? pickFeaturedHomeTours(excursions);
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
@@ -450,64 +564,109 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   return (
     <main>
-      {/* Language Selector */}
-      <div className="absolute top-5 right-5 z-50">
-        <div className="relative">
-          <button
-            onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
-            className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg hover:bg-white transition-all duration-200"
+      <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 backdrop-blur-md">
+        <div className="mx-auto flex w-full min-w-0 max-w-7xl items-center gap-1.5 px-2 py-2.5 sm:gap-2 sm:px-3 sm:py-3 md:gap-3 md:px-4">
+          <a
+            href="#home"
+            className="shrink-0 font-semibold tracking-tight text-white drop-shadow-sm transition-opacity hover:opacity-90 sm:text-lg"
           >
-            <span className="text-lg">{currentLanguage?.flag}</span>
-            <span className="font-medium text-gray-700 hidden sm:block">
-              {currentLanguage?.name}
-            </span>
-            <span className="font-medium text-gray-700 sm:hidden">
-              {currentLanguage?.code.toUpperCase()}
-            </span>
-            <ChevronDown
-              className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isLanguageDropdownOpen ? "rotate-180" : ""}`}
-            />
-          </button>
+            Tenerifly.io
+          </a>
 
-          {isLanguageDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
-              <div className="py-2">
-                <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                  {t.selectLanguage}
+          <nav
+            className="flex min-w-0 flex-1 items-center justify-center gap-0.5 overflow-x-auto overscroll-x-contain sm:gap-1 md:justify-start [&::-webkit-scrollbar]:hidden"
+            aria-label="Page sections"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            <a href="#home" className={headerAnchorClass}>
+              {headerNavHome[language]}
+            </a>
+            <a href="#accommodation" className={headerAnchorClass}>
+              {t.hero.tabs.accommodation}
+            </a>
+            <a href="#cars" className={headerAnchorClass}>
+              {t.hero.tabs.cars}
+            </a>
+            {transfers.length > 0 && (
+              <a href="#transfers" className={headerAnchorClass}>
+                {headerNavTransfers[language]}
+              </a>
+            )}
+            <a href="#excursions" className={headerAnchorClass}>
+              {t.hero.tabs.excursions}
+            </a>
+            <a href="#blog" className={headerAnchorClass}>
+              {t.hero.tabs.blog}
+            </a>
+            <a href="#faq" className={headerAnchorClass}>
+              {headerNavFaq[language]}
+            </a>
+          </nav>
+
+          <div className="relative shrink-0 pl-0.5">
+            <button
+              type="button"
+              onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
+              className="flex max-w-[min(100%,10.5rem)] items-center gap-1 rounded-lg border border-white/25 bg-white/90 px-2 py-1.5 text-gray-800 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white sm:gap-1.5 sm:py-2 lg:max-w-[13rem] lg:gap-2 lg:px-2.5 xl:max-w-none xl:px-3"
+              aria-expanded={isLanguageDropdownOpen}
+              aria-haspopup="listbox"
+            >
+              <span className="shrink-0 text-base sm:text-lg">
+                {currentLanguage?.flag}
+              </span>
+              <span className="min-w-0 truncate font-medium lg:hidden">
+                {currentLanguage?.code.toUpperCase()}
+              </span>
+              <span className="hidden min-w-0 max-w-[10rem] truncate font-medium lg:inline-block xl:max-w-[12rem] 2xl:max-w-none">
+                {currentLanguage?.name}
+              </span>
+              <ChevronDown
+                className={`h-3.5 w-3.5 shrink-0 text-gray-500 transition-transform duration-200 sm:h-4 sm:w-4 ${isLanguageDropdownOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {isLanguageDropdownOpen && (
+              <div className="absolute right-0 z-[60] mt-2 w-[min(18rem,calc(100vw-1rem))] rounded-lg border border-gray-200 bg-white shadow-xl">
+                <div className="py-2">
+                  <div className="border-b border-gray-100 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    {t.selectLanguage}
+                  </div>
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      onClick={() =>
+                        handleLanguageChange(lang.code as LanguageCode)
+                      }
+                      className={`flex w-full items-center gap-3 px-3 py-2 text-left transition-colors hover:bg-gray-50 ${
+                        language === lang.code
+                          ? "bg-blue-50 text-blue-700"
+                          : "text-gray-700"
+                      }`}
+                    >
+                      <span className="text-lg">{lang.flag}</span>
+                      <span className="font-medium">{lang.name}</span>
+                      {language === lang.code && (
+                        <Check className="ml-auto h-4 w-4 text-blue-600" />
+                      )}
+                    </button>
+                  ))}
                 </div>
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() =>
-                      handleLanguageChange(lang.code as LanguageCode)
-                    }
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors ${
-                      language === lang.code
-                        ? "bg-blue-50 text-blue-700"
-                        : "text-gray-700"
-                    }`}
-                  >
-                    <span className="text-lg">{lang.flag}</span>
-                    <span className="font-medium">{lang.name}</span>
-                    {language === lang.code && (
-                      <Check className="w-4 h-4 ml-auto text-blue-600" />
-                    )}
-                  </button>
-                ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      </header>
 
       {/* Hero Section */}
       <section
+        id="home"
         className="relative h-screen min-[360px]:h-[105vh] min-[381px]:h-[82vh] sm:h-[70vh] bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}
       >
-        <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 pb-6 pt-16 sm:pb-8 sm:pt-20">
           {/* Title - moved higher */}
           <div className="text-center mb-5 sm:mb-8">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg pt-2 sm:pt-0">
@@ -519,10 +678,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           </div>
 
           {/* Search Card - centered */}
-          <div className="w-full max-w-5xl xl:max-w-6xl bg-white/95 backdrop-blur-xl rounded-[2rem] border border-white/60 shadow-[0_24px_80px_rgba(15,23,42,0.28)] overflow-hidden">
+          <div className="w-full max-w-5xl xl:max-w-6xl bg-white/95 backdrop-blur-xl rounded-[1.5rem] sm:rounded-[2rem] border border-white/60 shadow-[0_20px_60px_rgba(15,23,42,0.24)] overflow-hidden">
             {/* Tabs - изменен порядок, accommodation теперь первый */}
-            <div className="border-b border-gray-200/80 bg-gray-50/60 px-1.5 pt-1.5 sm:px-3 sm:pt-3">
-              <nav className="flex gap-1.5 sm:gap-2 overflow-x-auto md:overflow-visible">
+            <div className="border-b border-gray-200/80 bg-gray-50/80 px-2 pt-2 sm:px-3 sm:pt-3">
+              <nav className="grid grid-cols-4 gap-1.5 sm:gap-2">
                 {[
                   {
                     key: "accommodation",
@@ -540,32 +699,41 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   <button
                     key={key}
                     onClick={() => setActiveTab(key)}
-                    className={`min-w-[114px] md:min-w-0 flex-1 flex items-center justify-center gap-1.5 sm:gap-2 rounded-t-xl px-2.5 py-2.5 sm:px-4 sm:py-3.5 lg:px-5 lg:py-4 text-sm md:text-base font-semibold transition-all duration-200 ${
+                    className={`min-w-0 h-14 sm:h-16 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 rounded-xl px-1.5 sm:px-3 text-[10px] min-[380px]:text-[11px] sm:text-sm md:text-base font-semibold transition-all duration-200 ${
                       activeTab === key
-                        ? "text-blue-700 bg-white border border-gray-200 border-b-white shadow-sm"
+                        ? "text-blue-700 bg-white border border-gray-200 shadow-sm"
                         : "text-gray-600 hover:text-gray-800 hover:bg-white/70 border border-transparent"
                     }`}
                   >
-                    <Icon className="w-4 h-4 md:w-5 md:h-5" />
-                    <span>{label}</span>
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                    <span className="block max-w-full truncate leading-tight sm:hidden">
+                      {getMobileTabLabel(key, label)}
+                    </span>
+                    <span className="hidden max-w-full truncate leading-tight sm:block">
+                      {label}
+                    </span>
                   </button>
                 ))}
               </nav>
             </div>
 
             {/* Form Content */}
-            <div className="bg-white px-4 pt-3 pb-5 sm:p-6 sm:pb-7 lg:p-8 lg:pb-9">
+            <div className="bg-white px-4 py-4 sm:p-6 sm:pb-7 lg:p-8 lg:pb-9">
               {/* Accommodation Tab */}
               {activeTab === "accommodation" && (
                 <div className="space-y-4 lg:space-y-5">
                   {/* First row - Basic filters */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className={fieldLabelClass}>
                         {t.hero.accommodation.type}
                       </label>
                       <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className={`${fieldControlClass} ${
+                          accommodationFilters.propertyType
+                            ? "text-gray-900"
+                            : "text-gray-500"
+                        }`}
                         value={accommodationFilters.propertyType}
                         onChange={(e) =>
                           setAccommodationFilters({
@@ -599,29 +767,47 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className={fieldLabelClass}>
                         {t.hero.accommodation.checkin}
                       </label>
                       <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        type={dates[0] ? "date" : "text"}
+                        placeholder={datePlaceholder}
+                        className={fieldControlClass}
                         value={dates[0]}
+                        onFocus={(e) => {
+                          e.currentTarget.type = "date";
+                        }}
+                        onBlur={(e) => {
+                          if (!e.currentTarget.value) {
+                            e.currentTarget.type = "text";
+                          }
+                        }}
                         onChange={(e) => setDates([e.target.value, dates[1]])}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className={fieldLabelClass}>
                         {t.hero.accommodation.checkout}
                       </label>
                       <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        type={dates[1] ? "date" : "text"}
+                        placeholder={datePlaceholder}
+                        className={fieldControlClass}
                         value={dates[1]}
+                        onFocus={(e) => {
+                          e.currentTarget.type = "date";
+                        }}
+                        onBlur={(e) => {
+                          if (!e.currentTarget.value) {
+                            e.currentTarget.type = "text";
+                          }
+                        }}
                         onChange={(e) => setDates([dates[0], e.target.value])}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className={fieldLabelClass}>
                         {t.hero.accommodation.guests}
                       </label>
                       <div className="relative">
@@ -630,7 +816,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           type="number"
                           min="1"
                           max="10"
-                          className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={iconFieldControlClass}
                           value={guests}
                           onChange={(e) => setGuests(Number(e.target.value))}
                         />
@@ -645,7 +831,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                       onClick={() =>
                         setShowAdvancedAccommodation(!showAdvancedAccommodation)
                       }
-                      className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-2 text-blue-700 hover:bg-blue-100 text-sm font-semibold transition-colors"
+                      className={advancedToggleClass}
                     >
                       {showAdvancedAccommodation ? (
                         <>
@@ -689,11 +875,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   {showAdvancedAccommodation && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           {t.hero.accommodation.rooms}
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={fieldControlClass}
                           value={accommodationFilters.rooms}
                           onChange={(e) =>
                             setAccommodationFilters({
@@ -712,13 +898,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           {t.common.priceFrom}
                         </label>
                         <input
                           type="number"
                           placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={fieldControlClass}
                           value={accommodationFilters.priceFrom}
                           onChange={(e) =>
                             setAccommodationFilters({
@@ -729,13 +915,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           {t.common.priceTo}
                         </label>
                         <input
                           type="number"
                           placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={fieldControlClass}
                           value={accommodationFilters.priceTo}
                           onChange={(e) =>
                             setAccommodationFilters({
@@ -746,11 +932,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           {t.common.type}
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={fieldControlClass}
                           value={accommodationFilters.type}
                           onChange={(e) =>
                             setAccommodationFilters({
@@ -774,11 +960,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   {/* First row - Basic filters */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className={fieldLabelClass}>
                         {t.hero.cars.bodyType}
                       </label>
                       <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className={fieldControlClass}
                         value={carType}
                         onChange={(e) => setCarType(e.target.value)}
                       >
@@ -805,33 +991,51 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className={fieldLabelClass}>
                         {t.hero.cars.pickup}
                       </label>
                       <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        type={dates[0] ? "date" : "text"}
+                        placeholder={datePlaceholder}
+                        className={fieldControlClass}
                         value={dates[0]}
+                        onFocus={(e) => {
+                          e.currentTarget.type = "date";
+                        }}
+                        onBlur={(e) => {
+                          if (!e.currentTarget.value) {
+                            e.currentTarget.type = "text";
+                          }
+                        }}
                         onChange={(e) => setDates([e.target.value, dates[1]])}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className={fieldLabelClass}>
                         {t.hero.cars.dropoff}
                       </label>
                       <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        type={dates[1] ? "date" : "text"}
+                        placeholder={datePlaceholder}
+                        className={fieldControlClass}
                         value={dates[1]}
+                        onFocus={(e) => {
+                          e.currentTarget.type = "date";
+                        }}
+                        onBlur={(e) => {
+                          if (!e.currentTarget.value) {
+                            e.currentTarget.type = "text";
+                          }
+                        }}
                         onChange={(e) => setDates([dates[0], e.target.value])}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className={fieldLabelClass}>
                         {t.common.type}
                       </label>
                       <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className={fieldControlClass}
                         value={carFilters.type}
                         onChange={(e) =>
                           setCarFilters({ ...carFilters, type: e.target.value })
@@ -848,7 +1052,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     <button
                       type="button"
                       onClick={() => setShowAdvancedCars(!showAdvancedCars)}
-                      className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-2 text-blue-700 hover:bg-blue-100 text-sm font-semibold transition-colors"
+                      className={advancedToggleClass}
                     >
                       {showAdvancedCars ? (
                         <>
@@ -892,11 +1096,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   {showAdvancedCars && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           {t.hero.cars.brand}
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={`${fieldControlClass} ${
+                            carFilters.brand ? "text-gray-900" : "text-gray-500"
+                          }`}
                           value={carFilters.brand}
                           onChange={(e) =>
                             setCarFilters({
@@ -919,13 +1125,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           {t.common.priceFrom}
                         </label>
                         <input
                           type="number"
                           placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={fieldControlClass}
                           value={carFilters.priceFrom}
                           onChange={(e) =>
                             setCarFilters({
@@ -936,13 +1142,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           {t.common.priceTo}
                         </label>
                         <input
                           type="number"
                           placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={fieldControlClass}
                           value={carFilters.priceTo}
                           onChange={(e) =>
                             setCarFilters({
@@ -953,11 +1159,15 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           {t.hero.cars.transmission}
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={`${fieldControlClass} ${
+                            carFilters.transmission
+                              ? "text-gray-900"
+                              : "text-gray-500"
+                          }`}
                           value={carFilters.transmission}
                           onChange={(e) =>
                             setCarFilters({
@@ -990,11 +1200,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   {/* First row - Basic filters */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className={fieldLabelClass}>
                         {t.hero.excursions.type}
                       </label>
                       <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className={`${fieldControlClass} ${
+                          excursionType ? "text-gray-900" : "text-gray-500"
+                        }`}
                         value={excursionType}
                         onChange={(e) => setExcursionType(e.target.value)}
                       >
@@ -1021,18 +1233,27 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className={fieldLabelClass}>
                         {t.hero.excursions.date}
                       </label>
                       <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        type={excursionDate ? "date" : "text"}
+                        placeholder={datePlaceholder}
+                        className={fieldControlClass}
                         value={excursionDate}
+                        onFocus={(e) => {
+                          e.currentTarget.type = "date";
+                        }}
+                        onBlur={(e) => {
+                          if (!e.currentTarget.value) {
+                            e.currentTarget.type = "text";
+                          }
+                        }}
                         onChange={(e) => setExcursionDate(e.target.value)}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className={fieldLabelClass}>
                         {t.hero.excursions.people}
                       </label>
                       <div className="relative">
@@ -1041,7 +1262,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           type="number"
                           min="1"
                           max="20"
-                          className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={iconFieldControlClass}
                           value={excursionPeople}
                           onChange={(e) =>
                             setExcursionPeople(Number(e.target.value))
@@ -1050,11 +1271,15 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className={fieldLabelClass}>
                         {t.hero.excursions.language}
                       </label>
                       <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        className={`${fieldControlClass} ${
+                          excursionFilters.language
+                            ? "text-gray-900"
+                            : "text-gray-500"
+                        }`}
                         value={excursionFilters.language}
                         onChange={(e) =>
                           setExcursionFilters({
@@ -1092,7 +1317,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     <button
                       type="button"
                       onClick={() => setShowAdvancedTours(!showAdvancedTours)}
-                      className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-2 text-blue-700 hover:bg-blue-100 text-sm font-semibold transition-colors"
+                      className={advancedToggleClass}
                     >
                       {showAdvancedTours ? (
                         <>
@@ -1136,13 +1361,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   {showAdvancedTours && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           Location
                         </label>
                         <input
                           type="text"
                           placeholder="Any location"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={fieldControlClass}
                           value={excursionFilters.location}
                           onChange={(e) =>
                             setExcursionFilters({
@@ -1153,13 +1378,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           {t.common.priceFrom}
                         </label>
                         <input
                           type="number"
                           placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={fieldControlClass}
                           value={excursionFilters.priceFrom}
                           onChange={(e) =>
                             setExcursionFilters({
@@ -1170,13 +1395,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           {t.common.priceTo}
                         </label>
                         <input
                           type="number"
                           placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={fieldControlClass}
                           value={excursionFilters.priceTo}
                           onChange={(e) =>
                             setExcursionFilters({
@@ -1187,11 +1412,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className={fieldLabelClass}>
                           Duration
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className={fieldControlClass}
                           value={excursionFilters.duration}
                           onChange={(e) =>
                             setExcursionFilters({
@@ -1279,7 +1504,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               {activeTab !== "blog" && (
                 <button
                   onClick={handleSearch}
-                  className="mt-4 mb-0 w-full md:w-auto md:min-w-[260px] mx-auto bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-base shadow-lg hover:shadow-xl"
+                  className="mt-4 mx-auto flex h-12 w-full max-w-[280px] items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 text-base font-semibold text-white shadow-md transition-colors hover:bg-blue-700 sm:w-auto sm:min-w-[240px]"
                 >
                   <Search className="w-5 h-5" />
                   {t.hero.search}
@@ -1291,7 +1516,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       </section>
 
       {/* Секция недвижимости */}
-      <section className="py-20 bg-gray-50">
+      <section
+        id="accommodation"
+        className="scroll-mt-14 py-20 sm:scroll-mt-16 bg-gray-50"
+      >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
@@ -1394,9 +1622,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                               {place.amenities}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <Euro className="w-4 h-4" />
-                            <span>{place.price}</span>
+                          <div className="flex flex-wrap items-center gap-2 text-sm">
+                            <TilePriceBadge>
+                              <span className="text-sm font-semibold tabular-nums text-yellow-900">
+                                {place.price}
+                              </span>
+                            </TilePriceBadge>
                           </div>
                         </div>
                         <div className="flex gap-3">
@@ -1428,7 +1659,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       </section>
 
       {/* Секция автомобилей */}
-      <section className="pt-20 bg-white">
+      <section
+        id="cars"
+        className="scroll-mt-14 pt-20 sm:scroll-mt-16 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
@@ -1451,13 +1685,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           {/* Баннер партнерского сервиса аренды авто (Canarias.com) */}
           <div className="flex justify-center mb-10">
             <a
-              href="https://rentacar.canarias.com/de?affiliateid=VA20022026"
+              href={getCanariasRentacarAffiliateUrl(language)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
             >
               <img
-                src="https://rentacar.canarias.com/Content/images/banner/afiliados-themes/1/dim6DE.jpg"
+                src={getCanariasRentacarBannerImageUrl(language)}
                 alt="rentacar canarias.com"
                 className="max-w-full h-auto"
               />
@@ -1542,12 +1776,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                               {t.sections.cars.features}: {getCarFeatures(car)}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <Euro className="w-4 h-4" />
-                            <span>
-                              {getLocalizedCurrency(car)}
-                              {getCarPrice(car)}/{getDayText()}
-                            </span>
+                          <div className="flex flex-wrap items-center gap-2 text-sm">
+                            <TileCarPrice
+                              currencySymbol={getLocalizedCurrency(car)}
+                              amount={Number(getCarPrice(car)) || 0}
+                              perDaySuffix={t.common.perDay}
+                              locale={language as Locale}
+                            />
                           </div>
                         </div>
                         <div className="flex gap-3">
@@ -1555,7 +1790,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             onClick={() =>
                               openBookingModal("car", {
                                 title: car.title,
-                                price: `${getLocalizedCurrency(car)}${getCarPrice(car)}/${getDayText()}`,
+                                price: `${getLocalizedCurrency(car).trim()} ${formatTileAmount(Number(getCarPrice(car)) || 0, language as Locale)}${t.common.perDay}`,
                                 brand: car.specifications?.make,
                                 model: car.specifications?.model,
                                 duration: car.duration,
@@ -1579,7 +1814,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
       {/* Секция трансферов */}
       {transfers.length > 0 && (
-        <section id="transfers" className="py-20 bg-gray-50">
+        <section
+          id="transfers"
+          className="scroll-mt-14 py-20 sm:scroll-mt-16 bg-gray-50"
+        >
           <div className="max-w-7xl mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -1692,7 +1930,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       )}
 
       {/* Секция экскурсий */}
-      <section className="py-20 bg-white">
+      <section
+        id="excursions"
+        className="scroll-mt-14 py-20 sm:scroll-mt-16 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
@@ -1714,14 +1955,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
           {dataLoading ? (
             <EmptyState type="loading" />
-          ) : excursions.length === 0 ? (
+          ) : homeFeaturedExcursions.length === 0 ? (
             <EmptyState type="empty" />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {(() => {
-                return excursions.map(
-                  (excursion, index) =>
-                    index < 3 && (
+                return homeFeaturedExcursions.map((excursion, index) => (
                       <div
                         key={excursion.id || index}
                         className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
@@ -1794,11 +2033,15 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                 {excursion.groupSize}
                               </span>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                              <Euro className="w-4 h-4" />
-                              <span>
-                                {t.sections.excursions.price}: {excursion.price}
+                            <div className="flex flex-wrap items-center gap-2 text-sm">
+                              <span className="text-gray-600">
+                                {t.sections.excursions.price}
                               </span>
+                              <TilePriceBadge>
+                                <span className="font-semibold tabular-nums text-yellow-900">
+                                  {excursion.price}
+                                </span>
+                              </TilePriceBadge>
                             </div>
                           </div>
                           <div className="flex gap-2">
@@ -1821,8 +2064,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           </div>
                         </div>
                       </div>
-                    )
-                );
+                    ));
               })()}
             </div>
           )}
@@ -1918,7 +2160,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       </section>
 
       {/* Секция блогов */}
-      <section className="py-20 bg-white">
+      <section
+        id="blog"
+        className="scroll-mt-14 py-20 sm:scroll-mt-16 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
@@ -2079,7 +2324,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       </section>
 
       {/* FAQ секция */}
-      <section className="py-20 bg-white">
+      <section
+        id="faq"
+        className="scroll-mt-14 py-20 sm:scroll-mt-16 bg-white"
+      >
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -2153,7 +2401,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   Property Rental & Sales
                 </Link>
                 <Link
-                  href="https://rentacar.canarias.com/en?affiliateid=VA20022026"
+                  href={getCanariasRentacarAffiliateUrl(language)}
                   className="block text-gray-400 hover:text-white transition-colors"
                   target="_blank"
                   rel="nofollow"

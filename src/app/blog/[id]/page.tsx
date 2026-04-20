@@ -2,6 +2,11 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllBlogIds, getBlogById } from "@/services/ssgDataService";
 import BlogDetailPageClient from "./BlogDetailPageClient";
+import {
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  ogLocale,
+} from "@/lib/seo";
 
 // ISR настройки - обновление каждые 24 часа
 export const revalidate = 86400;
@@ -59,7 +64,7 @@ export async function generateMetadata({
       openGraph: {
         title: title,
         description: description,
-        url: `https://tenerifly.io/blog/${id}`,
+        url: absoluteUrlForLocale("en", `/blog/${id}`),
         siteName: "Tenerifly.io",
         images: [
           {
@@ -69,7 +74,7 @@ export async function generateMetadata({
             alt: title,
           },
         ],
-        locale: "en_US",
+        locale: ogLocale("en"),
         type: "article",
       },
       twitter: {
@@ -79,7 +84,8 @@ export async function generateMetadata({
         images: [imageUrl],
       },
       alternates: {
-        canonical: `https://tenerifly.io/blog/${id}`,
+        canonical: absoluteUrlForLocale("en", `/blog/${id}`),
+        languages: hreflangAlternates(`/blog/${id}`),
       },
     };
   } catch (error) {

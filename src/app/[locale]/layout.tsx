@@ -3,6 +3,13 @@ import "../../styles/globals.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { LOCALES, type Locale } from "@/types/locale";
+import {
+  DEFAULT_OG_IMAGE,
+  SEO_HOME,
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  ogLocale,
+} from "@/lib/seo";
 
 // ISR настройки для layout
 export const revalidate = 86400; // Обновление каждые 24 часа для основного layout
@@ -16,27 +23,15 @@ export async function generateMetadata({
   const localeCode = LOCALES.some((l) => l.code === locale)
     ? (locale as Locale)
     : LOCALES[0].code;
-  const localeConfig = LOCALES.find((l) => l.code === localeCode) || LOCALES[0];
+  const seo = SEO_HOME[localeCode];
 
   return {
     title: {
       default: "Tenerifly.io - Accommodation, Tours and Car Rental in Tenerife",
       template: "%s | Tenerifly.io",
     },
-    description:
-      "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
-    keywords: [
-      "Tenerife accommodation",
-      "Tenerife tours",
-      "Tenerife car rental",
-      "Tenerife vacation",
-      "Tenerife holiday",
-      "Tenerife apartments",
-      "Tenerife villas",
-      "Tenerife activities",
-      "Tenerife sightseeing",
-      "Tenerife travel",
-    ],
+    description: seo.description,
+    keywords: seo.keywords,
     authors: [{ name: "Tenerifly.io" }],
     creator: "Tenerifly.io",
     publisher: "Tenerifly.io",
@@ -47,54 +42,32 @@ export async function generateMetadata({
     },
     openGraph: {
       title: "Tenerifly.io - Your Guide to Tenerife",
-      description:
-        "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
-      url: `https://tenerifly.io/${localeCode}`,
+      description: seo.description,
+      url: absoluteUrlForLocale(localeCode, ""),
       siteName: "Tenerifly.io",
       images: [
         {
-          url: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: "Tenerifly.io - Your Guide to Tenerife",
         },
       ],
-      locale:
-        localeCode === "en"
-          ? "en_US"
-          : localeCode === "ru"
-            ? "ru_RU"
-            : localeCode === "pl"
-              ? "pl_PL"
-              : localeCode === "fr"
-                ? "fr_FR"
-                : localeCode === "uk"
-                  ? "uk_UA"
-                  : localeCode === "de"
-                    ? "de_DE"
-                    : "es_ES",
+      locale: ogLocale(localeCode),
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: "Tenerifly.io - Your Guide to Tenerife",
-      description:
-        "Find your perfect accommodation, tours or car rental in Tenerife. Book directly with local providers for the best prices and authentic experiences.",
-      images: [
-        "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
-      ],
+      description: seo.description,
+      images: [DEFAULT_OG_IMAGE],
       creator: "@tenerifly",
       site: "@tenerifly",
     },
     metadataBase: new URL("https://tenerifly.io"),
     alternates: {
-      canonical: `https://tenerifly.io/${localeCode}`,
-      languages: Object.fromEntries(
-        LOCALES.map((loc) => [
-          `${loc.code}`,
-          `https://tenerifly.io/${loc.code}`,
-        ])
-      ),
+      canonical: absoluteUrlForLocale(localeCode, ""),
+      languages: hreflangAlternates(""),
     },
     robots: {
       index: true,
@@ -123,10 +96,5 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
-  const { locale } = await params;
-  const localeCode = LOCALES.some((l) => l.code === locale)
-    ? (locale as Locale)
-    : LOCALES[0].code;
-
   return <>{children}</>;
 }

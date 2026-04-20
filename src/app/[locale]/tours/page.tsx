@@ -3,6 +3,13 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import ToursPageClient from "../../tours/client";
 import { LOCALES, type Locale } from "@/types/locale";
+import {
+  DEFAULT_OG_IMAGE,
+  SEO_TOURS,
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  ogLocale,
+} from "@/lib/seo";
 
 // ISR настройки - обновление каждые 6 часов
 export const revalidate = 21600;
@@ -20,58 +27,46 @@ export async function generateMetadata({
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const seo = SEO_TOURS[locale];
 
   return {
-    title: "Tours & Excursions in Tenerife | Tenerifly.io",
-    description:
-      "Discover amazing tours and excursions in Tenerife. From Teide National Park to whale watching, find the best guided tours and activities in the Canary Islands.",
-    keywords: [
-      "Tenerife tours",
-      "Tenerife excursions",
-      "Teide National Park",
-      "whale watching Tenerife",
-      "Tenerife activities",
-      "Canary Islands tours",
-      "Tenerife guided tours",
-    ],
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
     openGraph: {
-      title: "Tours & Excursions in Tenerife | Tenerifly.io",
-      description:
-        "Discover amazing tours and excursions in Tenerife. From Teide National Park to whale watching, find the best guided tours.",
-      url: `https://tenerifly.io/${locale}/tours`,
+      title: seo.title,
+      description: seo.description,
+      url: absoluteUrlForLocale(locale, "/tours"),
       siteName: "Tenerifly.io",
       images: [
         {
-          url: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: "Tenerife Tours & Excursions",
         },
       ],
-      locale: locale === "en" ? "en_US" : locale === "ru" ? "ru_RU" : locale === "pl" ? "pl_PL" : locale === "fr" ? "fr_FR" : locale === "uk" ? "uk_UA" : locale === "de" ? "de_DE" : "es_ES",
+      locale: ogLocale(locale),
       type: "website",
     },
     alternates: {
-      canonical: `https://tenerifly.io/${locale}/tours`,
-      languages: Object.fromEntries(
-        LOCALES.map((loc) => [`${loc.code}`, `https://tenerifly.io/${loc.code}/tours`])
-      ),
+      canonical: absoluteUrlForLocale(locale, "/tours"),
+      languages: hreflangAlternates("/tours"),
     },
   };
 }
 
 export default async function ToursPage({
-  params,
+  params: _params,
 }: {
   params: Promise<{ locale: Locale }>;
 }) {
   // Получаем все данные экскурсий на сервере для SSG с кэшированием
   const tours = await getAllTours();
-  
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ToursPageClient initialTours={tours} />
     </Suspense>
   );
 }
-

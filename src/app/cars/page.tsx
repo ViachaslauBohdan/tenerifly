@@ -2,52 +2,44 @@ import { getAllCarsAllLocales } from "@/services/ssgDataService";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import CarsPageClient from "./client";
+import {
+  DEFAULT_OG_IMAGE,
+  SEO_CARS,
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  ogLocale,
+} from "@/lib/seo";
 
 // ISR настройки - обновление каждые 6 часов
 export const revalidate = 21600;
 
 // Генерация метаданных для страницы
 export async function generateMetadata(): Promise<Metadata> {
+  const seo = SEO_CARS.en;
+
   return {
-    title: "Car Rental in Tenerife | Tenerifly.io",
-    description:
-      "Rent a car in Tenerife. Browse our selection of cars for rent or sale. From economy to luxury vehicles, find your perfect car for exploring the Canary Islands.",
-    keywords: [
-      "Tenerife car rental",
-      "Tenerife car hire",
-      "Canary Islands car rental",
-      "Tenerife airport car rental",
-      "Tenerife car sales",
-      "Tenerife vehicle rental",
-    ],
+    title: seo.title,
+    description: seo.description,
+    keywords: seo.keywords,
     openGraph: {
-      title: "Car Rental in Tenerife | Tenerifly.io",
-      description:
-        "Rent a car in Tenerife. Browse our selection of cars for rent or sale. From economy to luxury vehicles.",
-      url: "https://tenerifly.io/cars",
+      title: seo.title,
+      description: seo.description,
+      url: absoluteUrlForLocale("en", "/cars"),
       siteName: "Tenerifly.io",
       images: [
         {
-          url: "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
           alt: "Tenerife Car Rental",
         },
       ],
-      locale: "en_US",
+      locale: ogLocale("en"),
       type: "website",
     },
     alternates: {
-      canonical: "https://tenerifly.io/cars",
-      languages: {
-        en: "https://tenerifly.io/cars",
-        pl: "https://tenerifly.io/cars",
-        fr: "https://tenerifly.io/cars",
-        ru: "https://tenerifly.io/cars",
-        uk: "https://tenerifly.io/cars",
-        de: "https://tenerifly.io/cars",
-        es: "https://tenerifly.io/cars",
-      },
+      canonical: absoluteUrlForLocale("en", "/cars"),
+      languages: hreflangAlternates("/cars"),
     },
   };
 }

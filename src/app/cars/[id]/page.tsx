@@ -2,6 +2,11 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllCarIds, getCarById } from "@/services/ssgDataService";
 import CarDetailPageClient from "./client";
+import {
+  absoluteUrlForLocale,
+  hreflangAlternates,
+  ogLocale,
+} from "@/lib/seo";
 
 // ISR настройки - обновление каждые 24 часа
 export const revalidate = 86400;
@@ -62,7 +67,7 @@ export async function generateMetadata({
       openGraph: {
         title: title,
         description: description,
-        url: `https://tenerifly.io/cars/${id}`,
+        url: absoluteUrlForLocale("en", `/cars/${id}`),
         siteName: "Tenerifly.io",
         images: [
           {
@@ -72,7 +77,7 @@ export async function generateMetadata({
             alt: title,
           },
         ],
-        locale: "en_US",
+        locale: ogLocale("en"),
         type: "website",
       },
       twitter: {
@@ -82,7 +87,8 @@ export async function generateMetadata({
         images: [imageUrl],
       },
       alternates: {
-        canonical: `https://tenerifly.io/cars/${id}`,
+        canonical: absoluteUrlForLocale("en", `/cars/${id}`),
+        languages: hreflangAlternates(`/cars/${id}`),
       },
     };
   } catch (error) {

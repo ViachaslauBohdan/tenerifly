@@ -1,6 +1,7 @@
 // Сервис для получения данных на сервере для SSG
 
 import { Transfer } from "@/lib/transfers";
+import { pickFeaturedHomeTours } from "@/lib/featuredHomeTours";
 
 const API_URL =
   process.env.NEXT_PUBLIC_STRAPI_API_URL ||
@@ -553,6 +554,8 @@ export async function getHomePageData(language: string = "en") {
             (tour: {
               id: number;
               documentId: string;
+              slug?: string;
+              isPopular?: boolean;
               name?: string;
               title?: string;
               description?: string;
@@ -566,6 +569,8 @@ export async function getHomePageData(language: string = "en") {
             }) => ({
               id: tour.id,
               documentId: tour.documentId,
+              slug: tour.slug,
+              isPopular: tour.isPopular === true,
               title: tour.name || tour.title || "Tour",
               description:
                 tour.description || "Discover amazing places in Tenerife",
@@ -577,6 +582,8 @@ export async function getHomePageData(language: string = "en") {
             })
           )
         : [];
+
+    const featuredTours = pickFeaturedHomeTours(tours);
 
     // Трансформация автомобилей
     type CarItem = {
@@ -762,6 +769,7 @@ export async function getHomePageData(language: string = "en") {
       properties,
       cars,
       tours,
+      featuredTours,
       blogs,
       transfers,
     };
@@ -771,6 +779,7 @@ export async function getHomePageData(language: string = "en") {
       properties: [],
       cars: [],
       tours: [],
+      featuredTours: [],
       blogs: [],
       transfers: [],
     };

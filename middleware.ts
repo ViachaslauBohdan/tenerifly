@@ -21,8 +21,14 @@ export function middleware(request: NextRequest) {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
-  // Если локаль уже есть в пути, продолжаем
+  // Если локаль уже есть в пути, продолжаем и передаём её в layout (html lang, SEO)
   if (pathnameHasLocale) {
+    const first = pathname.split("/").filter(Boolean)[0];
+    if (locales.includes(first as Locale)) {
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-locale", first);
+      return NextResponse.next({ request: { headers: requestHeaders } });
+    }
     return NextResponse.next();
   }
 
