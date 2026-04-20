@@ -101,6 +101,69 @@ interface ToursPageClientProps {
   initialTours?: any[] | undefined;
 }
 
+const defaultTourFilters: TourFilterParams = {
+  location: "",
+  tourType: "",
+  priceFrom: "",
+  priceTo: "",
+  duration: "",
+  durationType: "hours",
+  availableFrom: "",
+  language: "",
+  category: "",
+  groupSize: "",
+  difficulty: "",
+  rating: "",
+  transport: false,
+  meals: false,
+  tickets: false,
+};
+
+const tourLanguageMap: Record<string, string> = {
+  en: "EN",
+  ru: "RU",
+  pl: "PL",
+  fr: "FR",
+  uk: "UK",
+  de: "DE",
+  es: "ES",
+};
+
+const normalizeTourFilters = (rawFilters: Record<string, any>): TourFilterParams => {
+  const languageValue =
+    typeof rawFilters.language === "string" ? rawFilters.language : "";
+  const normalizedLanguage =
+    tourLanguageMap[languageValue.toLowerCase()] || languageValue.toUpperCase();
+
+  return {
+    ...defaultTourFilters,
+    ...rawFilters,
+    priceFrom: rawFilters.priceFrom?.toString() || "",
+    priceTo: rawFilters.priceTo?.toString() || "",
+    duration: rawFilters.duration?.toString() || "",
+    language: normalizedLanguage,
+    durationType:
+      rawFilters.durationType === "days" ? "days" : defaultTourFilters.durationType,
+  };
+};
+
+const areTourFiltersEqual = (
+  left: TourFilterParams,
+  right: TourFilterParams
+) =>
+  Object.keys(defaultTourFilters).every(
+    (key) => left[key] === right[key]
+  );
+
+const hasSupportedTourFilters = (filters: TourFilterParams) =>
+  Boolean(
+    filters.location ||
+      filters.priceFrom ||
+      filters.priceTo ||
+      filters.duration ||
+      filters.language
+  );
+
 export default function ToursPageClient({
   initialTours,
 }: ToursPageClientProps) {
@@ -119,32 +182,11 @@ export default function ToursPageClient({
 
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<TourFilterParams>(() => {
-    const defaultFilters: TourFilterParams = {
-      location: "",
-      tourType: "",
-      priceFrom: "",
-      priceTo: "",
-      duration: "",
-      durationType: "hours",
-      availableFrom: "",
-      language: "",
-      category: "",
-      groupSize: "",
-      difficulty: "",
-      rating: "",
-      transport: false,
-      meals: false,
-      tickets: false,
-    };
-
     if (searchParams) {
       const urlFilters = parseUrlParams(searchParams);
-      return {
-        ...defaultFilters,
-        ...urlFilters,
-      };
+      return normalizeTourFilters(urlFilters);
     }
-    return defaultFilters;
+    return defaultTourFilters;
   });
 
   // Инициализация текущей страницы из URL параметров
@@ -170,7 +212,14 @@ export default function ToursPageClient({
     pageType: "tours",
     filters,
     onFiltersChange: (newFilters) => {
-      setFilters(newFilters as TourFilterParams);
+      const normalizedFilters = normalizeTourFilters(
+        newFilters as Record<string, any>
+      );
+      setFilters((currentFilters) =>
+        areTourFiltersEqual(currentFilters, normalizedFilters)
+          ? currentFilters
+          : normalizedFilters
+      );
     },
   });
 
@@ -317,6 +366,7 @@ export default function ToursPageClient({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentTours = tours.slice(startIndex, endIndex);
+  const hasActiveFilters = hasSupportedTourFilters(filters);
 
   // Debug logging for pagination
   console.log("Pagination debug:", {
@@ -539,6 +589,8 @@ export default function ToursPageClient({
                   translations={t}
                   language={language}
                   tours={currentTours}
+                  totalToursCount={tours.length}
+                  hasActiveFilters={hasActiveFilters}
                 />
 
                 {/* Pagination */}

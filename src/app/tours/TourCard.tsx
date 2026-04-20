@@ -178,9 +178,17 @@ interface TourCardProps {
     }
     language: string
     tours?: TourData[]
+    totalToursCount?: number
+    hasActiveFilters?: boolean
 }
 
-const TourCard = ({ translations, language, tours: filteredTours }: TourCardProps) => {
+const TourCard = ({
+    translations,
+    language,
+    tours: filteredTours,
+    totalToursCount,
+    hasActiveFilters = false,
+}: TourCardProps) => {
     const [tours, setTours] = useState<TourData[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -361,7 +369,7 @@ const TourCard = ({ translations, language, tours: filteredTours }: TourCardProp
                         getNoToursAvailableText(language)
                     }
                 </div>
-                {filteredTours !== undefined && (
+                {hasActiveFilters && (
                     <div className="text-gray-400 text-sm">
                         {getTryChangeFiltersText(language)}
                     </div>
@@ -375,9 +383,9 @@ const TourCard = ({ translations, language, tours: filteredTours }: TourCardProp
             {/* Счетчик результатов */}
             <div className="flex items-center justify-between">
                 <div className="text-gray-600">
-                    {getFoundText(language)}: <span className="font-semibold text-gray-900">{tours.length}</span> {getToursText(language)}
+                    {getFoundText(language)}: <span className="font-semibold text-gray-900">{totalToursCount ?? tours.length}</span> {getToursText(language)}
                 </div>
-                {filteredTours !== undefined && (
+                {hasActiveFilters && (
                     <div className="text-sm text-blue-600">
                         {getFilterActiveText(language)}
                     </div>

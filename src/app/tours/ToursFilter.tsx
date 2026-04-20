@@ -52,6 +52,15 @@ interface TourData {
   [key: string]: unknown;
 }
 
+const hasSupportedApiFilters = (filters: FilterState) =>
+  Boolean(
+    filters.location ||
+      filters.priceFrom ||
+      filters.priceTo ||
+      filters.duration ||
+      filters.language
+  );
+
 export default function ToursFilter({
   filters,
   onFilterChange,
@@ -148,15 +157,8 @@ export default function ToursFilter({
   // Применение фильтров и загрузка отфильтрованных экскурсий
   useEffect(() => {
     const applyFilters = async () => {
-      // Проверяем, есть ли активные фильтры
-      const hasActiveFilters = Object.values(filters).some((value) => {
-        if (typeof value === "string") return value.trim() !== "";
-        if (typeof value === "boolean") return value;
-        return false;
-      });
-
-      // Если нет активных фильтров, загружаем все туры
-      if (!hasActiveFilters) {
+      // Apply only filters that are backed by the current Strapi tour schema.
+      if (!hasSupportedApiFilters(filters)) {
         console.log("No active filters");
         setIsLoading(true);
 
@@ -226,7 +228,7 @@ export default function ToursFilter({
 
         // Фильтр по языку
         if (filters.language) {
-          params.append("filters[language][$eq]", filters.language);
+          params.append("filters[language][$eq]", filters.language.toUpperCase());
         }
 
         const apiUrl =
