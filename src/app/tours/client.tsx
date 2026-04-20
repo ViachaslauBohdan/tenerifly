@@ -129,21 +129,44 @@ const tourLanguageMap: Record<string, string> = {
   es: "ES",
 };
 
-const normalizeTourFilters = (rawFilters: Record<string, any>): TourFilterParams => {
+const tourFilterKeys = Object.keys(defaultTourFilters) as Array<
+  keyof TourFilterParams
+>;
+
+const normalizeTourFilters = (
+  rawFilters: Record<string, any>,
+  currentLocale?: string
+): TourFilterParams => {
+  const normalizedFilters = { ...defaultTourFilters };
+
+  for (const key of tourFilterKeys) {
+    if (rawFilters[key] !== undefined) {
+      normalizedFilters[key] = rawFilters[key];
+    }
+  }
+
   const languageValue =
-    typeof rawFilters.language === "string" ? rawFilters.language : "";
-  const normalizedLanguage =
-    tourLanguageMap[languageValue.toLowerCase()] || languageValue.toUpperCase();
+    typeof normalizedFilters.language === "string"
+      ? normalizedFilters.language
+      : "";
+  const loweredLanguageValue = languageValue.toLowerCase();
+  const isLocaleParam =
+    loweredLanguageValue === (currentLocale || "").toLowerCase() &&
+    loweredLanguageValue in tourLanguageMap;
+  const normalizedLanguage = isLocaleParam
+    ? ""
+    : tourLanguageMap[loweredLanguageValue] || languageValue.toUpperCase();
 
   return {
-    ...defaultTourFilters,
-    ...rawFilters,
-    priceFrom: rawFilters.priceFrom?.toString() || "",
-    priceTo: rawFilters.priceTo?.toString() || "",
-    duration: rawFilters.duration?.toString() || "",
+    ...normalizedFilters,
+    priceFrom: normalizedFilters.priceFrom?.toString() || "",
+    priceTo: normalizedFilters.priceTo?.toString() || "",
+    duration: normalizedFilters.duration?.toString() || "",
     language: normalizedLanguage,
     durationType:
-      rawFilters.durationType === "days" ? "days" : defaultTourFilters.durationType,
+      normalizedFilters.durationType === "days"
+        ? "days"
+        : defaultTourFilters.durationType,
   };
 };
 
@@ -184,7 +207,7 @@ export default function ToursPageClient({
   const [filters, setFilters] = useState<TourFilterParams>(() => {
     if (searchParams) {
       const urlFilters = parseUrlParams(searchParams);
-      return normalizeTourFilters(urlFilters);
+      return normalizeTourFilters(urlFilters, locale);
     }
     return defaultTourFilters;
   });
@@ -213,7 +236,8 @@ export default function ToursPageClient({
     filters,
     onFiltersChange: (newFilters) => {
       const normalizedFilters = normalizeTourFilters(
-        newFilters as Record<string, any>
+        newFilters as Record<string, any>,
+        locale
       );
       setFilters((currentFilters) =>
         areTourFiltersEqual(currentFilters, normalizedFilters)
