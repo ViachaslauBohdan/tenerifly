@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useTranslation } from "@/hooks/useTranslation";
 import {
   ChevronDown,
-  Check,
   Home,
   Car,
   MapPin,
@@ -112,8 +111,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [language, setLanguage] = useState<LanguageCode>(
     (locale || "en") as LanguageCode
   );
-  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-
   // State for component
   const [mounted, setMounted] = useState(false);
 
@@ -191,7 +188,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   const t = translations[language];
   const transferCopy = getTransferLocaleText(language);
-  const currentLanguage = languages.find((lang) => lang.code === language);
   const datePlaceholder =
     language === "ru"
       ? "Выберите дату"
@@ -413,7 +409,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   // Переключение языка через URL
   const handleLanguageChange = (langCode: LanguageCode) => {
     switchLocale(langCode);
-    setIsLanguageDropdownOpen(false);
   };
 
   // Показываем загрузку до инициализации
@@ -603,57 +598,34 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             </a>
           </nav>
 
-          <div className="relative shrink-0 pl-0.5">
-            <button
-              type="button"
-              onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
-              className="flex max-w-[min(100%,10.5rem)] items-center gap-1 rounded-lg border border-white/25 bg-white/90 px-2 py-1.5 text-gray-800 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white sm:gap-1.5 sm:py-2 lg:max-w-[13rem] lg:gap-2 lg:px-2.5 xl:max-w-none xl:px-3"
-              aria-expanded={isLanguageDropdownOpen}
-              aria-haspopup="listbox"
-            >
-              <span className="shrink-0 text-base sm:text-lg">
-                {currentLanguage?.flag}
-              </span>
-              <span className="min-w-0 truncate font-medium lg:hidden">
-                {currentLanguage?.code.toUpperCase()}
-              </span>
-              <span className="hidden min-w-0 max-w-[10rem] truncate font-medium lg:inline-block xl:max-w-[12rem] 2xl:max-w-none">
-                {currentLanguage?.name}
-              </span>
-              <ChevronDown
-                className={`h-3.5 w-3.5 shrink-0 text-gray-500 transition-transform duration-200 sm:h-4 sm:w-4 ${isLanguageDropdownOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-
-            {isLanguageDropdownOpen && (
-              <div className="absolute right-0 z-[60] mt-2 w-[min(18rem,calc(100vw-1rem))] rounded-lg border border-gray-200 bg-white shadow-xl">
-                <div className="py-2">
-                  <div className="border-b border-gray-100 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
-                    {t.selectLanguage}
-                  </div>
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      type="button"
-                      onClick={() =>
-                        handleLanguageChange(lang.code as LanguageCode)
-                      }
-                      className={`flex w-full items-center gap-3 px-3 py-2 text-left transition-colors hover:bg-gray-50 ${
-                        language === lang.code
-                          ? "bg-blue-50 text-blue-700"
-                          : "text-gray-700"
-                      }`}
-                    >
-                      <span className="text-lg">{lang.flag}</span>
-                      <span className="font-medium">{lang.name}</span>
-                      {language === lang.code && (
-                        <Check className="ml-auto h-4 w-4 text-blue-600" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+          <div
+            className="flex min-w-0 max-w-[42%] shrink-0 items-center justify-end sm:max-w-none"
+            role="group"
+            aria-label={t.selectLanguage}
+          >
+            <div className="flex max-w-full items-center gap-px overflow-x-auto overscroll-x-contain rounded-md bg-white/5 p-0.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-px sm:p-0.5 [&::-webkit-scrollbar]:hidden">
+              {languages.map((lang) => {
+                const active = language === lang.code;
+                return (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() =>
+                      handleLanguageChange(lang.code as LanguageCode)
+                    }
+                    className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide transition-colors sm:px-2 sm:text-xs ${
+                      active
+                        ? "bg-white/25 text-white shadow-sm"
+                        : "text-white/55 hover:bg-white/10 hover:text-white"
+                    }`}
+                    aria-current={active ? "true" : undefined}
+                    title={lang.name}
+                  >
+                    {lang.code.toUpperCase()}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </header>
@@ -2434,14 +2406,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           </div>
         </div>
       </footer>
-
-      {/* Click outside to close dropdown */}
-      {isLanguageDropdownOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsLanguageDropdownOpen(false)}
-        />
-      )}
 
       {/* Модальное окно бронирования */}
       {bookingItem && (

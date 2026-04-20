@@ -69,6 +69,8 @@ export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
         "@id": `${SITE_URL}/#website`,
         url: SITE_URL,
         name: "Tenerifly.io",
+        description:
+          "Tenerife travel: rent apartments and holiday homes, hire cars, and book tours in the Canary Islands. Plan your trip to Tenerife—flights, stays, and local experiences.",
         inLanguage: ["en", "pl", "fr", "ru", "uk", "de", "es"],
         publisher: { "@id": `${SITE_URL}/#organization` },
       },
@@ -78,12 +80,16 @@ export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
 
 export const SEO_HOME: Record<Locale, PageSeo> = {
   en: {
-    title: "Tenerifly.io — Your Gateway to Tenerife",
+    title: "Tenerifly.io — Tenerife travel: fly, stay & explore the Canary Islands",
     description:
-      "Discover Tenerife with Tenerifly.io: holiday accommodation, car hire, and guided tours across the Canary Islands. Book with local hosts for better value and authentic trips.",
+      "Flying to Tenerife? Plan your whole trip on Tenerifly.io: rent apartments and villas, hire a car, and book tours across Tenerife—Spain’s largest Canary Island. Search Tenerife holidays with local hosts.",
     keywords: [
       "Tenerife",
-      "Canary Islands",
+      "fly to Tenerife",
+      "Tenerife flights",
+      "Tenerife holiday",
+      "Tenerife Canary Islands",
+      "visit Tenerife",
       "Tenerife accommodation",
       "Tenerife car rental",
       "Tenerife tours",
@@ -92,97 +98,108 @@ export const SEO_HOME: Record<Locale, PageSeo> = {
     ],
   },
   pl: {
-    title: "Tenerifly.io — Odkryj Teneryfę",
+    title: "Tenerifly.io — Lot na Teneryfę: noclegi, auto i wycieczki",
     description:
-      "Teneryfa i Wyspy Kanaryjskie: apartamenty i domy, wynajem aut oraz wycieczki z lokalnymi organizatorami. Rezerwuj online po polsku — bez pośredników.",
+      "Planujesz lot na Teneryfę? Zarezerwuj nocleg, wynajem auta i wycieczki w jednym miejscu. Teneryfa i Wyspy Kanaryjskie — oferty od lokalnych gospodarzy, bez pośredników.",
     keywords: [
       "Teneryfa",
+      "lot na Teneryfę",
+      "Teneryfa wakacje",
       "Wyspy Kanaryjskie",
       "noclegi Teneryfa",
       "wynajem aut Teneryfa",
       "wycieczki Teneryfa",
-      "wakacje Teneryfa",
       "apartamenty Teneryfa",
     ],
   },
   fr: {
-    title: "Tenerifly.io — Votre porte d’entrée à Ténérife",
+    title: "Tenerifly.io — Voyage à Ténérife : vol, séjour et îles Canaries",
     description:
-      "Ténérife et îles Canaries : hébergements, location de voiture et excursions avec des prestataires locaux. Réservez en français pour des séjours authentiques.",
+      "Vous prévoyez un vol vers Ténérife ? Réservez hébergement, voiture et excursions au même endroit. Ténérife et les Canaries avec des prestataires locaux.",
     keywords: [
       "Ténérife",
+      "vol Ténérife",
+      "vacances Ténérife",
       "îles Canaries",
       "hébergement Ténérife",
       "location voiture Ténérife",
       "excursions Ténérife",
       "voyage Ténérife",
-      "vacances Canaries",
     ],
   },
   ru: {
-    title: "Tenerifly.io — Тенерифе и Канарские острова",
+    title: "Tenerifly.io — Тенерифе: перелёт, жильё, авто и туры на Канарах",
     description:
-      "Жильё на Тенерифе, аренда авто и экскурсии с местными организаторами. Планируйте отдых на Канарах на русском языке — прямые цены и локальные гиды.",
+      "Собираетесь на Тенерифе? Забронируйте жильё, аренду авто и экскурсии в одном сервисе. Канарские острова — прямые цены от местных организаторов.",
     keywords: [
       "Тенерифе",
+      "перелёт на Тенерифе",
+      "отдых на Тенерифе",
       "Канарские острова",
       "аренда жилья Тенерифе",
       "аренда авто Тенерифе",
       "экскурсии Тенерифе",
-      "отдых на Тенерифе",
       "Канары тур",
     ],
   },
   uk: {
-    title: "Tenerifly.io — Тенеріфе та Канарські острови",
+    title: "Tenerifly.io — Тенеріфе: переліт, житло, авто та тури",
     description:
-      "Житло на Тенеріфе, оренда авто та тури з локальними партнерами. Плануйте канарську подорож українською — прямі бронювання та чесні ціни.",
+      "Плануєте політ на Тенеріфе? Забронюйте житло, оренду авто та тури в одному місці. Канарські острови — прямі пропозиції від локальних партнерів.",
     keywords: [
       "Тенеріфе",
+      "політ на Тенеріфе",
+      "відпочинок Тенеріфе",
       "Канарські острови",
       "житло Тенеріфе",
       "оренда авто Тенеріфе",
       "тури Тенеріфе",
-      "відпочинок Тенеріфе",
       "Канари подорож",
     ],
   },
   de: {
-    title: "Tenerifly.io — Dein Einstieg in Teneriffa",
+    title: "Tenerifly.io — Teneriffa Urlaub: Flug, Unterkunft & Mietwagen",
     description:
-      "Teneriffa und Kanaren: Unterkünfte, Mietwagen und Touren mit lokalen Anbietern. Direkt buchen — authentische Erlebnisse auf den Kanaren.",
+      "Sie fliegen nach Teneriffa? Unterkunft, Mietwagen und Ausflüge zentral planen. Kanaren-Urlaub mit lokalen Anbietern — direkt und transparent buchen.",
     keywords: [
       "Teneriffa",
+      "Flug Teneriffa",
+      "Teneriffa Urlaub",
       "Kanaren",
       "Unterkunft Teneriffa",
       "Mietwagen Teneriffa",
       "Ausflüge Teneriffa",
-      "Urlaub Teneriffa",
       "Kanaren Reise",
     ],
   },
   es: {
-    title: "Tenerifly.io — Tu puerta de entrada a Tenerife",
+    title: "Tenerifly.io — Viajar a Tenerife: vuelo, alojamiento y coche",
     description:
-      "Tenerife e islas Canarias: alojamiento, alquiler de coches y excursiones con proveedores locales. Reserva en español y disfruta el destino como un local.",
+      "¿Vuelo a Tenerife? Reserva apartamento o villa, coche de alquiler y excursiones en un solo sitio. Tenerife e Islas Canarias con proveedores locales.",
     keywords: [
       "Tenerife",
+      "vuelo a Tenerife",
+      "vacaciones Tenerife",
       "Islas Canarias",
       "alojamiento Tenerife",
       "alquiler coche Tenerife",
       "excursiones Tenerife",
       "viaje Tenerife",
-      "vacaciones Canarias",
     ],
   },
 };
 
 export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
   en: {
-    title: "Accommodation in Tenerife | Tenerifly.io",
+    title: "Tenerife apartments for rent | holiday lets & short stays | Tenerifly.io",
     description:
-      "Browse apartments, villas, and holiday homes in Tenerife. Compare listings and book directly with local hosts across the Canary Islands.",
+      "Rent an apartment in Tenerife for your holiday or longer stay. Browse holiday lets, flats, and villas—Tenerife apartment rental with direct booking from local hosts in the Canary Islands.",
     keywords: [
+      "Tenerife rent apartment",
+      "rent apartment Tenerife",
+      "Tenerife apartment rental",
+      "Tenerife apartments for rent",
+      "holiday apartment Tenerife",
       "Tenerife accommodation",
       "Tenerife apartments",
       "Tenerife villas",
@@ -191,10 +208,12 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
     ],
   },
   pl: {
-    title: "Noclegi i apartamenty na Teneryfie | Tenerifly.io",
+    title: "Wynajem apartamentu na Teneryfie | noclegi i krótkie pobyty | Tenerifly.io",
     description:
-      "Apartamenty, wille i domy wakacyjne na Teneryfie. Przeglądaj oferty i rezerwuj bezpośrednio u lokalnych gospodarzy na Wyspach Kanaryjskich.",
+      "Wynajem apartamentu na Teneryfie — wakacje i dłuższe pobyty. Przeglądaj oferty: apartamenty, wille i domy. Rezerwacja u lokalnych gospodarzy na Wyspach Kanaryjskich.",
     keywords: [
+      "wynajem apartamentu Teneryfa",
+      "apartament Teneryfa wynajem",
       "noclegi Teneryfa",
       "apartamenty Teneryfa",
       "wille Teneryfa",
@@ -203,61 +222,71 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
     ],
   },
   fr: {
-    title: "Hébergement à Ténérife | Tenerifly.io",
+    title: "Louer un appartement à Ténérife | location saisonnière | Tenerifly.io",
     description:
-      "Appartements, villas et maisons de vacances à Ténérife. Comparez les annonces et réservez directement avec des hôtes locaux aux Canaries.",
+      "Louer un appartement à Ténérife pour vos vacances ou un séjour prolongé. Appartements, villas et maisons d’hôtes aux Canaries — réservation directe.",
     keywords: [
+      "louer appartement Ténérife",
+      "location appartement Ténérife",
       "hébergement Ténérife",
       "appartement Ténérife",
-      "location Ténérife",
+      "location vacances Ténérife",
       "villa Ténérife",
       "Canaries séjour",
     ],
   },
   ru: {
-    title: "Жильё и апартаменты на Тенерифе | Tenerifly.io",
+    title: "Снять квартиру на Тенерифе | аренда жилья и апартаментов | Tenerifly.io",
     description:
-      "Квартиры, виллы и дома для отдыха на Тенерифе. Сравнивайте объявления и бронируйте напрямую у владельцев на Канарах.",
+      "Аренда квартиры на Тенерифе для отдыха или длительного проживания. Квартиры, виллы, апартаменты на Канарах — бронирование напрямую у владельцев.",
     keywords: [
+      "снять квартиру Тенерифе",
+      "аренда квартиры Тенерифе",
+      "аренда апартаментов Тенерифе",
       "жильё Тенерифе",
       "апартаменты Тенерифе",
-      "аренда Тенерифе",
-      "вилла Тенерифе",
+      "аренда жилья Тенерифе",
       "Канары жильё",
     ],
   },
   uk: {
-    title: "Житло та апартаменти на Тенеріфе | Tenerifly.io",
+    title: "Оренда квартири на Тенеріфе | подобово та довгостроково | Tenerifly.io",
     description:
-      "Квартири, вілли та будинки для відпочинку на Тенеріфе. Порівнюйте оголошення та бронюйте напряму у локальних орендодавців на Канарах.",
+      "Оренда квартири на Тенеріфе для відпочинку чи довшого перебування. Квартири, апартаменти, вілли на Канарах — бронювання напряму у власників.",
     keywords: [
+      "оренда квартири Тенеріфе",
+      "зняти квартиру Тенеріфе",
+      "квартира подобово Тенеріфе",
       "житло Тенеріфе",
       "апартаменти Тенеріфе",
-      "оренда Тенеріфе",
-      "вілла Тенеріфе",
+      "оренда житла Тенеріфе",
       "Канари житло",
     ],
   },
   de: {
-    title: "Unterkünfte auf Teneriffa | Tenerifly.io",
+    title: "Wohnung auf Teneriffa mieten | Ferienwohnung & Apartment | Tenerifly.io",
     description:
-      "Apartments, Villen und Ferienhäuser auf Teneriffa. Angebote vergleichen und direkt bei lokalen Gastgebern auf den Kanaren buchen.",
+      "Apartment oder Ferienwohnung auf Teneriffa mieten — Kurzurlaub oder längerer Aufenthalt. Angebote von lokalen Gastgebern auf den Kanaren vergleichen.",
     keywords: [
-      "Unterkunft Teneriffa",
-      "Apartment Teneriffa",
+      "Wohnung mieten Teneriffa",
       "Ferienwohnung Teneriffa",
+      "Apartment Teneriffa",
+      "Unterkunft Teneriffa",
+      "Teneriffa mieten",
       "Villa Teneriffa",
       "Kanaren Urlaub",
     ],
   },
   es: {
-    title: "Alojamiento en Tenerife | Tenerifly.io",
+    title: "Alquiler apartamento Tenerife | vacacional y larga estancia | Tenerifly.io",
     description:
-      "Apartamentos, villas y casas vacacionales en Tenerife. Compara anuncios y reserva directamente con anfitriones locales en Canarias.",
+      "Alquilar apartamento en Tenerife para vacaciones o estancias largas. Pisos, apartamentos y villas en Canarias — reserva directa con anfitriones locales.",
     keywords: [
-      "alojamiento Tenerife",
+      "alquiler apartamento Tenerife",
+      "alquilar piso Tenerife",
       "apartamentos Tenerife",
       "alquiler vacacional Tenerife",
+      "alojamiento Tenerife",
       "villa Tenerife",
       "Canarias alojamiento",
     ],

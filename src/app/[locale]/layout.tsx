@@ -27,7 +27,8 @@ export async function generateMetadata({
 
   return {
     title: {
-      default: "Tenerifly.io - Accommodation, Tours and Car Rental in Tenerife",
+      default:
+        "Tenerifly.io — Tenerife holidays: apartments, car hire & tours (Canary Islands)",
       template: "%s | Tenerifly.io",
     },
     description: seo.description,
@@ -41,7 +42,7 @@ export async function generateMetadata({
       telephone: false,
     },
     openGraph: {
-      title: "Tenerifly.io - Your Guide to Tenerife",
+      title: seo.title,
       description: seo.description,
       url: absoluteUrlForLocale(localeCode, ""),
       siteName: "Tenerifly.io",
@@ -50,7 +51,7 @@ export async function generateMetadata({
           url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
-          alt: "Tenerifly.io - Your Guide to Tenerife",
+          alt: seo.title,
         },
       ],
       locale: ogLocale(localeCode),
@@ -58,7 +59,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: "Tenerifly.io - Your Guide to Tenerife",
+      title: seo.title,
       description: seo.description,
       images: [DEFAULT_OG_IMAGE],
       creator: "@tenerifly",
