@@ -35,32 +35,3 @@
 </p>
 
 > When native apps are published, replace the links above with your direct App Store and Google Play listing URLs.
-
----
-
-## For developers
-
-This repository is the [Next.js](https://nextjs.org) frontend for **Tenerifly.io** (Node **20.18.1**).
-
-### Getting started
-
-```bash
-npm install
-npm run dev
-```
-
-Open [http://127.0.0.1:3000](http://127.0.0.1:3000). The app runs `fetch-translations` before dev/build; ensure Strapi and env vars are configured for full data.
-
-### Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Dev server with translation fetch |
-| `npm run build` | Production build |
-| `npm run start` | Run production server |
-| `npm run lint` | ESLint |
-
-### Learn more
-
-- [Next.js documentation](https://nextjs.org/docs)
-- Deployment: [Next.js deploying](https://nextjs.org/docs/app/building-your-application/deploying) (e.g. [Vercel](https://vercel.com/new))
