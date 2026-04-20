@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Transfer } from "@/lib/transfers";
+import { normalizeExcursionDocumentToTourCard } from "@/lib/strapiExcursionTours";
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
 
@@ -205,7 +206,7 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
           transfersResult,
         ] =
           await Promise.allSettled([
-            fetchFromStrapi("/tours/?populate=*&pagination[pageSize]=1000"),
+            fetchFromStrapi("/excursions/?populate=*&pagination[pageSize]=1000"),
             fetchFromStrapi("/cars/?populate=*&pagination[pageSize]=1000"),
             fetchFromStrapi("/properties/?populate=*&pagination[pageSize]=1000"),
             fetchFromStrapi("/blog-posts/?populate=*&pagination[pageSize]=1000"),
@@ -217,7 +218,9 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
           toursResult.status === "fulfilled" &&
           toursResult.value?.data?.length > 0
         ) {
-          const transformedTours = toursResult.value.data.map((tour: any) => ({
+          const transformedTours = toursResult.value.data.map((raw: unknown) => {
+            const tour = normalizeExcursionDocumentToTourCard(raw);
+            return {
             id: tour.id,
             documentId: tour.documentId,
             slug: tour.slug,
@@ -226,11 +229,12 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
             description:
               tour.description || "Discover amazing places in Tenerife",
             duration: tour.duration || "3 hours",
-            price: `€${tour.price?.amount || tour.cost || tour.pricing?.amount || 50}`,
+            price: `€${tour.price?.amount || 50}`,
             rating: 4.8,
-            groupSize: `${getLocalizedText(language, "max")} ${tour.maxGroupSize || tour.max_group_size || 20} ${getLocalizedText(language, "people")}`,
+            groupSize: `${getLocalizedText(language, "max")} ${tour.maxGroupSize ?? 20} ${getLocalizedText(language, "people")}`,
             image: getImageUrl(tour),
-          }));
+          };
+          });
           setExcursions(transformedTours);
         }
 

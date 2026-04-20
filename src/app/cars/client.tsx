@@ -5,7 +5,10 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import CarCard from "./CarCard";
 import CarsFilter from "./CarsFilter";
-import { parseUrlParams, CarFilterParams } from "@/utils/filterUtils";
+import {
+  parseUrlParamsExcludingPagination,
+  CarFilterParams,
+} from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
 import translations from "@/i18n/cars.json";
@@ -37,6 +40,66 @@ const languages = [
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
 ];
+
+const DEFAULT_CAR_FILTERS: CarFilterParams = {
+  brand: "",
+  model: "",
+  yearFrom: "",
+  yearTo: "",
+  priceFrom: "",
+  priceTo: "",
+  mileageFrom: "",
+  mileageTo: "",
+  fuel: "",
+  transmission: "",
+  bodyType: "",
+  color: "",
+  doors: "",
+  powerFrom: "",
+  powerTo: "",
+  location: "",
+  availableFrom: "",
+  airConditioner: false,
+  rearCamera: false,
+  multimedia: false,
+  bluetooth: false,
+  gps: false,
+  type: "",
+  carStatus: "",
+};
+
+function carFiltersFromSearchParams(
+  params: URLSearchParams | null
+): CarFilterParams {
+  if (!params) return { ...DEFAULT_CAR_FILTERS };
+  const urlFilters = parseUrlParamsExcludingPagination(params);
+  return {
+    brand: (urlFilters.brand as string) || "",
+    model: (urlFilters.model as string) || "",
+    yearFrom: (urlFilters.yearFrom as string) || "",
+    yearTo: (urlFilters.yearTo as string) || "",
+    priceFrom: (urlFilters.priceFrom as string) || "",
+    priceTo: (urlFilters.priceTo as string) || "",
+    mileageFrom: (urlFilters.mileageFrom as string) || "",
+    mileageTo: (urlFilters.mileageTo as string) || "",
+    fuel: (urlFilters.fuel as string) || "",
+    transmission: (urlFilters.transmission as string) || "",
+    bodyType: (urlFilters.bodyType as string) || "",
+    color: (urlFilters.color as string) || "",
+    doors: (urlFilters.doors as string) || "",
+    powerFrom: (urlFilters.powerFrom as string) || "",
+    powerTo: (urlFilters.powerTo as string) || "",
+    location: (urlFilters.location as string) || "",
+    availableFrom: (urlFilters.availableFrom as string) || "",
+    airConditioner: (urlFilters.airConditioner as boolean) || false,
+    rearCamera: (urlFilters.rearCamera as boolean) || false,
+    multimedia: (urlFilters.multimedia as boolean) || false,
+    bluetooth: (urlFilters.bluetooth as boolean) || false,
+    gps: (urlFilters.gps as boolean) || false,
+    type: (urlFilters.type as string) || "",
+    carStatus: (urlFilters.carStatus as string) || "",
+  };
+}
 
 interface CarData {
   id: number;
@@ -126,63 +189,9 @@ export default function CarsPageClient({
   }, [locale]);
 
   // Инициализация фильтров из URL параметров
-  const [filters, setFilters] = useState<CarFilterParams>(() => {
-    if (searchParams) {
-      const urlFilters = parseUrlParams(searchParams);
-      return {
-        brand: (urlFilters.brand as string) || "",
-        model: (urlFilters.model as string) || "",
-        yearFrom: (urlFilters.yearFrom as string) || "",
-        yearTo: (urlFilters.yearTo as string) || "",
-        priceFrom: (urlFilters.priceFrom as string) || "",
-        priceTo: (urlFilters.priceTo as string) || "",
-        mileageFrom: (urlFilters.mileageFrom as string) || "",
-        mileageTo: (urlFilters.mileageTo as string) || "",
-        fuel: (urlFilters.fuel as string) || "",
-        transmission: (urlFilters.transmission as string) || "",
-        bodyType: (urlFilters.bodyType as string) || "",
-        color: (urlFilters.color as string) || "",
-        doors: (urlFilters.doors as string) || "",
-        powerFrom: (urlFilters.powerFrom as string) || "",
-        powerTo: (urlFilters.powerTo as string) || "",
-        location: (urlFilters.location as string) || "",
-        availableFrom: (urlFilters.availableFrom as string) || "",
-        airConditioner: (urlFilters.airConditioner as boolean) || false,
-        rearCamera: (urlFilters.rearCamera as boolean) || false,
-        multimedia: (urlFilters.multimedia as boolean) || false,
-        bluetooth: (urlFilters.bluetooth as boolean) || false,
-        gps: (urlFilters.gps as boolean) || false,
-        type: (urlFilters.type as string) || "",
-        carStatus: (urlFilters.carStatus as string) || "",
-      };
-    }
-    return {
-      brand: "",
-      model: "",
-      yearFrom: "",
-      yearTo: "",
-      priceFrom: "",
-      priceTo: "",
-      mileageFrom: "",
-      mileageTo: "",
-      fuel: "",
-      transmission: "",
-      bodyType: "",
-      color: "",
-      doors: "",
-      powerFrom: "",
-      powerTo: "",
-      location: "",
-      availableFrom: "",
-      airConditioner: false,
-      rearCamera: false,
-      multimedia: false,
-      bluetooth: false,
-      gps: false,
-      type: "",
-      carStatus: "",
-    };
-  });
+  const [filters, setFilters] = useState<CarFilterParams>(() =>
+    carFiltersFromSearchParams(searchParams)
+  );
 
   // Состояния для всех и отфильтрованных автомобилей
   const [allCarsByLocale, setAllCarsByLocale] = useState<
@@ -211,6 +220,16 @@ export default function CarsPageClient({
       setFilters(newFilters as CarFilterParams);
     },
   });
+
+  const carSearchQueryKey = searchParams?.toString() ?? "";
+
+  useEffect(() => {
+    if (!searchParams) return;
+    const next = carFiltersFromSearchParams(searchParams);
+    setFilters((prev) =>
+      JSON.stringify(prev) === JSON.stringify(next) ? prev : next
+    );
+  }, [carSearchQueryKey, searchParams]);
 
   // Инициализация текущей страницы из URL параметров
   const [currentPage, setCurrentPage] = useState(() => {

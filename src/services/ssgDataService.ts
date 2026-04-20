@@ -2,6 +2,10 @@
 
 import { Transfer } from "@/lib/transfers";
 import { pickFeaturedHomeTours } from "@/lib/featuredHomeTours";
+import {
+  normalizeExcursionDocumentToTourCard,
+  type NormalizedExcursionTour,
+} from "@/lib/strapiExcursionTours";
 
 const API_URL =
   process.env.NEXT_PUBLIC_STRAPI_API_URL ||
@@ -408,12 +412,14 @@ export async function getAllCarsAllLocales() {
   return carsByLocale;
 }
 
-// Получение всех экскурсий
-export async function getAllTours() {
-  return fetchWithCache(
-    "/tours?populate=*&pagination[pageSize]=1000",
-    "all-tours"
+// Получение всех экскурсий (Strapi `excursion`)
+export async function getAllTours(): Promise<NormalizedExcursionTour[]> {
+  const rows = await fetchWithCache(
+    "/excursions?populate=*&pagination[pageSize]=1000",
+    "all-excursions-tour-ui"
   );
+  if (!Array.isArray(rows)) return [];
+  return rows.map((row: unknown) => normalizeExcursionDocumentToTourCard(row));
 }
 
 export async function getAllTransfers() {
@@ -467,13 +473,10 @@ export async function getBlogById(id: string) {
   return blog;
 }
 
-// Получение тура по ID
-export async function getTourById(id: string) {
-  const tour = await fetchWithCache(`/tours/${id}?populate=*`, `tour-${id}`);
-
-  // Изображения загружаются динамически, без предзагрузки в SSG
-
-  return tour;
+// Получение экскурсии по documentId (коллекция `excursions`)
+export async function getTourById(id: string): Promise<NormalizedExcursionTour> {
+  const raw = await fetchWithCache(`/excursions/${id}?populate=*`, `excursion-${id}`);
+  return normalizeExcursionDocumentToTourCard(raw);
 }
 
 export async function getTransferById(id: string) {
@@ -503,10 +506,16 @@ export async function getAllCarIds() {
 
 // Получение всех ID экскурсий для генерации статических путей
 export async function getAllTourIds() {
-  return fetchWithCache(
-    "/tours?fields=id&pagination[pageSize]=1000",
-    "tour-ids"
+  const rows = await fetchWithCache(
+    "/excursions?pagination[pageSize]=1000",
+    "excursion-ids"
   );
+  if (!Array.isArray(rows)) return [];
+  return rows
+    .map((r: { documentId?: string; id?: number }) => ({
+      documentId: String(r?.documentId ?? r?.id ?? ""),
+    }))
+    .filter((x) => x.documentId.length > 0);
 }
 
 export async function getAllTransferIds() {
@@ -551,22 +560,7 @@ export async function getHomePageData(language: string = "en") {
     const tours =
       toursResult.status === "fulfilled"
         ? toursResult.value.map(
-            (tour: {
-              id: number;
-              documentId: string;
-              slug?: string;
-              isPopular?: boolean;
-              name?: string;
-              title?: string;
-              description?: string;
-              duration?: string;
-              price?: { amount: number };
-              cost?: number;
-              pricing?: { amount: number };
-              maxGroupSize?: number;
-              max_group_size?: number;
-              images?: Array<{ url: string }>;
-            }) => ({
+            (tour: NormalizedExcursionTour) => ({
               id: tour.id,
               documentId: tour.documentId,
               slug: tour.slug,
@@ -575,9 +569,9 @@ export async function getHomePageData(language: string = "en") {
               description:
                 tour.description || "Discover amazing places in Tenerife",
               duration: tour.duration || "3 hours",
-              price: `€${tour.price?.amount || tour.cost || tour.pricing?.amount || 50}`,
+              price: `€${tour.price?.amount ?? 50}`,
               rating: 4.8,
-              groupSize: `${getLocalizedText(language, "max")} ${tour.maxGroupSize || tour.max_group_size || 20} ${getLocalizedText(language, "people")}`,
+              groupSize: `${getLocalizedText(language, "max")} ${tour.maxGroupSize ?? 20} ${getLocalizedText(language, "people")}`,
               image: getImageUrl(tour),
             })
           )

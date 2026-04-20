@@ -5,10 +5,40 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import ApartmentCard from "./ApartmentCard";
 import ApartmentsFilter from "./ApartmentsFilter";
-import { parseUrlParams, ApartmentFilterParams } from "@/utils/filterUtils";
+import {
+  parseUrlParamsExcludingPagination,
+  ApartmentFilterParams,
+} from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
 import translations from "@/i18n/apartments.json";
+
+const DEFAULT_APARTMENT_FILTERS: ApartmentFilterParams = {
+  propertyType: "",
+  rooms: "",
+  areaFrom: "",
+  areaTo: "",
+  priceFrom: "",
+  priceTo: "",
+  floorFrom: "",
+  floorTo: "",
+  yearBuiltFrom: "",
+  yearBuiltTo: "",
+  condition: "",
+  city: "",
+  district: "",
+  balcony: false,
+  terrace: false,
+  garden: false,
+  parking: false,
+  furnished: false,
+  airConditioner: false,
+  wifi: false,
+  washingMachine: false,
+  dishwasher: false,
+  type: "",
+  propertyStatus: "",
+};
 
 const getLoadingPropertiesText = (language: string) => {
   const texts: Record<string, string> = {
@@ -120,42 +150,15 @@ export default function ApartmentsPageClient({
 
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<ApartmentFilterParams>(() => {
-    const defaultFilters: ApartmentFilterParams = {
-      propertyType: "",
-      rooms: "",
-      areaFrom: "",
-      areaTo: "",
-      priceFrom: "",
-      priceTo: "",
-      floorFrom: "",
-      floorTo: "",
-      yearBuiltFrom: "",
-      yearBuiltTo: "",
-      condition: "",
-      city: "",
-      district: "",
-      balcony: false,
-      terrace: false,
-      garden: false,
-      parking: false,
-      furnished: false,
-      airConditioner: false,
-      wifi: false,
-      washingMachine: false,
-      dishwasher: false,
-      type: "",
-      propertyStatus: "",
-    };
-
     if (searchParams) {
-      const urlFilters = parseUrlParams(searchParams);
+      const urlFilters = parseUrlParamsExcludingPagination(searchParams);
       return {
-        ...defaultFilters,
+        ...DEFAULT_APARTMENT_FILTERS,
         ...urlFilters,
       };
     }
 
-    return defaultFilters;
+    return { ...DEFAULT_APARTMENT_FILTERS };
   });
 
   // Состояния для всех и отфильтрованных апартаментов
@@ -180,6 +183,17 @@ export default function ApartmentsPageClient({
     },
     onFiltersChanged: () => setFiltersChanged(true),
   });
+
+  const apartmentSearchQueryKey = searchParams?.toString() ?? "";
+
+  useEffect(() => {
+    if (!searchParams) return;
+    const raw = parseUrlParamsExcludingPagination(searchParams);
+    setFilters((prev) => {
+      const next = { ...DEFAULT_APARTMENT_FILTERS, ...raw } as ApartmentFilterParams;
+      return JSON.stringify(prev) === JSON.stringify(next) ? prev : next;
+    });
+  }, [apartmentSearchQueryKey, searchParams]);
 
   // Инициализация текущей страницы из URL параметров
   const [currentPage, setCurrentPage] = useState(() => {

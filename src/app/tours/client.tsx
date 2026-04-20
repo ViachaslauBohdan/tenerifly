@@ -6,7 +6,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { ExternalLink, MapPin } from "lucide-react";
 import ToursFilter from "./ToursFilter";
 import TourCard from "./TourCard";
-import { parseUrlParams, TourFilterParams } from "@/utils/filterUtils";
+import {
+  parseUrlParamsExcludingPagination,
+  TourFilterParams,
+} from "@/utils/filterUtils";
+import { mapExcursionsApiResponseToTourCards } from "@/lib/strapiExcursionTours";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
 import translations from "@/i18n/tours.json";
@@ -198,7 +202,7 @@ export default function ToursPageClient({
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<TourFilterParams>(() => {
     if (searchParams) {
-      const urlFilters = parseUrlParams(searchParams);
+      const urlFilters = parseUrlParamsExcludingPagination(searchParams);
       return normalizeTourFilters(urlFilters);
     }
     return defaultTourFilters;
@@ -238,6 +242,19 @@ export default function ToursPageClient({
     },
   });
 
+  // Hydrate filter state from the URL when the query string changes (back/forward, shared links).
+  // Generic useFilterSync URL→state sync was removed: it re-ran on every filter change and mixed
+  // pagination keys with filter state, which could trigger unrelated data loaders.
+  const searchQueryKey = searchParams?.toString() ?? "";
+
+  useEffect(() => {
+    if (!searchParams) return;
+    const next = normalizeTourFilters(
+      parseUrlParamsExcludingPagination(searchParams)
+    );
+    setFilters((prev) => (areTourFiltersEqual(prev, next) ? prev : next));
+  }, [searchQueryKey, searchParams]);
+
   const [itemsPerPage] = useState(12); // Show 12 tours per page
 
   // Функция для создания заголовков с авторизацией
@@ -266,7 +283,7 @@ export default function ToursPageClient({
           process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
         console.log("Tours Page API URL:", apiUrl); // Для отладки
 
-        const response = await fetch(`${apiUrl}/api/tours/?populate=*&pagination[pageSize]=1000`, {
+        const response = await fetch(`${apiUrl}/api/excursions/?populate=*&pagination[pageSize]=1000`, {
           headers: getAuthHeaders(),
         });
 
@@ -276,12 +293,14 @@ export default function ToursPageClient({
 
         const data = await response.json();
 
-        console.log("Loaded tours from API:", {
-          count: data.data?.length || 0,
+        const mapped = mapExcursionsApiResponseToTourCards(data);
+
+        console.log("Loaded excursions from API:", {
+          count: mapped.length,
         });
 
-        if (data.data) {
-          setTours(data.data);
+        if (mapped.length) {
+          setTours(mapped as unknown as Tour[]);
         }
       } catch (error) {
         console.error("Error loading tours:", error);

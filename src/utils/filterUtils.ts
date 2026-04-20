@@ -89,6 +89,23 @@ export type FilterParams =
   | CarFilterParams
   | TourFilterParams;
 
+/** URL keys handled outside filter state (pagination, etc.). */
+export const NON_FILTER_URL_KEYS = new Set(["page"]);
+
+/** Parse search params into filter fields, excluding pagination-only keys. */
+export const parseUrlParamsExcludingPagination = (
+  searchParams: URLSearchParams
+): BaseFilterParams => {
+  const all = parseUrlParams(searchParams);
+  const out: BaseFilterParams = {};
+  for (const [key, value] of Object.entries(all)) {
+    if (!NON_FILTER_URL_KEYS.has(key)) {
+      out[key] = value;
+    }
+  }
+  return out;
+};
+
 // Парсинг URL параметров в объект фильтров
 export const parseUrlParams = (
   searchParams: URLSearchParams

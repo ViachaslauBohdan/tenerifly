@@ -63,7 +63,7 @@ export async function generateMetadata({
         "Tenerife excursions",
         "Tenerife activities",
         "Tenerife travel",
-        tour.category || "tour",
+        String(tour.category ?? "tour"),
         "Tenerife",
       ],
       openGraph: {
@@ -116,7 +116,7 @@ export default async function TourDetailPage({
       notFound();
     }
 
-    return <TourDetailPageClient tour={tour} />;
+    return <TourDetailPageClient tour={tour as any} />;
   } catch (error) {
     console.error("Error loading tour:", error);
     notFound();

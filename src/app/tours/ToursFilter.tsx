@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { mapExcursionsApiResponseToTourCards } from "@/lib/strapiExcursionTours";
 
 export interface FilterState {
   location: string;
@@ -94,18 +95,16 @@ export default function ToursFilter({
         console.log("ToursFilter API URL:", apiUrl); // Для отладки
 
         // Prefer using initialTours passed from SSG to avoid extra client fetch
-        const sourceTours: TourData[] = initialTours && Array.isArray(initialTours)
-          ? (initialTours as unknown as TourData[])
+        const tours = (initialTours && Array.isArray(initialTours)
+          ? initialTours
           : await (async () => {
-              const response = await fetch(`${apiUrl}/api/tours/?populate=*&pagination[pageSize]=1000`, {
+              const response = await fetch(`${apiUrl}/api/excursions/?populate=*&pagination[pageSize]=1000`, {
                 headers: getAuthHeaders(),
               });
               if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
               const data = await response.json();
-              return data.data && Array.isArray(data.data) ? data.data : [];
-            })();
-
-        const tours: TourData[] = sourceTours;
+              return mapExcursionsApiResponseToTourCards(data);
+            })()) as TourData[];
 
           // Извлекаем уникальные значения для фильтров с проверкой типов
           const cities = [
@@ -157,7 +156,7 @@ export default function ToursFilter({
   // Применение фильтров и загрузка отфильтрованных экскурсий
   useEffect(() => {
     const applyFilters = async () => {
-      // Apply only filters that are backed by the current Strapi tour schema.
+      // Filters use Strapi `excursion` fields (meetingPoint, price, duration). Language is tour-only in old schema — omitted for API.
       if (!hasSupportedApiFilters(filters)) {
         console.log("No active filters");
 
@@ -171,7 +170,7 @@ export default function ToursFilter({
         try {
           const apiUrl =
             process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
-          const response = await fetch(`${apiUrl}/api/tours/?populate=*&pagination[pageSize]=1000`, {
+          const response = await fetch(`${apiUrl}/api/excursions/?populate=*&pagination[pageSize]=1000`, {
             headers: getAuthHeaders(),
           });
 
@@ -180,10 +179,11 @@ export default function ToursFilter({
           }
 
           const data = await response.json();
-          console.log("Loaded all tours (no filters):", {
-            totalCount: data.data?.length || 0,
+          const mapped = mapExcursionsApiResponseToTourCards(data);
+          console.log("Loaded all excursions (no filters):", {
+            totalCount: mapped.length,
           });
-          onToursUpdate(data.data || []);
+          onToursUpdate(mapped);
         } catch (error) {
           console.error("Error loading all tours:", error);
           onToursUpdate([]);
@@ -201,40 +201,28 @@ export default function ToursFilter({
         // Базовый параметр для получения всех связанных данных
         params.append("populate", "*");
 
-        // Фильтры по локации
+        // Локация: у excursion нет component location — ищем по тексту meetingPoint
         if (filters.location) {
-          // Проверяем, город это или регион
-          const isCity = filterOptions.cities.includes(filters.location);
-          if (isCity) {
-            params.append("filters[location][city][$eq]", filters.location);
-          } else {
-            params.append("filters[location][region][$eq]", filters.location);
-          }
+          params.append("filters[meetingPoint][$containsi]", filters.location);
         }
 
-        // Фильтры по цене
+        // Цена: у excursion поле price — decimal на корне
         if (filters.priceFrom) {
-          params.append("filters[price][amount][$gte]", filters.priceFrom);
+          params.append("filters[price][$gte]", filters.priceFrom);
         }
         if (filters.priceTo) {
-          params.append("filters[price][amount][$lte]", filters.priceTo);
+          params.append("filters[price][$lte]", filters.priceTo);
         }
 
-        // Фильтр по продолжительности
         if (filters.duration) {
           params.append("filters[duration][$eq]", filters.duration);
-        }
-
-        // Фильтр по языку
-        if (filters.language) {
-          params.append("filters[language][$eq]", filters.language.toUpperCase());
         }
 
         const apiUrl =
           process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
   // Запрашиваем большой pageSize, чтобы получить все совпадающие экскурсии
   params.append('pagination[pageSize]', '1000');
-  const url = `${apiUrl}/api/tours/?${params.toString()}`;
+  const url = `${apiUrl}/api/excursions/?${params.toString()}`;
         console.log("Filter URL:", url); // Для отладки
 
         const response = await fetch(url, {
@@ -254,7 +242,7 @@ export default function ToursFilter({
           url: url,
         });
 
-        onToursUpdate(data.data || []);
+        onToursUpdate(mapExcursionsApiResponseToTourCards(data));
       } catch (error) {
         console.error("Error applying filters:", error);
         onToursUpdate([]);
