@@ -16,22 +16,4 @@
 
 ## Get Tenerifly
 
-| Platform | Action |
-|----------|--------|
-| **Web** | [**Visit tenerifly.io**](https://tenerifly.io) — browse apartments, cars, tours & blog in your language |
-| **WhatsApp** | [**Message us**](https://wa.me/34613211069) — quick questions and booking help |
-| **X (Twitter)** | [**@tenerifly**](https://twitter.com/tenerifly) — updates and tips |
-
-### Mobile apps
-
-<p align="left">
-  <a href="https://apps.apple.com/search?term=Tenerifly" title="Find Tenerifly on the App Store">
-    <img alt="Download on the App Store" src="https://toolbox.marketingtools.apple.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" height="48" />
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://play.google.com/store/search?q=Tenerifly&c=apps" title="Find Tenerifly on Google Play">
-    <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="72" />
-  </a>
-</p>
-
-> When native apps are published, replace the links above with your direct App Store and Google Play listing URLs.
+[**Visit tenerifly.io**](https://tenerifly.io) — browse apartments, cars, tours & blog in your language.
