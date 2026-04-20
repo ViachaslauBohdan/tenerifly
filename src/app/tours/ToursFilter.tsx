@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { mapExcursionsApiResponseToTourCards } from "@/lib/strapiExcursionTours";
+import {
+  applyClientTourFilters,
+  fetchStrapiTourListPayload,
+  mapExcursionsApiResponseToTourCards,
+} from "@/lib/strapiExcursionTours";
 
 export interface FilterState {
   location: string;
@@ -98,12 +102,11 @@ export default function ToursFilter({
         const tours = (initialTours && Array.isArray(initialTours)
           ? initialTours
           : await (async () => {
-              const response = await fetch(`${apiUrl}/api/excursions/?populate=*&pagination[pageSize]=1000`, {
-                headers: getAuthHeaders(),
-              });
-              if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-              const data = await response.json();
-              return mapExcursionsApiResponseToTourCards(data);
+              const payload = await fetchStrapiTourListPayload(
+                apiUrl,
+                getAuthHeaders()
+              );
+              return mapExcursionsApiResponseToTourCards(payload);
             })()) as TourData[];
 
           // Извлекаем уникальные значения для фильтров с проверкой типов
@@ -170,16 +173,11 @@ export default function ToursFilter({
         try {
           const apiUrl =
             process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
-          const response = await fetch(`${apiUrl}/api/excursions/?populate=*&pagination[pageSize]=1000`, {
-            headers: getAuthHeaders(),
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const data = await response.json();
-          const mapped = mapExcursionsApiResponseToTourCards(data);
+          const payload = await fetchStrapiTourListPayload(
+            apiUrl,
+            getAuthHeaders()
+          );
+          const mapped = mapExcursionsApiResponseToTourCards(payload);
           console.log("Loaded all excursions (no filters):", {
             totalCount: mapped.length,
           });
@@ -229,20 +227,26 @@ export default function ToursFilter({
           headers: getAuthHeaders(),
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        if (response.ok) {
+          const data = await response.json();
+
+          console.log("Filter response:", {
+            totalCount: data.data?.length || 0,
+            hasData: !!data.data,
+            filters: filters,
+            url: url,
+          });
+
+          onToursUpdate(mapExcursionsApiResponseToTourCards(data));
+          return;
         }
 
-        const data = await response.json();
-
-        console.log("Filter response:", {
-          totalCount: data.data?.length || 0,
-          hasData: !!data.data,
-          filters: filters,
-          url: url,
-        });
-
-        onToursUpdate(mapExcursionsApiResponseToTourCards(data));
+        const full = await fetchStrapiTourListPayload(
+          apiUrl,
+          getAuthHeaders()
+        );
+        const mapped = mapExcursionsApiResponseToTourCards(full);
+        onToursUpdate(applyClientTourFilters(mapped, filters));
       } catch (error) {
         console.error("Error applying filters:", error);
         onToursUpdate([]);

@@ -199,6 +199,41 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
   }
 }
 
+/** Like fetchWithCache but returns null on non-OK (no console.error). Used to probe `/excursions` before legacy `/tours`. */
+async function fetchWithCacheMaybe(
+  endpoint: string,
+  cacheKey: string
+): Promise<unknown | null> {
+  const now = Date.now();
+  const cached = cache.get(cacheKey);
+
+  if (cached && now - cached.timestamp < CACHE_TTL) {
+    return cached.data;
+  }
+
+  try {
+    const url = `${API_URL}/api${endpoint}`;
+
+    const response = await fetch(url, {
+      headers: getAuthHeaders(),
+      next: {
+        revalidate: 3600,
+        tags: ["properties", "apartments", "cars"],
+      },
+    });
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    const result = data.data || data;
+
+    cache.set(cacheKey, { data: result, timestamp: now });
+    return result;
+  } catch {
+    return null;
+  }
+}
+
 async function fetchTransfersQuiet(endpoint: string) {
   const response = await fetch(`${API_URL}/api${endpoint}`, {
     headers: getAuthHeaders(),
@@ -412,13 +447,27 @@ export async function getAllCarsAllLocales() {
   return carsByLocale;
 }
 
-// Получение всех экскурсий (Strapi `excursion`)
-export async function getAllTours(): Promise<NormalizedExcursionTour[]> {
-  const rows = await fetchWithCache(
+async function fetchExcursionOrLegacyTourRows(): Promise<unknown[]> {
+  const ex = await fetchWithCacheMaybe(
     "/excursions?populate=*&pagination[pageSize]=1000",
     "all-excursions-tour-ui"
   );
-  if (!Array.isArray(rows)) return [];
+  if (ex !== null && Array.isArray(ex)) return ex;
+
+  try {
+    const rows = await fetchWithCache(
+      "/tours?populate=*&pagination[pageSize]=1000",
+      "all-tours-legacy-tour-ui"
+    );
+    return Array.isArray(rows) ? rows : [];
+  } catch {
+    return [];
+  }
+}
+
+// Получение всех экскурсий (Strapi `excursion`, или legacy `tour` на старом проде)
+export async function getAllTours(): Promise<NormalizedExcursionTour[]> {
+  const rows = await fetchExcursionOrLegacyTourRows();
   return rows.map((row: unknown) => normalizeExcursionDocumentToTourCard(row));
 }
 
@@ -473,9 +522,19 @@ export async function getBlogById(id: string) {
   return blog;
 }
 
-// Получение экскурсии по documentId (коллекция `excursions`)
+// Получение экскурсии по documentId (коллекция `excursions` или legacy `tours`)
 export async function getTourById(id: string): Promise<NormalizedExcursionTour> {
-  const raw = await fetchWithCache(`/excursions/${id}?populate=*`, `excursion-${id}`);
+  const ex = await fetchWithCacheMaybe(
+    `/excursions/${id}?populate=*`,
+    `excursion-${id}`
+  );
+  if (ex != null) {
+    return normalizeExcursionDocumentToTourCard(ex);
+  }
+  const raw = await fetchWithCache(
+    `/tours/${id}?populate=*`,
+    `tour-legacy-${id}`
+  );
   return normalizeExcursionDocumentToTourCard(raw);
 }
 
@@ -506,15 +565,31 @@ export async function getAllCarIds() {
 
 // Получение всех ID экскурсий для генерации статических путей
 export async function getAllTourIds() {
-  const rows = await fetchWithCache(
+  const ex = await fetchWithCacheMaybe(
     "/excursions?pagination[pageSize]=1000",
     "excursion-ids"
   );
-  if (!Array.isArray(rows)) return [];
+  let rows: unknown[] = [];
+  if (ex !== null && Array.isArray(ex)) {
+    rows = ex;
+  } else {
+    try {
+      const r = await fetchWithCache(
+        "/tours?pagination[pageSize]=1000",
+        "tour-ids-legacy"
+      );
+      if (Array.isArray(r)) rows = r;
+    } catch {
+      rows = [];
+    }
+  }
   return rows
-    .map((r: { documentId?: string; id?: number }) => ({
-      documentId: String(r?.documentId ?? r?.id ?? ""),
-    }))
+    .map((r: unknown) => {
+      const row = r as { documentId?: string; id?: number };
+      return {
+        documentId: String(row?.documentId ?? row?.id ?? ""),
+      };
+    })
     .filter((x) => x.documentId.length > 0);
 }
 

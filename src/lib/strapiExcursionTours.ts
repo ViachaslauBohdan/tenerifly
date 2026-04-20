@@ -78,6 +78,13 @@ function collectImages(doc: Record<string, unknown>): Array<{
     out.push({ id: n, url });
   };
 
+  const topLevelImages = doc.images;
+  if (Array.isArray(topLevelImages)) {
+    for (const g of topLevelImages) {
+      pushUrl(pickUrlFromMedia(g));
+    }
+  }
+
   const gallery = doc.gallery;
   if (Array.isArray(gallery)) {
     for (const g of gallery) {
@@ -144,7 +151,17 @@ export function normalizeExcursionDocumentToTourCard(
   const duration = String(d.duration ?? "3");
   const slug = String(d.slug ?? "");
 
-  const priceNum = typeof d.price === "number" ? d.price : Number(d.price ?? 0);
+  const rawPrice = d.price;
+  let priceNum = 0;
+  if (typeof rawPrice === "number") {
+    priceNum = rawPrice;
+  } else if (rawPrice && typeof rawPrice === "object") {
+    const amt = (rawPrice as { amount?: unknown }).amount;
+    if (typeof amt === "number") priceNum = amt;
+    else if (typeof amt === "string") priceNum = Number(amt) || 0;
+  } else {
+    priceNum = Number(rawPrice ?? 0);
+  }
   const price = {
     amount: Number.isFinite(priceNum) ? priceNum : 0,
     currency: "EUR",
@@ -153,19 +170,41 @@ export function normalizeExcursionDocumentToTourCard(
 
   const images = collectImages(d);
 
-  const meetingPoint = d.meetingPoint != null ? String(d.meetingPoint) : "";
-  const inferredCity = inferCityFromMeetingPoint(meetingPoint);
-  const locationFromMeeting =
-    meetingPoint.length > 0 || inferredCity
-      ? {
-          address: meetingPoint,
-          city: inferredCity,
-          region: inferredCity ? "Tenerife" : "",
-          postal_code: "",
-          latitude: null as number | null,
-          longitude: null as number | null,
-        }
-      : null;
+  const locRaw = d.location;
+  let locationOut: NormalizedExcursionTour["location"] = null;
+  if (locRaw && typeof locRaw === "object") {
+    const L = locRaw as Record<string, unknown>;
+    const city = String(L.city ?? "");
+    const region = String(L.region ?? "");
+    const addr = String(L.address ?? "");
+    const hasPlace =
+      (city && city !== "-") || (region && region !== "-") || (addr && addr !== "-");
+    if (hasPlace) {
+      locationOut = {
+        address: addr,
+        city: city !== "-" ? city : "",
+        region: region !== "-" ? region : "",
+        postal_code: String(L.postal_code ?? ""),
+        latitude: (L.latitude as number | null) ?? null,
+        longitude: (L.longitude as number | null) ?? null,
+      };
+    }
+  }
+  if (!locationOut) {
+    const meetingPoint = d.meetingPoint != null ? String(d.meetingPoint) : "";
+    const inferredCity = inferCityFromMeetingPoint(meetingPoint);
+    locationOut =
+      meetingPoint.length > 0 || inferredCity
+        ? {
+            address: meetingPoint,
+            city: inferredCity,
+            region: inferredCity ? "Tenerife" : "",
+            postal_code: "",
+            latitude: null as number | null,
+            longitude: null as number | null,
+          }
+        : null;
+  }
 
   return {
     id: typeof d.id === "number" ? d.id : Number(row.id ?? 0),
@@ -175,13 +214,13 @@ export function normalizeExcursionDocumentToTourCard(
     slug,
     description,
     duration,
-    language: "EN",
+    language: String(d.language ?? "EN"),
     available_days: null,
     createdAt: String(d.createdAt ?? ""),
     updatedAt: String(d.updatedAt ?? ""),
     publishedAt: String(d.publishedAt ?? ""),
     images,
-    location: locationFromMeeting,
+    location: locationOut,
     price,
     contact: null,
     category: d.category != null ? String(d.category) : undefined,
@@ -199,4 +238,85 @@ export function mapExcursionsApiResponseToTourCards(
   const p = payload as { data?: unknown[] };
   const list = Array.isArray(p?.data) ? p.data : [];
   return list.map((item) => normalizeExcursionDocumentToTourCard(item));
+}
+
+/** Query string for listing excursions (Strapi `excursion` type). */
+export const STRAPI_EXCURSIONS_LIST_PATH =
+  "/excursions/?populate=*&pagination[pageSize]=1000";
+
+/** Legacy listing when production CMS still exposes `tour` only. */
+export const STRAPI_TOURS_LEGACY_LIST_PATH =
+  "/tours/?populate=*&pagination[pageSize]=1000";
+
+/**
+ * Client-side: try `/excursions` first; if that fails (e.g. 404 on older Strapi),
+ * load `/tours`. Returns `{ data: [] }` when the primary responds OK with an empty list.
+ */
+export async function fetchStrapiTourListPayload(
+  apiUrl: string,
+  headers: HeadersInit
+): Promise<{ data: unknown[] }> {
+  const base = apiUrl.replace(/\/$/, "");
+  const primary = await fetch(`${base}/api${STRAPI_EXCURSIONS_LIST_PATH}`, {
+    headers,
+  });
+  if (primary.ok) {
+    const json = (await primary.json()) as { data?: unknown[] };
+    return { data: Array.isArray(json?.data) ? json.data : [] };
+  }
+  const fallback = await fetch(`${base}/api${STRAPI_TOURS_LEGACY_LIST_PATH}`, {
+    headers,
+  });
+  if (!fallback.ok) {
+    throw new Error(
+      `Tour list unavailable (excursions ${primary.status}, tours ${fallback.status})`
+    );
+  }
+  const json = (await fallback.json()) as { data?: unknown[] };
+  return { data: Array.isArray(json?.data) ? json.data : [] };
+}
+
+/** Subset of tour filter state for in-memory filtering (legacy `/tours` API). */
+export type TourListFilterInput = {
+  location?: string;
+  priceFrom?: string;
+  priceTo?: string;
+  duration?: string;
+  language?: string;
+};
+
+export function applyClientTourFilters(
+  tours: NormalizedExcursionTour[],
+  filters: TourListFilterInput
+): NormalizedExcursionTour[] {
+  const locQ = filters.location?.trim().toLowerCase() ?? "";
+  const pFrom = filters.priceFrom?.trim()
+    ? Number(filters.priceFrom)
+    : null;
+  const pTo = filters.priceTo?.trim() ? Number(filters.priceTo) : null;
+  const dur = filters.duration?.trim() ?? "";
+  const lang = filters.language?.trim() ?? "";
+
+  return tours.filter((t) => {
+    if (locQ) {
+      const loc = t.location;
+      const hay = [loc?.city, loc?.region, loc?.address, t.title, t.description]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      if (!hay.includes(locQ)) return false;
+    }
+    if (pFrom != null && !Number.isNaN(pFrom) && t.price.amount < pFrom) {
+      return false;
+    }
+    if (pTo != null && !Number.isNaN(pTo) && t.price.amount > pTo) {
+      return false;
+    }
+    if (dur) {
+      const td = String(t.duration);
+      if (td !== dur && !td.includes(dur) && !dur.includes(td)) return false;
+    }
+    if (lang && String(t.language) !== lang) return false;
+    return true;
+  });
 }

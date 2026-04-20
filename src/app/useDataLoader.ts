@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { Transfer } from "@/lib/transfers";
-import { normalizeExcursionDocumentToTourCard } from "@/lib/strapiExcursionTours";
+import {
+  fetchStrapiTourListPayload,
+  normalizeExcursionDocumentToTourCard,
+} from "@/lib/strapiExcursionTours";
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
 
@@ -197,6 +200,15 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
         setDataLoading(true);
         setHasError(false);
 
+        const API_URL =
+          process.env.NEXT_PUBLIC_STRAPI_API_URL ||
+          "https://tenerifly-strapi-production.up.railway.app";
+        const API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+        const strapiAuthHeaders = {
+          "Content-Type": "application/json",
+          ...(API_TOKEN && { Authorization: `Bearer ${API_TOKEN}` }),
+        } as HeadersInit;
+
         // Параллельная загрузка всех данных
         const [
           toursResult,
@@ -206,7 +218,7 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
           transfersResult,
         ] =
           await Promise.allSettled([
-            fetchFromStrapi("/excursions/?populate=*&pagination[pageSize]=1000"),
+            fetchStrapiTourListPayload(API_URL, strapiAuthHeaders),
             fetchFromStrapi("/cars/?populate=*&pagination[pageSize]=1000"),
             fetchFromStrapi("/properties/?populate=*&pagination[pageSize]=1000"),
             fetchFromStrapi("/blog-posts/?populate=*&pagination[pageSize]=1000"),

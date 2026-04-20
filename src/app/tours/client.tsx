@@ -10,7 +10,10 @@ import {
   parseUrlParamsExcludingPagination,
   TourFilterParams,
 } from "@/utils/filterUtils";
-import { mapExcursionsApiResponseToTourCards } from "@/lib/strapiExcursionTours";
+import {
+  fetchStrapiTourListPayload,
+  mapExcursionsApiResponseToTourCards,
+} from "@/lib/strapiExcursionTours";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
 import translations from "@/i18n/tours.json";
@@ -283,17 +286,8 @@ export default function ToursPageClient({
           process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
         console.log("Tours Page API URL:", apiUrl); // Для отладки
 
-        const response = await fetch(`${apiUrl}/api/excursions/?populate=*&pagination[pageSize]=1000`, {
-          headers: getAuthHeaders(),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        const mapped = mapExcursionsApiResponseToTourCards(data);
+        const payload = await fetchStrapiTourListPayload(apiUrl, getAuthHeaders());
+        const mapped = mapExcursionsApiResponseToTourCards(payload);
 
         console.log("Loaded excursions from API:", {
           count: mapped.length,

@@ -4,7 +4,10 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useTranslation } from "@/hooks/useTranslation"
-import { mapExcursionsApiResponseToTourCards } from "@/lib/strapiExcursionTours"
+import {
+    fetchStrapiTourListPayload,
+    mapExcursionsApiResponseToTourCards,
+} from "@/lib/strapiExcursionTours"
 
 const getFoundText = (locale: string): string => {
     const texts: Record<string, string> = {
@@ -217,16 +220,8 @@ const TourCard = ({
                 const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
                 console.log('TourCard API URL:', apiUrl) // Для отладки
 
-                const response = await fetch(`${apiUrl}/api/excursions?populate=*&pagination[pageSize]=1000`, {
-                    headers: getAuthHeaders()
-                })
-
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch tours: ${response.status}`)
-                }
-
-                const data = await response.json()
-                setTours(mapExcursionsApiResponseToTourCards(data) as unknown as TourData[])
+                const payload = await fetchStrapiTourListPayload(apiUrl, getAuthHeaders())
+                setTours(mapExcursionsApiResponseToTourCards(payload) as unknown as TourData[])
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Unknown error')
                 console.error('Error fetching tours:', err)
