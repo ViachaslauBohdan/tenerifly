@@ -519,10 +519,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           </div>
 
           {/* Search Card - centered */}
-          <div className="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden">
+          <div className="w-full max-w-5xl xl:max-w-6xl bg-white/95 backdrop-blur-xl rounded-3xl border border-white/60 shadow-[0_24px_80px_rgba(15,23,42,0.28)] overflow-hidden">
             {/* Tabs - изменен порядок, accommodation теперь первый */}
-            <div className="border-b border-gray-200">
-              <nav className="flex">
+            <div className="border-b border-gray-200/80 bg-gray-50/60 px-2 pt-2 sm:px-3 sm:pt-3">
+              <nav className="flex gap-2 overflow-x-auto md:overflow-visible">
                 {[
                   {
                     key: "accommodation",
@@ -540,26 +540,26 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   <button
                     key={key}
                     onClick={() => setActiveTab(key)}
-                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-200 ${
+                    className={`min-w-[128px] md:min-w-0 flex-1 flex items-center justify-center gap-2 rounded-t-xl px-3 py-3 sm:px-4 sm:py-3.5 lg:px-5 lg:py-4 text-sm md:text-base font-semibold transition-all duration-200 ${
                       activeTab === key
-                        ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
-                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                        ? "text-blue-700 bg-white border border-gray-200 border-b-white shadow-sm"
+                        : "text-gray-600 hover:text-gray-800 hover:bg-white/70 border border-transparent"
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
-                    <span className="hidden sm:inline">{label}</span>
+                    <Icon className="w-4 h-4 md:w-5 md:h-5" />
+                    <span>{label}</span>
                   </button>
                 ))}
               </nav>
             </div>
 
             {/* Form Content */}
-            <div className="p-4 sm:p-6 pb-8">
+            <div className="bg-white p-4 sm:p-6 lg:p-8 pb-8 lg:pb-10">
               {/* Accommodation Tab */}
               {activeTab === "accommodation" && (
-                <div className="space-y-3">
+                <div className="space-y-4 lg:space-y-5">
                   {/* First row - Basic filters */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         {t.hero.accommodation.type}
@@ -645,7 +645,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                       onClick={() =>
                         setShowAdvancedAccommodation(!showAdvancedAccommodation)
                       }
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                      className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-2 text-blue-700 hover:bg-blue-100 text-sm font-semibold transition-colors"
                     >
                       {showAdvancedAccommodation ? (
                         <>
@@ -687,7 +687,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
                   {/* Second row - Additional filters (expandable) */}
                   {showAdvancedAccommodation && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           {t.hero.accommodation.rooms}
@@ -770,9 +770,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
               {/* Cars Tab */}
               {activeTab === "cars" && (
-                <div className="space-y-4">
+                <div className="space-y-4 lg:space-y-5">
                   {/* First row - Basic filters */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         {t.hero.cars.bodyType}
@@ -848,7 +848,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     <button
                       type="button"
                       onClick={() => setShowAdvancedCars(!showAdvancedCars)}
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                      className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-2 text-blue-700 hover:bg-blue-100 text-sm font-semibold transition-colors"
                     >
                       {showAdvancedCars ? (
                         <>
@@ -890,7 +890,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
                   {/* Second row - Additional filters (expandable) */}
                   {showAdvancedCars && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           {t.hero.cars.brand}
@@ -986,9 +986,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
               {/* Excursions Tab */}
               {activeTab === "excursions" && (
-                <div className="space-y-4">
+                <div className="space-y-4 lg:space-y-5">
                   {/* First row - Basic filters */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         {t.hero.excursions.type}
@@ -1092,7 +1092,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     <button
                       type="button"
                       onClick={() => setShowAdvancedTours(!showAdvancedTours)}
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                      className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/70 px-4 py-2 text-blue-700 hover:bg-blue-100 text-sm font-semibold transition-colors"
                     >
                       {showAdvancedTours ? (
                         <>
@@ -1134,7 +1134,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
                   {/* Second row - Additional filters (expandable) */}
                   {showAdvancedTours && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Location
@@ -1279,7 +1279,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               {activeTab !== "blog" && (
                 <button
                   onClick={handleSearch}
-                  className="w-full mt-6 mb-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-lg shadow-lg hover:shadow-xl"
+                  className="mt-5 mb-3 w-full md:w-auto md:min-w-[260px] mx-auto bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-base shadow-lg hover:shadow-xl"
                 >
                   <Search className="w-5 h-5" />
                   {t.hero.search}
