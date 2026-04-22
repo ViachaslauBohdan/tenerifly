@@ -573,14 +573,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 backdrop-blur-md pt-[env(safe-area-inset-top,0px)]">
         <div className="mx-auto flex w-full min-w-0 max-w-7xl flex-col gap-1.5 px-2 pb-2 pt-1.5 min-[400px]:gap-2 min-[400px]:px-2.5 min-[400px]:pb-2.5 sm:px-3 md:flex-row md:items-center md:gap-2 md:py-2 md:pb-2 lg:gap-3 lg:px-4">
           <div className="flex w-full min-w-0 items-center justify-between gap-2 md:contents">
-            <a
-              href="#home"
-              onClick={scrollToSection("home")}
-              className="min-w-0 max-w-[calc(100%-7.5rem)] truncate text-sm font-semibold tracking-tight text-white drop-shadow-sm transition-opacity hover:opacity-90 min-[400px]:max-w-[calc(100%-8rem)] sm:text-base md:order-1 md:max-w-none md:shrink-0 lg:text-lg"
-            >
-              Tenerifly.io
-            </a>
-
             <div
               className="relative shrink-0 [color-scheme:dark] md:order-3"
               title={languages.find((l) => l.code === language)?.name}
