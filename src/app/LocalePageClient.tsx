@@ -1,23 +1,21 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 import { useTranslation } from "@/hooks/useTranslation";
 import {
   ChevronDown,
-  Check,
   Home,
   Car,
   MapPin,
   Star,
   Clock,
   Users,
-  Euro,
   Phone,
   Eye,
   BookOpen,
   Search,
-  Mail,
   AlertCircle,
   Wifi,
   WifiOff,
@@ -25,10 +23,29 @@ import {
   User,
   ArrowRight,
   ExternalLink,
+  Plane,
+  Languages,
 } from "lucide-react";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
+import {
+  formatTransferPrice,
+  getTransferImage,
+  getTransferLocaleText,
+  Transfer,
+} from "@/lib/transfers";
+import {
+  getCanariasRentacarAffiliateUrl,
+  getCanariasRentacarBannerImageUrl,
+} from "@/lib/canariasAffiliate";
+import { pickFeaturedHomeTours } from "@/lib/featuredHomeTours";
+import {
+  TileCarPrice,
+  TilePriceBadge,
+  formatTileAmount,
+} from "@/components/TilePriceBadge";
+import type { Locale } from "@/types/locale";
 // Переводы для всех языков
 const translations = translationsJson;
 
@@ -45,12 +62,45 @@ const languages = [
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
 
+const headerNavHome: Record<LanguageCode, string> = {
+  en: "Home",
+  ru: "Главная",
+  pl: "Start",
+  fr: "Accueil",
+  uk: "Головна",
+  de: "Start",
+  es: "Inicio",
+};
+
+const headerNavFaq: Record<LanguageCode, string> = {
+  en: "FAQ",
+  ru: "Вопросы",
+  pl: "FAQ",
+  fr: "FAQ",
+  uk: "Питання",
+  de: "FAQ",
+  es: "FAQ",
+};
+
+const headerNavTransfers: Record<LanguageCode, string> = {
+  en: "Transfers",
+  ru: "Трансферы",
+  pl: "Transfery",
+  fr: "Transferts",
+  uk: "Трансфери",
+  de: "Transfers",
+  es: "Traslados",
+};
+
 interface LocalePageClientProps {
   initialData?: {
     properties: any[];
     cars: any[];
     tours: any[];
+    /** Three tours for the home “featured excursions” grid; full `tours` stays for filters */
+    featuredTours?: any[];
     blogs: any[];
+    transfers?: Transfer[];
   };
 }
 
@@ -62,8 +112,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [language, setLanguage] = useState<LanguageCode>(
     (locale || "en") as LanguageCode
   );
-  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-
   // State for component
   const [mounted, setMounted] = useState(false);
 
@@ -140,7 +188,79 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [showAdvancedTours, setShowAdvancedTours] = useState(false);
 
   const t = translations[language];
-  const currentLanguage = languages.find((lang) => lang.code === language);
+  const transferCopy = getTransferLocaleText(language);
+  const datePlaceholder =
+    language === "ru"
+      ? "Выберите дату"
+      : language === "pl"
+        ? "Wybierz datę"
+        : language === "fr"
+          ? "Choisir une date"
+          : language === "uk"
+            ? "Оберіть дату"
+            : language === "de"
+              ? "Datum wählen"
+              : language === "es"
+                ? "Elegir fecha"
+                : "Choose date";
+  const fieldLabelClass =
+    "block text-[13px] font-semibold text-gray-700 mb-1.5";
+  const fieldControlClass =
+    "h-12 w-full rounded-xl border border-gray-300 bg-white px-3 text-base text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-gray-400";
+  const iconFieldControlClass =
+    "h-12 w-full rounded-xl border border-gray-300 bg-white pl-10 pr-3 text-base text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-gray-400";
+  const advancedToggleClass =
+    "inline-flex h-9 items-center gap-2 rounded-xl border border-blue-100 bg-blue-50/70 px-3.5 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100";
+  const headerAnchorClass =
+    "touch-manipulation text-[10px] font-medium leading-tight text-white/90 hover:text-white whitespace-nowrap rounded-md px-1 py-1 transition-colors hover:bg-white/10 min-[400px]:text-[11px] min-[400px]:px-1.5 sm:rounded-lg sm:px-2.5 sm:text-sm sm:leading-normal md:py-1.5";
+  const getMobileTabLabel = (key: string, fallback: string) => {
+    const labels: Record<LanguageCode, Record<string, string>> = {
+      en: {
+        accommodation: "Stay",
+        cars: "Cars",
+        excursions: "Tours",
+        blog: "Blog",
+      },
+      ru: {
+        accommodation: "Жилье",
+        cars: "Авто",
+        excursions: "Экскурсии",
+        blog: "Блог",
+      },
+      pl: {
+        accommodation: "Nocleg",
+        cars: "Auta",
+        excursions: "Wycieczki",
+        blog: "Blog",
+      },
+      fr: {
+        accommodation: "Séjour",
+        cars: "Autos",
+        excursions: "Sorties",
+        blog: "Blog",
+      },
+      uk: {
+        accommodation: "Житло",
+        cars: "Авто",
+        excursions: "Екскурсії",
+        blog: "Блог",
+      },
+      de: {
+        accommodation: "Unterkunft",
+        cars: "Autos",
+        excursions: "Touren",
+        blog: "Blog",
+      },
+      es: {
+        accommodation: "Estancia",
+        cars: "Coches",
+        excursions: "Tours",
+        blog: "Blog",
+      },
+    };
+
+    return labels[language]?.[key] || fallback;
+  };
 
   const getCarImage = (car: any) => {
     const apiUrl =
@@ -153,9 +273,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   const getCarPrice = (car: any) =>
     car?.rental_prices?.day_1 ?? car?.price ?? 0;
-
-  const getDayText = () =>
-    (t as any)?.sections?.cars?.pricePerDay || "day";
 
   const getLocalizedCurrency = (car: any) => {
     const currency = car?.rental_prices?.currency || "€";
@@ -176,16 +293,74 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   // Используем initialData если доступно, иначе загружаем через хук
   const dataFromHook = useDataLoader(mounted, language);
-  const { excursions, cars, accommodation, blogPosts, dataLoading } =
+  const { excursions, cars, accommodation, blogPosts, transfers, dataLoading } =
     initialData
       ? {
           excursions: initialData.tours || [],
           cars: initialData.cars || [],
           accommodation: initialData.properties || [],
           blogPosts: initialData.blogs || [],
+          transfers: initialData.transfers || [],
           dataLoading: false,
         }
       : dataFromHook;
+
+  const homeFeaturedExcursions =
+    initialData?.featuredTours ?? pickFeaturedHomeTours(excursions);
+
+  // otpusk setting
+  useEffect(() => {
+    window.osGeo = '';
+    window.osDefaultDeparture = '';
+    window.osDefaultDuration = '';
+    window.osDateFrom = '';
+    window.osDateTo = '';
+    window.osHotelCategory = '';
+    window.osFood = '';
+    window.osTransport = '';
+    window.osTarget = '';
+    window.osContainer = '#otpusk-search-container';
+    window.osTourContainer = '#otpusk-tour-container';
+    window.osLang = language === "uk" ? "ua" : (["en", "ru", "pl"].includes(language) ? language : "en");
+    window.osTourTargetBlank = false;
+    window.osOrderUrl = null;
+    window.osCurrency = 'converted';
+    window.osAutoStart = false;
+
+    // 2. Очищуємо контейнери перед перезапуском, щоб уникнути дублювання або залишків старого рендеру
+    const searchCont = document.getElementById('otpusk-search-container');
+    const tourCont = document.getElementById('otpusk-tour-container');
+    if (searchCont) searchCont.innerHTML = '';
+    if (tourCont) tourCont.innerHTML = '';
+
+    // 3. Функція для динамічного завантаження скриптів
+    const loadScript = (src: string, id: string) => {
+      // Видаляємо старий скрипт, якщо він є
+      const oldScript = document.getElementById(id);
+      if (oldScript) oldScript.remove();
+
+      const script = document.createElement('script');
+      script.src = src;
+      script.id = id;
+      script.async = true;
+      document.body.appendChild(script);
+    };
+
+    // Завантажуємо скрипти по черзі або разом.
+    // Додаємо timestamp (?v=...), щоб змусити браузер виконати їх заново
+    const ts = new Date().getTime();
+    loadScript(`https://api.otpusk.com/api/2.4/session?access_token=3f93a-35d0c-a0b24-5a708-493e5&ts=${ts}`, 'otpusk-script-session');
+    loadScript(`https://export.otpusk.com/js/onsite/?ts=${ts}`, 'otpusk-script-onsite');
+    loadScript(`https://export.otpusk.com/js/order?ts=${ts}`, 'otpusk-script-order');
+
+    // Опціонально: видаляємо скрипти при розмонтуванні компонента
+    return () => {
+      ['otpusk-script-session', 'otpusk-script-onsite', 'otpusk-script-order'].forEach(id => {
+        const s = document.getElementById(id);
+        if (s) s.remove();
+      });
+    };
+  }, [language]);
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
@@ -265,7 +440,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   // Функция для открытия модального окна бронирования
   const openBookingModal = (
-    type: "excursion" | "car" | "accommodation",
+    type: "excursion" | "car" | "accommodation" | "transfer",
     item: {
       title: string;
       price?: string;
@@ -289,8 +464,18 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   // Переключение языка через URL
   const handleLanguageChange = (langCode: LanguageCode) => {
     switchLocale(langCode);
-    setIsLanguageDropdownOpen(false);
   };
+
+  const scrollToSection = useCallback(
+    (sectionId: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    },
+    []
+  );
 
   // Показываем загрузку до инициализации
   if (!mounted) {
@@ -440,67 +625,121 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   return (
     <main>
-      {/* Language Selector */}
-      <div className="absolute top-5 right-5 z-50">
-        <div className="relative">
-          <button
-            onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
-            className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg hover:bg-white transition-all duration-200"
-          >
-            <span className="text-lg">{currentLanguage?.flag}</span>
-            <span className="font-medium text-gray-700 hidden sm:block">
-              {currentLanguage?.name}
-            </span>
-            <span className="font-medium text-gray-700 sm:hidden">
-              {currentLanguage?.code.toUpperCase()}
-            </span>
-            <ChevronDown
-              className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isLanguageDropdownOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-
-          {isLanguageDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
-              <div className="py-2">
-                <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                  {t.selectLanguage}
-                </div>
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() =>
-                      handleLanguageChange(lang.code as LanguageCode)
+      <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 backdrop-blur-md pt-[env(safe-area-inset-top,0px)]">
+        <div className="mx-auto flex w-full min-w-0 max-w-7xl flex-col gap-1.5 px-2 pb-2 pt-1.5 min-[400px]:gap-2 min-[400px]:px-2.5 min-[400px]:pb-2.5 sm:px-3 md:flex-row md:items-center md:gap-2 md:py-2 md:pb-2 lg:gap-3 lg:px-4">
+          <div className="flex w-full min-w-0 items-center justify-between gap-2 md:contents">
+            <div
+              className="relative shrink-0 [color-scheme:dark] md:order-3"
+              title={languages.find((l) => l.code === language)?.name}
+            >
+              <div className="flex h-7 items-stretch overflow-hidden rounded-full border border-white/20 bg-black/25 shadow-sm backdrop-blur-md min-[400px]:h-8 sm:h-9">
+                <span
+                  className="flex items-center border-r border-white/10 bg-white/[0.06] px-1.5 text-white/70 min-[400px]:px-2"
+                  aria-hidden
+                >
+                  <Languages className="h-3 w-3 min-[400px]:h-3.5 min-[400px]:w-3.5 sm:h-4 sm:w-4" />
+                </span>
+                <div className="relative min-w-[2.85rem] min-[400px]:min-w-[3.15rem]">
+                  <select
+                    value={language}
+                    onChange={(e) =>
+                      handleLanguageChange(e.target.value as LanguageCode)
                     }
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors ${
-                      language === lang.code
-                        ? "bg-blue-50 text-blue-700"
-                        : "text-gray-700"
-                    }`}
+                    aria-label={t.selectLanguage}
+                    className="h-full w-full min-w-[2.85rem] cursor-pointer appearance-none bg-transparent py-0 pl-1.5 pr-6 text-[10px] font-semibold uppercase tracking-wide text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/25 min-[400px]:min-w-[3.15rem] min-[400px]:pl-2 min-[400px]:pr-7 min-[400px]:text-[11px] sm:min-w-[3.35rem] sm:pl-2.5 sm:pr-8 sm:text-sm"
                   >
-                    <span className="text-lg">{lang.flag}</span>
-                    <span className="font-medium">{lang.name}</span>
-                    {language === lang.code && (
-                      <Check className="w-4 h-4 ml-auto text-blue-600" />
-                    )}
-                  </button>
-                ))}
+                    {languages.map((lang) => (
+                      <option
+                        key={lang.code}
+                        value={lang.code}
+                        className="bg-slate-900 text-white"
+                      >
+                        {`${lang.flag} ${lang.code.toUpperCase()}`}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    aria-hidden
+                    className="pointer-events-none absolute right-0.5 top-1/2 h-3 w-3 -translate-y-1/2 text-white/45 min-[400px]:right-1 min-[400px]:h-3.5 min-[400px]:w-3.5 sm:right-1.5 sm:h-4 sm:w-4"
+                  />
+                </div>
               </div>
             </div>
-          )}
+          </div>
+
+          <nav
+            className="-mx-2 flex min-h-[2.25rem] min-w-0 w-full touch-pan-x flex-nowrap items-center gap-0 overflow-x-auto overscroll-x-contain px-2 [-ms-overflow-style:none] [scrollbar-width:none] min-[400px]:min-h-[2.5rem] min-[400px]:gap-px sm:mx-0 sm:gap-0.5 sm:px-0 md:order-2 md:min-h-0 md:flex-1 md:justify-start md:overflow-x-auto md:overflow-y-visible [&::-webkit-scrollbar]:hidden"
+            aria-label="Page sections"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            <a
+              href="#home"
+              onClick={scrollToSection("home")}
+              className={headerAnchorClass}
+            >
+              {headerNavHome[language]}
+            </a>
+            <a
+              href="#accommodation"
+              onClick={scrollToSection("accommodation")}
+              className={headerAnchorClass}
+            >
+              {t.hero.tabs.accommodation}
+            </a>
+            <a
+              href="#cars"
+              onClick={scrollToSection("cars")}
+              className={headerAnchorClass}
+            >
+              {t.hero.tabs.cars}
+            </a>
+            {transfers.length > 0 && (
+              <a
+                href="#transfers"
+                onClick={scrollToSection("transfers")}
+                className={headerAnchorClass}
+              >
+                {headerNavTransfers[language]}
+              </a>
+            )}
+            <a
+              href="#excursions"
+              onClick={scrollToSection("excursions")}
+              className={headerAnchorClass}
+            >
+              {t.hero.tabs.excursions}
+            </a>
+            <a
+              href="#blog"
+              onClick={scrollToSection("blog")}
+              className={headerAnchorClass}
+            >
+              {t.hero.tabs.blog}
+            </a>
+            <a
+              href="#faq"
+              onClick={scrollToSection("faq")}
+              className={headerAnchorClass}
+            >
+              {headerNavFaq[language]}
+            </a>
+          </nav>
         </div>
-      </div>
+      </header>
 
       {/* Hero Section */}
       <section
-        className="relative h-screen min-[360px]:h-[110vh] min-[381px]:h-[80vh] sm:h-[70vh] bg-cover bg-center bg-no-repeat"
+        id="home"
+        className="relative flex min-h-dvh flex-col bg-cover bg-center bg-no-repeat sm:min-h-[70vh]"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}
       >
-        <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
+        <div
+            className="relative z-10 flex w-full flex-1 flex-col items-center justify-center px-3 pt-[6.75rem] min-[400px]:px-4 md:pt-20 pb-[max(2rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
           {/* Title - moved higher */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg pt-4 sm:pt-0">
+          <div className="text-center mb-5 sm:mb-8">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg pt-2 sm:pt-0">
               {t.hero.title}
             </h1>
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto drop-shadow-md">
@@ -509,270 +748,298 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           </div>
 
           {/* Search Card - centered */}
-          <div className="w-full max-w-4xl bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden">
+          <div
+              className="w-full max-w-5xl xl:max-w-6xl bg-white/95 backdrop-blur-xl rounded-[1.5rem] sm:rounded-[2rem] border border-white/60 shadow-[0_20px_60px_rgba(15,23,42,0.24)] overflow-hidden">
             {/* Tabs - изменен порядок, accommodation теперь первый */}
-            <div className="border-b border-gray-200">
-              <nav className="flex">
+            <div className="border-b border-gray-200/80 bg-gray-50/80 px-2 pt-2 sm:px-3 sm:pt-3">
+              <nav className="grid grid-cols-4 gap-1.5 sm:gap-2">
                 {[
                   {
                     key: "accommodation",
                     icon: Home,
                     label: t.hero.tabs.accommodation,
                   },
-                  { key: "cars", icon: Car, label: t.hero.tabs.cars },
+                  {key: "cars", icon: Car, label: t.hero.tabs.cars},
                   {
                     key: "excursions",
                     icon: MapPin,
                     label: t.hero.tabs.excursions,
                   },
-                  { key: "blog", icon: BookOpen, label: t.hero.tabs.blog },
-                ].map(({ key, icon: Icon, label }) => (
-                  <button
-                    key={key}
-                    onClick={() => setActiveTab(key)}
-                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-4 text-sm font-medium transition-all duration-200 ${
-                      activeTab === key
-                        ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50/50"
-                        : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span className="hidden sm:inline">{label}</span>
-                  </button>
+                  {key: "blog", icon: BookOpen, label: t.hero.tabs.blog},
+                ].map(({key, icon: Icon, label}) => (
+                    <button
+                        key={key}
+                        onClick={() => setActiveTab(key)}
+                        className={`min-w-0 h-14 sm:h-16 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 rounded-xl px-1.5 sm:px-3 text-[10px] min-[380px]:text-[11px] sm:text-sm md:text-base font-semibold transition-all duration-200 ${
+                            activeTab === key
+                                ? "text-blue-700 bg-white border border-gray-200 shadow-sm"
+                                : "text-gray-600 hover:text-gray-800 hover:bg-white/70 border border-transparent"
+                        }`}
+                    >
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"/>
+                      <span className="block max-w-full truncate leading-tight sm:hidden">
+                      {getMobileTabLabel(key, label)}
+                    </span>
+                      <span className="hidden max-w-full truncate leading-tight sm:block">
+                      {label}
+                    </span>
+                    </button>
                 ))}
               </nav>
             </div>
 
             {/* Form Content */}
-            <div className="p-4 sm:p-6 pb-8">
+            <div className="bg-white px-4 py-4 sm:p-6 sm:pb-7 lg:p-8 lg:pb-9">
               {/* Accommodation Tab */}
               {activeTab === "accommodation" && (
-                <div className="space-y-3">
-                  {/* First row - Basic filters */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t.hero.accommodation.type}
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={accommodationFilters.propertyType}
-                        onChange={(e) =>
-                          setAccommodationFilters({
-                            ...accommodationFilters,
-                            propertyType: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="">
-                          {language === "en"
-                            ? "Select type"
-                            : language === "ru"
-                              ? "Выберите тип"
-                              : language === "pl"
-                                ? "Wybierz typ"
-                                : language === "fr"
-                                  ? "Sélectionner le type"
-                                  : language === "de"
-                                    ? "Typ auswählen"
-                                    : language === "es"
-                                      ? "Seleccionar tipo"
-                                      : "Оберіть тип"}
-                        </option>
-                        {t.hero.accommodation.types.map(
-                          (type: { value: string; label: string }) => (
-                            <option key={type.value} value={type.value}>
-                              {type.label}
-                            </option>
-                          )
-                        )}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t.hero.accommodation.checkin}
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={dates[0]}
-                        onChange={(e) => setDates([e.target.value, dates[1]])}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t.hero.accommodation.checkout}
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={dates[1]}
-                        onChange={(e) => setDates([dates[0], e.target.value])}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t.hero.accommodation.guests}
-                      </label>
-                      <div className="relative">
-                        <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <input
-                          type="number"
-                          min="1"
-                          max="10"
-                          className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={guests}
-                          onChange={(e) => setGuests(Number(e.target.value))}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Advanced search toggle button */}
-                  <div className="flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowAdvancedAccommodation(!showAdvancedAccommodation)
-                      }
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
-                    >
-                      {showAdvancedAccommodation ? (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 15l7-7 7 7"
-                            />
-                          </svg>
-                          {t.common.hideSearch}
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                          {t.common.showSearch}
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  {/* Second row - Additional filters (expandable) */}
-                  {showAdvancedAccommodation && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="space-y-4 lg:space-y-5">
+                    {/* First row - Basic filters */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.hero.accommodation.rooms}
+                        <label className={fieldLabelClass}>
+                          {t.hero.accommodation.type}
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={accommodationFilters.rooms}
-                          onChange={(e) =>
-                            setAccommodationFilters({
-                              ...accommodationFilters,
-                              rooms: e.target.value,
-                            })
-                          }
+                            className={`${fieldControlClass} ${
+                                accommodationFilters.propertyType
+                                    ? "text-gray-900"
+                                    : "text-gray-500"
+                            }`}
+                            value={accommodationFilters.propertyType}
+                            onChange={(e) =>
+                                setAccommodationFilters({
+                                  ...accommodationFilters,
+                                  propertyType: e.target.value,
+                                })
+                            }
                         >
-                          {t.hero.accommodation.roomsList?.map(
-                            (room: { value: string; label: string }) => (
-                              <option key={room.value} value={room.value}>
-                                {room.label}
-                              </option>
-                            )
+                          <option value="">
+                            {language === "en"
+                                ? "Select type"
+                                : language === "ru"
+                                    ? "Выберите тип"
+                                    : language === "pl"
+                                        ? "Wybierz typ"
+                                        : language === "fr"
+                                            ? "Sélectionner le type"
+                                            : language === "de"
+                                                ? "Typ auswählen"
+                                                : language === "es"
+                                                    ? "Seleccionar tipo"
+                                                    : "Оберіть тип"}
+                          </option>
+                          {t.hero.accommodation.types.map(
+                              (type: { value: string; label: string }) => (
+                                  <option key={type.value} value={type.value}>
+                                    {type.label}
+                                  </option>
+                              )
                           )}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.common.priceFrom}
+                        <label className={fieldLabelClass}>
+                          {t.hero.accommodation.checkin}
                         </label>
                         <input
-                          type="number"
-                          placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={accommodationFilters.priceFrom}
-                          onChange={(e) =>
-                            setAccommodationFilters({
-                              ...accommodationFilters,
-                              priceFrom: e.target.value,
-                            })
-                          }
+                            type={dates[0] ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={fieldControlClass}
+                            value={dates[0]}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setDates([e.target.value, dates[1]])}
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.common.priceTo}
+                        <label className={fieldLabelClass}>
+                          {t.hero.accommodation.checkout}
                         </label>
                         <input
-                          type="number"
-                          placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={accommodationFilters.priceTo}
-                          onChange={(e) =>
-                            setAccommodationFilters({
-                              ...accommodationFilters,
-                              priceTo: e.target.value,
-                            })
-                          }
+                            type={dates[1] ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={fieldControlClass}
+                            value={dates[1]}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setDates([dates[0], e.target.value])}
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.common.type}
+                        <label className={fieldLabelClass}>
+                          {t.hero.accommodation.guests}
                         </label>
-                        <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={accommodationFilters.type}
-                          onChange={(e) =>
-                            setAccommodationFilters({
-                              ...accommodationFilters,
-                              type: e.target.value,
-                            })
-                          }
-                        >
-                          <option value="rent">{t.common.typeRent}</option>
-                          <option value="sale">{t.common.typeSale}</option>
-                        </select>
+                        <div className="relative">
+                          <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"/>
+                          <input
+                              type="number"
+                              min="1"
+                              max="10"
+                              className={iconFieldControlClass}
+                              value={guests}
+                              onChange={(e) => setGuests(Number(e.target.value))}
+                          />
+                        </div>
                       </div>
                     </div>
-                  )}
-                </div>
+
+                    {/* Advanced search toggle button */}
+                    <div className="flex justify-center">
+                      <button
+                          type="button"
+                          onClick={() =>
+                              setShowAdvancedAccommodation(!showAdvancedAccommodation)
+                          }
+                          className={advancedToggleClass}
+                      >
+                        {showAdvancedAccommodation ? (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 15l7-7 7 7"
+                                />
+                              </svg>
+                              {t.common.hideSearch}
+                            </>
+                        ) : (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                              {t.common.showSearch}
+                            </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Second row - Additional filters (expandable) */}
+                    {showAdvancedAccommodation && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.hero.accommodation.rooms}
+                            </label>
+                            <select
+                                className={fieldControlClass}
+                                value={accommodationFilters.rooms}
+                                onChange={(e) =>
+                                    setAccommodationFilters({
+                                      ...accommodationFilters,
+                                      rooms: e.target.value,
+                                    })
+                                }
+                            >
+                              {t.hero.accommodation.roomsList?.map(
+                                  (room: { value: string; label: string }) => (
+                                      <option key={room.value} value={room.value}>
+                                        {room.label}
+                                      </option>
+                                  )
+                              )}
+                            </select>
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceFrom}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={accommodationFilters.priceFrom}
+                                onChange={(e) =>
+                                    setAccommodationFilters({
+                                      ...accommodationFilters,
+                                      priceFrom: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceTo}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={accommodationFilters.priceTo}
+                                onChange={(e) =>
+                                    setAccommodationFilters({
+                                      ...accommodationFilters,
+                                      priceTo: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.type}
+                            </label>
+                            <select
+                                className={fieldControlClass}
+                                value={accommodationFilters.type}
+                                onChange={(e) =>
+                                    setAccommodationFilters({
+                                      ...accommodationFilters,
+                                      type: e.target.value,
+                                    })
+                                }
+                            >
+                              <option value="rent">{t.common.typeRent}</option>
+                              <option value="sale">{t.common.typeSale}</option>
+                            </select>
+                          </div>
+                        </div>
+                    )}
+                  </div>
               )}
 
               {/* Cars Tab */}
               {activeTab === "cars" && (
-                <div className="space-y-4">
-                  {/* First row - Basic filters */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t.hero.cars.bodyType}
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={carType}
-                        onChange={(e) => setCarType(e.target.value)}
-                      >
-                        {/* <option value="">
+                  <div className="space-y-4 lg:space-y-5">
+                    {/* First row - Basic filters */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.hero.cars.bodyType}
+                        </label>
+                        <select
+                            className={fieldControlClass}
+                            value={carType}
+                            onChange={(e) => setCarType(e.target.value)}
+                        >
+                          {/* <option value="">
                           {language === "en"
                             ? "Select car type"
                             : language === "ru"
@@ -787,501 +1054,557 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                       ? "Seleccionar tipo de coche"
                                       : "Оберіть тип авто"}
                         </option> */}
-                        {t.hero.cars.bodyTypeOptions.map((type) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t.hero.cars.pickup}
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={dates[0]}
-                        onChange={(e) => setDates([e.target.value, dates[1]])}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t.hero.cars.dropoff}
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={dates[1]}
-                        onChange={(e) => setDates([dates[0], e.target.value])}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t.common.type}
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={carFilters.type}
-                        onChange={(e) =>
-                          setCarFilters({ ...carFilters, type: e.target.value })
-                        }
-                      >
-                        <option value="rent">{t.common.typeRent}</option>
-                        <option value="sale">{t.common.typeSale}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Advanced search toggle button */}
-                  <div className="flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() => setShowAdvancedCars(!showAdvancedCars)}
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
-                    >
-                      {showAdvancedCars ? (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 15l7-7 7 7"
-                            />
-                          </svg>
-                          {t.common.hideSearch}
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                          {t.common.showSearch}
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  {/* Second row - Additional filters (expandable) */}
-                  {showAdvancedCars && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                          {t.hero.cars.bodyTypeOptions.map((type) => (
+                              <option key={type.value} value={type.value}>
+                                {type.label}
+                              </option>
+                          ))}
+                        </select>
+                      </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.hero.cars.brand}
+                        <label className={fieldLabelClass}>
+                          {t.hero.cars.pickup}
+                        </label>
+                        <input
+                            type={dates[0] ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={fieldControlClass}
+                            value={dates[0]}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setDates([e.target.value, dates[1]])}
+                        />
+                      </div>
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.hero.cars.dropoff}
+                        </label>
+                        <input
+                            type={dates[1] ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={fieldControlClass}
+                            value={dates[1]}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setDates([dates[0], e.target.value])}
+                        />
+                      </div>
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.common.type}
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={carFilters.brand}
-                          onChange={(e) =>
-                            setCarFilters({
-                              ...carFilters,
-                              brand: e.target.value,
-                            })
-                          }
+                            className={fieldControlClass}
+                            value={carFilters.type}
+                            onChange={(e) =>
+                                setCarFilters({...carFilters, type: e.target.value})
+                            }
                         >
-                          <option value="">{t.common.all}</option>
-                          {carBrands.map((brand) => (
-                            <option key={brand} value={brand}>
-                              {brand.charAt(0).toUpperCase() + brand.slice(1)}
-                            </option>
-                          ))}
-                          {/* {carMarks.map((mark) => (
+                          <option value="rent">{t.common.typeRent}</option>
+                          <option value="sale">{t.common.typeSale}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Advanced search toggle button */}
+                    <div className="flex justify-center">
+                      <button
+                          type="button"
+                          onClick={() => setShowAdvancedCars(!showAdvancedCars)}
+                          className={advancedToggleClass}
+                      >
+                        {showAdvancedCars ? (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 15l7-7 7 7"
+                                />
+                              </svg>
+                              {t.common.hideSearch}
+                            </>
+                        ) : (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                              {t.common.showSearch}
+                            </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Second row - Additional filters (expandable) */}
+                    {showAdvancedCars && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.hero.cars.brand}
+                            </label>
+                            <select
+                                className={`${fieldControlClass} ${
+                                    carFilters.brand ? "text-gray-900" : "text-gray-500"
+                                }`}
+                                value={carFilters.brand}
+                                onChange={(e) =>
+                                    setCarFilters({
+                                      ...carFilters,
+                                      brand: e.target.value,
+                                    })
+                                }
+                            >
+                              <option value="">{t.common.all}</option>
+                              {carBrands.map((brand) => (
+                                  <option key={brand} value={brand}>
+                                    {brand.charAt(0).toUpperCase() + brand.slice(1)}
+                                  </option>
+                              ))}
+                              {/* {carMarks.map((mark) => (
                             <option key={mark.value} value={mark.value}>
                               {mark.label}
                             </option>
                           ))} */}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.common.priceFrom}
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={carFilters.priceFrom}
-                          onChange={(e) =>
-                            setCarFilters({
-                              ...carFilters,
-                              priceFrom: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.common.priceTo}
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={carFilters.priceTo}
-                          onChange={(e) =>
-                            setCarFilters({
-                              ...carFilters,
-                              priceTo: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.hero.cars.transmission}
-                        </label>
-                        <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={carFilters.transmission}
-                          onChange={(e) =>
-                            setCarFilters({
-                              ...carFilters,
-                              transmission: e.target.value,
-                            })
-                          }
-                        >
-                          <option value="">{t.common.all}</option>
-                          {t.hero.cars.transmissionOptions.map(
-                            (transmission) => (
-                              <option
-                                key={transmission.value}
-                                value={transmission.value}
-                              >
-                                {transmission.label}
-                              </option>
-                            )
-                          )}
-                        </select>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                            </select>
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceFrom}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={carFilters.priceFrom}
+                                onChange={(e) =>
+                                    setCarFilters({
+                                      ...carFilters,
+                                      priceFrom: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceTo}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={carFilters.priceTo}
+                                onChange={(e) =>
+                                    setCarFilters({
+                                      ...carFilters,
+                                      priceTo: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.hero.cars.transmission}
+                            </label>
+                            <select
+                                className={`${fieldControlClass} ${
+                                    carFilters.transmission
+                                        ? "text-gray-900"
+                                        : "text-gray-500"
+                                }`}
+                                value={carFilters.transmission}
+                                onChange={(e) =>
+                                    setCarFilters({
+                                      ...carFilters,
+                                      transmission: e.target.value,
+                                    })
+                                }
+                            >
+                              <option value="">{t.common.all}</option>
+                              {t.hero.cars.transmissionOptions.map(
+                                  (transmission) => (
+                                      <option
+                                          key={transmission.value}
+                                          value={transmission.value}
+                                      >
+                                        {transmission.label}
+                                      </option>
+                                  )
+                              )}
+                            </select>
+                          </div>
+                        </div>
+                    )}
+                  </div>
               )}
 
               {/* Excursions Tab */}
               {activeTab === "excursions" && (
-                <div className="space-y-4">
-                  {/* First row - Basic filters */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t.hero.excursions.type}
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={excursionType}
-                        onChange={(e) => setExcursionType(e.target.value)}
-                      >
-                        <option value="">
-                          {language === "en"
-                            ? "Select type"
-                            : language === "ru"
-                              ? "Выберите тип"
-                              : language === "pl"
-                                ? "Wybierz typ"
-                                : language === "fr"
-                                  ? "Sélectionner le type"
-                                  : language === "de"
-                                    ? "Typ auswählen"
-                                    : language === "es"
-                                      ? "Seleccionar tipo"
-                                      : "Оберіть тип"}
-                        </option>
-                        {t.hero.excursions.types.map((type) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t.hero.excursions.date}
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={excursionDate}
-                        onChange={(e) => setExcursionDate(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t.hero.excursions.people}
-                      </label>
-                      <div className="relative">
-                        <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <input
-                          type="number"
-                          min="1"
-                          max="20"
-                          className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={excursionPeople}
-                          onChange={(e) =>
-                            setExcursionPeople(Number(e.target.value))
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t.hero.excursions.language}
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        value={excursionFilters.language}
-                        onChange={(e) =>
-                          setExcursionFilters({
-                            ...excursionFilters,
-                            language: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="">
-                          {language === "en"
-                            ? "Select language"
-                            : language === "ru"
-                              ? "Выберите язык"
-                              : language === "pl"
-                                ? "Wybierz język"
-                                : language === "fr"
-                                  ? "Sélectionner la langue"
-                                  : language === "uk"
-                                    ? "Оберіть мову"
-                                    : language === "de"
-                                      ? "Sprache auswählen"
-                                      : "Seleccionar idioma"}
-                        </option>
-                        {t.hero.excursions.languageOptions.map((lang) => (
-                          <option key={lang.value} value={lang.value}>
-                            {lang.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Advanced search toggle button */}
-                  <div className="flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() => setShowAdvancedTours(!showAdvancedTours)}
-                      className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
-                    >
-                      {showAdvancedTours ? (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 15l7-7 7 7"
-                            />
-                          </svg>
-                          {t.common.hideSearch}
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                          {t.common.showSearch}
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  {/* Second row - Additional filters (expandable) */}
-                  {showAdvancedTours && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="space-y-4 lg:space-y-5">
+                    {/* First row - Basic filters */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Location
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Any location"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={excursionFilters.location}
-                          onChange={(e) =>
-                            setExcursionFilters({
-                              ...excursionFilters,
-                              location: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.common.priceFrom}
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={excursionFilters.priceFrom}
-                          onChange={(e) =>
-                            setExcursionFilters({
-                              ...excursionFilters,
-                              priceFrom: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t.common.priceTo}
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={excursionFilters.priceTo}
-                          onChange={(e) =>
-                            setExcursionFilters({
-                              ...excursionFilters,
-                              priceTo: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duration
+                        <label className={fieldLabelClass}>
+                          {t.hero.excursions.type}
                         </label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          value={excursionFilters.duration}
-                          onChange={(e) =>
-                            setExcursionFilters({
-                              ...excursionFilters,
-                              duration: e.target.value,
-                            })
-                          }
+                            className={`${fieldControlClass} ${
+                                excursionType ? "text-gray-900" : "text-gray-500"
+                            }`}
+                            value={excursionType}
+                            onChange={(e) => setExcursionType(e.target.value)}
                         >
-                          {tourDurations.map((duration) => (
-                            <option key={duration} value={duration}>
-                              {duration.charAt(0).toUpperCase() +
-                                duration.slice(1)}
-                            </option>
+                          <option value="">
+                            {language === "en"
+                                ? "Select type"
+                                : language === "ru"
+                                    ? "Выберите тип"
+                                    : language === "pl"
+                                        ? "Wybierz typ"
+                                        : language === "fr"
+                                            ? "Sélectionner le type"
+                                            : language === "de"
+                                                ? "Typ auswählen"
+                                                : language === "es"
+                                                    ? "Seleccionar tipo"
+                                                    : "Оберіть тип"}
+                          </option>
+                          {t.hero.excursions.types.map((type) => (
+                              <option key={type.value} value={type.value}>
+                                {type.label}
+                              </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.hero.excursions.date}
+                        </label>
+                        <input
+                            type={excursionDate ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={fieldControlClass}
+                            value={excursionDate}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setExcursionDate(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.hero.excursions.people}
+                        </label>
+                        <div className="relative">
+                          <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"/>
+                          <input
+                              type="number"
+                              min="1"
+                              max="20"
+                              className={iconFieldControlClass}
+                              value={excursionPeople}
+                              onChange={(e) =>
+                                  setExcursionPeople(Number(e.target.value))
+                              }
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.hero.excursions.language}
+                        </label>
+                        <select
+                            className={`${fieldControlClass} ${
+                                excursionFilters.language
+                                    ? "text-gray-900"
+                                    : "text-gray-500"
+                            }`}
+                            value={excursionFilters.language}
+                            onChange={(e) =>
+                                setExcursionFilters({
+                                  ...excursionFilters,
+                                  language: e.target.value,
+                                })
+                            }
+                        >
+                          <option value="">
+                            {language === "en"
+                                ? "Select language"
+                                : language === "ru"
+                                    ? "Выберите язык"
+                                    : language === "pl"
+                                        ? "Wybierz język"
+                                        : language === "fr"
+                                            ? "Sélectionner la langue"
+                                            : language === "uk"
+                                                ? "Оберіть мову"
+                                                : language === "de"
+                                                    ? "Sprache auswählen"
+                                                    : "Seleccionar idioma"}
+                          </option>
+                          {t.hero.excursions.languageOptions.map((lang) => (
+                              <option key={lang.value} value={lang.value}>
+                                {lang.label}
+                              </option>
                           ))}
                         </select>
                       </div>
                     </div>
-                  )}
-                </div>
+
+                    {/* Advanced search toggle button */}
+                    <div className="flex justify-center">
+                      <button
+                          type="button"
+                          onClick={() => setShowAdvancedTours(!showAdvancedTours)}
+                          className={advancedToggleClass}
+                      >
+                        {showAdvancedTours ? (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 15l7-7 7 7"
+                                />
+                              </svg>
+                              {t.common.hideSearch}
+                            </>
+                        ) : (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                              {t.common.showSearch}
+                            </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Second row - Additional filters (expandable) */}
+                    {showAdvancedTours && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+                          <div>
+                            <label className={fieldLabelClass}>
+                              Location
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Any location"
+                                className={fieldControlClass}
+                                value={excursionFilters.location}
+                                onChange={(e) =>
+                                    setExcursionFilters({
+                                      ...excursionFilters,
+                                      location: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceFrom}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={excursionFilters.priceFrom}
+                                onChange={(e) =>
+                                    setExcursionFilters({
+                                      ...excursionFilters,
+                                      priceFrom: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceTo}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={excursionFilters.priceTo}
+                                onChange={(e) =>
+                                    setExcursionFilters({
+                                      ...excursionFilters,
+                                      priceTo: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              Duration
+                            </label>
+                            <select
+                                className={fieldControlClass}
+                                value={excursionFilters.duration}
+                                onChange={(e) =>
+                                    setExcursionFilters({
+                                      ...excursionFilters,
+                                      duration: e.target.value,
+                                    })
+                                }
+                            >
+                              {tourDurations.map((duration) => (
+                                  <option key={duration} value={duration}>
+                                    {duration.charAt(0).toUpperCase() +
+                                        duration.slice(1)}
+                                  </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                    )}
+                  </div>
               )}
 
               {/* Blog Tab */}
               {activeTab === "blog" && (
-                <div className="text-center py-12">
-                  <BookOpen className="w-16 h-16 mx-auto text-blue-500 mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {language === "en"
-                      ? "Discover Our Blog"
-                      : language === "ru"
-                        ? "Откройте наш блог"
-                        : language === "pl"
-                          ? "Odkryj nasz blog"
-                          : language === "fr"
-                            ? "Découvrez notre blog"
-                            : language === "uk"
-                              ? "Відкрийте наш блог"
-                              : language === "de"
-                                ? "Unser Blog entdecken"
-                                : language === "es"
-                                  ? "Descubre nuestro blog"
-                                  : "Відкрийте наш блог"}
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    {language === "en"
-                      ? "Read about the best places, tips and experiences in Tenerife"
-                      : language === "ru"
-                        ? "Читайте о лучших местах, советах и впечатлениях на Тенерифе"
-                        : language === "pl"
-                          ? "Czytaj o najlepszych miejscach, wskazówkach i doświadczeniach na Teneryfie"
-                          : language === "fr"
-                            ? "Lisez sur les meilleurs endroits, conseils et expériences à Tenerife"
-                            : language === "uk"
-                              ? "Читайте про найкращі місця, поради та враження на Тенеріфе"
-                              : language === "de"
-                                ? "Lesen Sie über die besten Orte, Tipps und Erfahrungen auf Teneriffa"
-                                : language === "es"
-                                  ? "Lee sobre los mejores lugares, consejos y experiencias en Tenerife"
-                                  : "Читайте про найкращі місця, поради та враження на Тенеріфе"}
-                  </p>
-                  <button
-                    onClick={() => router.push(createLocaleLink("/blog"))}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    <BookOpen className="w-4 h-4" />
-                    {language === "en"
-                      ? "Visit Blog"
-                      : language === "ru"
-                        ? "Перейти в блог"
-                        : language === "pl"
-                          ? "Odwiedź blog"
-                          : language === "fr"
-                            ? "Visiter le blog"
-                            : language === "uk"
-                              ? "Відвідати блог"
-                              : language === "de"
-                                ? "Blog besuchen"
-                                : language === "es"
-                                  ? "Visitar el blog"
-                                  : "Відвідати блог"}
-                  </button>
-                </div>
+                  <div className="text-center py-12">
+                    <BookOpen className="w-16 h-16 mx-auto text-blue-500 mb-4"/>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      {language === "en"
+                          ? "Discover Our Blog"
+                          : language === "ru"
+                              ? "Откройте наш блог"
+                              : language === "pl"
+                                  ? "Odkryj nasz blog"
+                                  : language === "fr"
+                                      ? "Découvrez notre blog"
+                                      : language === "uk"
+                                          ? "Відкрийте наш блог"
+                                          : language === "de"
+                                              ? "Unser Blog entdecken"
+                                              : language === "es"
+                                                  ? "Descubre nuestro blog"
+                                                  : "Відкрийте наш блог"}
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      {language === "en"
+                          ? "Read about the best places, tips and experiences in Tenerife"
+                          : language === "ru"
+                              ? "Читайте о лучших местах, советах и впечатлениях на Тенерифе"
+                              : language === "pl"
+                                  ? "Czytaj o najlepszych miejscach, wskazówkach i doświadczeniach na Teneryfie"
+                                  : language === "fr"
+                                      ? "Lisez sur les meilleurs endroits, conseils et expériences à Tenerife"
+                                      : language === "uk"
+                                          ? "Читайте про найкращі місця, поради та враження на Тенеріфе"
+                                          : language === "de"
+                                              ? "Lesen Sie über die besten Orte, Tipps und Erfahrungen auf Teneriffa"
+                                              : language === "es"
+                                                  ? "Lee sobre los mejores lugares, consejos y experiencias en Tenerife"
+                                                  : "Читайте про найкращі місця, поради та враження на Тенеріфе"}
+                    </p>
+                    <button
+                        onClick={() => router.push(createLocaleLink("/blog"))}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      <BookOpen className="w-4 h-4"/>
+                      {language === "en"
+                          ? "Visit Blog"
+                          : language === "ru"
+                              ? "Перейти в блог"
+                              : language === "pl"
+                                  ? "Odwiedź blog"
+                                  : language === "fr"
+                                      ? "Visiter le blog"
+                                      : language === "uk"
+                                          ? "Відвідати блог"
+                                          : language === "de"
+                                              ? "Blog besuchen"
+                                              : language === "es"
+                                                  ? "Visitar el blog"
+                                                  : "Відвідати блог"}
+                    </button>
+                  </div>
               )}
 
               {/* Search Button */}
               {activeTab !== "blog" && (
-                <button
-                  onClick={handleSearch}
-                  className="w-full mt-6 mb-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-lg shadow-lg hover:shadow-xl"
-                >
-                  <Search className="w-5 h-5" />
-                  {t.hero.search}
-                </button>
+                  <button
+                      onClick={handleSearch}
+                      className="mt-4 mx-auto flex h-12 w-full max-w-[280px] items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 text-base font-semibold text-white shadow-md transition-colors hover:bg-blue-700 sm:w-auto sm:min-w-[240px]"
+                  >
+                    <Search className="w-5 h-5"/>
+                    {t.hero.search}
+                  </button>
               )}
             </div>
           </div>
         </div>
+
+        {/* otpusk Card  */}
+        <div>
+          <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=cyrillic" rel="stylesheet" />
+          <link rel="Stylesheet" href="https://export.otpusk.com/os/onsite/form.css" type="text/css" />
+          <link rel="Stylesheet" href="https://export.otpusk.com/os/onsite/result.css" type="text/css" />
+          <link rel="Stylesheet" href="https://export.otpusk.com/os/onsite/tour.css" type="text/css" />
+        </div>
+        <div className="new_os"></div>
+      </section>
+
+      <section className="bg-gray-50 py-12">
+        <div id="otpusk-search-container" className="mx-auto max-w-[1200px]"></div>
+        <div id="otpusk-tour-container" className="mx-auto max-w-[1200px]"></div>
       </section>
 
       {/* Секция недвижимости */}
-      <section className="py-20 bg-gray-50">
+      <section
+          id="accommodation"
+          className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-gray-50"
+      >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
@@ -1293,36 +1616,36 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </p>
             </div>
             <button
-              onClick={() => router.push(createLocaleLink("/apartments"))}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
+                onClick={() => router.push(createLocaleLink("/apartments"))}
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
             >
               {t.sections.accommodation.viewAll}
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4"/>
             </button>
           </div>
 
           {dataLoading ? (
-            <EmptyState type="loading" />
+              <EmptyState type="loading"/>
           ) : accommodation.length === 0 ? (
-            <EmptyState type="empty" />
+              <EmptyState type="empty"/>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {accommodation.map(
-                (place, index) =>
-                  index < 3 && (
-                    <div
-                      key={place.id || index}
-                      className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                    >
-                      <div className="aspect-video relative overflow-hidden">
-                        <img
-                          src={place.image || "/placeholder.svg"}
-                          alt={place.title}
-                          className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                          onClick={() =>
-                            router.push(
-                              createLocaleLink(
-                                `/apartments/${place.documentId}`
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {accommodation.map(
+                    (place, index) =>
+                        index < 3 && (
+                            <div
+                                key={place.id || index}
+                                className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                            >
+                              <div className="aspect-video relative overflow-hidden">
+                                <img
+                                    src={place.image || "/placeholder.svg"}
+                                    alt={place.title}
+                                    className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                                    onClick={() =>
+                                        router.push(
+                                            createLocaleLink(
+                                                `/apartments/${place.documentId}`
                               )
                             )
                           }
@@ -1384,9 +1707,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                               {place.amenities}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <Euro className="w-4 h-4" />
-                            <span>{place.price}</span>
+                          <div className="flex flex-wrap items-center gap-2 text-sm">
+                            <TilePriceBadge>
+                              <span className="text-sm font-semibold tabular-nums text-yellow-900">
+                                {place.price}
+                              </span>
+                            </TilePriceBadge>
                           </div>
                         </div>
                         <div className="flex gap-3">
@@ -1418,7 +1744,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       </section>
 
       {/* Секция автомобилей */}
-      <section className="pt-20 bg-white">
+      <section
+        id="cars"
+        className="scroll-mt-[6.5rem] pt-20 md:scroll-mt-16 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
@@ -1441,13 +1770,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           {/* Баннер партнерского сервиса аренды авто (Canarias.com) */}
           <div className="flex justify-center mb-10">
             <a
-              href="https://rentacar.canarias.com/de?affiliateid=VA20022026"
+              href={getCanariasRentacarAffiliateUrl(language)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
             >
               <img
-                src="https://rentacar.canarias.com/Content/images/banner/afiliados-themes/1/dim6DE.jpg"
+                src={getCanariasRentacarBannerImageUrl(language)}
                 alt="rentacar canarias.com"
                 className="max-w-full h-auto"
               />
@@ -1532,12 +1861,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                               {t.sections.cars.features}: {getCarFeatures(car)}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <Euro className="w-4 h-4" />
-                            <span>
-                              {getLocalizedCurrency(car)}
-                              {getCarPrice(car)}/{getDayText()}
-                            </span>
+                          <div className="flex flex-wrap items-center gap-2 text-sm">
+                            <TileCarPrice
+                              currencySymbol={getLocalizedCurrency(car)}
+                              amount={Number(getCarPrice(car)) || 0}
+                              perDaySuffix={t.common.perDay}
+                              locale={language as Locale}
+                            />
                           </div>
                         </div>
                         <div className="flex gap-3">
@@ -1545,7 +1875,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             onClick={() =>
                               openBookingModal("car", {
                                 title: car.title,
-                                price: `${getLocalizedCurrency(car)}${getCarPrice(car)}/${getDayText()}`,
+                                price: `${getLocalizedCurrency(car).trim()} ${formatTileAmount(Number(getCarPrice(car)) || 0, language as Locale)}${t.common.perDay}`,
                                 brand: car.specifications?.make,
                                 model: car.specifications?.model,
                                 duration: car.duration,
@@ -1567,8 +1897,128 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         </div>
       </section>
 
+      {/* Секция трансферов */}
+      {transfers.length > 0 && (
+        <section
+          id="transfers"
+          className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-gray-50"
+        >
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                {transferCopy.sectionTitle}
+              </h2>
+              <p className="text-xl text-gray-600">
+                {transferCopy.sectionSubtitle}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {transfers.slice(0, 2).map((transfer) => (
+                <div
+                  key={transfer.documentId || transfer.id}
+                  className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                >
+                  <div className="aspect-video relative overflow-hidden bg-gray-100">
+                    <img
+                      src={getTransferImage(transfer)}
+                      alt={transfer.title}
+                      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                      onClick={() =>
+                        router.push(
+                          createLocaleLink(`/transfers/${transfer.documentId}`)
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900">
+                          {transfer.title}
+                        </h3>
+                        <div className="mt-2 inline-flex items-center gap-2 text-sm text-gray-600">
+                          <Users className="w-4 h-4" />
+                          <span>
+                            {transfer.seats} {transferCopy.seats}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-blue-700">
+                        <Plane className="w-4 h-4" />
+                        <span className="text-sm font-medium">
+                          {transferCopy.from}{" "}
+                          {formatTransferPrice(transfer, "south")}
+                        </span>
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-gray-600 mb-5 line-clamp-2">
+                      {transfer.description}
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                      <div className="rounded-lg border border-gray-200 p-4">
+                        <div className="text-sm text-gray-500 mb-1">
+                          {transferCopy.southAirport}
+                        </div>
+                        <div className="text-lg font-semibold text-gray-900">
+                          {formatTransferPrice(transfer, "south")}
+                        </div>
+                      </div>
+                      <div className="rounded-lg border border-gray-200 p-4">
+                        <div className="text-sm text-gray-500 mb-1">
+                          {transferCopy.northAirport}
+                        </div>
+                        <div className="text-lg font-semibold text-gray-900">
+                          {formatTransferPrice(transfer, "north")}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <button
+                        onClick={() =>
+                          router.push(
+                            createLocaleLink(`/transfers/${transfer.documentId}`)
+                          )
+                        }
+                        className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+                      >
+                        {transferCopy.viewDetails}
+                      </button>
+                      <button
+                        onClick={() =>
+                          openBookingModal("transfer", {
+                            title: transfer.title,
+                            price: `${transferCopy.southAirport}: ${formatTransferPrice(
+                              transfer,
+                              "south"
+                            )}, ${transferCopy.northAirport}: ${formatTransferPrice(
+                              transfer,
+                              "north"
+                            )}`,
+                            contact: transfer.contact,
+                          })
+                        }
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        {transferCopy.bookNow}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Секция экскурсий */}
-      <section className="py-20 bg-gray-50">
+      <section
+        id="excursions"
+        className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
@@ -1590,14 +2040,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
           {dataLoading ? (
             <EmptyState type="loading" />
-          ) : excursions.length === 0 ? (
+          ) : homeFeaturedExcursions.length === 0 ? (
             <EmptyState type="empty" />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {(() => {
-                return excursions.map(
-                  (excursion, index) =>
-                    index < 3 && (
+                return homeFeaturedExcursions.map((excursion, index) => (
                       <div
                         key={excursion.id || index}
                         className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
@@ -1670,11 +2118,15 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                 {excursion.groupSize}
                               </span>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                              <Euro className="w-4 h-4" />
-                              <span>
-                                {t.sections.excursions.price}: {excursion.price}
+                            <div className="flex flex-wrap items-center gap-2 text-sm">
+                              <span className="text-gray-600">
+                                {t.sections.excursions.price}
                               </span>
+                              <TilePriceBadge>
+                                <span className="font-semibold tabular-nums text-yellow-900">
+                                  {excursion.price}
+                                </span>
+                              </TilePriceBadge>
                             </div>
                           </div>
                           <div className="flex gap-2">
@@ -1697,8 +2149,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           </div>
                         </div>
                       </div>
-                    )
-                );
+                    ));
               })()}
             </div>
           )}
@@ -1794,7 +2245,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       </section>
 
       {/* Секция блогов */}
-      <section className="py-20 bg-white">
+      <section
+        id="blog"
+        className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
             <div className="text-center flex-1">
@@ -1955,7 +2409,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       </section>
 
       {/* FAQ секция */}
-      <section className="py-20 bg-white">
+      <section
+        id="faq"
+        className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-white"
+      >
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -2011,7 +2468,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </h4>
               <div className="space-y-3">
                 <Link
-                  href={createLocaleLink("/cars")}
+                  href={createLocaleLink("/#transfers")}
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   Airport Transfers
@@ -2029,7 +2486,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   Property Rental & Sales
                 </Link>
                 <Link
-                  href="https://rentacar.canarias.com/en?affiliateid=VA20022026"
+                  href={getCanariasRentacarAffiliateUrl(language)}
                   className="block text-gray-400 hover:text-white transition-colors"
                   target="_blank"
                   rel="nofollow"
@@ -2044,32 +2501,17 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </h4>
               <div className="space-y-3">
                 <a
-                  href="tel:+34656641433"
+                  href="tel:+34613211069"
                   className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                 >
                   <Phone className="w-4 h-4" />
-                  +34656641433
-                </a>
-                <a
-                  href="mailto:info@tenerifly.io"
-                  className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
-                >
-                  <Mail className="w-4 h-4" />
-                  info@tenerifly.io
+                  +34613211069
                 </a>
               </div>
             </div>
           </div>
         </div>
       </footer>
-
-      {/* Click outside to close dropdown */}
-      {isLanguageDropdownOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsLanguageDropdownOpen(false)}
-        />
-      )}
 
       {/* Модальное окно бронирования */}
       {bookingItem && (
