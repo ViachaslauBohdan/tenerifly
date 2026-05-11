@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 import { useTranslation } from "@/hooks/useTranslation";
 import {
   ChevronDown,
@@ -306,6 +307,60 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   const homeFeaturedExcursions =
     initialData?.featuredTours ?? pickFeaturedHomeTours(excursions);
+
+  // otpusk setting
+  useEffect(() => {
+    window.osGeo = '';
+    window.osDefaultDeparture = '';
+    window.osDefaultDuration = '';
+    window.osDateFrom = '';
+    window.osDateTo = '';
+    window.osHotelCategory = '';
+    window.osFood = '';
+    window.osTransport = '';
+    window.osTarget = '';
+    window.osContainer = '#otpusk-search-container';
+    window.osTourContainer = '#otpusk-tour-container';
+    window.osLang = language === "uk" ? "ua" : (["en", "ru", "pl"].includes(language) ? language : "en");
+    window.osTourTargetBlank = false;
+    window.osOrderUrl = null;
+    window.osCurrency = 'converted';
+    window.osAutoStart = false;
+
+    // 2. Очищуємо контейнери перед перезапуском, щоб уникнути дублювання або залишків старого рендеру
+    const searchCont = document.getElementById('otpusk-search-container');
+    const tourCont = document.getElementById('otpusk-tour-container');
+    if (searchCont) searchCont.innerHTML = '';
+    if (tourCont) tourCont.innerHTML = '';
+
+    // 3. Функція для динамічного завантаження скриптів
+    const loadScript = (src: string, id: string) => {
+      // Видаляємо старий скрипт, якщо він є
+      const oldScript = document.getElementById(id);
+      if (oldScript) oldScript.remove();
+
+      const script = document.createElement('script');
+      script.src = src;
+      script.id = id;
+      script.async = true;
+      document.body.appendChild(script);
+    };
+
+    // Завантажуємо скрипти по черзі або разом.
+    // Додаємо timestamp (?v=...), щоб змусити браузер виконати їх заново
+    const ts = new Date().getTime();
+    loadScript(`https://api.otpusk.com/api/2.4/session?access_token=3f93a-35d0c-a0b24-5a708-493e5&ts=${ts}`, 'otpusk-script-session');
+    loadScript(`https://export.otpusk.com/js/onsite/?ts=${ts}`, 'otpusk-script-onsite');
+    loadScript(`https://export.otpusk.com/js/order?ts=${ts}`, 'otpusk-script-order');
+
+    // Опціонально: видаляємо скрипти при розмонтуванні компонента
+    return () => {
+      ['otpusk-script-session', 'otpusk-script-onsite', 'otpusk-script-order'].forEach(id => {
+        const s = document.getElementById(id);
+        if (s) s.remove();
+      });
+    };
+  }, [language]);
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
@@ -680,7 +735,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}
       >
-        <div className="relative z-10 flex w-full flex-1 flex-col items-center justify-center px-3 pt-[6.75rem] min-[400px]:px-4 md:pt-20 pb-[max(2rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
+        <div
+            className="relative z-10 flex w-full flex-1 flex-col items-center justify-center px-3 pt-[6.75rem] min-[400px]:px-4 md:pt-20 pb-[max(2rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
           {/* Title - moved higher */}
           <div className="text-center mb-5 sm:mb-8">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg pt-2 sm:pt-0">
@@ -692,7 +748,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           </div>
 
           {/* Search Card - centered */}
-          <div className="w-full max-w-5xl xl:max-w-6xl bg-white/95 backdrop-blur-xl rounded-[1.5rem] sm:rounded-[2rem] border border-white/60 shadow-[0_20px_60px_rgba(15,23,42,0.24)] overflow-hidden">
+          <div
+              className="w-full max-w-5xl xl:max-w-6xl bg-white/95 backdrop-blur-xl rounded-[1.5rem] sm:rounded-[2rem] border border-white/60 shadow-[0_20px_60px_rgba(15,23,42,0.24)] overflow-hidden">
             {/* Tabs - изменен порядок, accommodation теперь первый */}
             <div className="border-b border-gray-200/80 bg-gray-50/80 px-2 pt-2 sm:px-3 sm:pt-3">
               <nav className="grid grid-cols-4 gap-1.5 sm:gap-2">
@@ -702,31 +759,31 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     icon: Home,
                     label: t.hero.tabs.accommodation,
                   },
-                  { key: "cars", icon: Car, label: t.hero.tabs.cars },
+                  {key: "cars", icon: Car, label: t.hero.tabs.cars},
                   {
                     key: "excursions",
                     icon: MapPin,
                     label: t.hero.tabs.excursions,
                   },
-                  { key: "blog", icon: BookOpen, label: t.hero.tabs.blog },
-                ].map(({ key, icon: Icon, label }) => (
-                  <button
-                    key={key}
-                    onClick={() => setActiveTab(key)}
-                    className={`min-w-0 h-14 sm:h-16 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 rounded-xl px-1.5 sm:px-3 text-[10px] min-[380px]:text-[11px] sm:text-sm md:text-base font-semibold transition-all duration-200 ${
-                      activeTab === key
-                        ? "text-blue-700 bg-white border border-gray-200 shadow-sm"
-                        : "text-gray-600 hover:text-gray-800 hover:bg-white/70 border border-transparent"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-                    <span className="block max-w-full truncate leading-tight sm:hidden">
+                  {key: "blog", icon: BookOpen, label: t.hero.tabs.blog},
+                ].map(({key, icon: Icon, label}) => (
+                    <button
+                        key={key}
+                        onClick={() => setActiveTab(key)}
+                        className={`min-w-0 h-14 sm:h-16 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 rounded-xl px-1.5 sm:px-3 text-[10px] min-[380px]:text-[11px] sm:text-sm md:text-base font-semibold transition-all duration-200 ${
+                            activeTab === key
+                                ? "text-blue-700 bg-white border border-gray-200 shadow-sm"
+                                : "text-gray-600 hover:text-gray-800 hover:bg-white/70 border border-transparent"
+                        }`}
+                    >
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"/>
+                      <span className="block max-w-full truncate leading-tight sm:hidden">
                       {getMobileTabLabel(key, label)}
                     </span>
-                    <span className="hidden max-w-full truncate leading-tight sm:block">
+                      <span className="hidden max-w-full truncate leading-tight sm:block">
                       {label}
                     </span>
-                  </button>
+                    </button>
                 ))}
               </nav>
             </div>
@@ -735,254 +792,254 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             <div className="bg-white px-4 py-4 sm:p-6 sm:pb-7 lg:p-8 lg:pb-9">
               {/* Accommodation Tab */}
               {activeTab === "accommodation" && (
-                <div className="space-y-4 lg:space-y-5">
-                  {/* First row - Basic filters */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.accommodation.type}
-                      </label>
-                      <select
-                        className={`${fieldControlClass} ${
-                          accommodationFilters.propertyType
-                            ? "text-gray-900"
-                            : "text-gray-500"
-                        }`}
-                        value={accommodationFilters.propertyType}
-                        onChange={(e) =>
-                          setAccommodationFilters({
-                            ...accommodationFilters,
-                            propertyType: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="">
-                          {language === "en"
-                            ? "Select type"
-                            : language === "ru"
-                              ? "Выберите тип"
-                              : language === "pl"
-                                ? "Wybierz typ"
-                                : language === "fr"
-                                  ? "Sélectionner le type"
-                                  : language === "de"
-                                    ? "Typ auswählen"
-                                    : language === "es"
-                                      ? "Seleccionar tipo"
-                                      : "Оберіть тип"}
-                        </option>
-                        {t.hero.accommodation.types.map(
-                          (type: { value: string; label: string }) => (
-                            <option key={type.value} value={type.value}>
-                              {type.label}
-                            </option>
-                          )
-                        )}
-                      </select>
-                    </div>
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.accommodation.checkin}
-                      </label>
-                      <input
-                        type={dates[0] ? "date" : "text"}
-                        placeholder={datePlaceholder}
-                        className={fieldControlClass}
-                        value={dates[0]}
-                        onFocus={(e) => {
-                          e.currentTarget.type = "date";
-                        }}
-                        onBlur={(e) => {
-                          if (!e.currentTarget.value) {
-                            e.currentTarget.type = "text";
-                          }
-                        }}
-                        onChange={(e) => setDates([e.target.value, dates[1]])}
-                      />
-                    </div>
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.accommodation.checkout}
-                      </label>
-                      <input
-                        type={dates[1] ? "date" : "text"}
-                        placeholder={datePlaceholder}
-                        className={fieldControlClass}
-                        value={dates[1]}
-                        onFocus={(e) => {
-                          e.currentTarget.type = "date";
-                        }}
-                        onBlur={(e) => {
-                          if (!e.currentTarget.value) {
-                            e.currentTarget.type = "text";
-                          }
-                        }}
-                        onChange={(e) => setDates([dates[0], e.target.value])}
-                      />
-                    </div>
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.accommodation.guests}
-                      </label>
-                      <div className="relative">
-                        <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <input
-                          type="number"
-                          min="1"
-                          max="10"
-                          className={iconFieldControlClass}
-                          value={guests}
-                          onChange={(e) => setGuests(Number(e.target.value))}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Advanced search toggle button */}
-                  <div className="flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setShowAdvancedAccommodation(!showAdvancedAccommodation)
-                      }
-                      className={advancedToggleClass}
-                    >
-                      {showAdvancedAccommodation ? (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 15l7-7 7 7"
-                            />
-                          </svg>
-                          {t.common.hideSearch}
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                          {t.common.showSearch}
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  {/* Second row - Additional filters (expandable) */}
-                  {showAdvancedAccommodation && (
+                  <div className="space-y-4 lg:space-y-5">
+                    {/* First row - Basic filters */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
                       <div>
                         <label className={fieldLabelClass}>
-                          {t.hero.accommodation.rooms}
+                          {t.hero.accommodation.type}
                         </label>
                         <select
-                          className={fieldControlClass}
-                          value={accommodationFilters.rooms}
-                          onChange={(e) =>
-                            setAccommodationFilters({
-                              ...accommodationFilters,
-                              rooms: e.target.value,
-                            })
-                          }
+                            className={`${fieldControlClass} ${
+                                accommodationFilters.propertyType
+                                    ? "text-gray-900"
+                                    : "text-gray-500"
+                            }`}
+                            value={accommodationFilters.propertyType}
+                            onChange={(e) =>
+                                setAccommodationFilters({
+                                  ...accommodationFilters,
+                                  propertyType: e.target.value,
+                                })
+                            }
                         >
-                          {t.hero.accommodation.roomsList?.map(
-                            (room: { value: string; label: string }) => (
-                              <option key={room.value} value={room.value}>
-                                {room.label}
-                              </option>
-                            )
+                          <option value="">
+                            {language === "en"
+                                ? "Select type"
+                                : language === "ru"
+                                    ? "Выберите тип"
+                                    : language === "pl"
+                                        ? "Wybierz typ"
+                                        : language === "fr"
+                                            ? "Sélectionner le type"
+                                            : language === "de"
+                                                ? "Typ auswählen"
+                                                : language === "es"
+                                                    ? "Seleccionar tipo"
+                                                    : "Оберіть тип"}
+                          </option>
+                          {t.hero.accommodation.types.map(
+                              (type: { value: string; label: string }) => (
+                                  <option key={type.value} value={type.value}>
+                                    {type.label}
+                                  </option>
+                              )
                           )}
                         </select>
                       </div>
                       <div>
                         <label className={fieldLabelClass}>
-                          {t.common.priceFrom}
+                          {t.hero.accommodation.checkin}
                         </label>
                         <input
-                          type="number"
-                          placeholder="€"
-                          className={fieldControlClass}
-                          value={accommodationFilters.priceFrom}
-                          onChange={(e) =>
-                            setAccommodationFilters({
-                              ...accommodationFilters,
-                              priceFrom: e.target.value,
-                            })
-                          }
+                            type={dates[0] ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={fieldControlClass}
+                            value={dates[0]}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setDates([e.target.value, dates[1]])}
                         />
                       </div>
                       <div>
                         <label className={fieldLabelClass}>
-                          {t.common.priceTo}
+                          {t.hero.accommodation.checkout}
                         </label>
                         <input
-                          type="number"
-                          placeholder="€"
-                          className={fieldControlClass}
-                          value={accommodationFilters.priceTo}
-                          onChange={(e) =>
-                            setAccommodationFilters({
-                              ...accommodationFilters,
-                              priceTo: e.target.value,
-                            })
-                          }
+                            type={dates[1] ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={fieldControlClass}
+                            value={dates[1]}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setDates([dates[0], e.target.value])}
                         />
                       </div>
                       <div>
                         <label className={fieldLabelClass}>
-                          {t.common.type}
+                          {t.hero.accommodation.guests}
                         </label>
-                        <select
-                          className={fieldControlClass}
-                          value={accommodationFilters.type}
-                          onChange={(e) =>
-                            setAccommodationFilters({
-                              ...accommodationFilters,
-                              type: e.target.value,
-                            })
-                          }
-                        >
-                          <option value="rent">{t.common.typeRent}</option>
-                          <option value="sale">{t.common.typeSale}</option>
-                        </select>
+                        <div className="relative">
+                          <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"/>
+                          <input
+                              type="number"
+                              min="1"
+                              max="10"
+                              className={iconFieldControlClass}
+                              value={guests}
+                              onChange={(e) => setGuests(Number(e.target.value))}
+                          />
+                        </div>
                       </div>
                     </div>
-                  )}
-                </div>
+
+                    {/* Advanced search toggle button */}
+                    <div className="flex justify-center">
+                      <button
+                          type="button"
+                          onClick={() =>
+                              setShowAdvancedAccommodation(!showAdvancedAccommodation)
+                          }
+                          className={advancedToggleClass}
+                      >
+                        {showAdvancedAccommodation ? (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 15l7-7 7 7"
+                                />
+                              </svg>
+                              {t.common.hideSearch}
+                            </>
+                        ) : (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                              {t.common.showSearch}
+                            </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Second row - Additional filters (expandable) */}
+                    {showAdvancedAccommodation && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.hero.accommodation.rooms}
+                            </label>
+                            <select
+                                className={fieldControlClass}
+                                value={accommodationFilters.rooms}
+                                onChange={(e) =>
+                                    setAccommodationFilters({
+                                      ...accommodationFilters,
+                                      rooms: e.target.value,
+                                    })
+                                }
+                            >
+                              {t.hero.accommodation.roomsList?.map(
+                                  (room: { value: string; label: string }) => (
+                                      <option key={room.value} value={room.value}>
+                                        {room.label}
+                                      </option>
+                                  )
+                              )}
+                            </select>
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceFrom}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={accommodationFilters.priceFrom}
+                                onChange={(e) =>
+                                    setAccommodationFilters({
+                                      ...accommodationFilters,
+                                      priceFrom: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceTo}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={accommodationFilters.priceTo}
+                                onChange={(e) =>
+                                    setAccommodationFilters({
+                                      ...accommodationFilters,
+                                      priceTo: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.type}
+                            </label>
+                            <select
+                                className={fieldControlClass}
+                                value={accommodationFilters.type}
+                                onChange={(e) =>
+                                    setAccommodationFilters({
+                                      ...accommodationFilters,
+                                      type: e.target.value,
+                                    })
+                                }
+                            >
+                              <option value="rent">{t.common.typeRent}</option>
+                              <option value="sale">{t.common.typeSale}</option>
+                            </select>
+                          </div>
+                        </div>
+                    )}
+                  </div>
               )}
 
               {/* Cars Tab */}
               {activeTab === "cars" && (
-                <div className="space-y-4 lg:space-y-5">
-                  {/* First row - Basic filters */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.cars.bodyType}
-                      </label>
-                      <select
-                        className={fieldControlClass}
-                        value={carType}
-                        onChange={(e) => setCarType(e.target.value)}
-                      >
-                        {/* <option value="">
+                  <div className="space-y-4 lg:space-y-5">
+                    {/* First row - Basic filters */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.hero.cars.bodyType}
+                        </label>
+                        <select
+                            className={fieldControlClass}
+                            value={carType}
+                            onChange={(e) => setCarType(e.target.value)}
+                        >
+                          {/* <option value="">
                           {language === "en"
                             ? "Select car type"
                             : language === "ru"
@@ -997,542 +1054,556 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                       ? "Seleccionar tipo de coche"
                                       : "Оберіть тип авто"}
                         </option> */}
-                        {t.hero.cars.bodyTypeOptions.map((type) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.cars.pickup}
-                      </label>
-                      <input
-                        type={dates[0] ? "date" : "text"}
-                        placeholder={datePlaceholder}
-                        className={fieldControlClass}
-                        value={dates[0]}
-                        onFocus={(e) => {
-                          e.currentTarget.type = "date";
-                        }}
-                        onBlur={(e) => {
-                          if (!e.currentTarget.value) {
-                            e.currentTarget.type = "text";
-                          }
-                        }}
-                        onChange={(e) => setDates([e.target.value, dates[1]])}
-                      />
-                    </div>
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.cars.dropoff}
-                      </label>
-                      <input
-                        type={dates[1] ? "date" : "text"}
-                        placeholder={datePlaceholder}
-                        className={fieldControlClass}
-                        value={dates[1]}
-                        onFocus={(e) => {
-                          e.currentTarget.type = "date";
-                        }}
-                        onBlur={(e) => {
-                          if (!e.currentTarget.value) {
-                            e.currentTarget.type = "text";
-                          }
-                        }}
-                        onChange={(e) => setDates([dates[0], e.target.value])}
-                      />
-                    </div>
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.common.type}
-                      </label>
-                      <select
-                        className={fieldControlClass}
-                        value={carFilters.type}
-                        onChange={(e) =>
-                          setCarFilters({ ...carFilters, type: e.target.value })
-                        }
-                      >
-                        <option value="rent">{t.common.typeRent}</option>
-                        <option value="sale">{t.common.typeSale}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Advanced search toggle button */}
-                  <div className="flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() => setShowAdvancedCars(!showAdvancedCars)}
-                      className={advancedToggleClass}
-                    >
-                      {showAdvancedCars ? (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 15l7-7 7 7"
-                            />
-                          </svg>
-                          {t.common.hideSearch}
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                          {t.common.showSearch}
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  {/* Second row - Additional filters (expandable) */}
-                  {showAdvancedCars && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+                          {t.hero.cars.bodyTypeOptions.map((type) => (
+                              <option key={type.value} value={type.value}>
+                                {type.label}
+                              </option>
+                          ))}
+                        </select>
+                      </div>
                       <div>
                         <label className={fieldLabelClass}>
-                          {t.hero.cars.brand}
+                          {t.hero.cars.pickup}
+                        </label>
+                        <input
+                            type={dates[0] ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={fieldControlClass}
+                            value={dates[0]}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setDates([e.target.value, dates[1]])}
+                        />
+                      </div>
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.hero.cars.dropoff}
+                        </label>
+                        <input
+                            type={dates[1] ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={fieldControlClass}
+                            value={dates[1]}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setDates([dates[0], e.target.value])}
+                        />
+                      </div>
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.common.type}
                         </label>
                         <select
-                          className={`${fieldControlClass} ${
-                            carFilters.brand ? "text-gray-900" : "text-gray-500"
-                          }`}
-                          value={carFilters.brand}
-                          onChange={(e) =>
-                            setCarFilters({
-                              ...carFilters,
-                              brand: e.target.value,
-                            })
-                          }
+                            className={fieldControlClass}
+                            value={carFilters.type}
+                            onChange={(e) =>
+                                setCarFilters({...carFilters, type: e.target.value})
+                            }
                         >
-                          <option value="">{t.common.all}</option>
-                          {carBrands.map((brand) => (
-                            <option key={brand} value={brand}>
-                              {brand.charAt(0).toUpperCase() + brand.slice(1)}
-                            </option>
-                          ))}
-                          {/* {carMarks.map((mark) => (
+                          <option value="rent">{t.common.typeRent}</option>
+                          <option value="sale">{t.common.typeSale}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Advanced search toggle button */}
+                    <div className="flex justify-center">
+                      <button
+                          type="button"
+                          onClick={() => setShowAdvancedCars(!showAdvancedCars)}
+                          className={advancedToggleClass}
+                      >
+                        {showAdvancedCars ? (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 15l7-7 7 7"
+                                />
+                              </svg>
+                              {t.common.hideSearch}
+                            </>
+                        ) : (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                              {t.common.showSearch}
+                            </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Second row - Additional filters (expandable) */}
+                    {showAdvancedCars && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.hero.cars.brand}
+                            </label>
+                            <select
+                                className={`${fieldControlClass} ${
+                                    carFilters.brand ? "text-gray-900" : "text-gray-500"
+                                }`}
+                                value={carFilters.brand}
+                                onChange={(e) =>
+                                    setCarFilters({
+                                      ...carFilters,
+                                      brand: e.target.value,
+                                    })
+                                }
+                            >
+                              <option value="">{t.common.all}</option>
+                              {carBrands.map((brand) => (
+                                  <option key={brand} value={brand}>
+                                    {brand.charAt(0).toUpperCase() + brand.slice(1)}
+                                  </option>
+                              ))}
+                              {/* {carMarks.map((mark) => (
                             <option key={mark.value} value={mark.value}>
                               {mark.label}
                             </option>
                           ))} */}
-                        </select>
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.common.priceFrom}
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="€"
-                          className={fieldControlClass}
-                          value={carFilters.priceFrom}
-                          onChange={(e) =>
-                            setCarFilters({
-                              ...carFilters,
-                              priceFrom: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.common.priceTo}
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="€"
-                          className={fieldControlClass}
-                          value={carFilters.priceTo}
-                          onChange={(e) =>
-                            setCarFilters({
-                              ...carFilters,
-                              priceTo: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.cars.transmission}
-                        </label>
-                        <select
-                          className={`${fieldControlClass} ${
-                            carFilters.transmission
-                              ? "text-gray-900"
-                              : "text-gray-500"
-                          }`}
-                          value={carFilters.transmission}
-                          onChange={(e) =>
-                            setCarFilters({
-                              ...carFilters,
-                              transmission: e.target.value,
-                            })
-                          }
-                        >
-                          <option value="">{t.common.all}</option>
-                          {t.hero.cars.transmissionOptions.map(
-                            (transmission) => (
-                              <option
-                                key={transmission.value}
-                                value={transmission.value}
-                              >
-                                {transmission.label}
-                              </option>
-                            )
-                          )}
-                        </select>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                            </select>
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceFrom}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={carFilters.priceFrom}
+                                onChange={(e) =>
+                                    setCarFilters({
+                                      ...carFilters,
+                                      priceFrom: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceTo}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={carFilters.priceTo}
+                                onChange={(e) =>
+                                    setCarFilters({
+                                      ...carFilters,
+                                      priceTo: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.hero.cars.transmission}
+                            </label>
+                            <select
+                                className={`${fieldControlClass} ${
+                                    carFilters.transmission
+                                        ? "text-gray-900"
+                                        : "text-gray-500"
+                                }`}
+                                value={carFilters.transmission}
+                                onChange={(e) =>
+                                    setCarFilters({
+                                      ...carFilters,
+                                      transmission: e.target.value,
+                                    })
+                                }
+                            >
+                              <option value="">{t.common.all}</option>
+                              {t.hero.cars.transmissionOptions.map(
+                                  (transmission) => (
+                                      <option
+                                          key={transmission.value}
+                                          value={transmission.value}
+                                      >
+                                        {transmission.label}
+                                      </option>
+                                  )
+                              )}
+                            </select>
+                          </div>
+                        </div>
+                    )}
+                  </div>
               )}
 
               {/* Excursions Tab */}
               {activeTab === "excursions" && (
-                <div className="space-y-4 lg:space-y-5">
-                  {/* First row - Basic filters */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.excursions.type}
-                      </label>
-                      <select
-                        className={`${fieldControlClass} ${
-                          excursionType ? "text-gray-900" : "text-gray-500"
-                        }`}
-                        value={excursionType}
-                        onChange={(e) => setExcursionType(e.target.value)}
-                      >
-                        <option value="">
-                          {language === "en"
-                            ? "Select type"
-                            : language === "ru"
-                              ? "Выберите тип"
-                              : language === "pl"
-                                ? "Wybierz typ"
-                                : language === "fr"
-                                  ? "Sélectionner le type"
-                                  : language === "de"
-                                    ? "Typ auswählen"
-                                    : language === "es"
-                                      ? "Seleccionar tipo"
-                                      : "Оберіть тип"}
-                        </option>
-                        {t.hero.excursions.types.map((type) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.excursions.date}
-                      </label>
-                      <input
-                        type={excursionDate ? "date" : "text"}
-                        placeholder={datePlaceholder}
-                        className={fieldControlClass}
-                        value={excursionDate}
-                        onFocus={(e) => {
-                          e.currentTarget.type = "date";
-                        }}
-                        onBlur={(e) => {
-                          if (!e.currentTarget.value) {
-                            e.currentTarget.type = "text";
-                          }
-                        }}
-                        onChange={(e) => setExcursionDate(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.excursions.people}
-                      </label>
-                      <div className="relative">
-                        <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <input
-                          type="number"
-                          min="1"
-                          max="20"
-                          className={iconFieldControlClass}
-                          value={excursionPeople}
-                          onChange={(e) =>
-                            setExcursionPeople(Number(e.target.value))
-                          }
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className={fieldLabelClass}>
-                        {t.hero.excursions.language}
-                      </label>
-                      <select
-                        className={`${fieldControlClass} ${
-                          excursionFilters.language
-                            ? "text-gray-900"
-                            : "text-gray-500"
-                        }`}
-                        value={excursionFilters.language}
-                        onChange={(e) =>
-                          setExcursionFilters({
-                            ...excursionFilters,
-                            language: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="">
-                          {language === "en"
-                            ? "Select language"
-                            : language === "ru"
-                              ? "Выберите язык"
-                              : language === "pl"
-                                ? "Wybierz język"
-                                : language === "fr"
-                                  ? "Sélectionner la langue"
-                                  : language === "uk"
-                                    ? "Оберіть мову"
-                                    : language === "de"
-                                      ? "Sprache auswählen"
-                                      : "Seleccionar idioma"}
-                        </option>
-                        {t.hero.excursions.languageOptions.map((lang) => (
-                          <option key={lang.value} value={lang.value}>
-                            {lang.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Advanced search toggle button */}
-                  <div className="flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() => setShowAdvancedTours(!showAdvancedTours)}
-                      className={advancedToggleClass}
-                    >
-                      {showAdvancedTours ? (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 15l7-7 7 7"
-                            />
-                          </svg>
-                          {t.common.hideSearch}
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                          {t.common.showSearch}
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  {/* Second row - Additional filters (expandable) */}
-                  {showAdvancedTours && (
+                  <div className="space-y-4 lg:space-y-5">
+                    {/* First row - Basic filters */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                       <div>
                         <label className={fieldLabelClass}>
-                          Location
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Any location"
-                          className={fieldControlClass}
-                          value={excursionFilters.location}
-                          onChange={(e) =>
-                            setExcursionFilters({
-                              ...excursionFilters,
-                              location: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.common.priceFrom}
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="€"
-                          className={fieldControlClass}
-                          value={excursionFilters.priceFrom}
-                          onChange={(e) =>
-                            setExcursionFilters({
-                              ...excursionFilters,
-                              priceFrom: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.common.priceTo}
-                        </label>
-                        <input
-                          type="number"
-                          placeholder="€"
-                          className={fieldControlClass}
-                          value={excursionFilters.priceTo}
-                          onChange={(e) =>
-                            setExcursionFilters({
-                              ...excursionFilters,
-                              priceTo: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          Duration
+                          {t.hero.excursions.type}
                         </label>
                         <select
-                          className={fieldControlClass}
-                          value={excursionFilters.duration}
-                          onChange={(e) =>
-                            setExcursionFilters({
-                              ...excursionFilters,
-                              duration: e.target.value,
-                            })
-                          }
+                            className={`${fieldControlClass} ${
+                                excursionType ? "text-gray-900" : "text-gray-500"
+                            }`}
+                            value={excursionType}
+                            onChange={(e) => setExcursionType(e.target.value)}
                         >
-                          {tourDurations.map((duration) => (
-                            <option key={duration} value={duration}>
-                              {duration.charAt(0).toUpperCase() +
-                                duration.slice(1)}
-                            </option>
+                          <option value="">
+                            {language === "en"
+                                ? "Select type"
+                                : language === "ru"
+                                    ? "Выберите тип"
+                                    : language === "pl"
+                                        ? "Wybierz typ"
+                                        : language === "fr"
+                                            ? "Sélectionner le type"
+                                            : language === "de"
+                                                ? "Typ auswählen"
+                                                : language === "es"
+                                                    ? "Seleccionar tipo"
+                                                    : "Оберіть тип"}
+                          </option>
+                          {t.hero.excursions.types.map((type) => (
+                              <option key={type.value} value={type.value}>
+                                {type.label}
+                              </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.hero.excursions.date}
+                        </label>
+                        <input
+                            type={excursionDate ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={fieldControlClass}
+                            value={excursionDate}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setExcursionDate(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.hero.excursions.people}
+                        </label>
+                        <div className="relative">
+                          <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"/>
+                          <input
+                              type="number"
+                              min="1"
+                              max="20"
+                              className={iconFieldControlClass}
+                              value={excursionPeople}
+                              onChange={(e) =>
+                                  setExcursionPeople(Number(e.target.value))
+                              }
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className={fieldLabelClass}>
+                          {t.hero.excursions.language}
+                        </label>
+                        <select
+                            className={`${fieldControlClass} ${
+                                excursionFilters.language
+                                    ? "text-gray-900"
+                                    : "text-gray-500"
+                            }`}
+                            value={excursionFilters.language}
+                            onChange={(e) =>
+                                setExcursionFilters({
+                                  ...excursionFilters,
+                                  language: e.target.value,
+                                })
+                            }
+                        >
+                          <option value="">
+                            {language === "en"
+                                ? "Select language"
+                                : language === "ru"
+                                    ? "Выберите язык"
+                                    : language === "pl"
+                                        ? "Wybierz język"
+                                        : language === "fr"
+                                            ? "Sélectionner la langue"
+                                            : language === "uk"
+                                                ? "Оберіть мову"
+                                                : language === "de"
+                                                    ? "Sprache auswählen"
+                                                    : "Seleccionar idioma"}
+                          </option>
+                          {t.hero.excursions.languageOptions.map((lang) => (
+                              <option key={lang.value} value={lang.value}>
+                                {lang.label}
+                              </option>
                           ))}
                         </select>
                       </div>
                     </div>
-                  )}
-                </div>
+
+                    {/* Advanced search toggle button */}
+                    <div className="flex justify-center">
+                      <button
+                          type="button"
+                          onClick={() => setShowAdvancedTours(!showAdvancedTours)}
+                          className={advancedToggleClass}
+                      >
+                        {showAdvancedTours ? (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 15l7-7 7 7"
+                                />
+                              </svg>
+                              {t.common.hideSearch}
+                            </>
+                        ) : (
+                            <>
+                              <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                              {t.common.showSearch}
+                            </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Second row - Additional filters (expandable) */}
+                    {showAdvancedTours && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+                          <div>
+                            <label className={fieldLabelClass}>
+                              Location
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Any location"
+                                className={fieldControlClass}
+                                value={excursionFilters.location}
+                                onChange={(e) =>
+                                    setExcursionFilters({
+                                      ...excursionFilters,
+                                      location: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceFrom}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={excursionFilters.priceFrom}
+                                onChange={(e) =>
+                                    setExcursionFilters({
+                                      ...excursionFilters,
+                                      priceFrom: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              {t.common.priceTo}
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="€"
+                                className={fieldControlClass}
+                                value={excursionFilters.priceTo}
+                                onChange={(e) =>
+                                    setExcursionFilters({
+                                      ...excursionFilters,
+                                      priceTo: e.target.value,
+                                    })
+                                }
+                            />
+                          </div>
+                          <div>
+                            <label className={fieldLabelClass}>
+                              Duration
+                            </label>
+                            <select
+                                className={fieldControlClass}
+                                value={excursionFilters.duration}
+                                onChange={(e) =>
+                                    setExcursionFilters({
+                                      ...excursionFilters,
+                                      duration: e.target.value,
+                                    })
+                                }
+                            >
+                              {tourDurations.map((duration) => (
+                                  <option key={duration} value={duration}>
+                                    {duration.charAt(0).toUpperCase() +
+                                        duration.slice(1)}
+                                  </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                    )}
+                  </div>
               )}
 
               {/* Blog Tab */}
               {activeTab === "blog" && (
-                <div className="text-center py-12">
-                  <BookOpen className="w-16 h-16 mx-auto text-blue-500 mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {language === "en"
-                      ? "Discover Our Blog"
-                      : language === "ru"
-                        ? "Откройте наш блог"
-                        : language === "pl"
-                          ? "Odkryj nasz blog"
-                          : language === "fr"
-                            ? "Découvrez notre blog"
-                            : language === "uk"
-                              ? "Відкрийте наш блог"
-                              : language === "de"
-                                ? "Unser Blog entdecken"
-                                : language === "es"
-                                  ? "Descubre nuestro blog"
-                                  : "Відкрийте наш блог"}
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    {language === "en"
-                      ? "Read about the best places, tips and experiences in Tenerife"
-                      : language === "ru"
-                        ? "Читайте о лучших местах, советах и впечатлениях на Тенерифе"
-                        : language === "pl"
-                          ? "Czytaj o najlepszych miejscach, wskazówkach i doświadczeniach na Teneryfie"
-                          : language === "fr"
-                            ? "Lisez sur les meilleurs endroits, conseils et expériences à Tenerife"
-                            : language === "uk"
-                              ? "Читайте про найкращі місця, поради та враження на Тенеріфе"
-                              : language === "de"
-                                ? "Lesen Sie über die besten Orte, Tipps und Erfahrungen auf Teneriffa"
-                                : language === "es"
-                                  ? "Lee sobre los mejores lugares, consejos y experiencias en Tenerife"
-                                  : "Читайте про найкращі місця, поради та враження на Тенеріфе"}
-                  </p>
-                  <button
-                    onClick={() => router.push(createLocaleLink("/blog"))}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    <BookOpen className="w-4 h-4" />
-                    {language === "en"
-                      ? "Visit Blog"
-                      : language === "ru"
-                        ? "Перейти в блог"
-                        : language === "pl"
-                          ? "Odwiedź blog"
-                          : language === "fr"
-                            ? "Visiter le blog"
-                            : language === "uk"
-                              ? "Відвідати блог"
-                              : language === "de"
-                                ? "Blog besuchen"
-                                : language === "es"
-                                  ? "Visitar el blog"
-                                  : "Відвідати блог"}
-                  </button>
-                </div>
+                  <div className="text-center py-12">
+                    <BookOpen className="w-16 h-16 mx-auto text-blue-500 mb-4"/>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      {language === "en"
+                          ? "Discover Our Blog"
+                          : language === "ru"
+                              ? "Откройте наш блог"
+                              : language === "pl"
+                                  ? "Odkryj nasz blog"
+                                  : language === "fr"
+                                      ? "Découvrez notre blog"
+                                      : language === "uk"
+                                          ? "Відкрийте наш блог"
+                                          : language === "de"
+                                              ? "Unser Blog entdecken"
+                                              : language === "es"
+                                                  ? "Descubre nuestro blog"
+                                                  : "Відкрийте наш блог"}
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      {language === "en"
+                          ? "Read about the best places, tips and experiences in Tenerife"
+                          : language === "ru"
+                              ? "Читайте о лучших местах, советах и впечатлениях на Тенерифе"
+                              : language === "pl"
+                                  ? "Czytaj o najlepszych miejscach, wskazówkach i doświadczeniach na Teneryfie"
+                                  : language === "fr"
+                                      ? "Lisez sur les meilleurs endroits, conseils et expériences à Tenerife"
+                                      : language === "uk"
+                                          ? "Читайте про найкращі місця, поради та враження на Тенеріфе"
+                                          : language === "de"
+                                              ? "Lesen Sie über die besten Orte, Tipps und Erfahrungen auf Teneriffa"
+                                              : language === "es"
+                                                  ? "Lee sobre los mejores lugares, consejos y experiencias en Tenerife"
+                                                  : "Читайте про найкращі місця, поради та враження на Тенеріфе"}
+                    </p>
+                    <button
+                        onClick={() => router.push(createLocaleLink("/blog"))}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      <BookOpen className="w-4 h-4"/>
+                      {language === "en"
+                          ? "Visit Blog"
+                          : language === "ru"
+                              ? "Перейти в блог"
+                              : language === "pl"
+                                  ? "Odwiedź blog"
+                                  : language === "fr"
+                                      ? "Visiter le blog"
+                                      : language === "uk"
+                                          ? "Відвідати блог"
+                                          : language === "de"
+                                              ? "Blog besuchen"
+                                              : language === "es"
+                                                  ? "Visitar el blog"
+                                                  : "Відвідати блог"}
+                    </button>
+                  </div>
               )}
 
               {/* Search Button */}
               {activeTab !== "blog" && (
-                <button
-                  onClick={handleSearch}
-                  className="mt-4 mx-auto flex h-12 w-full max-w-[280px] items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 text-base font-semibold text-white shadow-md transition-colors hover:bg-blue-700 sm:w-auto sm:min-w-[240px]"
-                >
-                  <Search className="w-5 h-5" />
-                  {t.hero.search}
-                </button>
+                  <button
+                      onClick={handleSearch}
+                      className="mt-4 mx-auto flex h-12 w-full max-w-[280px] items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 text-base font-semibold text-white shadow-md transition-colors hover:bg-blue-700 sm:w-auto sm:min-w-[240px]"
+                  >
+                    <Search className="w-5 h-5"/>
+                    {t.hero.search}
+                  </button>
               )}
             </div>
           </div>
         </div>
+
+        {/* otpusk Card  */}
+        <div>
+          <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=cyrillic" rel="stylesheet" />
+          <link rel="Stylesheet" href="https://export.otpusk.com/os/onsite/form.css" type="text/css" />
+          <link rel="Stylesheet" href="https://export.otpusk.com/os/onsite/result.css" type="text/css" />
+          <link rel="Stylesheet" href="https://export.otpusk.com/os/onsite/tour.css" type="text/css" />
+        </div>
+        <div className="new_os"></div>
+      </section>
+
+      <section className="bg-gray-50 py-12">
+        <div id="otpusk-search-container" className="mx-auto max-w-[1200px]"></div>
+        <div id="otpusk-tour-container" className="mx-auto max-w-[1200px]"></div>
       </section>
 
       {/* Секция недвижимости */}
       <section
-        id="accommodation"
-        className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-gray-50"
+          id="accommodation"
+          className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-gray-50"
       >
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-16">
@@ -1545,36 +1616,36 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </p>
             </div>
             <button
-              onClick={() => router.push(createLocaleLink("/apartments"))}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
+                onClick={() => router.push(createLocaleLink("/apartments"))}
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
             >
               {t.sections.accommodation.viewAll}
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4"/>
             </button>
           </div>
 
           {dataLoading ? (
-            <EmptyState type="loading" />
+              <EmptyState type="loading"/>
           ) : accommodation.length === 0 ? (
-            <EmptyState type="empty" />
+              <EmptyState type="empty"/>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {accommodation.map(
-                (place, index) =>
-                  index < 3 && (
-                    <div
-                      key={place.id || index}
-                      className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                    >
-                      <div className="aspect-video relative overflow-hidden">
-                        <img
-                          src={place.image || "/placeholder.svg"}
-                          alt={place.title}
-                          className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                          onClick={() =>
-                            router.push(
-                              createLocaleLink(
-                                `/apartments/${place.documentId}`
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {accommodation.map(
+                    (place, index) =>
+                        index < 3 && (
+                            <div
+                                key={place.id || index}
+                                className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                            >
+                              <div className="aspect-video relative overflow-hidden">
+                                <img
+                                    src={place.image || "/placeholder.svg"}
+                                    alt={place.title}
+                                    className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+                                    onClick={() =>
+                                        router.push(
+                                            createLocaleLink(
+                                                `/apartments/${place.documentId}`
                               )
                             )
                           }
