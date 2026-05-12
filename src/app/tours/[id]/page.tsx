@@ -2,6 +2,12 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllTourIds, getTourById } from "@/services/ssgDataService";
 import TourDetailPageClient from "./client";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  breadcrumbListJsonLd,
+  detailJsonLdGraph,
+  productOfferJsonLd,
+} from "@/lib/jsonLd";
 import {
   absoluteUrlForLocale,
   hreflangAlternates,
@@ -110,7 +116,35 @@ export default async function TourDetailPage({
       notFound();
     }
 
-    return <TourDetailPageClient tour={tour as any} />;
+    const title = tour.name || tour.title || "Tour";
+    const imageUrl = tour.images?.[0]?.url
+      ? tour.images[0].url.startsWith("http")
+        ? tour.images[0].url
+        : `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${tour.images[0].url}`
+      : "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg";
+    const pageUrl = absoluteUrlForLocale("en", `/tours/${id}`);
+    const structuredData = detailJsonLdGraph([
+      breadcrumbListJsonLd("en", [
+        { kind: "home" },
+        { kind: "tours" },
+        { kind: "named", name: title, path: `/tours/${id}` },
+      ]),
+      productOfferJsonLd({
+        url: pageUrl,
+        name: title,
+        description: String(tour.description || ""),
+        image: imageUrl,
+        price: tour.price?.amount,
+        priceCurrency: tour.price?.currency,
+      }),
+    ]);
+
+    return (
+      <>
+        <JsonLd data={structuredData} />
+        <TourDetailPageClient tour={tour as any} />
+      </>
+    );
   } catch (error) {
     console.error("Error loading tour:", error);
     notFound();

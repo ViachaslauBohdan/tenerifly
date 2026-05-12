@@ -1,42 +1,23 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
+import { SEO_HOME } from "@/lib/seo";
 
 export default function manifest(): MetadataRoute.Manifest {
+  const { description } = SEO_HOME.en;
   return {
-    name: 'Tenerifly.io - Your Guide to Tenerife',
-    short_name: 'Tenerifly',
-    description: 'Find your perfect accommodation, tours or car rental in Tenerife',
-    start_url: '/',
-    display: 'standalone',
-    background_color: '#ffffff',
-    theme_color: '#ffffff',
+    name: "Tenerifly.io — Tenerife travel",
+    short_name: "Tenerifly",
+    description,
+    start_url: "/en/",
+    scope: "/",
+    display: "standalone",
+    background_color: "#ffffff",
+    theme_color: "#ffffff",
     icons: [
       {
-        src: '/icon-192x192.png',
-        sizes: '192x192',
-        type: 'image/png',
-      },
-      {
-        src: '/icon-512x512.png',
-        sizes: '512x512',
-        type: 'image/png',
-      },
-      {
-        src: '/icon-192x192.png',
-        sizes: '192x192',
-        type: 'image/png',
-        purpose: 'maskable',
+        src: "/favicon.ico",
+        sizes: "any",
+        type: "image/x-icon",
       },
     ],
-    orientation: 'portrait',
-    categories: ['travel', 'lifestyle', 'business'],
-    screenshots: [
-      {
-        src: 'https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg',
-        sizes: '1200x630',
-        type: 'image/jpeg',
-        label: 'Tenerifly.io Homepage',
-      },
-    ],
-    prefer_related_applications: false,
   };
-} 
+}

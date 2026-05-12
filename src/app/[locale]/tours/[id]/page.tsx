@@ -3,6 +3,12 @@ import { notFound } from "next/navigation";
 import { getAllTourIds, getTourById } from "@/services/ssgDataService";
 import TourDetailPageClient from "../../../tours/[id]/client";
 import { LOCALES, type Locale } from "@/types/locale";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  breadcrumbListJsonLd,
+  detailJsonLdGraph,
+  productOfferJsonLd,
+} from "@/lib/jsonLd";
 import {
   absoluteUrlForLocale,
   hreflangAlternates,
@@ -109,14 +115,42 @@ export default async function TourDetailPage({
   params: Promise<{ locale: Locale; id: string }>;
 }) {
   try {
-    const { id } = await params;
+    const { id, locale } = await params;
     const tour = await getTourById(id);
 
     if (!tour) {
       notFound();
     }
 
-    return <TourDetailPageClient tour={tour as any} />;
+    const title = tour.name || tour.title || "Tour";
+    const imageUrl = tour.images?.[0]?.url
+      ? tour.images[0].url.startsWith("http")
+        ? tour.images[0].url
+        : `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${tour.images[0].url}`
+      : "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg";
+    const pageUrl = absoluteUrlForLocale(locale, `/tours/${id}`);
+    const structuredData = detailJsonLdGraph([
+      breadcrumbListJsonLd(locale, [
+        { kind: "home" },
+        { kind: "tours" },
+        { kind: "named", name: title, path: `/tours/${id}` },
+      ]),
+      productOfferJsonLd({
+        url: pageUrl,
+        name: title,
+        description: String(tour.description || ""),
+        image: imageUrl,
+        price: tour.price?.amount,
+        priceCurrency: tour.price?.currency,
+      }),
+    ]);
+
+    return (
+      <>
+        <JsonLd data={structuredData} />
+        <TourDetailPageClient tour={tour as any} />
+      </>
+    );
   } catch (error) {
     console.error("Error loading tour:", error);
     notFound();

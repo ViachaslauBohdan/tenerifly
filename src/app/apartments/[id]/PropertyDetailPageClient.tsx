@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslation } from "@/hooks/useTranslation";
+import { localeDisplayCode } from "@/types/locale";
 import {
   Carousel,
   CarouselContent,
@@ -254,7 +255,7 @@ export default function PropertyDetailPage({
                 {currentLanguage?.name}
               </span>
               <span className="font-medium text-gray-700 sm:hidden">
-                {currentLanguage?.code.toUpperCase()}
+                {localeDisplayCode(currentLanguage?.code)}
               </span>
               <svg
                 className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${

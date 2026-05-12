@@ -3,6 +3,12 @@ import { notFound } from "next/navigation";
 import { getAllCarIds, getCarById } from "@/services/ssgDataService";
 import CarDetailPageClient from "../../../cars/[id]/client";
 import { LOCALES, type Locale } from "@/types/locale";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  breadcrumbListJsonLd,
+  detailJsonLdGraph,
+  productOfferJsonLd,
+} from "@/lib/jsonLd";
 import {
   absoluteUrlForLocale,
   hreflangAlternates,
@@ -113,14 +119,49 @@ export default async function CarDetailPage({
   params: Promise<{ locale: Locale; id: string }>;
 }) {
   try {
-    const { id } = await params;
+    const { id, locale } = await params;
     const car = await getCarById(id);
 
     if (!car) {
       notFound();
     }
 
-    return <CarDetailPageClient car={car} />;
+    const title =
+      car.title ||
+      `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim();
+    const imageUrl = car.images?.[0]?.url
+      ? car.images[0].url.startsWith("http")
+        ? car.images[0].url
+        : `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${car.images[0].url}`
+      : "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg";
+    const pageUrl = absoluteUrlForLocale(locale, `/cars/${id}`);
+    const dayRate =
+      typeof (car as { rental_prices?: { day_1?: number } }).rental_prices
+        ?.day_1 === "number"
+        ? (car as { rental_prices: { day_1: number } }).rental_prices.day_1
+        : undefined;
+    const structuredData = detailJsonLdGraph([
+      breadcrumbListJsonLd(locale, [
+        { kind: "home" },
+        { kind: "cars" },
+        { kind: "named", name: title, path: `/cars/${id}` },
+      ]),
+      productOfferJsonLd({
+        url: pageUrl,
+        name: title,
+        description: String(car.description || ""),
+        image: imageUrl,
+        price: dayRate,
+        priceCurrency: "EUR",
+      }),
+    ]);
+
+    return (
+      <>
+        <JsonLd data={structuredData} />
+        <CarDetailPageClient car={car} />
+      </>
+    );
   } catch (error) {
     console.error("Error loading car:", error);
     notFound();

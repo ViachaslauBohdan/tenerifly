@@ -15,3 +15,10 @@ export const LOCALES: LocaleConfig[] = [
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
 ];
+
+/** Two-letter label for the language switcher (Ukrainian ISO 639-1 is `uk`, which reads as UK next to 🇺🇦). */
+export function localeDisplayCode(localeCode: string | undefined): string {
+  if (localeCode === "uk") return "UA";
+  if (!localeCode) return "";
+  return localeCode.toUpperCase();
+}

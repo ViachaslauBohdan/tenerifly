@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Plane, Users, CheckCircle, Phone } from "lucide-react";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import { useTranslation } from "@/hooks/useTranslation";
+import { localeDisplayCode } from "@/types/locale";
 import {
   formatTransferPrice,
   getTransferImage,
@@ -77,7 +78,7 @@ export default function TransferDetailPageClient({
                 {currentLanguage?.name}
               </span>
               <span className="font-medium text-gray-700 sm:hidden">
-                {currentLanguage?.code.toUpperCase()}
+                {localeDisplayCode(currentLanguage?.code)}
               </span>
             </button>
 

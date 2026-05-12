@@ -11,6 +11,7 @@ import {
 } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
+import { localeDisplayCode } from "@/types/locale";
 import translations from "@/i18n/cars.json";
 import {
   getCanariasRentacarAffiliateUrl,
@@ -576,7 +577,7 @@ export default function CarsPageClient({
                 {currentLanguage?.name}
               </span>
               <span className="font-medium text-gray-700 sm:hidden">
-                {currentLanguage?.code.toUpperCase()}
+                {localeDisplayCode(currentLanguage?.code)}
               </span>
               <svg
                 className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${

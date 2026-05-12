@@ -9,6 +9,7 @@ import {
   absoluteUrlForLocale,
   hreflangAlternates,
   ogLocale,
+  openGraphAlternateLocales,
 } from "@/lib/seo";
 
 // ISR настройки для layout
@@ -55,6 +56,7 @@ export async function generateMetadata({
         },
       ],
       locale: ogLocale(localeCode),
+      alternateLocale: openGraphAlternateLocales(localeCode),
       type: "website",
     },
     twitter: {

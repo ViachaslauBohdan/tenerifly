@@ -1,4 +1,3 @@
-import { getAllTours } from "@/services/ssgDataService";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import ToursPageClient from "./client";
@@ -45,12 +44,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ToursPage() {
-  // Получаем все данные экскурсий на сервере для SSG с кэшированием
-  const tours = await getAllTours();
-
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ToursPageClient initialTours={tours} />
+      <ToursPageClient />
     </Suspense>
   );
 }

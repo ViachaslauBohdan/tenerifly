@@ -39,13 +39,16 @@ import {
   getCanariasRentacarAffiliateUrl,
   getCanariasRentacarBannerImageUrl,
 } from "@/lib/canariasAffiliate";
-import { pickFeaturedHomeTours } from "@/lib/featuredHomeTours";
+import {
+  ATLANTICO_EXCURSIONS_AFFILIATE_URL,
+  NEREIZERDIE_EXCURSIONS_URL,
+} from "@/lib/excursionAggregatorUrls";
 import {
   TileCarPrice,
   TilePriceBadge,
   formatTileAmount,
 } from "@/components/TilePriceBadge";
-import type { Locale } from "@/types/locale";
+import { localeDisplayCode, type Locale } from "@/types/locale";
 // Переводы для всех языков
 const translations = translationsJson;
 
@@ -97,8 +100,6 @@ interface LocalePageClientProps {
     properties: any[];
     cars: any[];
     tours: any[];
-    /** Three tours for the home “featured excursions” grid; full `tours` stays for filters */
-    featuredTours?: any[];
     blogs: any[];
     transfers?: Transfer[];
   };
@@ -120,9 +121,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [dates, setDates] = useState(["", ""]);
   const [guests, setGuests] = useState(2);
   const [carType, setCarType] = useState("");
-  const [excursionType, setExcursionType] = useState("");
-  const [excursionDate, setExcursionDate] = useState("");
-  const [excursionPeople, setExcursionPeople] = useState(2);
 
   // Enhanced filter states to sync with individual pages
   const [accommodationFilters, setAccommodationFilters] = useState({
@@ -148,16 +146,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     type: "rent", // rent or sale
   });
 
-  const [excursionFilters, setExcursionFilters] = useState({
-    location: "",
-    tourType: "",
-    priceFrom: "",
-    priceTo: "",
-    duration: "",
-    category: "",
-    language: "", // Добавляем свойство language
-  });
-
   // State для модального окна бронирования
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [bookingItem, setBookingItem] = useState<{
@@ -179,13 +167,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [carTypes, setCarTypes] = useState<string[]>([]);
   const [carBrands, setCarBrands] = useState<string[]>([]);
   const [carTransmissions, setCarTransmissions] = useState<string[]>([]);
-  const [tourDurations, setTourDurations] = useState<string[]>([]);
 
   // Advanced search visibility states
   const [showAdvancedAccommodation, setShowAdvancedAccommodation] =
     useState(false);
   const [showAdvancedCars, setShowAdvancedCars] = useState(false);
-  const [showAdvancedTours, setShowAdvancedTours] = useState(false);
 
   const t = translations[language];
   const transferCopy = getTransferLocaleText(language);
@@ -218,43 +204,36 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       en: {
         accommodation: "Stay",
         cars: "Cars",
-        excursions: "Tours",
         blog: "Blog",
       },
       ru: {
         accommodation: "Жилье",
         cars: "Авто",
-        excursions: "Экскурсии",
         blog: "Блог",
       },
       pl: {
         accommodation: "Nocleg",
         cars: "Auta",
-        excursions: "Wycieczki",
         blog: "Blog",
       },
       fr: {
         accommodation: "Séjour",
         cars: "Autos",
-        excursions: "Sorties",
         blog: "Blog",
       },
       uk: {
         accommodation: "Житло",
         cars: "Авто",
-        excursions: "Екскурсії",
         blog: "Блог",
       },
       de: {
         accommodation: "Unterkunft",
         cars: "Autos",
-        excursions: "Touren",
         blog: "Blog",
       },
       es: {
         accommodation: "Estancia",
         cars: "Coches",
-        excursions: "Tours",
         blog: "Blog",
       },
     };
@@ -293,20 +272,22 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   // Используем initialData если доступно, иначе загружаем через хук
   const dataFromHook = useDataLoader(mounted, language);
-  const { excursions, cars, accommodation, blogPosts, transfers, dataLoading } =
+  const { cars, accommodation, blogPosts, transfers, dataLoading } =
     initialData
       ? {
-          excursions: initialData.tours || [],
           cars: initialData.cars || [],
           accommodation: initialData.properties || [],
           blogPosts: initialData.blogs || [],
           transfers: initialData.transfers || [],
           dataLoading: false,
         }
-      : dataFromHook;
-
-  const homeFeaturedExcursions =
-    initialData?.featuredTours ?? pickFeaturedHomeTours(excursions);
+      : {
+          cars: dataFromHook.cars,
+          accommodation: dataFromHook.accommodation,
+          blogPosts: dataFromHook.blogPosts,
+          transfers: dataFromHook.transfers,
+          dataLoading: dataFromHook.dataLoading,
+        };
 
   // otpusk setting
   useEffect(() => {
@@ -364,7 +345,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
-    if (mounted && accommodation && cars && excursions) {
+    if (mounted && accommodation && cars) {
       // Extract property types from accommodation data
       const propertyTypesArray = [
         ...new Set(
@@ -417,26 +398,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         ),
       ].sort();
 
-      // Extract tour filter options from excursions data
-      const tourDurationsArray = [
-        ...new Set(
-          excursions
-            .map((tour: { duration?: string }) => tour.duration)
-            .filter(
-              (value): value is string =>
-                Boolean(value) && typeof value === "string"
-            )
-        ),
-      ].sort();
-
       // Set all filter options (simple string arrays like individual pages)
       setPropertyTypes(propertyTypesArray);
       setCarTypes(carTypesArray);
       setCarBrands(carBrandsArray);
       setCarTransmissions(carTransmissionsArray);
-      setTourDurations(tourDurationsArray);
     }
-  }, [mounted, accommodation, cars, excursions]);
+  }, [mounted, accommodation, cars]);
 
   // Функция для открытия модального окна бронирования
   const openBookingModal = (
@@ -491,27 +459,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     if (dates[1]) params.append("checkOut", dates[1]);
 
     switch (activeTab) {
-      case "excursions":
-        // Add excursion-specific filters
-        if (excursionType) params.append("tourType", excursionType);
-        if (excursionDate) params.append("date", excursionDate);
-        if (excursionPeople)
-          params.append("people", excursionPeople.toString());
-        if (excursionFilters.location)
-          params.append("location", excursionFilters.location);
-        if (excursionFilters.priceFrom)
-          params.append("priceFrom", excursionFilters.priceFrom);
-        if (excursionFilters.priceTo)
-          params.append("priceTo", excursionFilters.priceTo);
-        if (excursionFilters.duration)
-          params.append("duration", excursionFilters.duration);
-        if (excursionFilters.language)
-          params.append("language", excursionFilters.language);
-        if (excursionFilters.category)
-          params.append("category", excursionFilters.category);
-        router.push(`${createLocaleLink("/tours")}?${params.toString()}`);
-        break;
-
       case "cars":
         // Add car-specific filters
         if (carType) params.append("bodyType", carType);
@@ -654,7 +601,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         value={lang.code}
                         className="bg-slate-900 text-white"
                       >
-                        {`${lang.flag} ${lang.code.toUpperCase()}`}
+                        {`${lang.flag} ${localeDisplayCode(lang.code)}`}
                       </option>
                     ))}
                   </select>
@@ -752,7 +699,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               className="w-full max-w-5xl xl:max-w-6xl bg-white/95 backdrop-blur-xl rounded-[1.5rem] sm:rounded-[2rem] border border-white/60 shadow-[0_20px_60px_rgba(15,23,42,0.24)] overflow-hidden">
             {/* Tabs - изменен порядок, accommodation теперь первый */}
             <div className="border-b border-gray-200/80 bg-gray-50/80 px-2 pt-2 sm:px-3 sm:pt-3">
-              <nav className="grid grid-cols-4 gap-1.5 sm:gap-2">
+              <nav className="grid grid-cols-3 gap-1.5 sm:gap-2">
                 {[
                   {
                     key: "accommodation",
@@ -760,11 +707,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     label: t.hero.tabs.accommodation,
                   },
                   {key: "cars", icon: Car, label: t.hero.tabs.cars},
-                  {
-                    key: "excursions",
-                    icon: MapPin,
-                    label: t.hero.tabs.excursions,
-                  },
                   {key: "blog", icon: BookOpen, label: t.hero.tabs.blog},
                 ].map(({key, icon: Icon, label}) => (
                     <button
@@ -1258,250 +1200,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                       </option>
                                   )
                               )}
-                            </select>
-                          </div>
-                        </div>
-                    )}
-                  </div>
-              )}
-
-              {/* Excursions Tab */}
-              {activeTab === "excursions" && (
-                  <div className="space-y-4 lg:space-y-5">
-                    {/* First row - Basic filters */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.excursions.type}
-                        </label>
-                        <select
-                            className={`${fieldControlClass} ${
-                                excursionType ? "text-gray-900" : "text-gray-500"
-                            }`}
-                            value={excursionType}
-                            onChange={(e) => setExcursionType(e.target.value)}
-                        >
-                          <option value="">
-                            {language === "en"
-                                ? "Select type"
-                                : language === "ru"
-                                    ? "Выберите тип"
-                                    : language === "pl"
-                                        ? "Wybierz typ"
-                                        : language === "fr"
-                                            ? "Sélectionner le type"
-                                            : language === "de"
-                                                ? "Typ auswählen"
-                                                : language === "es"
-                                                    ? "Seleccionar tipo"
-                                                    : "Оберіть тип"}
-                          </option>
-                          {t.hero.excursions.types.map((type) => (
-                              <option key={type.value} value={type.value}>
-                                {type.label}
-                              </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.excursions.date}
-                        </label>
-                        <input
-                            type={excursionDate ? "date" : "text"}
-                            placeholder={datePlaceholder}
-                            className={fieldControlClass}
-                            value={excursionDate}
-                            onFocus={(e) => {
-                              e.currentTarget.type = "date";
-                            }}
-                            onBlur={(e) => {
-                              if (!e.currentTarget.value) {
-                                e.currentTarget.type = "text";
-                              }
-                            }}
-                            onChange={(e) => setExcursionDate(e.target.value)}
-                        />
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.excursions.people}
-                        </label>
-                        <div className="relative">
-                          <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"/>
-                          <input
-                              type="number"
-                              min="1"
-                              max="20"
-                              className={iconFieldControlClass}
-                              value={excursionPeople}
-                              onChange={(e) =>
-                                  setExcursionPeople(Number(e.target.value))
-                              }
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.excursions.language}
-                        </label>
-                        <select
-                            className={`${fieldControlClass} ${
-                                excursionFilters.language
-                                    ? "text-gray-900"
-                                    : "text-gray-500"
-                            }`}
-                            value={excursionFilters.language}
-                            onChange={(e) =>
-                                setExcursionFilters({
-                                  ...excursionFilters,
-                                  language: e.target.value,
-                                })
-                            }
-                        >
-                          <option value="">
-                            {language === "en"
-                                ? "Select language"
-                                : language === "ru"
-                                    ? "Выберите язык"
-                                    : language === "pl"
-                                        ? "Wybierz język"
-                                        : language === "fr"
-                                            ? "Sélectionner la langue"
-                                            : language === "uk"
-                                                ? "Оберіть мову"
-                                                : language === "de"
-                                                    ? "Sprache auswählen"
-                                                    : "Seleccionar idioma"}
-                          </option>
-                          {t.hero.excursions.languageOptions.map((lang) => (
-                              <option key={lang.value} value={lang.value}>
-                                {lang.label}
-                              </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Advanced search toggle button */}
-                    <div className="flex justify-center">
-                      <button
-                          type="button"
-                          onClick={() => setShowAdvancedTours(!showAdvancedTours)}
-                          className={advancedToggleClass}
-                      >
-                        {showAdvancedTours ? (
-                            <>
-                              <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                              >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M5 15l7-7 7 7"
-                                />
-                              </svg>
-                              {t.common.hideSearch}
-                            </>
-                        ) : (
-                            <>
-                              <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                              >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 9l-7 7-7-7"
-                                />
-                              </svg>
-                              {t.common.showSearch}
-                            </>
-                        )}
-                      </button>
-                    </div>
-
-                    {/* Second row - Additional filters (expandable) */}
-                    {showAdvancedTours && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-                          <div>
-                            <label className={fieldLabelClass}>
-                              Location
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Any location"
-                                className={fieldControlClass}
-                                value={excursionFilters.location}
-                                onChange={(e) =>
-                                    setExcursionFilters({
-                                      ...excursionFilters,
-                                      location: e.target.value,
-                                    })
-                                }
-                            />
-                          </div>
-                          <div>
-                            <label className={fieldLabelClass}>
-                              {t.common.priceFrom}
-                            </label>
-                            <input
-                                type="number"
-                                placeholder="€"
-                                className={fieldControlClass}
-                                value={excursionFilters.priceFrom}
-                                onChange={(e) =>
-                                    setExcursionFilters({
-                                      ...excursionFilters,
-                                      priceFrom: e.target.value,
-                                    })
-                                }
-                            />
-                          </div>
-                          <div>
-                            <label className={fieldLabelClass}>
-                              {t.common.priceTo}
-                            </label>
-                            <input
-                                type="number"
-                                placeholder="€"
-                                className={fieldControlClass}
-                                value={excursionFilters.priceTo}
-                                onChange={(e) =>
-                                    setExcursionFilters({
-                                      ...excursionFilters,
-                                      priceTo: e.target.value,
-                                    })
-                                }
-                            />
-                          </div>
-                          <div>
-                            <label className={fieldLabelClass}>
-                              Duration
-                            </label>
-                            <select
-                                className={fieldControlClass}
-                                value={excursionFilters.duration}
-                                onChange={(e) =>
-                                    setExcursionFilters({
-                                      ...excursionFilters,
-                                      duration: e.target.value,
-                                    })
-                                }
-                            >
-                              {tourDurations.map((duration) => (
-                                  <option key={duration} value={duration}>
-                                    {duration.charAt(0).toUpperCase() +
-                                        duration.slice(1)}
-                                  </option>
-                              ))}
                             </select>
                           </div>
                         </div>
@@ -2014,230 +1712,196 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         </section>
       )}
 
-      {/* Секция экскурсий */}
+
+      {/* Excursion aggregators (Atlántico + Nere Izerdie) */}
       <section
         id="excursions"
         className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-white"
       >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center mb-16">
-            <div className="text-center flex-1">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-12 md:mb-14 gap-4">
+            <div className="text-center flex-1 w-full sm:w-auto">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">
                 {t.sections.excursions.title}
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto sm:mx-0 sm:max-w-none">
                 {t.sections.excursions.subtitle}
               </p>
             </div>
             <button
+              type="button"
               onClick={() => router.push(createLocaleLink("/tours"))}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
+              className="flex shrink-0 items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl sm:ml-8"
             >
               {t.sections.excursions.viewAll}
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
-          {dataLoading ? (
-            <EmptyState type="loading" />
-          ) : homeFeaturedExcursions.length === 0 ? (
-            <EmptyState type="empty" />
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(() => {
-                return homeFeaturedExcursions.map((excursion, index) => (
-                      <div
-                        key={excursion.id || index}
-                        className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-                      >
-                        <div className="aspect-video relative overflow-hidden">
-                          <img
-                            src={excursion.image || "/placeholder.svg"}
-                            alt={excursion.title}
-                            className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
-                            onClick={() =>
-                              router.push(
-                                createLocaleLink(
-                                  `/tours/${excursion.documentId || index + 1}`
-                                )
-                              )
-                            }
-                          />
-                          <div className="absolute top-2 right-2">
-                            <button
-                              onClick={() =>
-                                router.push(
-                                  `/tours/${excursion.documentId || index + 1}`
-                                )
-                              }
-                              className="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-200 sm:hidden"
-                            >
-                              <svg
-                                className="w-4 h-4 text-gray-700"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                        <div className="p-6">
-                          <div className="flex justify-between items-start mb-4">
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {excursion.title}
-                            </h3>
-                            <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full">
-                              <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                              <span className="text-sm font-medium text-yellow-700">
-                                {excursion.rating}
-                              </span>
-                            </div>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                            {excursion.description}
-                          </p>
-                          <div className="space-y-2 mb-6">
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                              <Clock className="w-4 h-4" />
-                              <span>
-                                {t.sections.excursions.duration}:{" "}
-                                {excursion.duration}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                              <Users className="w-4 h-4" />
-                              <span>
-                                {t.sections.excursions.groupSize}:{" "}
-                                {excursion.groupSize}
-                              </span>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-2 text-sm">
-                              <span className="text-gray-600">
-                                {t.sections.excursions.price}
-                              </span>
-                              <TilePriceBadge>
-                                <span className="font-semibold tabular-nums text-yellow-900">
-                                  {excursion.price}
-                                </span>
-                              </TilePriceBadge>
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() =>
-                                openBookingModal("excursion", {
-                                  title: excursion.title,
-                                  price: excursion.price,
-                                  duration: excursion.duration,
-                                  language: "English",
-                                  brand: excursion.brand,
-                                  model: excursion.model,
-                                  contact: excursion.contact,
-                                })
-                              }
-                              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                            >
-                              {t.common.bookNow}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ));
-              })()}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Мини-секция Atlántico Excursiones */}
-      <section className="py-12 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-100 hover:shadow-2xl transition-all duration-300">
-            <div className="md:flex items-center">
-              <div className="md:w-1/3 bg-gradient-to-br from-blue-600 to-indigo-700 p-8 md:p-12 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
-                    <MapPin className="w-8 h-8 text-white" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-100 hover:shadow-2xl transition-all duration-300">
+              <div className="md:flex items-stretch min-h-[280px]">
+                <div className="md:w-2/5 bg-gradient-to-br from-blue-600 to-indigo-700 p-8 md:p-10 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+                      <MapPin className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      Atlántico Excursiones
+                    </h3>
+                    <p className="text-blue-100 text-sm">
+                      {language === "ru"
+                        ? "Больше туров и активностей"
+                        : language === "pl"
+                          ? "Więcej wycieczek i aktywności"
+                          : language === "fr"
+                            ? "Plus de visites et d'activités"
+                            : language === "de"
+                              ? "Mehr Touren & Aktivitäten"
+                              : language === "es"
+                                ? "Más tours y actividades"
+                                : language === "uk"
+                                  ? "Більше турів та активностей"
+                                  : "More tours & activities"}
+                    </p>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    Atlántico Excursiones
-                  </h3>
-                  <p className="text-blue-100 text-sm">
-                    {language === "ru" 
-                      ? "Больше туров и активностей"
+                </div>
+                <div className="md:w-3/5 p-8 md:p-10 flex flex-col justify-center">
+                  <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                    {language === "ru"
+                      ? "Наш партнёр Atlántico Excursiones"
                       : language === "pl"
-                      ? "Więcej wycieczek i aktywności"
-                      : language === "fr"
-                      ? "Plus de visites et d'activités"
-                      : language === "de"
-                      ? "Mehr Touren & Aktivitäten"
-                      : language === "es"
-                      ? "Más tours y actividades"
-                      : language === "uk"
-                      ? "Більше турів та активностей"
-                      : "More Tours & Activities"}
+                        ? "Nasz partner: Atlántico Excursiones"
+                        : language === "fr"
+                          ? "Notre partenaire Atlántico Excursiones"
+                          : language === "de"
+                            ? "Unser Partner Atlántico Excursiones"
+                            : language === "es"
+                              ? "Nuestro socio Atlántico Excursiones"
+                              : language === "uk"
+                                ? "Партнер Atlántico Excursiones"
+                                : "Our partner Atlántico Excursiones"}
+                  </h4>
+                  <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base">
+                    {language === "ru"
+                      ? "Автобусные туры, тематические парки, морские прогулки и VIP — бронируйте с Atlántico Excursiones."
+                      : language === "pl"
+                        ? "Wycieczki autokarowe, parki rozrywki, rejsy i VIP — rezerwuj z Atlántico Excursiones."
+                        : language === "fr"
+                          ? "Circuits en bus, parcs à thème, croisières et expériences VIP — réservez avec Atlántico Excursiones."
+                          : language === "de"
+                            ? "Busreisen, Freizeitparks, Bootstouren und VIP — buchen Sie bei Atlántico Excursiones."
+                            : language === "es"
+                              ? "Excursiones en bus, parques temáticos, barcos y experiencias VIP — reserva con Atlántico Excursiones."
+                              : language === "uk"
+                                ? "Автобусні тури, парки розваг, морські прогулянки та VIP — бронюйте з Atlántico Excursiones."
+                                : "Coach tours, theme parks, boat trips and VIP experiences — book with Atlántico Excursiones."}
                   </p>
+                  <a
+                    href={ATLANTICO_EXCURSIONS_AFFILIATE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg w-fit"
+                  >
+                    {language === "ru"
+                      ? "Посмотреть все туры"
+                      : language === "pl"
+                        ? "Zobacz wszystkie wycieczki"
+                        : language === "fr"
+                          ? "Voir toutes les visites"
+                          : language === "de"
+                            ? "Alle Touren anzeigen"
+                            : language === "es"
+                              ? "Ver todos los tours"
+                              : language === "uk"
+                                ? "Переглянути всі тури"
+                                : "View all tours"}
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
                 </div>
               </div>
-              <div className="md:w-2/3 p-8 md:p-12">
-                <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                  {language === "ru"
-                    ? "Откройте для себя больше экскурсий на Тенерифе"
-                    : language === "pl"
-                    ? "Odkryj więcej wycieczek na Teneryfie"
-                    : language === "fr"
-                    ? "Découvrez plus d'excursions à Tenerife"
-                    : language === "de"
-                    ? "Entdecken Sie mehr Ausflüge auf Teneriffa"
-                    : language === "es"
-                    ? "Descubre más excursiones en Tenerife"
-                    : language === "uk"
-                    ? "Відкрийте для себе більше екскурсій на Тенерифі"
-                    : "Discover More Excursions in Tenerife"}
-                </h4>
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  {language === "ru"
-                    ? "Исследуйте широкий выбор автобусных туров, тематических парков, морских прогулок, приключенческих мероприятий и VIP-экскурсий. Забронируйте билеты на лучшие развлечения на Тенерифе с Atlántico Excursiones."
-                    : language === "pl"
-                    ? "Odkryj szeroki wybór wycieczek autokarowych, parków tematycznych, rejsów łodzią, aktywności przygodowych i doświadczeń VIP. Zarezerwuj bilety na najlepsze atrakcje na Teneryfie z Atlántico Excursiones."
-                    : language === "fr"
-                    ? "Explorez une large sélection de visites en bus, de parcs à thème, de croisières, d'activités d'aventure et d'expériences VIP. Réservez des billets pour les meilleures activités à Tenerife avec Atlántico Excursiones."
-                    : language === "de"
-                    ? "Entdecken Sie eine große Auswahl an Busreisen, Themenparks, Bootsfahrten, Abenteueraktivitäten und VIP-Erlebnissen. Buchen Sie Tickets für die besten Aktivitäten auf Teneriffa mit Atlántico Excursiones."
-                    : language === "es"
-                    ? "Explora una amplia selección de excursiones en autobús, parques temáticos, paseos en barco, actividades de aventura y experiencias VIP. Reserva entradas para las mejores actividades en Tenerife con Atlántico Excursiones."
-                    : language === "uk"
-                    ? "Дослідіть широкий вибір автобусних турів, тематичних парків, морських прогулянок, пригодницьких заходів та VIP-екскурсій. Забронюйте квитки на найкращі розваги на Тенерифі з Atlántico Excursiones."
-                    : "Explore a wide selection of coach tours, theme parks, boat trips, adventure activities, and VIP experiences. Book tickets for the best activities in Tenerife with Atlántico Excursiones."}
-                </p>
-                <a
-                  href="https://en.atlanticoexcursiones.com/index.php?afId=3609"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
-                >
-                  {language === "ru"
-                    ? "Посмотреть все туры"
-                    : language === "pl"
-                    ? "Zobacz wszystkie wycieczki"
-                    : language === "fr"
-                    ? "Voir toutes les visites"
-                    : language === "de"
-                    ? "Alle Touren anzeigen"
-                    : language === "es"
-                    ? "Ver todos los tours"
-                    : language === "uk"
-                    ? "Переглянути всі тури"
-                    : "View All Tours"}
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-emerald-100 hover:shadow-2xl transition-all duration-300">
+              <div className="md:flex items-stretch min-h-[280px]">
+                <div className="md:w-2/5 bg-gradient-to-br from-emerald-600 to-teal-800 p-8 md:p-10 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+                      <MapPin className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      Viajes Nere Izerdie
+                    </h3>
+                    <p className="text-emerald-100 text-sm">
+                      {language === "ru"
+                        ? "Каталог экскурсий и активностей"
+                        : language === "pl"
+                          ? "Katalog wycieczek i atrakcji"
+                          : language === "fr"
+                            ? "Catalogue d'excursions"
+                            : language === "de"
+                              ? "Ausflugs- & Aktivitätenkatalog"
+                              : language === "es"
+                                ? "Catálogo de excursiones"
+                                : language === "uk"
+                                  ? "Каталог екскурсій"
+                                  : "Excursions & activities"}
+                    </p>
+                  </div>
+                </div>
+                <div className="md:w-3/5 p-8 md:p-10 flex flex-col justify-center">
+                  <h4 className="text-xl font-semibold text-gray-900 mb-3">
+                    {language === "ru"
+                      ? "Ещё один надёжный партнёр на Тенерифе"
+                      : language === "pl"
+                        ? "Kolejny sprawdzony partner na Teneryfie"
+                        : language === "fr"
+                          ? "Un autre partenaire sur Tenerife"
+                          : language === "de"
+                            ? "Weiterer Anbieter auf Teneriffa"
+                            : language === "es"
+                              ? "Otro catálogo en Tenerife"
+                              : language === "uk"
+                                ? "Ще один каталог на Тенеріфі"
+                                : "Another trusted Tenerife catalogue"}
+                  </h4>
+                  <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base">
+                    {language === "ru"
+                      ? "Автобусные экскурсии, вечерние шоу, морские прогулки, парки развлечений и активный отдых — см. предложения на Nere Izerdie."
+                      : language === "pl"
+                        ? "Wycieczki autokarowe, wieczorne show, rejsy, parki rozrywki i aktywności na świeżym powietrzu — zobacz ofertę Nere Izerdie."
+                        : language === "fr"
+                          ? "Excursions en bus, spectacles de soirée, sorties en mer, parcs à thème et activités outdoor — parcourez Nere Izerdie."
+                          : language === "de"
+                            ? "Busausflüge, Abendshows, Bootstouren, Freizeitparks und Outdoor-Aktivitäten — entdecken Sie Nere Izerdie."
+                            : language === "es"
+                              ? "Excursiones en bus, espectáculos nocturnos, barcos, parques temáticos y aventura — explora Nere Izerdie."
+                              : language === "uk"
+                                ? "Автобусні тури, вечірні шоу, морські прогулянки, парки та активності — перегляньте Nere Izerdie."
+                                : "Bus tours, night shows, boat trips, theme parks and outdoor fun — browse Nere Izerdie."}
+                  </p>
+                  <a
+                    href={NEREIZERDIE_EXCURSIONS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg w-fit"
+                  >
+                    {language === "ru"
+                      ? "Открыть каталог"
+                      : language === "pl"
+                        ? "Otwórz katalog"
+                        : language === "fr"
+                          ? "Voir le catalogue"
+                          : language === "de"
+                            ? "Zum Katalog"
+                            : language === "es"
+                              ? "Ver catálogo"
+                              : language === "uk"
+                                ? "Відкрити каталог"
+                                : "Open catalogue"}
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -2375,36 +2039,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               )}
             </div>
           )}
-        </div>
-      </section>
-
-      {/* CTA секция */}
-      <section className="py-20 bg-gray-100">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              {t.cta.title}
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">{t.cta.subtitle}</p>
-            <button
-              onClick={() =>
-                openBookingModal("accommodation", {
-                  title: "",
-                  price: undefined,
-                  currency: undefined,
-                  duration: undefined,
-                  language: undefined,
-                  brand: undefined,
-                  model: undefined,
-                  contact: undefined,
-                })
-              }
-              className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors text-lg"
-            >
-              <Phone className="w-5 h-5" />
-              {t.cta.button}
-            </button>
-          </div>
         </div>
       </section>
 

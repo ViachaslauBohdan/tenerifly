@@ -7,6 +7,12 @@ import {
 import TransferDetailPageClient from "../../../transfers/[id]/client";
 import { getTransferImage } from "@/lib/transfers";
 import { LOCALES, type Locale } from "@/types/locale";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  breadcrumbListJsonLd,
+  detailJsonLdGraph,
+  serviceTransferJsonLd,
+} from "@/lib/jsonLd";
 import {
   absoluteUrlForLocale,
   hreflangAlternates,
@@ -46,6 +52,13 @@ export async function generateMetadata({
     return {
       title: `${title} | Tenerifly.io Transfers`,
       description,
+      keywords: [
+        "Tenerife airport transfer",
+        "Tenerife South Airport transfer",
+        "Tenerife North Airport transfer",
+        "private transfer Tenerife",
+        "Canary Islands transfer",
+      ],
       openGraph: {
         title,
         description,
@@ -54,6 +67,12 @@ export async function generateMetadata({
         images: [{ url: imageUrl, width: 1200, height: 630, alt: title }],
         locale: ogLocale(locale),
         type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [imageUrl],
       },
       alternates: {
         canonical: absoluteUrlForLocale(locale, `/transfers/${id}`),
@@ -74,14 +93,48 @@ export default async function TransferDetailPage({
   params: Promise<{ locale: Locale; id: string }>;
 }) {
   try {
-    const { id } = await params;
+    const { id, locale } = await params;
     const transfer = await getTransferById(id);
 
     if (!transfer) {
       notFound();
     }
 
-    return <TransferDetailPageClient transfer={transfer} />;
+    const title = transfer.title || "Airport transfer";
+    const description =
+      transfer.description || "Private airport transfer in Tenerife";
+    const imageUrl = getTransferImage(transfer);
+    const pageUrl = absoluteUrlForLocale(locale, `/transfers/${id}`);
+    const low = Math.min(
+      transfer.price_south_airport,
+      transfer.price_north_airport
+    );
+    const high = Math.max(
+      transfer.price_south_airport,
+      transfer.price_north_airport
+    );
+    const structuredData = detailJsonLdGraph([
+      breadcrumbListJsonLd(locale, [
+        { kind: "home" },
+        { kind: "named", name: title, path: `/transfers/${id}` },
+      ]),
+      serviceTransferJsonLd({
+        url: pageUrl,
+        name: title,
+        description,
+        image: imageUrl,
+        lowPrice: low,
+        highPrice: high,
+        priceCurrency: transfer.currency || "EUR",
+      }),
+    ]);
+
+    return (
+      <>
+        <JsonLd data={structuredData} />
+        <TransferDetailPageClient transfer={transfer} />
+      </>
+    );
   } catch (error) {
     console.error("Error loading transfer:", error);
     notFound();

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
+import { localeDisplayCode } from "@/types/locale";
 import translations from "@/i18n/blog.json";
 // Языки с флагами
 const languages = [
@@ -197,7 +198,7 @@ export default function BlogPageClient({ initialBlogs }: BlogPageClientProps) {
                 {currentLanguage?.name}
               </span>
               <span className="font-medium text-gray-700 sm:hidden">
-                {currentLanguage?.code.toUpperCase()}
+                {localeDisplayCode(currentLanguage?.code)}
               </span>
               <svg
                 className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${

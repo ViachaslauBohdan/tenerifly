@@ -3,6 +3,12 @@ import { notFound } from "next/navigation";
 import { getAllPropertyIds, getPropertyById } from "@/services/ssgDataService";
 import PropertyDetailPageClient from "../../../apartments/[id]/PropertyDetailPageClient";
 import { LOCALES, type Locale } from "@/types/locale";
+import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  breadcrumbListJsonLd,
+  detailJsonLdGraph,
+  productOfferJsonLd,
+} from "@/lib/jsonLd";
 import {
   absoluteUrlForLocale,
   hreflangAlternates,
@@ -112,14 +118,42 @@ export default async function PropertyDetailPage({
   params: Promise<{ locale: Locale; id: string }>;
 }) {
   try {
-    const { id } = await params;
+    const { id, locale } = await params;
     const property = await getPropertyById(id);
 
     if (!property) {
       notFound();
     }
 
-    return <PropertyDetailPageClient property={property} />;
+    const title = property.title || "Property Details";
+    const imageUrl = property.images?.[0]?.url
+      ? property.images[0].url.startsWith("http")
+        ? property.images[0].url
+        : `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${property.images[0].url}`
+      : "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg";
+    const pageUrl = absoluteUrlForLocale(locale, `/apartments/${id}`);
+    const structuredData = detailJsonLdGraph([
+      breadcrumbListJsonLd(locale, [
+        { kind: "home" },
+        { kind: "apartments" },
+        { kind: "named", name: title, path: `/apartments/${id}` },
+      ]),
+      productOfferJsonLd({
+        url: pageUrl,
+        name: title,
+        description: String(property.description || ""),
+        image: imageUrl,
+        price: property.price?.amount,
+        priceCurrency: property.price?.currency,
+      }),
+    ]);
+
+    return (
+      <>
+        <JsonLd data={structuredData} />
+        <PropertyDetailPageClient property={property} />
+      </>
+    );
   } catch (error) {
     console.error("Error loading property:", error);
     notFound();

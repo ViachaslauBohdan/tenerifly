@@ -50,7 +50,13 @@ export function ogLocale(locale: Locale): string {
   return map[locale];
 }
 
+/** Other locales for `openGraph.alternateLocale` (Facebook / OG locale hints). */
+export function openGraphAlternateLocales(exclude: Locale): string[] {
+  return LOCALES.filter((l) => l.code !== exclude).map((l) => ogLocale(l.code));
+}
+
 export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
+  const homeEn = absoluteUrlForLocale("en", "");
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -59,6 +65,7 @@ export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
         "@id": `${SITE_URL}/#organization`,
         name: "Tenerifly.io",
         url: SITE_URL,
+        sameAs: ["https://twitter.com/tenerifly"],
         logo: {
           "@type": "ImageObject",
           url: DEFAULT_OG_IMAGE,
@@ -67,8 +74,9 @@ export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
       {
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
-        url: SITE_URL,
+        url: homeEn,
         name: "Tenerifly.io",
+        alternateName: ["Tenerifly"],
         description:
           "Tenerife travel: rent apartments and holiday homes, hire cars, and book tours in the Canary Islands. Plan your trip to Tenerife—flights, stays, and local experiences.",
         inLanguage: ["en", "pl", "fr", "ru", "uk", "de", "es"],

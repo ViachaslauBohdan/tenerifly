@@ -14,7 +14,9 @@ import {
   SEO_HOME,
   absoluteUrlForLocale,
   hreflangAlternates,
+  openGraphAlternateLocales,
   organizationAndWebsiteJsonLd,
+  ogLocale,
 } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -61,7 +63,8 @@ export async function generateMetadata(): Promise<Metadata> {
           alt: seo.title,
         },
       ],
-      locale: "en_US",
+      locale: ogLocale("en"),
+      alternateLocale: openGraphAlternateLocales("en"),
       type: "website",
     },
     twitter: {
