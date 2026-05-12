@@ -75,6 +75,50 @@ const languages = [
   { code: "es", name: "Español", flag: "🇪🇸" },
 ];
 
+type TourLang = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
+
+/** Strapi may omit these; build runs fetch before typecheck. */
+const PARTNER_OFFERS_FALLBACK: Record<
+  TourLang,
+  { title: string; subtitle: string }
+> = {
+  en: {
+    title: "Partner offers",
+    subtitle:
+      "Book this or similar excursions with our trusted local partners.",
+  },
+  de: {
+    title: "Partnerangebote",
+    subtitle:
+      "Buchen Sie diese oder ähnliche Ausflüge bei unseren vertrauenswürdigen Partnern vor Ort.",
+  },
+  es: {
+    title: "Ofertas de socios",
+    subtitle:
+      "Reserve esta u otras excursiones similares con nuestros socios locales de confianza.",
+  },
+  fr: {
+    title: "Offres partenaires",
+    subtitle:
+      "Réservez cette excursion ou des visites similaires auprès de nos partenaires locaux de confiance.",
+  },
+  pl: {
+    title: "Oferty partnerów",
+    subtitle:
+      "Zarezerwuj tę lub podobne wycieczki u naszych zaufanych partnerów lokalnych.",
+  },
+  ru: {
+    title: "Предложения партнёров",
+    subtitle:
+      "Забронируйте эту или похожие экскурсии у наших надёжных местных партнёров.",
+  },
+  uk: {
+    title: "Пропозиції партнерів",
+    subtitle:
+      "Забронюйте цю або схожі екскурсії у наших надійних місцевих партнерів.",
+  },
+};
+
 export default function TourDetailPageClient({ tour }: { tour: TourData }) {
   const { locale, switchLocale, createLocaleLink } = useTranslation();
   const [language, setLanguage] = useState<
@@ -85,6 +129,14 @@ export default function TourDetailPageClient({ tour }: { tour: TourData }) {
 
   const t = translations[language];
   const currentLanguage = languages.find((lang) => lang.code === language);
+  type TourStringsWithPartners = (typeof translations)["en"] & {
+    partnerOffersTitle?: string;
+    partnerOffersSubtitle?: string;
+  };
+  const tw = t as TourStringsWithPartners;
+  const partnerFb = PARTNER_OFFERS_FALLBACK[language];
+  const partnerOffersTitle = tw.partnerOffersTitle ?? partnerFb.title;
+  const partnerOffersSubtitle = tw.partnerOffersSubtitle ?? partnerFb.subtitle;
 
   // Синхронизируем язык с URL
   useEffect(() => {
@@ -326,10 +378,10 @@ export default function TourDetailPageClient({ tour }: { tour: TourData }) {
 
             <div className="bg-gradient-to-br from-blue-50 via-white to-emerald-50 rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
               <h2 className="text-xl font-bold text-gray-900 mb-2">
-                {t.partnerOffersTitle}
+                {partnerOffersTitle}
               </h2>
               <p className="text-gray-600 text-sm mb-5 leading-relaxed">
-                {t.partnerOffersSubtitle}
+                {partnerOffersSubtitle}
               </p>
               <div className="flex flex-col sm:flex-row flex-wrap gap-3">
                 <a
