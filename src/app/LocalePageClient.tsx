@@ -24,11 +24,13 @@ import {
   ArrowRight,
   ExternalLink,
   Plane,
-  Languages,
 } from "lucide-react";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
+import { useOtpuskSearch } from "@/hooks/useOtpuskSearch";
+import { SiteHeader } from "@/components/SiteHeader";
+import { TourTaglinesHeader } from "@/components/TourTaglinesHeader";
 import {
   formatTransferPrice,
   getTransferImage,
@@ -48,7 +50,11 @@ import {
   TilePriceBadge,
   formatTileAmount,
 } from "@/components/TilePriceBadge";
-import { localeDisplayCode, type Locale } from "@/types/locale";
+import {
+  localeDisplayCode,
+  pickLocaleBundle,
+  type Locale,
+} from "@/types/locale";
 // Переводы для всех языков
 const translations = translationsJson;
 
@@ -58,42 +64,12 @@ const languages = [
   { code: "ru", name: "Русский", flag: "🇷🇺" },
   { code: "pl", name: "Polski", flag: "🇵🇱" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "uk", name: "Українська", flag: "🇺🇦" },
+  { code: "ua", name: "Українська", flag: "🇺🇦" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
 ];
 
-type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
-
-const headerNavHome: Record<LanguageCode, string> = {
-  en: "Home",
-  ru: "Главная",
-  pl: "Start",
-  fr: "Accueil",
-  uk: "Головна",
-  de: "Start",
-  es: "Inicio",
-};
-
-const headerNavFaq: Record<LanguageCode, string> = {
-  en: "FAQ",
-  ru: "Вопросы",
-  pl: "FAQ",
-  fr: "FAQ",
-  uk: "Питання",
-  de: "FAQ",
-  es: "FAQ",
-};
-
-const headerNavTransfers: Record<LanguageCode, string> = {
-  en: "Transfers",
-  ru: "Трансферы",
-  pl: "Transfery",
-  fr: "Transferts",
-  uk: "Трансфери",
-  de: "Transfers",
-  es: "Traslados",
-};
+type LanguageCode = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
 
 interface LocalePageClientProps {
   initialData?: {
@@ -173,7 +149,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     useState(false);
   const [showAdvancedCars, setShowAdvancedCars] = useState(false);
 
-  const t = translations[language];
+  const t = pickLocaleBundle(translations, language);
   const transferCopy = getTransferLocaleText(language);
   const datePlaceholder =
     language === "ru"
@@ -182,7 +158,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         ? "Wybierz datę"
         : language === "fr"
           ? "Choisir une date"
-          : language === "uk"
+          : language === "ua"
             ? "Оберіть дату"
             : language === "de"
               ? "Datum wählen"
@@ -197,8 +173,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     "h-12 w-full rounded-xl border border-gray-300 bg-white pl-10 pr-3 text-base text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-gray-400";
   const advancedToggleClass =
     "inline-flex h-9 items-center gap-2 rounded-xl border border-blue-100 bg-blue-50/70 px-3.5 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100";
-  const headerAnchorClass =
-    "touch-manipulation text-[10px] font-medium leading-tight text-white/90 hover:text-white whitespace-nowrap rounded-md px-1 py-1 transition-colors hover:bg-white/10 min-[400px]:text-[11px] min-[400px]:px-1.5 sm:rounded-lg sm:px-2.5 sm:text-sm sm:leading-normal md:py-1.5";
   const getMobileTabLabel = (key: string, fallback: string) => {
     const labels: Record<LanguageCode, Record<string, string>> = {
       en: {
@@ -221,7 +195,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         cars: "Autos",
         blog: "Blog",
       },
-      uk: {
+      ua: {
         accommodation: "Житло",
         cars: "Авто",
         blog: "Блог",
@@ -289,59 +263,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           dataLoading: dataFromHook.dataLoading,
         };
 
-  // otpusk setting
-  useEffect(() => {
-    window.osGeo = '';
-    window.osDefaultDeparture = '';
-    window.osDefaultDuration = '';
-    window.osDateFrom = '';
-    window.osDateTo = '';
-    window.osHotelCategory = '';
-    window.osFood = '';
-    window.osTransport = '';
-    window.osTarget = '';
-    window.osContainer = '#otpusk-search-container';
-    window.osTourContainer = '#otpusk-tour-container';
-    window.osLang = language === "uk" ? "ua" : (["en", "ru", "pl"].includes(language) ? language : "en");
-    window.osTourTargetBlank = false;
-    window.osOrderUrl = null;
-    window.osCurrency = 'converted';
-    window.osAutoStart = false;
-
-    // 2. Очищуємо контейнери перед перезапуском, щоб уникнути дублювання або залишків старого рендеру
-    const searchCont = document.getElementById('otpusk-search-container');
-    const tourCont = document.getElementById('otpusk-tour-container');
-    if (searchCont) searchCont.innerHTML = '';
-    if (tourCont) tourCont.innerHTML = '';
-
-    // 3. Функція для динамічного завантаження скриптів
-    const loadScript = (src: string, id: string) => {
-      // Видаляємо старий скрипт, якщо він є
-      const oldScript = document.getElementById(id);
-      if (oldScript) oldScript.remove();
-
-      const script = document.createElement('script');
-      script.src = src;
-      script.id = id;
-      script.async = true;
-      document.body.appendChild(script);
-    };
-
-    // Завантажуємо скрипти по черзі або разом.
-    // Додаємо timestamp (?v=...), щоб змусити браузер виконати їх заново
-    const ts = new Date().getTime();
-    loadScript(`https://api.otpusk.com/api/2.4/session?access_token=3f93a-35d0c-a0b24-5a708-493e5&ts=${ts}`, 'otpusk-script-session');
-    loadScript(`https://export.otpusk.com/js/onsite/?ts=${ts}`, 'otpusk-script-onsite');
-    loadScript(`https://export.otpusk.com/js/order?ts=${ts}`, 'otpusk-script-order');
-
-    // Опціонально: видаляємо скрипти при розмонтуванні компонента
-    return () => {
-      ['otpusk-script-session', 'otpusk-script-onsite', 'otpusk-script-order'].forEach(id => {
-        const s = document.getElementById(id);
-        if (s) s.remove();
-      });
-    };
-  }, [language]);
+  useOtpuskSearch({
+    language,
+    searchContainer: "#otpusk-search-container",
+    tourContainer: "#otpusk-tour-container",
+  });
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
@@ -572,107 +498,21 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   return (
     <main>
-      <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 backdrop-blur-md pt-[env(safe-area-inset-top,0px)]">
-        <div className="mx-auto flex w-full min-w-0 max-w-7xl flex-col gap-1.5 px-2 pb-2 pt-1.5 min-[400px]:gap-2 min-[400px]:px-2.5 min-[400px]:pb-2.5 sm:px-3 md:flex-row md:items-center md:gap-2 md:py-2 md:pb-2 lg:gap-3 lg:px-4">
-          <div className="flex w-full min-w-0 items-center justify-between gap-2 md:contents">
-            <div
-              className="relative shrink-0 [color-scheme:dark] md:order-3"
-              title={languages.find((l) => l.code === language)?.name}
-            >
-              <div className="flex h-7 items-stretch overflow-hidden rounded-full border border-white/20 bg-black/25 shadow-sm backdrop-blur-md min-[400px]:h-8 sm:h-9">
-                <span
-                  className="flex items-center border-r border-white/10 bg-white/[0.06] px-1.5 text-white/70 min-[400px]:px-2"
-                  aria-hidden
-                >
-                  <Languages className="h-3 w-3 min-[400px]:h-3.5 min-[400px]:w-3.5 sm:h-4 sm:w-4" />
-                </span>
-                <div className="relative min-w-[2.85rem] min-[400px]:min-w-[3.15rem]">
-                  <select
-                    value={language}
-                    onChange={(e) =>
-                      handleLanguageChange(e.target.value as LanguageCode)
-                    }
-                    aria-label={t.selectLanguage}
-                    className="h-full w-full min-w-[2.85rem] cursor-pointer appearance-none bg-transparent py-0 pl-1.5 pr-6 text-[10px] font-semibold uppercase tracking-wide text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/25 min-[400px]:min-w-[3.15rem] min-[400px]:pl-2 min-[400px]:pr-7 min-[400px]:text-[11px] sm:min-w-[3.35rem] sm:pl-2.5 sm:pr-8 sm:text-sm"
-                  >
-                    {languages.map((lang) => (
-                      <option
-                        key={lang.code}
-                        value={lang.code}
-                        className="bg-slate-900 text-white"
-                      >
-                        {`${lang.flag} ${localeDisplayCode(lang.code)}`}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    aria-hidden
-                    className="pointer-events-none absolute right-0.5 top-1/2 h-3 w-3 -translate-y-1/2 text-white/45 min-[400px]:right-1 min-[400px]:h-3.5 min-[400px]:w-3.5 sm:right-1.5 sm:h-4 sm:w-4"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <nav
-            className="-mx-2 flex min-h-[2.25rem] min-w-0 w-full touch-pan-x flex-nowrap items-center gap-0 overflow-x-auto overscroll-x-contain px-2 [-ms-overflow-style:none] [scrollbar-width:none] min-[400px]:min-h-[2.5rem] min-[400px]:gap-px sm:mx-0 sm:gap-0.5 sm:px-0 md:order-2 md:min-h-0 md:flex-1 md:justify-start md:overflow-x-auto md:overflow-y-visible [&::-webkit-scrollbar]:hidden"
-            aria-label="Page sections"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            <a
-              href="#home"
-              onClick={scrollToSection("home")}
-              className={headerAnchorClass}
-            >
-              {headerNavHome[language]}
-            </a>
-            <a
-              href="#accommodation"
-              onClick={scrollToSection("accommodation")}
-              className={headerAnchorClass}
-            >
-              {t.hero.tabs.accommodation}
-            </a>
-            <a
-              href="#cars"
-              onClick={scrollToSection("cars")}
-              className={headerAnchorClass}
-            >
-              {t.hero.tabs.cars}
-            </a>
-            {transfers.length > 0 && (
-              <a
-                href="#transfers"
-                onClick={scrollToSection("transfers")}
-                className={headerAnchorClass}
-              >
-                {headerNavTransfers[language]}
-              </a>
-            )}
-            <a
-              href="#excursions"
-              onClick={scrollToSection("excursions")}
-              className={headerAnchorClass}
-            >
-              {t.hero.tabs.excursions}
-            </a>
-            <a
-              href="#blog"
-              onClick={scrollToSection("blog")}
-              className={headerAnchorClass}
-            >
-              {t.hero.tabs.blog}
-            </a>
-            <a
-              href="#faq"
-              onClick={scrollToSection("faq")}
-              className={headerAnchorClass}
-            >
-              {headerNavFaq[language]}
-            </a>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader
+        language={language}
+        onLanguageChange={handleLanguageChange}
+        selectLanguageLabel={t.selectLanguage}
+        tabLabels={{
+          accommodation: t.hero.tabs.accommodation,
+          cars: t.hero.tabs.cars,
+          excursions: t.hero.tabs.excursions,
+          blog: t.hero.tabs.blog,
+        }}
+        variant="home"
+        showTransfers={transfers.length > 0}
+        createLocaleLink={createLocaleLink}
+        onScrollToSection={scrollToSection}
+      />
 
       {/* Hero Section */}
       <section
@@ -1220,7 +1060,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                   ? "Odkryj nasz blog"
                                   : language === "fr"
                                       ? "Découvrez notre blog"
-                                      : language === "uk"
+                                      : language === "ua"
                                           ? "Відкрийте наш блог"
                                           : language === "de"
                                               ? "Unser Blog entdecken"
@@ -1237,7 +1077,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                   ? "Czytaj o najlepszych miejscach, wskazówkach i doświadczeniach na Teneryfie"
                                   : language === "fr"
                                       ? "Lisez sur les meilleurs endroits, conseils et expériences à Tenerife"
-                                      : language === "uk"
+                                      : language === "ua"
                                           ? "Читайте про найкращі місця, поради та враження на Тенеріфе"
                                           : language === "de"
                                               ? "Lesen Sie über die besten Orte, Tipps und Erfahrungen auf Teneriffa"
@@ -1258,7 +1098,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                   ? "Odwiedź blog"
                                   : language === "fr"
                                       ? "Visiter le blog"
-                                      : language === "uk"
+                                      : language === "ua"
                                           ? "Відвідати блог"
                                           : language === "de"
                                               ? "Blog besuchen"
@@ -1281,6 +1121,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               )}
             </div>
           </div>
+
+          <TourTaglinesHeader
+            dreamTrip={t.hero.tourTaglines.dreamTrip}
+            tourOfTheDay={t.hero.tourTaglines.tourOfTheDay}
+            chooseTour={t.hero.tourTaglines.chooseTour}
+            variant="hero"
+          />
         </div>
 
         {/* otpusk Card  */}
@@ -1293,9 +1140,15 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         <div className="new_os"></div>
       </section>
 
-      <section className="bg-gray-50 py-12">
-        <div id="otpusk-search-container" className="mx-auto max-w-[1200px]"></div>
-        <div id="otpusk-tour-container" className="mx-auto max-w-[1200px]"></div>
+      <section className="bg-gray-50 pt-10 pb-16 sm:pb-20">
+        <div
+          id="otpusk-search-container"
+          className="mx-auto max-w-[1200px] px-3 sm:px-4"
+        />
+        <div
+          id="otpusk-tour-container"
+          className="mx-auto max-w-[1200px] px-3 sm:px-4"
+        />
       </section>
 
       {/* Секция недвижимости */}
@@ -1760,7 +1613,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                               ? "Mehr Touren & Aktivitäten"
                               : language === "es"
                                 ? "Más tours y actividades"
-                                : language === "uk"
+                                : language === "ua"
                                   ? "Більше турів та активностей"
                                   : "More tours & activities"}
                     </p>
@@ -1778,7 +1631,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             ? "Unser Partner Atlántico Excursiones"
                             : language === "es"
                               ? "Nuestro socio Atlántico Excursiones"
-                              : language === "uk"
+                              : language === "ua"
                                 ? "Партнер Atlántico Excursiones"
                                 : "Our partner Atlántico Excursiones"}
                   </h4>
@@ -1793,7 +1646,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             ? "Busreisen, Freizeitparks, Bootstouren und VIP — buchen Sie bei Atlántico Excursiones."
                             : language === "es"
                               ? "Excursiones en bus, parques temáticos, barcos y experiencias VIP — reserva con Atlántico Excursiones."
-                              : language === "uk"
+                              : language === "ua"
                                 ? "Автобусні тури, парки розваг, морські прогулянки та VIP — бронюйте з Atlántico Excursiones."
                                 : "Coach tours, theme parks, boat trips and VIP experiences — book with Atlántico Excursiones."}
                   </p>
@@ -1813,7 +1666,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             ? "Alle Touren anzeigen"
                             : language === "es"
                               ? "Ver todos los tours"
-                              : language === "uk"
+                              : language === "ua"
                                 ? "Переглянути всі тури"
                                 : "View all tours"}
                     <ExternalLink className="w-4 h-4" />
@@ -1843,7 +1696,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                               ? "Ausflugs- & Aktivitätenkatalog"
                               : language === "es"
                                 ? "Catálogo de excursiones"
-                                : language === "uk"
+                                : language === "ua"
                                   ? "Каталог екскурсій"
                                   : "Excursions & activities"}
                     </p>
@@ -1861,7 +1714,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             ? "Weiterer Anbieter auf Teneriffa"
                             : language === "es"
                               ? "Otro catálogo en Tenerife"
-                              : language === "uk"
+                              : language === "ua"
                                 ? "Ще один каталог на Тенеріфі"
                                 : "Another trusted Tenerife catalogue"}
                   </h4>
@@ -1876,7 +1729,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             ? "Busausflüge, Abendshows, Bootstouren, Freizeitparks und Outdoor-Aktivitäten — entdecken Sie Nere Izerdie."
                             : language === "es"
                               ? "Excursiones en bus, espectáculos nocturnos, barcos, parques temáticos y aventura — explora Nere Izerdie."
-                              : language === "uk"
+                              : language === "ua"
                                 ? "Автобусні тури, вечірні шоу, морські прогулянки, парки та активності — перегляньте Nere Izerdie."
                                 : "Bus tours, night shows, boat trips, theme parks and outdoor fun — browse Nere Izerdie."}
                   </p>
@@ -1896,7 +1749,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             ? "Zum Katalog"
                             : language === "es"
                               ? "Ver catálogo"
-                              : language === "uk"
+                              : language === "ua"
                                 ? "Відкрити каталог"
                                 : "Open catalogue"}
                     <ExternalLink className="w-4 h-4" />

@@ -1,3 +1,4 @@
+import { localeContentKey } from "@/types/locale";
 // Сервис для получения данных на сервере для SSG
 
 import { Transfer } from "@/lib/transfers";
@@ -680,7 +681,10 @@ export async function getHomePageData(language: string = "en") {
       carsResult.status === "fulfilled"
         ? (carsResult.value as Record<string, CarItem[]>)
         : {};
-    const carsRaw: CarItem[] = carsByLocale[language] || [];
+    const carsRaw: CarItem[] =
+      carsByLocale[localeContentKey(language)] ??
+      carsByLocale[language] ??
+      [];
     // const cars = carsRaw.map(
     //   (car: {
     //     id: number;

@@ -18,7 +18,7 @@ export function WhatsAppButton() {
                    locale === 'pl' ? "Skontaktuj się z nami przez WhatsApp" :
                    locale === 'fr' ? "Contactez-nous sur WhatsApp" :
                    locale === 'ru' ? "Свяжитесь с нами в WhatsApp" :
-                   locale === 'uk' ? "Зв'яжіться з нами в WhatsApp" :
+                   locale === 'ua' ? "Зв'яжіться з нами в WhatsApp" :
                    locale === 'de' ? "Kontaktieren Sie uns über WhatsApp" :
                    locale === 'es' ? "Contáctenos por WhatsApp" : "Contact us on WhatsApp"}>
       <ActionIcon

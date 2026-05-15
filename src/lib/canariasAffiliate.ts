@@ -12,7 +12,7 @@ const appLocaleToCanariasPath: Record<string, CanariasRentacarPath> = {
   ru: "ru",
   pl: "en",
   fr: "fr",
-  uk: "en",
+  uk: "en",  ua: "en",
   de: "de",
   es: "en",
 };

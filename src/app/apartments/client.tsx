@@ -11,7 +11,7 @@ import {
 } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
-import { localeDisplayCode } from "@/types/locale";
+import {localeDisplayCode, pickLocaleBundle} from "@/types/locale";
 import translations from "@/i18n/apartments.json";
 
 const DEFAULT_APARTMENT_FILTERS: ApartmentFilterParams = {
@@ -47,7 +47,7 @@ const getLoadingPropertiesText = (language: string) => {
     ru: "Загрузка недвижимости...",
     pl: "Ładowanie nieruchomości...",
     fr: "Chargement des propriétés...",
-    uk: "Завантаження нерухомості...",
+    uk: "Завантаження нерухомості...",    ua: "Завантаження нерухомості...",
     de: "Immobilien werden geladen...",
     es: "Cargando inmuebles...",
   };
@@ -60,7 +60,7 @@ const languages = [
   { code: "ru", name: "Русский", flag: "🇷🇺" },
   { code: "pl", name: "Polski", flag: "🇵🇱" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "uk", name: "Українська", flag: "🇺🇦" },
+  { code: "ua", name: "Українська", flag: "🇺🇦" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
 ];
@@ -145,8 +145,8 @@ export default function ApartmentsPageClient({
   const router = useRouter();
   const { locale, switchLocale, createLocaleLink } = useTranslation();
   const [language, setLanguage] = useState<
-    "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-  >(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+    "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es"
+  >(locale as "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
   // Инициализация фильтров из URL параметров
@@ -264,12 +264,12 @@ export default function ApartmentsPageClient({
     }
   }, [initialProperties]);
 
-  const t = translations[language];
+  const t = pickLocaleBundle(translations, language);
   const currentLanguage = languages.find((lang) => lang.code === language);
 
   // Синхронизируем язык с URL
   useEffect(() => {
-    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es");
   }, [locale]);
 
   // Синхронизация текущей страницы с URL при изменении searchParams
@@ -291,7 +291,7 @@ export default function ApartmentsPageClient({
 
   // Переключение языка через URL
   const handleLanguageChange = (
-    langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
+    langCode: "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es"
   ) => {
     switchLocale(langCode);
     setIsLanguageDropdownOpen(false);
@@ -498,7 +498,7 @@ export default function ApartmentsPageClient({
                             | "ru"
                             | "pl"
                             | "fr"
-                            | "uk"
+                            | "ua"
                             | "de"
                             | "es"
                         )

@@ -115,7 +115,7 @@ const getFoundPropertiesText = (locale: string): string => {
     ru: "Найдено объектов",
     pl: "Znaleziono nieruchomości",
     fr: "Propriétés trouvées",
-    uk: "Знайдено об'єктів",
+    uk: "Знайдено об'єктів",    ua: "Знайдено об'єктів",
     de: "Gefundene Immobilien",
     es: "Propiedades encontradas",
   };
@@ -128,7 +128,7 @@ const getFilterActiveText = (locale: string): string => {
     ru: "🔍 Фильтр активен",
     pl: "🔍 Filtr aktywny",
     fr: "🔍 Filtre actif",
-    uk: "🔍 Фільтр активний",
+    uk: "🔍 Фільтр активний",    ua: "🔍 Фільтр активний",
     de: "🔍 Filter aktiv",
     es: "🔍 Filtro activo",
   };
@@ -372,7 +372,7 @@ const ApartmentCard = ({
         return "Piętro";
       case "fr":
         return "Étage";
-      case "uk":
+      case "ua":
         return "Поверх";
       default:
         return "Floor";

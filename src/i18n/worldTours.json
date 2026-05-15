@@ -1,0 +1,74 @@
+{
+  "de": {
+    "nav": "Weltreisen",
+    "title": "Weltweite Toursuche",
+    "subtitle": "Pauschalreisen in jedes Land, jeden Ort und jedes Hotel — nicht nur Teneriffa",
+    "badge": "Weltweit",
+    "hint": "Suchen Sie Abflüge aus Ihrer Stadt zu Reisezielen auf der ganzen Welt.",
+    "backToHome": "Zurück zur Startseite",
+    "selectLanguage": "Sprache wählen"
+  },
+  "en": {
+    "nav": "World tours",
+    "title": "Worldwide tour search",
+    "subtitle": "Package tours to any country, resort, or hotel — not only Tenerife",
+    "badge": "Worldwide",
+    "hint": "Search departures from your city to destinations around the world.",
+    "backToHome": "Back to Home",
+    "selectLanguage": "Select language"
+  },
+  "es": {
+    "nav": "Tours del mundo",
+    "title": "Búsqueda de tours en todo el mundo",
+    "subtitle": "Viajes organizados a cualquier país, resort u hotel — no solo Tenerife",
+    "badge": "Mundial",
+    "hint": "Busca salidas desde tu ciudad a destinos de todo el mundo.",
+    "backToHome": "Volver al inicio",
+    "selectLanguage": "Seleccionar idioma"
+  },
+  "fr": {
+    "nav": "Tours monde",
+    "title": "Recherche de circuits dans le monde",
+    "subtitle": "Séjours packagés vers tout pays, resort ou hôtel — pas seulement Tenerife",
+    "badge": "Monde entier",
+    "hint": "Recherchez des départs depuis votre ville vers des destinations du monde entier.",
+    "backToHome": "Retour à l'accueil",
+    "selectLanguage": "Choisir la langue"
+  },
+  "pl": {
+    "nav": "Tury świata",
+    "title": "Wyszukiwarka tourów na całym świecie",
+    "subtitle": "Wycieczki pakietowe do dowolnego kraju, kurortu lub hotelu — nie tylko Teneryfa",
+    "badge": "Na całym świecie",
+    "hint": "Szukaj wylotów z Twojego miasta do kierunków na całym świecie.",
+    "backToHome": "Powrót do strony głównej",
+    "selectLanguage": "Wybierz język"
+  },
+  "ru": {
+    "nav": "Туры мира",
+    "title": "Поиск туров по всему миру",
+    "subtitle": "Пакетные туры в любую страну, курорт или отель — не только Тенерифе",
+    "badge": "По всему миру",
+    "hint": "Ищите вылеты из вашего города в направления по всему миру.",
+    "backToHome": "Назад на главную",
+    "selectLanguage": "Выберите язык"
+  },
+  "uk": {
+    "nav": "Тури світу",
+    "title": "Пошук туру по всьому світу",
+    "subtitle": "Пакетні тури в будь-яку країну, курорт чи готель — не лише Тенеріфе",
+    "badge": "По всьому світу",
+    "hint": "Шукайте вильоти з вашого міста до напрямків по всьому світу.",
+    "backToHome": "Назад на головну",
+    "selectLanguage": "Оберіть мову"
+  },
+  "ua": {
+    "nav": "Тури світу",
+    "title": "Пошук туру по всьому світу",
+    "subtitle": "Пакетні тури в будь-яку країну, курорт чи готель — не лише Тенеріфе",
+    "badge": "По всьому світу",
+    "hint": "Шукайте вильоти з вашого міста до напрямків по всьому світу.",
+    "backToHome": "Назад на головну",
+    "selectLanguage": "Оберіть мову"
+  }
+}

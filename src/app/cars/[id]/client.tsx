@@ -5,7 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
-import { localeDisplayCode } from "@/types/locale";
+import {
+  localeDisplayCode,
+  pickLocaleBundle,
+  type Locale,
+} from "@/types/locale";
 import {
   Carousel,
   CarouselContent,
@@ -22,12 +26,12 @@ const languages = [
   { code: "ru", name: "Русский", flag: "🇷🇺" },
   { code: "pl", name: "Polski", flag: "🇵🇱" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "uk", name: "Українська", flag: "🇺🇦" },
+  { code: "ua", name: "Українська", flag: "🇺🇦" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
 ] as const;
 
-type LanguageCode = keyof typeof translations;
+type LanguageCode = Locale;
 
 interface CarData {
   id: number;
@@ -100,7 +104,7 @@ export default function CarDetailPageClient({ car }: { car: CarData }) {
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
-  const t = translations[language];
+  const t = pickLocaleBundle(translations, language);
   const currentLanguage = languages.find((lang) => lang.code === language);
 
   // Синхронизируем язык с URL
@@ -111,6 +115,7 @@ export default function CarDetailPageClient({ car }: { car: CarData }) {
   // Переключение языка через URL
   const handleLanguageChange = (langCode: LanguageCode) => {
     switchLocale(langCode);
+    setLanguage(langCode);
     setIsLanguageDropdownOpen(false);
   };
 

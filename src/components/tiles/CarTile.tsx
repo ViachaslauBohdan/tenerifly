@@ -53,7 +53,7 @@ export function CarTile({
       ru: 'Аренда',
       pl: 'Do wynajęcia',
       fr: 'À louer',
-      uk: 'Оренда',
+      uk: 'Оренда',      ua: 'Оренда',
       de: 'Zu vermieten',
       es: 'Alquilar'
     },
@@ -62,7 +62,7 @@ export function CarTile({
       ru: 'Продажа',
       pl: 'Na sprzedaż',
       fr: 'À vendre',
-      uk: 'Продаж',
+      uk: 'Продаж',      ua: 'Продаж',
       de: 'Verkaufen',
       es: 'Venta'
     }

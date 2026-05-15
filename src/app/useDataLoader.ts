@@ -6,8 +6,9 @@ import {
   fetchStrapiTourListPayload,
   normalizeExcursionDocumentToTourCard,
 } from "@/lib/strapiExcursionTours";
+import { localeContentKey } from "@/types/locale";
 
-type LanguageCode = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
+type LanguageCode = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
 
 // Добавить эту функцию в начало файла useDataLoader.ts
 const getLocalizedText = (language: LanguageCode, textKey: string): string => {
@@ -122,7 +123,8 @@ const getLocalizedText = (language: LanguageCode, textKey: string): string => {
     },
   };
 
-  return texts[textKey]?.[language] || texts[textKey]?.["en"] || "";
+  const lang = localeContentKey(language);
+  return texts[textKey]?.[lang] || texts[textKey]?.en || "";
 };
 
 // Функция для API запросов

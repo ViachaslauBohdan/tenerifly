@@ -43,7 +43,7 @@ export function ogLocale(locale: Locale): string {
     ru: "ru_RU",
     pl: "pl_PL",
     fr: "fr_FR",
-    uk: "uk_UA",
+    ua: "uk_UA",
     de: "de_DE",
     es: "es_ES",
   };
@@ -79,7 +79,7 @@ export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
         alternateName: ["Tenerifly"],
         description:
           "Tenerife travel: rent apartments and holiday homes, hire cars, and book tours in the Canary Islands. Plan your trip to Tenerife—flights, stays, and local experiences.",
-        inLanguage: ["en", "pl", "fr", "ru", "uk", "de", "es"],
+        inLanguage: ["en", "pl", "fr", "ru", "ua", "de", "es"],
         publisher: { "@id": `${SITE_URL}/#organization` },
       },
     ],
@@ -150,7 +150,7 @@ export const SEO_HOME: Record<Locale, PageSeo> = {
       "Канары тур",
     ],
   },
-  uk: {
+  ua: {
     title: "Tenerifly.io — Тенеріфе: переліт, житло, авто та тури",
     description:
       "Плануєте політ на Тенеріфе? Забронюйте житло, оренду авто та тури в одному місці. Канарські острови — прямі пропозиції від локальних партнерів.",
@@ -257,7 +257,7 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
       "Канары жильё",
     ],
   },
-  uk: {
+  ua: {
     title: "Оренда квартири на Тенеріфе | подобово та довгостроково | Tenerifly.io",
     description:
       "Оренда квартири на Тенеріфе для відпочинку чи довшого перебування. Квартири, апартаменти, вілли на Канарах — бронювання напряму у власників.",
@@ -350,7 +350,7 @@ export const SEO_TOURS: Record<Locale, PageSeo> = {
       "Канары экскурсии",
     ],
   },
-  uk: {
+  ua: {
     title: "Екскурсії та тури на Тенеріфе | Tenerifly.io",
     description:
       "Тейде, спостереження за китами, піші маршрути та морські тури на Тенеріфе. Активності на Канарах з перевіреними партнерами.",
@@ -384,6 +384,87 @@ export const SEO_TOURS: Record<Locale, PageSeo> = {
       "ballenas Tenerife",
       "actividades Tenerife",
       "Canarias excursiones",
+    ],
+  },
+};
+
+export const SEO_WORLD_TOURS: Record<Locale, PageSeo> = {
+  en: {
+    title: "Worldwide package tour search | Tenerifly.io",
+    description:
+      "Search package tours to any country, resort, or hotel worldwide. Compare departures from your city — beyond Tenerife and the Canary Islands.",
+    keywords: [
+      "worldwide tour search",
+      "package tours",
+      "international holidays",
+      "tour search",
+      "world travel deals",
+    ],
+  },
+  pl: {
+    title: "Wyszukiwarka tourów na całym świecie | Tenerifly.io",
+    description:
+      "Wycieczki pakietowe do dowolnego kraju, kurortu lub hotelu. Porównuj wyloty z Twojego miasta — nie tylko Teneryfa.",
+    keywords: [
+      "tury na świecie",
+      "wycieczki pakietowe",
+      "wyszukiwarka tourów",
+      "wakacje za granicą",
+    ],
+  },
+  fr: {
+    title: "Recherche de circuits dans le monde | Tenerifly.io",
+    description:
+      "Séjours packagés vers tout pays, resort ou hôtel. Comparez les départs depuis votre ville — au-delà de Tenerife.",
+    keywords: [
+      "circuit monde",
+      "voyage organisé",
+      "recherche séjour",
+      "tour opérateur",
+    ],
+  },
+  ru: {
+    title: "Поиск туров по всему миру | Tenerifly.io",
+    description:
+      "Пакетные туры в любую страну, курорт или отель. Ищите вылеты из вашего города — не только Тенерифе.",
+    keywords: [
+      "туры по миру",
+      "пакетные туры",
+      "поиск туров",
+      "отдых за границей",
+    ],
+  },
+  ua: {
+    title: "Пошук туру по всьому світу | Tenerifly.io",
+    description:
+      "Пакетні тури в будь-яку країну, курорт чи готель. Порівнюйте вильоти з вашого міста — не лише Тенеріфе.",
+    keywords: [
+      "тури світу",
+      "пакетні тури",
+      "пошук туру",
+      "відпочинок за кордоном",
+    ],
+  },
+  de: {
+    title: "Weltweite Pauschalreise-Suche | Tenerifly.io",
+    description:
+      "Pauschalreisen in jedes Land, jeden Ort und jedes Hotel. Abflüge aus Ihrer Stadt vergleichen — nicht nur Teneriffa.",
+    keywords: [
+      "Weltreisen",
+      "Pauschalreisen",
+      "Toursuche",
+      "weltweit Urlaub",
+    ],
+  },
+  es: {
+    title: "Búsqueda de tours en todo el mundo | Tenerifly.io",
+    description:
+      "Viajes organizados a cualquier país, resort u hotel. Compara salidas desde tu ciudad — no solo Tenerife.",
+    keywords: [
+      "tours mundo",
+      "viajes organizados",
+      "buscador tours",
+      "vacaciones internacionales",
     ],
   },
 };
@@ -434,7 +515,7 @@ export const SEO_CARS: Record<Locale, PageSeo> = {
       "аэропорт Тенерифе аренда",
     ],
   },
-  uk: {
+  ua: {
     title: "Оренда авто на Тенеріфе | Tenerifly.io",
     description:
       "Підбір авто на Тенеріфе — від економу до преміуму. Подорожуйте Канарами у власному ритмі з прозорими умовами оренди.",
@@ -514,7 +595,7 @@ export const SEO_BLOG: Record<Locale, PageSeo> = {
       "маршрут Тенерифе",
     ],
   },
-  uk: {
+  ua: {
     title: "Блог про Тенеріфе — поради та гіди | Tenerifly.io",
     description:
       "Корисні матеріали, маршрути та новини про Тенеріфе й Канарські острови — для планування подорожі.",

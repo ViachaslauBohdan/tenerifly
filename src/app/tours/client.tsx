@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ExternalLink, MapPin } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { localeDisplayCode } from "@/types/locale";
+import {localeDisplayCode, pickLocaleBundle} from "@/types/locale";
 import translations from "@/i18n/tours.json";
 import mainJson from "@/i18n/main.json";
 import {
@@ -17,12 +17,12 @@ const languages = [
   { code: "ru", name: "Русский", flag: "🇷🇺" },
   { code: "pl", name: "Polski", flag: "🇵🇱" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "uk", name: "Українська", flag: "🇺🇦" },
+  { code: "ua", name: "Українська", flag: "🇺🇦" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
 ];
 
-type Lang = "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es";
+type Lang = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
 
 type MainBundle = {
   sections?: { excursions?: { title?: string; subtitle?: string } };
@@ -37,9 +37,9 @@ export default function ToursPageClient() {
     setLanguage(locale as Lang);
   }, [locale]);
 
-  const t = translations[language];
+  const t = pickLocaleBundle(translations, language);
   const currentLanguage = languages.find((lang) => lang.code === language);
-  const mainT = (mainJson as Record<string, MainBundle>)[language];
+  const mainT = pickLocaleBundle(mainJson as Record<string, MainBundle>, language);
   const excursionSection = mainT?.sections?.excursions;
 
   const handleLanguageChange = (langCode: Lang) => {
@@ -58,7 +58,7 @@ export default function ToursPageClient() {
             ? "Busreisen, Parks, Bootstouren und VIP."
             : language === "es"
               ? "Autobús, parques, barcos y VIP."
-              : language === "uk"
+              : language === "ua"
                 ? "Автобусні тури, парки, море та VIP."
                 : "Coach tours, parks, boat trips & VIP.";
 
@@ -73,7 +73,7 @@ export default function ToursPageClient() {
             ? "Shows, Boote, Parks und Aktivitäten — Viajes Nere Izerdie."
             : language === "es"
               ? "Espectáculos, barcos, parques y aventura — Viajes Nere Izerdie."
-              : language === "uk"
+              : language === "ua"
                 ? "Шоу, човни, парки та активності — Viajes Nere Izerdie."
                 : "Shows, boats, theme parks & adventure — Viajes Nere Izerdie.";
 
@@ -88,7 +88,7 @@ export default function ToursPageClient() {
             ? "Alle Touren"
             : language === "es"
               ? "Todos los tours"
-              : language === "uk"
+              : language === "ua"
                 ? "Всі тури"
                 : "View all tours";
 
@@ -103,7 +103,7 @@ export default function ToursPageClient() {
             ? "Katalog"
             : language === "es"
               ? "Catálogo"
-              : language === "uk"
+              : language === "ua"
                 ? "Каталог"
                 : "Open catalogue";
 

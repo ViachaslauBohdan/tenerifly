@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { Locale, LOCALES } from "@/types/locale";
+import { Locale, LOCALES, localeContentKey } from "@/types/locale";
 import { useState, useEffect } from "react";
 import mainTranslations from "@/i18n/main.json";
 
@@ -19,7 +19,8 @@ export function useTranslation() {
   const currentLocale: Locale =
     LOCALES.find((l) => l.code === localeFromPath)?.code || "en";
 
-  const t = mainTranslations[currentLocale] || mainTranslations.en;
+  const contentKey = localeContentKey(currentLocale) as keyof typeof mainTranslations;
+  const t = mainTranslations[contentKey] || mainTranslations.en;
 
   const switchLocale = (newLocale: Locale) => {
     const segments = pathname.split("/");

@@ -90,7 +90,7 @@ export function ClassicPropertiesPage({ locale }: ClassicPropertiesPageProps) {
       ru: 'Назад на главную',
       pl: 'Powrót do strony głównej',
       fr: 'Retour à l\'accueil',
-      uk: 'Назад на головну',
+      uk: 'Назад на головну',      ua: 'Назад на головну',
       de: "Zurück zur Startseite",
       es: "Volver a la página principal"
     };

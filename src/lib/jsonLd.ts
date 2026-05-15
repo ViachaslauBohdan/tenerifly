@@ -45,7 +45,7 @@ const BC: Record<
     cars: "Аренда авто",
     blog: "Блог",
   },
-  uk: {
+  ua: {
     home: "Головна",
     apartments: "Апартаменти",
     tours: "Тури",

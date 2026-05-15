@@ -74,7 +74,7 @@ const getFoundCarsText = (locale: string): string => {
     ru: "Найдено автомобилей",
     pl: "Znaleziono samochodów",
     fr: "Voitures trouvées",
-    uk: "Знайдено автомобілів",
+    uk: "Знайдено автомобілів",    ua: "Знайдено автомобілів",
     de: "Gefundene Autos",
     es: "Coches encontrados",
   };
@@ -87,7 +87,7 @@ const getFilterActiveText = (locale: string): string => {
     ru: "🔍 Фильтр активен",
     pl: "🔍 Filtr aktywny",
     fr: "🔍 Filtre actif",
-    uk: "🔍 Фільтр активний",
+    uk: "🔍 Фільтр активний",    ua: "🔍 Фільтр активний",
     de: "🔍 Filter aktiv",
     es: "🔍 Filtro activo",
   };
@@ -321,7 +321,7 @@ const CarCard = ({
         return "KM";
       case "fr":
         return "ch";
-      case "uk":
+      case "ua":
         return "к.с.";
       default:
         return "hp";
@@ -338,7 +338,7 @@ const CarCard = ({
         return "drzwi";
       case "fr":
         return "portes";
-      case "uk":
+      case "ua":
         return "двері";
       default:
         return "doors";
@@ -354,7 +354,7 @@ const CarCard = ({
         return "miejsca";
       case "fr":
         return "places";
-      case "uk":
+      case "ua":
         return "місця";
       default:
         return "seats";

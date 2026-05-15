@@ -9,7 +9,7 @@ const NUMBER_LOCALE: Record<Locale, string> = {
   fr: "fr-FR",
   pl: "pl-PL",
   ru: "ru-RU",
-  uk: "uk-UA",
+  ua: "uk-UA",
 };
 
 export function formatTileAmount(n: number, locale: Locale): string {

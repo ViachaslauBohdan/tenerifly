@@ -235,7 +235,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
       ru: 'Назад на главную',
       pl: 'Powrót do strony głównej',
       fr: 'Retour à l\'accueil',
-      uk: 'Назад на головну',
+      uk: 'Назад на головну',      ua: 'Назад на головну',
       de: "Zurück zur Startseite",
       es: "Volver a la página principal"
     };
@@ -248,7 +248,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
       ru: 'Экскурсии и туры',
       pl: 'Wycieczki i ekskursje',
       fr: 'Tours et excursions',
-      uk: 'Екскурсії та тури',
+      uk: 'Екскурсії та тури',      ua: 'Екскурсії та тури',
       de: "Touren und Exkursionen",
       es: "Excursiones y tours"
     };
@@ -261,7 +261,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
       ru: 'Откройте для себя красоту Тенерифе с нашими увлекательными турами',
       pl: 'Odkryj piękno Tenerife dzięki naszym ekscytującym wycieczkom',
       fr: 'Découvrez la beauté de Tenerife avec nos tours passionnants',
-      uk: 'Відкрийте для себе красу Тенерифе з нашими захоплюючими турами',
+      uk: 'Відкрийте для себе красу Тенерифе з нашими захоплюючими турами',      ua: 'Відкрийте для себе красу Тенерифе з нашими захоплюючими турами',
       de: "Entdecken Sie die Schönheit von Tenerife mit unseren spannenden Touren",
       es: "Descubre la belleza de Tenerife con nuestras emocionantes excursiones"
     };
@@ -274,7 +274,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
       ru: 'Экскурсии не найдены',
       pl: 'Nie znaleziono wycieczek',
       fr: 'Aucun tour trouvé',
-      uk: 'Екскурсії не знайдено',
+      uk: 'Екскурсії не знайдено',      ua: 'Екскурсії не знайдено',
       de: "Keine Touren gefunden",
       es: "No se encontraron excursiones"
     };
@@ -287,7 +287,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
       ru: 'Найдено',
       pl: 'Znaleziono',
       fr: 'Trouvé',
-      uk: 'Знайдено',
+      uk: 'Знайдено',      ua: 'Знайдено',
       de: "Gefunden",
       es: "Encontrado"
     };
@@ -300,7 +300,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
       ru: 'экскурсий',
       pl: 'wycieczek',
       fr: 'tours',
-      uk: 'екскурсій',
+      uk: 'екскурсій',      ua: 'екскурсій',
       de: "Touren",
       es: "Excursiones"
     };
@@ -313,7 +313,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
       ru: 'Бронь',
       pl: 'Rezerwuj',
       fr: 'Réserver',
-      uk: 'Бронь',
+      uk: 'Бронь',      ua: 'Бронь',
       de: "Buchen",
       es: "Reservar"
     };
@@ -326,7 +326,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
       ru: 'Подробнее',
       pl: 'Zobacz szczegóły',
       fr: 'Voir les détails',
-      uk: 'Детальніше',
+      uk: 'Детальніше',      ua: 'Детальніше',
       de: "Details ansehen",
       es: "Ver detalles"
 

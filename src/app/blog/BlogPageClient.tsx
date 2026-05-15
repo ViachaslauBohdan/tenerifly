@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
-import { localeDisplayCode } from "@/types/locale";
+import {localeDisplayCode, pickLocaleBundle} from "@/types/locale";
 import translations from "@/i18n/blog.json";
 // Языки с флагами
 const languages = [
@@ -12,7 +12,7 @@ const languages = [
   { code: "ru", name: "Русский", flag: "🇷🇺" },
   { code: "pl", name: "Polski", flag: "🇵🇱" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "uk", name: "Українська", flag: "🇺🇦" },
+  { code: "ua", name: "Українська", flag: "🇺🇦" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
 ];
@@ -41,19 +41,19 @@ interface BlogPageClientProps {
 export default function BlogPageClient({ initialBlogs }: BlogPageClientProps) {
   const { locale, switchLocale, createLocaleLink } = useTranslation();
   const [language, setLanguage] = useState<
-    "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-  >(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+    "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es"
+  >(locale as "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>(initialBlogs || []);
   const [loading, setLoading] = useState(!initialBlogs);
   const [error, setError] = useState<string | null>(null);
 
-  const t = translations[language];
+  const t = pickLocaleBundle(translations, language);
   const currentLanguage = languages.find((lang) => lang.code === language);
 
   // Синхронизируем язык с URL
   useEffect(() => {
-    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es");
   }, [locale]);
 
   // Загрузка блогов только если нет initialBlogs
@@ -102,7 +102,7 @@ export default function BlogPageClient({ initialBlogs }: BlogPageClientProps) {
 
   // Переключение языка через URL
   const handleLanguageChange = (
-    langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
+    langCode: "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es"
   ) => {
     switchLocale(langCode);
     setIsLanguageDropdownOpen(false);
@@ -234,7 +234,7 @@ export default function BlogPageClient({ initialBlogs }: BlogPageClientProps) {
                             | "ru"
                             | "pl"
                             | "fr"
-                            | "uk"
+                            | "ua"
                             | "de"
                             | "es"
                         )

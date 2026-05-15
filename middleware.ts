@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { LOCALES, type Locale } from './src/types/locale';
+import {
+  LEGACY_LOCALE_PATHS,
+  LOCALES,
+  type Locale,
+} from './src/types/locale';
 
 const locales = LOCALES.map(locale => locale.code) as Locale[];
 const defaultLocale: Locale = 'en';
@@ -14,6 +18,20 @@ export function middleware(request: NextRequest) {
   // Пропускаем публичные пути
   if (publicPaths.some(path => pathname.startsWith(path))) {
     return NextResponse.next();
+  }
+
+  const firstSegment = pathname.split("/").filter(Boolean)[0];
+  const legacyTarget = firstSegment
+    ? LEGACY_LOCALE_PATHS[firstSegment]
+    : undefined;
+
+  if (legacyTarget) {
+    const newUrl = new URL(
+      pathname.replace(`/${firstSegment}`, `/${legacyTarget}`),
+      request.url
+    );
+    newUrl.search = request.nextUrl.search;
+    return NextResponse.redirect(newUrl, 308);
   }
 
   // Проверяем, есть ли уже локаль в пути
@@ -60,8 +78,14 @@ function getLocale(request: NextRequest): Locale | null {
 
     // Ищем первую поддерживаемую локаль
     for (const lang of languages) {
-      if (locales.includes(lang.code as Locale)) {
-        return lang.code as Locale;
+      const code =
+        lang.code === "uk"
+          ? "ua"
+          : locales.includes(lang.code as Locale)
+            ? (lang.code as Locale)
+            : null;
+      if (code) {
+        return code;
       }
     }
   }

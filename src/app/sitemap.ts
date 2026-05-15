@@ -26,7 +26,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const now = new Date();
 
-  const staticPaths = ["", "/apartments", "/tours", "/cars", "/blog"];
+  const staticPaths = [
+    "",
+    "/apartments",
+    "/tours",
+    "/world-tours",
+    "/cars",
+    "/blog",
+  ];
 
   const staticPages: MetadataRoute.Sitemap = LOCALES.flatMap((locale) =>
     staticPaths.map((path) => ({

@@ -11,7 +11,7 @@ import {
 } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
-import { localeDisplayCode } from "@/types/locale";
+import {localeDisplayCode, pickLocaleBundle, localeContentKey} from "@/types/locale";
 import translations from "@/i18n/cars.json";
 import {
   getCanariasRentacarAffiliateUrl,
@@ -24,11 +24,11 @@ const getLoadingCarsText = (language: string) => {
     ru: "Загрузка автомобилей...",
     pl: "Ładowanie samochodów...",
     fr: "Chargement des voitures...",
-    uk: "Завантаження автомобілів...",
+    uk: "Завантаження автомобілів...",    ua: "Завантаження автомобілів...",
     de: "Autos werden geladen...",
     es: "Cargando coches...",
   };
-  return texts[language] || texts.en;
+  return texts[localeContentKey(language)] || texts.en;
 };
 
 // Языки с флагами
@@ -37,7 +37,7 @@ const languages = [
   { code: "ru", name: "Русский", flag: "🇷🇺" },
   { code: "pl", name: "Polski", flag: "🇵🇱" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "uk", name: "Українська", flag: "🇺🇦" },
+  { code: "ua", name: "Українська", flag: "🇺🇦" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
 ];
@@ -180,13 +180,13 @@ export default function CarsPageClient({
   const { locale, switchLocale, createLocaleLink } = useTranslation();
 
   const [language, setLanguage] = useState<
-    "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
-  >(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+    "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es"
+  >(locale as "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es");
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
 
   // Синхронизируем язык с URL
   useEffect(() => {
-    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es");
+    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es");
   }, [locale]);
 
   // Инициализация фильтров из URL параметров
@@ -199,9 +199,15 @@ export default function CarsPageClient({
     Record<string, unknown[]>
   >(initialCarsByLocale || {});
   const [filteredCars, setFilteredCars] = useState<CarData[]>(() => {
-    if (initialCarsByLocale && initialCarsByLocale[language]) {
-      // Берем автомобили для текущего языка напрямую из объекта
-      return (initialCarsByLocale[language] as CarData[]) || [];
+    if (
+      initialCarsByLocale &&
+      (initialCarsByLocale[localeContentKey(language)] ||
+        initialCarsByLocale[language])
+    ) {
+      return (
+        ((initialCarsByLocale[localeContentKey(language)] ??
+          initialCarsByLocale[language]) as CarData[]) || []
+      );
     }
     return [];
   });
@@ -448,7 +454,10 @@ export default function CarsPageClient({
       }
 
       setAllCarsByLocale(carsByLocale);
-      setFilteredCars((carsByLocale[language] as CarData[]) || []);
+      setFilteredCars(
+        ((carsByLocale[localeContentKey(language)] ??
+          carsByLocale[language]) as CarData[]) || []
+      );
     } catch (error) {
       console.error("Error loading cars by locales:", error);
     } finally {
@@ -462,7 +471,10 @@ export default function CarsPageClient({
       // Сохраняем все автомобили по локалям
       setAllCarsByLocale(initialCarsByLocale);
       // Устанавливаем автомобили для текущего языка
-      setFilteredCars((initialCarsByLocale[language] as CarData[]) || []);
+      setFilteredCars(
+        ((initialCarsByLocale[localeContentKey(language)] ??
+          initialCarsByLocale[language]) as CarData[]) || []
+      );
       setInitialLoadComplete(true);
       return;
     }
@@ -471,12 +483,15 @@ export default function CarsPageClient({
     loadCarsByLocales();
   }, [initialCarsByLocale, language, loadCarsByLocales]);
 
-  const t = translations[language];
+  const t = pickLocaleBundle(translations, language);
   const currentLanguage = languages.find((lang) => lang.code === language);
 
   // Обновляем отфильтрованные данные при смене языка (без догрузки)
   useEffect(() => {
-    setFilteredCars((allCarsByLocale[language] as CarData[]) || []);
+    setFilteredCars(
+      ((allCarsByLocale[localeContentKey(language)] ??
+        allCarsByLocale[language]) as CarData[]) || []
+    );
   }, [language, allCarsByLocale]);
 
   // Синхронизация текущей страницы с URL при изменении searchParams
@@ -495,7 +510,7 @@ export default function CarsPageClient({
 
   // Переключение языка через URL
   const handleLanguageChange = (
-    langCode: "en" | "ru" | "pl" | "fr" | "uk" | "de" | "es"
+    langCode: "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es"
   ) => {
     switchLocale(langCode);
     setIsLanguageDropdownOpen(false);
@@ -613,7 +628,7 @@ export default function CarsPageClient({
                             | "ru"
                             | "pl"
                             | "fr"
-                            | "uk"
+                            | "ua"
                             | "de"
                             | "es"
                         )
@@ -673,7 +688,10 @@ export default function CarsPageClient({
             onResetFilters={resetFiltersSync}
             onCarsUpdate={handleCarsUpdate}
             translations={t}
-            allCars={(allCarsByLocale[language] as CarData[]) || []}
+            allCars={
+              ((allCarsByLocale[localeContentKey(language)] ??
+                allCarsByLocale[language]) as CarData[]) || []
+            }
           />
 
           {/* Cars Grid - показываем отфильтрованные автомобили */}
@@ -733,7 +751,7 @@ export default function CarsPageClient({
                               ? "Poprzednia"
                               : language === "fr"
                                 ? "Précédent"
-                                : language === "uk"
+                                : language === "ua"
                                   ? "Попередня"
                                   : language === "de"
                                     ? "Zurück"
@@ -793,7 +811,7 @@ export default function CarsPageClient({
                               ? "Następna"
                               : language === "fr"
                                 ? "Suivant"
-                                : language === "uk"
+                                : language === "ua"
                                   ? "Наступна"
                                   : language === "de"
                                     ? "Weiter"

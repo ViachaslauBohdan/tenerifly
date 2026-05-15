@@ -60,7 +60,7 @@ export const openWhatsApp = (
       accommodation: `Привет! Меня интересует жилье "${details.title}" за ${details.price}`,
       general: `Привет! Я хотел бы узнать больше о ваших услугах на Тенерифе`,
     },
-    uk: {
+    ua: {
       excursion: `Привіт! Мене цікавить екскурсія "${details.title}" (${details.duration}, ${details.language}) за ${details.price}`,
       car: `Привіт! Я хотів би орендувати автомобіль ${details.brand} ${details.model} "${details.title}" за ${details.price}`,
       accommodation: `Привіт! Мене цікавить житло "${details.title}" за ${details.price}`,
@@ -128,7 +128,7 @@ export const openBookingWhatsApp = (
       car: `Привет! Я хотел бы забронировать автомобиль ${details.brand} ${details.model} "${details.title}" за ${details.price}`,
       excursion: `Привет! Я хотел бы забронировать экскурсию "${details.title}" (${details.duration}, ${details.language}) за ${details.price}`,
     },
-    uk: {
+    ua: {
       accommodation: `Привіт! Я хотів би забронювати "${details.title}" за ${details.price}`,
       car: `Привіт! Я хотів би забронювати автомобіль ${details.brand} ${details.model} "${details.title}" за ${details.price}`,
       excursion: `Привіт! Я хотів би забронювати екскурсію "${details.title}" (${details.duration}, ${details.language}) за ${details.price}`,

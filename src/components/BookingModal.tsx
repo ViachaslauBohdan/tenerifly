@@ -68,7 +68,7 @@ const translations = {
     agentResponse: "L'agent répondra bientôt",
     close: "Fermer",
   },
-  uk: {
+  ua: {
     title: "Забронювати",
     apartmentName: "Назва апартаментів",
     selectDates: "Виберіть дати",

@@ -191,7 +191,7 @@ export function SimpleBookingPopup({
       back: "Retour",
     },
   
-    uk: {
+    ua: {
       title: "Попереднє бронювання",
       itemName: "Об'єкт",
       price: "Ціна",
@@ -418,7 +418,7 @@ export function SimpleBookingPopup({
       back: "Retour",
     },
   
-    uk: {
+    ua: {
       title: "Попереднє бронювання",
       itemName: "Об'єкт",
       price: "Ціна",

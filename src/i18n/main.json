@@ -176,6 +176,11 @@
             "value": "4+"
           }
         ]
+      },
+      "tourTaglines": {
+        "dreamTrip": "Deine Traumreise beginnt hier",
+        "tourOfTheDay": "Tagesausflug: bester Preis",
+        "chooseTour": "Wähle deine Tour"
       }
     },
     "common": {
@@ -492,6 +497,11 @@
             "value": "4+"
           }
         ]
+      },
+      "tourTaglines": {
+        "dreamTrip": "Your dream trip starts here",
+        "tourOfTheDay": "Tour of the day: best price",
+        "chooseTour": "Choose your tour"
       }
     },
     "common": {
@@ -808,6 +818,11 @@
             "value": "4+"
           }
         ]
+      },
+      "tourTaglines": {
+        "dreamTrip": "Tu viaje soñado comienza aquí",
+        "tourOfTheDay": "Tour del día: mejor precio",
+        "chooseTour": "Elige tu tour"
       }
     },
     "common": {
@@ -1124,6 +1139,11 @@
             "value": "4+"
           }
         ]
+      },
+      "tourTaglines": {
+        "dreamTrip": "Votre voyage de rêve commence ici",
+        "tourOfTheDay": "Circuit du jour : meilleur prix",
+        "chooseTour": "Choisir votre circuit"
       }
     },
     "common": {
@@ -1440,6 +1460,11 @@
             "value": "4+"
           }
         ]
+      },
+      "tourTaglines": {
+        "dreamTrip": "Twoja wymarzona podróż zaczyna się tutaj",
+        "tourOfTheDay": "Wycieczka dnia: najlepsza cena",
+        "chooseTour": "Wybierz swoją wycieczkę"
       }
     },
     "common": {
@@ -1756,6 +1781,11 @@
             "value": "4+"
           }
         ]
+      },
+      "tourTaglines": {
+        "dreamTrip": "Твоё путешествие мечты начинается здесь",
+        "tourOfTheDay": "Тур дня: лучшая цена",
+        "chooseTour": "Выбрать свой тур"
       }
     },
     "common": {
@@ -2072,6 +2102,332 @@
             "value": "4+"
           }
         ]
+      },
+      "tourTaglines": {
+        "dreamTrip": "Твоя подорож мрії починається тут",
+        "tourOfTheDay": "Тур дня: найкраща ціна",
+        "chooseTour": "Обрати свій тур"
+      }
+    },
+    "common": {
+      "to": "До",
+      "all": "Всі",
+      "per": "за",
+      "date": "Дата",
+      "from": "Від",
+      "sale": "Продаж",
+      "time": "Час",
+      "type": "Тип",
+      "email": "Email",
+      "found": "Знайдено",
+      "phone": "Телефон",
+      "rooms": "Кімнати",
+      "adults": "Дорослі",
+      "guests": "Гості",
+      "noData": "Немає даних",
+      "perDay": "/день",
+      "rental": "Оренда",
+      "bookNow": "Бронь",
+      "contact": "Контакт",
+      "loading": "Завантаження...",
+      "priceTo": "Ціна до",
+      "children": "Діти",
+      "currency": "€",
+      "perNight": "/ніч",
+      "readMore": "Читати далі",
+      "typeRent": "Оренда",
+      "typeSale": "Продаж",
+      "whatsapp": "WhatsApp",
+      "noResults": "Результати не знайдено",
+      "priceFrom": "Ціна від",
+      "backToHome": "Повернутися на головну",
+      "hideSearch": "Приховати пошук",
+      "showSearch": "Показати пошук",
+      "serverError": "Помилка сервера",
+      "viewDetails": "Детальніше"
+    },
+    "footer": {
+      "social": "Соціальні мережі",
+      "aboutUs": "Про нас",
+      "contacts": "Контакти",
+      "services": "Наші послуги",
+      "quickLinks": "Швидкі посилання",
+      "description": "Ваш гід по Тенеріфе",
+      "privacyPolicy": "Політика конфіденційності",
+      "termsOfService": "Умови використання"
+    },
+    "filters": {
+      "area": "Площа (м²)",
+      "fuel": "Тип палива",
+      "make": "Марка",
+      "type": "Тип",
+      "year": "Рік будівництва",
+      "color": "Колір",
+      "doors": "Двері",
+      "model": "Модель",
+      "power": "Потужність двигуна",
+      "newest": "Спочатку нові",
+      "oldest": "Спочатку старі",
+      "mileage": "Пробіг (км)",
+      "parking": "Парковка",
+      "yearAsc": "Рік: старі першими",
+      "bedrooms": "Спальні",
+      "bodyType": "Тип кузова",
+      "category": "Категорія",
+      "duration": "Тривалість",
+      "included": "Включено",
+      "language": "Мова",
+      "location": "Місцезнаходження",
+      "priceAsc": "Ціна: за зростанням",
+      "yearDesc": "Рік: нові першими",
+      "condition": "Стан",
+      "furnished": "Мебльоване",
+      "groupSize": "Розмір групи",
+      "priceDesc": "Ціна: за спаданням",
+      "difficulty": "Складність",
+      "priceRange": "Діапазон цін",
+      "applyFilters": "Застосувати фільтри",
+      "availability": "Доступно з",
+      "resetFilters": "Скинути фільтри",
+      "transmission": "Коробка передач"
+    },
+    "sections": {
+      "blog": {
+        "title": "Блог",
+        "author": "Автор",
+        "viewAll": "Показати все",
+        "readTime": "Час читання",
+        "subtitle": "Останні новини та поради",
+        "publishedDate": "Опубліковано"
+      },
+      "cars": {
+        "year": "Рік",
+        "seats": "Місця",
+        "title": "Оренда автомобілів",
+        "viewAll": "Показати все",
+        "features": "Особливості",
+        "fuelType": "Тип палива",
+        "subtitle": "Знайдіть ідеальний автомобіль для пригод на Тенеріфе",
+        "transmission": "Коробка передач"
+      },
+      "excursions": {
+        "price": "Ціна",
+        "title": "Популярні екскурсії",
+        "viewAll": "Показати все",
+        "duration": "Тривалість",
+        "language": "Мова",
+        "subtitle": "Відкрийте для себе найкраще на Тенеріфе",
+        "groupSize": "Розмір групи"
+      },
+      "accommodation": {
+        "area": "Площа",
+        "title": "Місця для проживання",
+        "viewAll": "Показати все",
+        "bedrooms": "Спальні",
+        "location": "Місцезнаходження",
+        "subtitle": "Знайдіть ідеальне житло на Тенеріфе",
+        "amenities": "Зручності",
+        "bathrooms": "Ванні кімнати"
+      }
+    },
+    "navigation": {
+      "blog": "Блог",
+      "cars": "Автомобілі",
+      "home": "Головна",
+      "contact": "Контакти",
+      "excursions": "Екскурсії",
+      "accommodation": "Житло"
+    },
+    "selectLanguage": "Оберіть мову",
+    "personalizedRequest": {
+      "title": "Є персональний запит?",
+      "button": "Надіслати запит",
+      "subtitle": "Напишіть нам про свої конкретні потреби, і ми допоможемо знайти ідеальне рішення",
+      "placeholder": "Розкажіть про свої вимоги, дати, уподобання або особливі побажання..."
+    }
+  },
+  "ua": {
+    "cta": {
+      "title": "Не знаєте з чого почати?",
+      "button": "Написати в WhatsApp",
+      "subtitle": "Отримайте персональну добірку!"
+    },
+    "faq": {
+      "title": "Часто задавані питання",
+      "preBook": {
+        "answer": "Попереднє бронювання - це зручний спосіб виразити інтерес до наших послуг. Коли ви надсилаєте запит на попереднє бронювання, наша команда перевірить доступність на ваші бажані дати та зв'яжеться з вами протягом 24 годин з підтвердженням та наступними кроками. Це гарантує, що ви отримаєте найкращі доступні варіанти для ваших дат подорожі.",
+        "question": "Що таке процес попереднього бронювання?"
+      },
+      "subtitle": "Все, що вам потрібно знати про бронювання з нами"
+    },
+    "blog": {
+      "tags": "Теги",
+      "title": "Гід по Тенеріфе",
+      "author": "Автор",
+      "readMore": "Читати далі",
+      "publishedOn": "Опубліковано",
+      "relatedPosts": "Схожі статті"
+    },
+    "hero": {
+      "cars": {
+        "type": "Тип автомобіля",
+        "brand": "Марка",
+        "title": "Автомобілі",
+        "types": [
+          {
+            "label": "Всі автомобілі",
+            "value": "all"
+          },
+          {
+            "label": "Економ",
+            "value": "economy"
+          },
+          {
+            "label": "Стандарт",
+            "value": "standard"
+          },
+          {
+            "label": "Преміум",
+            "value": "premium"
+          }
+        ],
+        "pickup": "Дата отримання",
+        "dropoff": "Дата повернення",
+        "bodyType": "Тип кузова",
+        "transmission": "Коробка передач",
+        "bodyTypeOptions": [
+          {
+            "label": "Седан",
+            "value": "sedan"
+          },
+          {
+            "label": "SUV",
+            "value": "suv"
+          },
+          {
+            "label": "Універсал",
+            "value": "wagon"
+          },
+          {
+            "label": "Кабріолет",
+            "value": "convertible"
+          }
+        ],
+        "transmissionOptions": [
+          {
+            "label": "Автомат",
+            "value": "automatic"
+          },
+          {
+            "label": "Механіка",
+            "value": "manual"
+          }
+        ]
+      },
+      "tabs": {
+        "blog": "Блог",
+        "cars": "Автомобілі",
+        "excursions": "Екскурсії",
+        "accommodation": "Житло"
+      },
+      "title": "Ласкаво просимо на Тенеріфе",
+      "search": "Пошук",
+      "subtitle": "Знайдіть житло, екскурсії або оренду автомобіля",
+      "excursions": {
+        "date": "Дата",
+        "type": "Тип екскурсії",
+        "title": "Екскурсії",
+        "types": [
+          {
+            "label": "Всі екскурсії",
+            "value": "all"
+          },
+          {
+            "label": "Національний парк Тейде",
+            "value": "teide"
+          },
+          {
+            "label": "Водні розваги",
+            "value": "water"
+          },
+          {
+            "label": "Культурні тури",
+            "value": "culture"
+          }
+        ],
+        "people": "Кількість осіб",
+        "language": "Мова",
+        "languageOptions": [
+          {
+            "label": "Українська",
+            "value": "uk"
+          },
+          {
+            "label": "Англійська",
+            "value": "en"
+          },
+          {
+            "label": "Німецька",
+            "value": "de"
+          },
+          {
+            "label": "Іспанська",
+            "value": "es"
+          }
+        ]
+      },
+      "accommodation": {
+        "type": "Тип нерухомості",
+        "rooms": "Кімнати",
+        "title": "Житло",
+        "types": [
+          {
+            "label": "Всі типи",
+            "value": ""
+          },
+          {
+            "label": "Квартира",
+            "value": "apartment"
+          },
+          {
+            "label": "Будинок",
+            "value": "house"
+          },
+          {
+            "label": "Ділянка",
+            "value": "plot"
+          },
+          {
+            "label": "Студія",
+            "value": "studio"
+          }
+        ],
+        "guests": "Гості",
+        "checkin": "Заїзд",
+        "checkout": "Виїзд",
+        "roomsList": [
+          {
+            "label": "1 кімната",
+            "value": "1"
+          },
+          {
+            "label": "2 кімнати",
+            "value": "2"
+          },
+          {
+            "label": "3 кімнати",
+            "value": "3"
+          },
+          {
+            "label": "4+ кімнат",
+            "value": "4+"
+          }
+        ]
+      },
+      "tourTaglines": {
+        "dreamTrip": "Твоя подорож мрії починається тут",
+        "tourOfTheDay": "Тур дня: найкраща ціна",
+        "chooseTour": "Обрати свій тур"
       }
     },
     "common": {

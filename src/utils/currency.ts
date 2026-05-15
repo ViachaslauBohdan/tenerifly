@@ -7,7 +7,7 @@ const localeCurrencies: Record<Locale, string> = {
   ru: "RUB",
   pl: "PLN",
   fr: "EUR",
-  uk: "USD",
+  ua: "USD",
   de: "EUR",
   es: "EUR",
 };
@@ -126,7 +126,7 @@ function getIntlLocale(locale: Locale): string {
     ru: "ru-RU",
     pl: "pl-PL",
     fr: "fr-FR",
-    uk: "en-US",
+    ua: "en-US",
     de: "de-DE",
     es: "es-ES",
   };

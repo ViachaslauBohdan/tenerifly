@@ -998,3 +998,26 @@ html {
     @apply bg-background text-foreground;
 }
 }
+
+/* Otpusk tour search — extra space under the form row (inside blue bar) and below the widget */
+#otpusk-search-container .new_f-form,
+#otpusk-world-search-container .new_f-form {
+  padding-bottom: 1.125rem !important;
+}
+
+#otpusk-search-container .new_f-container,
+#otpusk-world-search-container .new_f-container {
+  margin-bottom: 2rem !important;
+}
+
+@media (min-width: 640px) {
+  #otpusk-search-container .new_f-form,
+  #otpusk-world-search-container .new_f-form {
+    padding-bottom: 1.375rem !important;
+  }
+
+  #otpusk-search-container .new_f-container,
+  #otpusk-world-search-container .new_f-container {
+    margin-bottom: 2.5rem !important;
+  }
+}

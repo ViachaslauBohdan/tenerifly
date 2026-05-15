@@ -18,6 +18,57 @@ const API_TOKEN =
 // Путь к папке i18n
 const I18N_DIR = path.join(__dirname, "..", "src", "i18n");
 
+/** App-only hero copy (not in Strapi) — merged into main.json on each fetch. */
+const HERO_TOUR_TAGLINES = {
+  de: {
+    dreamTrip: "Deine Traumreise beginnt hier",
+    tourOfTheDay: "Tagesausflug: bester Preis",
+    chooseTour: "Wähle deine Tour",
+  },
+  en: {
+    dreamTrip: "Your dream trip starts here",
+    tourOfTheDay: "Tour of the day: best price",
+    chooseTour: "Choose your tour",
+  },
+  es: {
+    dreamTrip: "Tu viaje soñado comienza aquí",
+    tourOfTheDay: "Tour del día: mejor precio",
+    chooseTour: "Elige tu tour",
+  },
+  fr: {
+    dreamTrip: "Votre voyage de rêve commence ici",
+    tourOfTheDay: "Circuit du jour : meilleur prix",
+    chooseTour: "Choisir votre circuit",
+  },
+  pl: {
+    dreamTrip: "Twoja wymarzona podróż zaczyna się tutaj",
+    tourOfTheDay: "Wycieczka dnia: najlepsza cena",
+    chooseTour: "Wybierz swoją wycieczkę",
+  },
+  ru: {
+    dreamTrip: "Твоё путешествие мечты начинается здесь",
+    tourOfTheDay: "Тур дня: лучшая цена",
+    chooseTour: "Выбрать свой тур",
+  },
+  uk: {
+    dreamTrip: "Твоя подорож мрії починається тут",
+    tourOfTheDay: "Тур дня: найкраща ціна",
+    chooseTour: "Обрати свій тур",
+  },
+};
+
+function applyMainLocalePatches(translation) {
+  for (const [locale, taglines] of Object.entries(HERO_TOUR_TAGLINES)) {
+    if (translation[locale]?.hero) {
+      translation[locale].hero.tourTaglines = taglines;
+    }
+  }
+  if (translation.uk && !translation.ua) {
+    translation.ua = JSON.parse(JSON.stringify(translation.uk));
+  }
+  return translation;
+}
+
 /**
  * Функция для получения всех переводов из Strapi
  */
@@ -89,11 +140,15 @@ async function saveAllTranslations(translationsData) {
 
     for (const record of translationsData) {
       const name = record.Name || record.name || `translation_${record.id}`;
-      const translation = record.translation || {};
+      let translation = record.translation || {};
 
       // Создаем безопасное имя файла
       const safeFileName = createSafeFileName(name);
       const filePath = path.join(I18N_DIR, `${safeFileName}.json`);
+
+      if (safeFileName === "main") {
+        translation = applyMainLocalePatches(translation);
+      }
 
       // Сохраняем только содержимое поля translation
       fs.writeFileSync(filePath, JSON.stringify(translation, null, 2), "utf8");
