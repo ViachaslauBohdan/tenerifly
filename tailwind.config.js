@@ -13,6 +13,30 @@ module.exports = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
+  		keyframes: {
+  			heroCtaPulse: {
+  				'0%, 100%': {
+  					boxShadow:
+  						'0 0 0 0 rgba(255, 255, 255, 0.2), 0 4px 16px rgba(0, 0, 0, 0.12)',
+  					borderColor: 'rgba(255, 255, 255, 0.4)',
+  					backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  				},
+  				'50%': {
+  					boxShadow:
+  						'0 0 0 3px rgba(255, 255, 255, 0.25), 0 0 28px rgba(96, 165, 250, 0.5)',
+  					borderColor: 'rgba(255, 255, 255, 0.85)',
+  					backgroundColor: 'rgba(255, 255, 255, 0.18)',
+  				},
+  			},
+  			heroCtaArrow: {
+  				'0%, 100%': { transform: 'translateX(0)' },
+  				'50%': { transform: 'translateX(5px)' },
+  			},
+  		},
+  		animation: {
+  			'hero-cta-pulse': 'heroCtaPulse 2.25s ease-in-out infinite',
+  			'hero-cta-arrow': 'heroCtaArrow 2.25s ease-in-out infinite',
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

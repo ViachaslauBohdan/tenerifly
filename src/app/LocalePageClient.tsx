@@ -1117,11 +1117,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           <div className="mt-8 text-center sm:mt-10">
             <Link
               href={createLocaleLink("/world-tours")}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+              className="group inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25 motion-reduce:animate-none animate-hero-cta-pulse"
             >
-              <Plane className="h-5 w-5 shrink-0" />
+              <Plane className="h-5 w-5 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:rotate-12" />
               {t.hero.searchGlobalTours}
-              <ArrowRight className="h-4 w-4 shrink-0" />
+              <ArrowRight className="h-4 w-4 shrink-0 motion-reduce:animate-none animate-hero-cta-arrow" />
             </Link>
           </div>
         </div>
