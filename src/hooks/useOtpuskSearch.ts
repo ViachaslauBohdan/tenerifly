@@ -19,12 +19,31 @@ export type UseOtpuskSearchOptions = {
   tourContainer: string;
 };
 
+function loadScript(src: string, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const existing = document.getElementById(id);
+    if (existing) {
+      existing.remove();
+    }
+
+    const script = document.createElement("script");
+    script.src = src;
+    script.id = id;
+    script.async = false;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error(`Failed to load ${src}`));
+    document.body.appendChild(script);
+  });
+}
+
 export function useOtpuskSearch({
   language,
   searchContainer,
   tourContainer,
 }: UseOtpuskSearchOptions) {
   useEffect(() => {
+    let cancelled = false;
+
     window.osGeo = "";
     window.osDefaultDeparture = "";
     window.osDefaultDuration = "";
@@ -47,41 +66,36 @@ export function useOtpuskSearch({
     if (searchCont) searchCont.innerHTML = "";
     if (tourCont) tourCont.innerHTML = "";
 
-    const loadScript = (src: string, id: string) => {
-      const oldScript = document.getElementById(id);
-      if (oldScript) oldScript.remove();
+    const scriptSuffix = searchContainer.replace(/[^a-z0-9]/gi, "-");
+    const ts = Date.now();
 
-      const script = document.createElement("script");
-      script.src = src;
-      script.id = id;
-      script.async = true;
-      document.body.appendChild(script);
+    const init = async () => {
+      try {
+        await loadScript(
+          `https://api.otpusk.com/api/2.4/session?access_token=3f93a-35d0c-a0b24-5a708-493e5&ts=${ts}`,
+          `otpusk-script-session-${scriptSuffix}`
+        );
+        if (cancelled) return;
+
+        await loadScript(
+          `https://export.otpusk.com/js/onsite/?ts=${ts}`,
+          `otpusk-script-onsite-${scriptSuffix}`
+        );
+        if (cancelled) return;
+
+        void loadScript(
+          `https://export.otpusk.com/js/order?ts=${ts}`,
+          `otpusk-script-order-${scriptSuffix}`
+        );
+      } catch (error) {
+        console.error("Otpusk search failed to load", error);
+      }
     };
 
-    const scriptSuffix = searchContainer.replace(/[^a-z0-9]/gi, "-");
-    const ts = new Date().getTime();
-    loadScript(
-      `https://api.otpusk.com/api/2.4/session?access_token=3f93a-35d0c-a0b24-5a708-493e5&ts=${ts}`,
-      `otpusk-script-session-${scriptSuffix}`
-    );
-    loadScript(
-      `https://export.otpusk.com/js/onsite/?ts=${ts}`,
-      `otpusk-script-onsite-${scriptSuffix}`
-    );
-    loadScript(
-      `https://export.otpusk.com/js/order?ts=${ts}`,
-      `otpusk-script-order-${scriptSuffix}`
-    );
+    void init();
 
     return () => {
-      [
-        `otpusk-script-session-${scriptSuffix}`,
-        `otpusk-script-onsite-${scriptSuffix}`,
-        `otpusk-script-order-${scriptSuffix}`,
-      ].forEach((id) => {
-        const s = document.getElementById(id);
-        if (s) s.remove();
-      });
+      cancelled = true;
     };
   }, [language, searchContainer, tourContainer]);
 }

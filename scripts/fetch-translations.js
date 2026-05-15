@@ -57,11 +57,30 @@ const HERO_TOUR_TAGLINES = {
   },
 };
 
+const HERO_SEARCH_GLOBAL_TOURS = {
+  de: "Globale Touren suchen",
+  en: "Search Global Tours",
+  es: "Buscar tours globales",
+  fr: "Rechercher des tours mondiaux",
+  pl: "Szukaj tourów globalnych",
+  ru: "Искать туры по всему миру",
+  uk: "Шукати глобальні тури",
+  ua: "Шукати глобальні тури",
+};
+
 function applyMainLocalePatches(translation) {
   for (const [locale, taglines] of Object.entries(HERO_TOUR_TAGLINES)) {
     if (translation[locale]?.hero) {
       translation[locale].hero.tourTaglines = taglines;
+      if (HERO_SEARCH_GLOBAL_TOURS[locale]) {
+        translation[locale].hero.searchGlobalTours =
+          HERO_SEARCH_GLOBAL_TOURS[locale];
+      }
     }
+  }
+  if (translation.uk?.hero && translation.ua?.hero) {
+    translation.ua.hero.searchGlobalTours =
+      HERO_SEARCH_GLOBAL_TOURS.ua ?? HERO_SEARCH_GLOBAL_TOURS.uk;
   }
   if (translation.uk && !translation.ua) {
     translation.ua = JSON.parse(JSON.stringify(translation.uk));

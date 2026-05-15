@@ -28,9 +28,7 @@ import {
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
-import { useOtpuskSearch } from "@/hooks/useOtpuskSearch";
 import { SiteHeader } from "@/components/SiteHeader";
-import { TourTaglinesHeader } from "@/components/TourTaglinesHeader";
 import {
   formatTransferPrice,
   getTransferImage,
@@ -262,12 +260,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           transfers: dataFromHook.transfers,
           dataLoading: dataFromHook.dataLoading,
         };
-
-  useOtpuskSearch({
-    language,
-    searchContainer: "#otpusk-search-container",
-    tourContainer: "#otpusk-tour-container",
-  });
 
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
@@ -1122,33 +1114,17 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             </div>
           </div>
 
-          <TourTaglinesHeader
-            dreamTrip={t.hero.tourTaglines.dreamTrip}
-            tourOfTheDay={t.hero.tourTaglines.tourOfTheDay}
-            chooseTour={t.hero.tourTaglines.chooseTour}
-            variant="hero"
-          />
+          <div className="mt-8 text-center sm:mt-10">
+            <Link
+              href={createLocaleLink("/world-tours")}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+            >
+              <Plane className="h-5 w-5 shrink-0" />
+              {t.hero.searchGlobalTours}
+              <ArrowRight className="h-4 w-4 shrink-0" />
+            </Link>
+          </div>
         </div>
-
-        {/* otpusk Card  */}
-        <div>
-          <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=cyrillic" rel="stylesheet" />
-          <link rel="Stylesheet" href="https://export.otpusk.com/os/onsite/form.css" type="text/css" />
-          <link rel="Stylesheet" href="https://export.otpusk.com/os/onsite/result.css" type="text/css" />
-          <link rel="Stylesheet" href="https://export.otpusk.com/os/onsite/tour.css" type="text/css" />
-        </div>
-        <div className="new_os"></div>
-      </section>
-
-      <section className="bg-gray-50 pt-10 pb-16 sm:pb-20">
-        <div
-          id="otpusk-search-container"
-          className="mx-auto max-w-[1200px] px-3 sm:px-4"
-        />
-        <div
-          id="otpusk-tour-container"
-          className="mx-auto max-w-[1200px] px-3 sm:px-4"
-        />
       </section>
 
       {/* Секция недвижимости */}

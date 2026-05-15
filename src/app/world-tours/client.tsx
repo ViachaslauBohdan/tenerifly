@@ -14,20 +14,13 @@ export default function WorldToursPageClient() {
   const [language, setLanguage] = useState<SiteHeaderLanguage>(
     locale as SiteHeaderLanguage
   );
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
     setLanguage(locale as SiteHeaderLanguage);
   }, [locale]);
 
   const handleLanguageChange = (langCode: SiteHeaderLanguage) => {
     switchLocale(langCode);
   };
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <main className="min-h-screen bg-gray-50">

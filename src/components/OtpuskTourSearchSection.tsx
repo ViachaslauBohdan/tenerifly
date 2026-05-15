@@ -41,11 +41,10 @@ export function OtpuskTourSearchSection({
         href="https://export.otpusk.com/os/onsite/tour.css"
         type="text/css"
       />
-      <div className="new_os" />
       <section className={className}>
         <div
           id={searchContainerId}
-          className="mx-auto max-w-[1200px] px-3 sm:px-4"
+          className="new_os mx-auto min-h-[120px] max-w-[1200px] px-3 sm:px-4"
         />
         <div
           id={tourContainerId}

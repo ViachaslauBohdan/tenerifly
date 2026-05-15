@@ -181,7 +181,8 @@
         "dreamTrip": "Deine Traumreise beginnt hier",
         "tourOfTheDay": "Tagesausflug: bester Preis",
         "chooseTour": "Wähle deine Tour"
-      }
+      },
+      "searchGlobalTours": "Globale Touren suchen"
     },
     "common": {
       "to": "Bis",
@@ -502,7 +503,8 @@
         "dreamTrip": "Your dream trip starts here",
         "tourOfTheDay": "Tour of the day: best price",
         "chooseTour": "Choose your tour"
-      }
+      },
+      "searchGlobalTours": "Search Global Tours"
     },
     "common": {
       "to": "To",
@@ -823,7 +825,8 @@
         "dreamTrip": "Tu viaje soñado comienza aquí",
         "tourOfTheDay": "Tour del día: mejor precio",
         "chooseTour": "Elige tu tour"
-      }
+      },
+      "searchGlobalTours": "Buscar tours globales"
     },
     "common": {
       "to": "Hasta",
@@ -1144,7 +1147,8 @@
         "dreamTrip": "Votre voyage de rêve commence ici",
         "tourOfTheDay": "Circuit du jour : meilleur prix",
         "chooseTour": "Choisir votre circuit"
-      }
+      },
+      "searchGlobalTours": "Rechercher des tours mondiaux"
     },
     "common": {
       "to": "À",
@@ -1465,7 +1469,8 @@
         "dreamTrip": "Twoja wymarzona podróż zaczyna się tutaj",
         "tourOfTheDay": "Wycieczka dnia: najlepsza cena",
         "chooseTour": "Wybierz swoją wycieczkę"
-      }
+      },
+      "searchGlobalTours": "Szukaj tourów globalnych"
     },
     "common": {
       "to": "Do",
@@ -1786,7 +1791,8 @@
         "dreamTrip": "Твоё путешествие мечты начинается здесь",
         "tourOfTheDay": "Тур дня: лучшая цена",
         "chooseTour": "Выбрать свой тур"
-      }
+      },
+      "searchGlobalTours": "Искать туры по всему миру"
     },
     "common": {
       "to": "До",
@@ -2107,7 +2113,8 @@
         "dreamTrip": "Твоя подорож мрії починається тут",
         "tourOfTheDay": "Тур дня: найкраща ціна",
         "chooseTour": "Обрати свій тур"
-      }
+      },
+      "searchGlobalTours": "Шукати глобальні тури"
     },
     "common": {
       "to": "До",
@@ -2428,7 +2435,8 @@
         "dreamTrip": "Твоя подорож мрії починається тут",
         "tourOfTheDay": "Тур дня: найкраща ціна",
         "chooseTour": "Обрати свій тур"
-      }
+      },
+      "searchGlobalTours": "Шукати глобальні тури"
     },
     "common": {
       "to": "До",
