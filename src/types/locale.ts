@@ -8,12 +8,12 @@ export interface LocaleConfig {
 
 export const LOCALES: LocaleConfig[] = [
   { code: "en", name: "English", flag: "🇬🇧" },
-  { code: "pl", name: "Polski", flag: "🇵🇱" },
-  { code: "fr", name: "Français", flag: "🇫🇷" },
   { code: "ru", name: "Русский", flag: "🇷🇺" },
   { code: "ua", name: "Українська", flag: "🇺🇦" },
+  { code: "pl", name: "Polski", flag: "🇵🇱" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
 ];
 
 /** Legacy URL segment → current locale (permanent redirect in middleware). */

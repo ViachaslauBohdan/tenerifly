@@ -1,5 +1,7 @@
 import { getHomePageData } from "@/services/ssgDataService";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import { HomePageFallback } from "@/components/HomePageFallback";
 import { LocalePageClient } from "./LocalePageClient";
 import {
   DEFAULT_OG_IMAGE,
@@ -48,5 +50,9 @@ export default async function RootPage() {
   // По умолчанию английский, но LocalePageClient будет переключать языки динамически
   const homeData = await getHomePageData();
 
-  return <LocalePageClient initialData={homeData} />;
+  return (
+    <Suspense fallback={<HomePageFallback />}>
+      <LocalePageClient initialData={homeData} />
+    </Suspense>
+  );
 }

@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect, useMemo, useCallback } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useState, useEffect, useMemo, useCallback, type ReactNode } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Script from "next/script";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -28,6 +28,7 @@ import {
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
+import worldToursJson from "../i18n/worldTours.json";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
   formatTransferPrice,
@@ -53,6 +54,11 @@ import {
   pickLocaleBundle,
   type Locale,
 } from "@/types/locale";
+import {
+  type HeroTab,
+  parseHeroTab,
+  isHeroTab,
+} from "@/lib/heroTab";
 // Переводы для всех языков
 const translations = translationsJson;
 
@@ -60,11 +66,11 @@ const translations = translationsJson;
 const languages = [
   { code: "en", name: "English", flag: "🇬🇧" },
   { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "pl", name: "Polski", flag: "🇵🇱" },
-  { code: "fr", name: "Français", flag: "🇫🇷" },
   { code: "ua", name: "Українська", flag: "🇺🇦" },
+  { code: "pl", name: "Polski", flag: "🇵🇱" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
 ];
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
@@ -79,8 +85,29 @@ interface LocalePageClientProps {
   };
 }
 
+function CompactSearchField({
+  label,
+  children,
+  className = "",
+}: {
+  label: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`flex min-w-0 flex-1 flex-col justify-center px-2.5 py-1.5 sm:px-3 sm:py-2 ${className}`}>
+      <span className="mb-0.5 truncate text-[10px] font-medium leading-none text-gray-500 sm:text-[11px]">
+        {label}
+      </span>
+      {children}
+    </div>
+  );
+}
+
 export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { locale, switchLocale, createLocaleLink } = useTranslation();
 
   // State для языка - инициализируем из URL или по умолчанию английский
@@ -90,21 +117,21 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   // State for component
   const [mounted, setMounted] = useState(false);
 
-  // State for search filters
-  const [activeTab, setActiveTab] = useState("accommodation");
+  // State for search filters (synced with ?tab= query for shareable links)
+  const [activeTab, setActiveTab] = useState<HeroTab>(() =>
+    parseHeroTab(searchParams.get("tab"))
+  );
   const [dates, setDates] = useState(["", ""]);
   const [guests, setGuests] = useState(2);
   const [carType, setCarType] = useState("");
 
   // Enhanced filter states to sync with individual pages
   const [accommodationFilters, setAccommodationFilters] = useState({
-    propertyType: "",
     rooms: "",
     priceFrom: "",
     priceTo: "",
     city: "",
     district: "Tenerife",
-    type: "rent", // rent or sale
   });
 
   const [carFilters, setCarFilters] = useState({
@@ -117,8 +144,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     fuel: "",
     transmission: "",
     location: "",
-    type: "rent", // rent or sale
   });
+
+  const [tourLanguage, setTourLanguage] = useState("en");
 
   // State для модального окна бронирования
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -137,17 +165,18 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
 
   // Dynamic filter options extracted from useDataLoader data (same pattern as individual pages)
-  const [propertyTypes, setPropertyTypes] = useState<string[]>([]);
   const [carTypes, setCarTypes] = useState<string[]>([]);
   const [carBrands, setCarBrands] = useState<string[]>([]);
   const [carTransmissions, setCarTransmissions] = useState<string[]>([]);
 
-  // Advanced search visibility states
-  const [showAdvancedAccommodation, setShowAdvancedAccommodation] =
-    useState(false);
-  const [showAdvancedCars, setShowAdvancedCars] = useState(false);
-
   const t = pickLocaleBundle(translations, language);
+  const worldToursCopy = pickLocaleBundle(
+    worldToursJson as Record<
+      string,
+      { nav: string; hint: string; title: string; subtitle: string }
+    >,
+    language
+  );
   const transferCopy = getTransferLocaleText(language);
   const datePlaceholder =
     language === "ru"
@@ -164,49 +193,74 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 ? "Elegir fecha"
                 : "Choose date";
   const fieldLabelClass =
-    "block text-[13px] font-semibold text-gray-700 mb-1.5";
+    "block text-[11px] font-medium text-gray-500 mb-1";
   const fieldControlClass =
-    "h-12 w-full rounded-xl border border-gray-300 bg-white px-3 text-base text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-gray-400";
+    "h-9 w-full rounded-lg border border-gray-200 bg-white px-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-100 placeholder:text-gray-400";
   const iconFieldControlClass =
-    "h-12 w-full rounded-xl border border-gray-300 bg-white pl-10 pr-3 text-base text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-gray-400";
-  const advancedToggleClass =
-    "inline-flex h-9 items-center gap-2 rounded-xl border border-blue-100 bg-blue-50/70 px-3.5 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100";
+    "h-9 w-full rounded-lg border border-gray-200 bg-white pl-8 pr-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-100 placeholder:text-gray-400";
+  const compactControlClass =
+    "w-full min-w-0 border-0 bg-transparent p-0 text-sm font-medium text-gray-900 shadow-none outline-none focus:ring-0 placeholder:text-gray-400";
+  const searchBarClass =
+    "flex min-h-[44px] flex-1 flex-col divide-y divide-gray-200 sm:flex-row sm:divide-x sm:divide-y-0";
+  const heroSearchWrapClass =
+    "flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.24)] sm:flex-row";
+  const searchSubmitClass =
+    "flex h-11 shrink-0 items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 sm:h-auto sm:border-t-0 sm:border-l sm:px-5 md:min-w-[7.5rem]";
+  const heroTabGroupLabelClass =
+    "text-[10px] font-semibold uppercase tracking-wider text-white/70 sm:text-xs";
+  const heroTabNavClass =
+    "inline-flex max-w-full flex-wrap justify-center gap-1 rounded-lg bg-sky-950/55 p-1 ring-1 ring-white/15 backdrop-blur-sm";
+  const heroTabButtonClass = (isActive: boolean) =>
+    `inline-flex shrink-0 flex-row items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[11px] font-semibold leading-tight transition-all sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm ${
+      isActive
+        ? "bg-white text-slate-900 shadow-sm"
+        : "border border-white/35 text-white hover:bg-white/10"
+    }`;
+  const heroTabIconClass = (isActive: boolean) =>
+    `h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4 ${isActive ? "text-slate-800" : "text-white"}`;
   const getMobileTabLabel = (key: string, fallback: string) => {
     const labels: Record<LanguageCode, Record<string, string>> = {
       en: {
-        accommodation: "Stay",
+        accommodation: "Stays",
         cars: "Cars",
-        blog: "Blog",
+        tours: "Tours",
+        "world-tours": "World",
       },
       ru: {
         accommodation: "Жилье",
         cars: "Авто",
-        blog: "Блог",
+        tours: "Туры",
+        "world-tours": "Мир",
       },
       pl: {
         accommodation: "Nocleg",
         cars: "Auta",
-        blog: "Blog",
+        tours: "Wycieczki",
+        "world-tours": "Świat",
       },
       fr: {
         accommodation: "Séjour",
         cars: "Autos",
-        blog: "Blog",
+        tours: "Excursions",
+        "world-tours": "Monde",
       },
       ua: {
         accommodation: "Житло",
         cars: "Авто",
-        blog: "Блог",
+        tours: "Екскурсії",
+        "world-tours": "Світ",
       },
       de: {
         accommodation: "Unterkunft",
         cars: "Autos",
-        blog: "Blog",
+        tours: "Touren",
+        "world-tours": "Welt",
       },
       es: {
         accommodation: "Estancia",
         cars: "Coches",
-        blog: "Blog",
+        tours: "Excursiones",
+        "world-tours": "Mundo",
       },
     };
 
@@ -264,18 +318,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   // Extract filter options from useDataLoader data (same pattern as individual pages)
   useEffect(() => {
     if (mounted && accommodation && cars) {
-      // Extract property types from accommodation data
-      const propertyTypesArray = [
-        ...new Set(
-          accommodation
-            .map((property: { category?: string }) => property.category)
-            .filter(
-              (value): value is string =>
-                Boolean(value) && typeof value === "string"
-            )
-        ),
-      ].sort();
-
       // Extract car filter options from cars data
       const carTypesArray = [
         ...new Set(
@@ -317,7 +359,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       ].sort();
 
       // Set all filter options (simple string arrays like individual pages)
-      setPropertyTypes(propertyTypesArray);
       setCarTypes(carTypesArray);
       setCarBrands(carBrandsArray);
       setCarTransmissions(carTransmissionsArray);
@@ -347,6 +388,24 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     setLanguage(locale as LanguageCode);
   }, [locale]);
 
+  useEffect(() => {
+    if (!mounted) return;
+    setActiveTab(parseHeroTab(searchParams.get("tab")));
+  }, [mounted, searchParams]);
+
+  const selectHeroTab = useCallback(
+    (tab: HeroTab) => {
+      setActiveTab(tab);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("tab", tab);
+      const query = params.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname, {
+        scroll: false,
+      });
+    },
+    [pathname, router, searchParams]
+  );
+
   // Переключение языка через URL
   const handleLanguageChange = (langCode: LanguageCode) => {
     switchLocale(langCode);
@@ -362,11 +421,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     },
     []
   );
-
-  // Показываем загрузку до инициализации
-  if (!mounted) {
-    return null;
-  }
 
   const handleSearch = () => {
     // Build query parameters based on active tab and filters
@@ -391,14 +445,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         if (carFilters.transmission)
           params.append("transmission", carFilters.transmission);
         if (carFilters.location) params.append("location", carFilters.location);
-        if (carFilters.type) params.append("type", carFilters.type);
         router.push(`${createLocaleLink("/cars")}?${params.toString()}`);
         break;
 
       case "accommodation":
         // Add accommodation-specific filters
-        if (accommodationFilters.propertyType)
-          params.append("propertyType", accommodationFilters.propertyType);
         if (accommodationFilters.rooms)
           params.append("rooms", accommodationFilters.rooms);
         if (accommodationFilters.priceFrom)
@@ -409,14 +460,19 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           params.append("city", accommodationFilters.city);
         if (accommodationFilters.district)
           params.append("district", accommodationFilters.district);
-        if (accommodationFilters.type)
-          params.append("type", accommodationFilters.type);
         if (guests) params.append("guests", guests.toString());
         router.push(`${createLocaleLink("/apartments")}?${params.toString()}`);
         break;
 
-      case "blog":
-        router.push(createLocaleLink("/blog"));
+      case "tours":
+        if (dates[0]) params.append("date", dates[0]);
+        if (guests) params.append("people", guests.toString());
+        params.append("language", tourLanguage);
+        router.push(`${createLocaleLink("/tours")}?${params.toString()}`);
+        break;
+
+      case "world-tours":
+        router.push(createLocaleLink("/world-tours"));
         break;
     }
   };
@@ -517,108 +573,104 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         <div
             className="relative z-10 flex w-full flex-1 flex-col items-center justify-center px-3 pt-[6.75rem] min-[400px]:px-4 md:pt-20 pb-[max(2rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
           {/* Title - moved higher */}
-          <div className="text-center mb-5 sm:mb-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-lg pt-2 sm:pt-0">
+          <div className="text-center mb-4 sm:mb-6">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-3 drop-shadow-lg pt-2 sm:pt-0">
               {t.hero.title}
             </h1>
-            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto drop-shadow-md">
+            <p className="text-base md:text-lg text-white/90 max-w-2xl mx-auto drop-shadow-md">
               {t.hero.subtitle}
             </p>
           </div>
 
-          {/* Search Card - centered */}
-          <div
-              className="w-full max-w-5xl xl:max-w-6xl bg-white/95 backdrop-blur-xl rounded-[1.5rem] sm:rounded-[2rem] border border-white/60 shadow-[0_20px_60px_rgba(15,23,42,0.24)] overflow-hidden">
-            {/* Tabs - изменен порядок, accommodation теперь первый */}
-            <div className="border-b border-gray-200/80 bg-gray-50/80 px-2 pt-2 sm:px-3 sm:pt-3">
-              <nav className="grid grid-cols-3 gap-1.5 sm:gap-2">
-                {[
-                  {
-                    key: "accommodation",
-                    icon: Home,
-                    label: t.hero.tabs.accommodation,
-                  },
-                  {key: "cars", icon: Car, label: t.hero.tabs.cars},
-                  {key: "blog", icon: BookOpen, label: t.hero.tabs.blog},
-                ].map(({key, icon: Icon, label}) => (
-                    <button
-                        key={key}
-                        onClick={() => setActiveTab(key)}
-                        className={`min-w-0 h-14 sm:h-16 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 rounded-xl px-1.5 sm:px-3 text-[10px] min-[380px]:text-[11px] sm:text-sm md:text-base font-semibold transition-all duration-200 ${
-                            activeTab === key
-                                ? "text-blue-700 bg-white border border-gray-200 shadow-sm"
-                                : "text-gray-600 hover:text-gray-800 hover:bg-white/70 border border-transparent"
-                        }`}
-                    >
-                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0"/>
-                      <span className="block max-w-full truncate leading-tight sm:hidden">
-                      {getMobileTabLabel(key, label)}
+          <div className="flex w-full max-w-5xl flex-col gap-2 xl:max-w-6xl sm:gap-2.5">
+            <div className="mx-auto flex max-w-full flex-wrap items-end justify-center gap-2 sm:gap-3">
+              <div className="flex flex-col items-center gap-1">
+                <span className={heroTabGroupLabelClass}>
+                  {t.hero.tabGroups.tenerife}
+                </span>
+                <nav
+                    className={heroTabNavClass}
+                    role="tablist"
+                    aria-label={t.hero.tabGroups.tenerife}
+                >
+                  {[
+                    {
+                      key: "accommodation",
+                      icon: Home,
+                      label: t.hero.tabs.accommodation,
+                    },
+                    {key: "cars", icon: Car, label: t.hero.tabs.cars},
+                    {key: "tours", icon: MapPin, label: t.hero.tabs.excursions},
+                  ].map(({key, icon: Icon, label}) => {
+                    const isActive = activeTab === key;
+                    return (
+                      <button
+                          key={key}
+                          type="button"
+                          role="tab"
+                          aria-selected={isActive}
+                          onClick={() => {
+                            if (isHeroTab(key)) selectHeroTab(key);
+                          }}
+                          className={heroTabButtonClass(isActive)}
+                      >
+                        <Icon className={heroTabIconClass(isActive)} />
+                        <span className="max-w-[5.5rem] truncate sm:max-w-none">
+                          <span className="md:hidden">
+                            {getMobileTabLabel(key, label)}
+                          </span>
+                          <span className="hidden md:inline">{label}</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+              <div
+                  className="mb-1.5 hidden h-8 w-px shrink-0 bg-white/30 sm:block"
+                  aria-hidden="true"
+              />
+              <div className="flex flex-col items-center gap-1">
+                <span className={heroTabGroupLabelClass}>
+                  {t.hero.tabGroups.worldwide}
+                </span>
+                <nav
+                    className={heroTabNavClass}
+                    role="tablist"
+                    aria-label={t.hero.tabGroups.worldwide}
+                >
+                  <button
+                      type="button"
+                      role="tab"
+                      aria-selected={activeTab === "world-tours"}
+                      onClick={() => selectHeroTab("world-tours")}
+                      className={heroTabButtonClass(activeTab === "world-tours")}
+                  >
+                    <Plane
+                        className={heroTabIconClass(activeTab === "world-tours")}
+                    />
+                    <span className="max-w-[5.5rem] truncate sm:max-w-none">
+                      <span className="md:hidden">
+                        {getMobileTabLabel("world-tours", worldToursCopy.nav)}
+                      </span>
+                      <span className="hidden md:inline">{worldToursCopy.nav}</span>
                     </span>
-                      <span className="hidden max-w-full truncate leading-tight sm:block">
-                      {label}
-                    </span>
-                    </button>
-                ))}
-              </nav>
+                  </button>
+                </nav>
+              </div>
             </div>
 
-            {/* Form Content */}
-            <div className="bg-white px-4 py-4 sm:p-6 sm:pb-7 lg:p-8 lg:pb-9">
+            <div className="w-full">
               {/* Accommodation Tab */}
               {activeTab === "accommodation" && (
-                  <div className="space-y-4 lg:space-y-5">
-                    {/* First row - Basic filters */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.accommodation.type}
-                        </label>
-                        <select
-                            className={`${fieldControlClass} ${
-                                accommodationFilters.propertyType
-                                    ? "text-gray-900"
-                                    : "text-gray-500"
-                            }`}
-                            value={accommodationFilters.propertyType}
-                            onChange={(e) =>
-                                setAccommodationFilters({
-                                  ...accommodationFilters,
-                                  propertyType: e.target.value,
-                                })
-                            }
-                        >
-                          <option value="">
-                            {language === "en"
-                                ? "Select type"
-                                : language === "ru"
-                                    ? "Выберите тип"
-                                    : language === "pl"
-                                        ? "Wybierz typ"
-                                        : language === "fr"
-                                            ? "Sélectionner le type"
-                                            : language === "de"
-                                                ? "Typ auswählen"
-                                                : language === "es"
-                                                    ? "Seleccionar tipo"
-                                                    : "Оберіть тип"}
-                          </option>
-                          {t.hero.accommodation.types.map(
-                              (type: { value: string; label: string }) => (
-                                  <option key={type.value} value={type.value}>
-                                    {type.label}
-                                  </option>
-                              )
-                          )}
-                        </select>
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.accommodation.checkin}
-                        </label>
+                  <div>
+                    <div className={heroSearchWrapClass}>
+                      <div className={searchBarClass}>
+                        <CompactSearchField label={t.hero.accommodation.checkin}>
                         <input
                             type={dates[0] ? "date" : "text"}
                             placeholder={datePlaceholder}
-                            className={fieldControlClass}
+                            className={compactControlClass}
                             value={dates[0]}
                             onFocus={(e) => {
                               e.currentTarget.type = "date";
@@ -630,15 +682,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             }}
                             onChange={(e) => setDates([e.target.value, dates[1]])}
                         />
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.accommodation.checkout}
-                        </label>
+                        </CompactSearchField>
+                        <CompactSearchField label={t.hero.accommodation.checkout}>
                         <input
                             type={dates[1] ? "date" : "text"}
                             placeholder={datePlaceholder}
-                            className={fieldControlClass}
+                            className={compactControlClass}
                             value={dates[1]}
                             onFocus={(e) => {
                               e.currentTarget.type = "date";
@@ -650,166 +699,41 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             }}
                             onChange={(e) => setDates([dates[0], e.target.value])}
                         />
+                        </CompactSearchField>
+                        <CompactSearchField label={t.hero.accommodation.guests}>
+                          <div className="relative flex items-center">
+                            <Users className="absolute left-0 h-3.5 w-3.5 text-gray-400"/>
+                            <input
+                                type="number"
+                                min="1"
+                                max="10"
+                                className={`${compactControlClass} pl-5`}
+                                value={guests}
+                                onChange={(e) => setGuests(Number(e.target.value))}
+                            />
+                          </div>
+                        </CompactSearchField>
                       </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.accommodation.guests}
-                        </label>
-                        <div className="relative">
-                          <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"/>
-                          <input
-                              type="number"
-                              min="1"
-                              max="10"
-                              className={iconFieldControlClass}
-                              value={guests}
-                              onChange={(e) => setGuests(Number(e.target.value))}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Advanced search toggle button */}
-                    <div className="flex justify-center">
                       <button
                           type="button"
-                          onClick={() =>
-                              setShowAdvancedAccommodation(!showAdvancedAccommodation)
-                          }
-                          className={advancedToggleClass}
+                          onClick={handleSearch}
+                          className={searchSubmitClass}
                       >
-                        {showAdvancedAccommodation ? (
-                            <>
-                              <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                              >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M5 15l7-7 7 7"
-                                />
-                              </svg>
-                              {t.common.hideSearch}
-                            </>
-                        ) : (
-                            <>
-                              <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                              >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 9l-7 7-7-7"
-                                />
-                              </svg>
-                              {t.common.showSearch}
-                            </>
-                        )}
+                        <Search className="h-4 w-4 shrink-0"/>
+                        <span>{t.hero.search}</span>
                       </button>
                     </div>
 
-                    {/* Second row - Additional filters (expandable) */}
-                    {showAdvancedAccommodation && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-                          <div>
-                            <label className={fieldLabelClass}>
-                              {t.hero.accommodation.rooms}
-                            </label>
-                            <select
-                                className={fieldControlClass}
-                                value={accommodationFilters.rooms}
-                                onChange={(e) =>
-                                    setAccommodationFilters({
-                                      ...accommodationFilters,
-                                      rooms: e.target.value,
-                                    })
-                                }
-                            >
-                              {t.hero.accommodation.roomsList?.map(
-                                  (room: { value: string; label: string }) => (
-                                      <option key={room.value} value={room.value}>
-                                        {room.label}
-                                      </option>
-                                  )
-                              )}
-                            </select>
-                          </div>
-                          <div>
-                            <label className={fieldLabelClass}>
-                              {t.common.priceFrom}
-                            </label>
-                            <input
-                                type="number"
-                                placeholder="€"
-                                className={fieldControlClass}
-                                value={accommodationFilters.priceFrom}
-                                onChange={(e) =>
-                                    setAccommodationFilters({
-                                      ...accommodationFilters,
-                                      priceFrom: e.target.value,
-                                    })
-                                }
-                            />
-                          </div>
-                          <div>
-                            <label className={fieldLabelClass}>
-                              {t.common.priceTo}
-                            </label>
-                            <input
-                                type="number"
-                                placeholder="€"
-                                className={fieldControlClass}
-                                value={accommodationFilters.priceTo}
-                                onChange={(e) =>
-                                    setAccommodationFilters({
-                                      ...accommodationFilters,
-                                      priceTo: e.target.value,
-                                    })
-                                }
-                            />
-                          </div>
-                          <div>
-                            <label className={fieldLabelClass}>
-                              {t.common.type}
-                            </label>
-                            <select
-                                className={fieldControlClass}
-                                value={accommodationFilters.type}
-                                onChange={(e) =>
-                                    setAccommodationFilters({
-                                      ...accommodationFilters,
-                                      type: e.target.value,
-                                    })
-                                }
-                            >
-                              <option value="rent">{t.common.typeRent}</option>
-                              <option value="sale">{t.common.typeSale}</option>
-                            </select>
-                          </div>
-                        </div>
-                    )}
                   </div>
               )}
 
-              {/* Cars Tab */}
               {activeTab === "cars" && (
-                  <div className="space-y-4 lg:space-y-5">
-                    {/* First row - Basic filters */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.cars.bodyType}
-                        </label>
+                  <div>
+                    <div className={heroSearchWrapClass}>
+                      <div className={searchBarClass}>
+                        <CompactSearchField label={t.hero.cars.bodyType}>
                         <select
-                            className={fieldControlClass}
+                            className={compactControlClass}
                             value={carType}
                             onChange={(e) => setCarType(e.target.value)}
                         >
@@ -834,15 +758,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                               </option>
                           ))}
                         </select>
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.cars.pickup}
-                        </label>
+                        </CompactSearchField>
+                        <CompactSearchField label={t.hero.cars.pickup}>
                         <input
                             type={dates[0] ? "date" : "text"}
                             placeholder={datePlaceholder}
-                            className={fieldControlClass}
+                            className={compactControlClass}
                             value={dates[0]}
                             onFocus={(e) => {
                               e.currentTarget.type = "date";
@@ -854,15 +775,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             }}
                             onChange={(e) => setDates([e.target.value, dates[1]])}
                         />
-                      </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.hero.cars.dropoff}
-                        </label>
+                        </CompactSearchField>
+                        <CompactSearchField label={t.hero.cars.dropoff}>
                         <input
                             type={dates[1] ? "date" : "text"}
                             placeholder={datePlaceholder}
-                            className={fieldControlClass}
+                            className={compactControlClass}
                             value={dates[1]}
                             onFocus={(e) => {
                               e.currentTarget.type = "date";
@@ -874,256 +792,112 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                             }}
                             onChange={(e) => setDates([dates[0], e.target.value])}
                         />
+                        </CompactSearchField>
                       </div>
-                      <div>
-                        <label className={fieldLabelClass}>
-                          {t.common.type}
-                        </label>
-                        <select
-                            className={fieldControlClass}
-                            value={carFilters.type}
-                            onChange={(e) =>
-                                setCarFilters({...carFilters, type: e.target.value})
-                            }
-                        >
-                          <option value="rent">{t.common.typeRent}</option>
-                          <option value="sale">{t.common.typeSale}</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Advanced search toggle button */}
-                    <div className="flex justify-center">
                       <button
                           type="button"
-                          onClick={() => setShowAdvancedCars(!showAdvancedCars)}
-                          className={advancedToggleClass}
+                          onClick={handleSearch}
+                          className={searchSubmitClass}
                       >
-                        {showAdvancedCars ? (
-                            <>
-                              <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                              >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M5 15l7-7 7 7"
-                                />
-                              </svg>
-                              {t.common.hideSearch}
-                            </>
-                        ) : (
-                            <>
-                              <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                              >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 9l-7 7-7-7"
-                                />
-                              </svg>
-                              {t.common.showSearch}
-                            </>
-                        )}
+                        <Search className="h-4 w-4 shrink-0"/>
+                        <span>{t.hero.search}</span>
                       </button>
                     </div>
 
-                    {/* Second row - Additional filters (expandable) */}
-                    {showAdvancedCars && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-                          <div>
-                            <label className={fieldLabelClass}>
-                              {t.hero.cars.brand}
-                            </label>
-                            <select
-                                className={`${fieldControlClass} ${
-                                    carFilters.brand ? "text-gray-900" : "text-gray-500"
-                                }`}
-                                value={carFilters.brand}
-                                onChange={(e) =>
-                                    setCarFilters({
-                                      ...carFilters,
-                                      brand: e.target.value,
-                                    })
-                                }
-                            >
-                              <option value="">{t.common.all}</option>
-                              {carBrands.map((brand) => (
-                                  <option key={brand} value={brand}>
-                                    {brand.charAt(0).toUpperCase() + brand.slice(1)}
+                  </div>
+              )}
+
+              {activeTab === "tours" && (
+                  <div>
+                    <div className={heroSearchWrapClass}>
+                      <div className={searchBarClass}>
+                        <CompactSearchField label={t.hero.excursions.date}>
+                        <input
+                            type={dates[0] ? "date" : "text"}
+                            placeholder={datePlaceholder}
+                            className={compactControlClass}
+                            value={dates[0]}
+                            onFocus={(e) => {
+                              e.currentTarget.type = "date";
+                            }}
+                            onBlur={(e) => {
+                              if (!e.currentTarget.value) {
+                                e.currentTarget.type = "text";
+                              }
+                            }}
+                            onChange={(e) => setDates([e.target.value, dates[1]])}
+                        />
+                        </CompactSearchField>
+                        <CompactSearchField label={t.hero.excursions.people}>
+                          <div className="relative flex items-center">
+                            <Users className="absolute left-0 h-3.5 w-3.5 text-gray-400"/>
+                            <input
+                                type="number"
+                                min="1"
+                                max="20"
+                                className={`${compactControlClass} pl-5`}
+                                value={guests}
+                                onChange={(e) => setGuests(Number(e.target.value))}
+                            />
+                          </div>
+                        </CompactSearchField>
+                        <CompactSearchField label={t.hero.excursions.language}>
+                        <select
+                            className={compactControlClass}
+                            value={tourLanguage}
+                            onChange={(e) => setTourLanguage(e.target.value)}
+                        >
+                          {t.hero.excursions.languageOptions.map(
+                              (opt: { value: string; label: string }) => (
+                                  <option key={opt.value} value={opt.value}>
+                                    {opt.label}
                                   </option>
-                              ))}
-                              {/* {carMarks.map((mark) => (
-                            <option key={mark.value} value={mark.value}>
-                              {mark.label}
-                            </option>
-                          ))} */}
-                            </select>
-                          </div>
-                          <div>
-                            <label className={fieldLabelClass}>
-                              {t.common.priceFrom}
-                            </label>
-                            <input
-                                type="number"
-                                placeholder="€"
-                                className={fieldControlClass}
-                                value={carFilters.priceFrom}
-                                onChange={(e) =>
-                                    setCarFilters({
-                                      ...carFilters,
-                                      priceFrom: e.target.value,
-                                    })
-                                }
-                            />
-                          </div>
-                          <div>
-                            <label className={fieldLabelClass}>
-                              {t.common.priceTo}
-                            </label>
-                            <input
-                                type="number"
-                                placeholder="€"
-                                className={fieldControlClass}
-                                value={carFilters.priceTo}
-                                onChange={(e) =>
-                                    setCarFilters({
-                                      ...carFilters,
-                                      priceTo: e.target.value,
-                                    })
-                                }
-                            />
-                          </div>
-                          <div>
-                            <label className={fieldLabelClass}>
-                              {t.hero.cars.transmission}
-                            </label>
-                            <select
-                                className={`${fieldControlClass} ${
-                                    carFilters.transmission
-                                        ? "text-gray-900"
-                                        : "text-gray-500"
-                                }`}
-                                value={carFilters.transmission}
-                                onChange={(e) =>
-                                    setCarFilters({
-                                      ...carFilters,
-                                      transmission: e.target.value,
-                                    })
-                                }
-                            >
-                              <option value="">{t.common.all}</option>
-                              {t.hero.cars.transmissionOptions.map(
-                                  (transmission) => (
-                                      <option
-                                          key={transmission.value}
-                                          value={transmission.value}
-                                      >
-                                        {transmission.label}
-                                      </option>
-                                  )
-                              )}
-                            </select>
-                          </div>
+                              )
+                          )}
+                        </select>
+                        </CompactSearchField>
+                      </div>
+                      <button
+                          type="button"
+                          onClick={handleSearch}
+                          className={searchSubmitClass}
+                      >
+                        <Search className="h-4 w-4 shrink-0"/>
+                        <span>{t.hero.search}</span>
+                      </button>
+                    </div>
+                  </div>
+              )}
+
+              {activeTab === "world-tours" && (
+                  <div>
+                    <div className={heroSearchWrapClass}>
+                      <div className="flex min-h-[44px] flex-1 items-center gap-2.5 px-3 py-2.5 sm:px-4">
+                        <Plane className="h-7 w-7 shrink-0 text-blue-600 sm:h-8 sm:w-8"/>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-gray-900 sm:text-base">
+                            {worldToursCopy.title}
+                          </p>
+                          <p className="line-clamp-2 text-xs text-gray-600 sm:text-sm">
+                            {worldToursCopy.hint}
+                          </p>
                         </div>
-                    )}
+                      </div>
+                      <button
+                          type="button"
+                          onClick={handleSearch}
+                          className={searchSubmitClass}
+                      >
+                        <Search className="h-4 w-4 shrink-0"/>
+                        <span>{t.hero.search}</span>
+                      </button>
+                    </div>
                   </div>
               )}
 
-              {/* Blog Tab */}
-              {activeTab === "blog" && (
-                  <div className="text-center py-12">
-                    <BookOpen className="w-16 h-16 mx-auto text-blue-500 mb-4"/>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      {language === "en"
-                          ? "Discover Our Blog"
-                          : language === "ru"
-                              ? "Откройте наш блог"
-                              : language === "pl"
-                                  ? "Odkryj nasz blog"
-                                  : language === "fr"
-                                      ? "Découvrez notre blog"
-                                      : language === "ua"
-                                          ? "Відкрийте наш блог"
-                                          : language === "de"
-                                              ? "Unser Blog entdecken"
-                                              : language === "es"
-                                                  ? "Descubre nuestro blog"
-                                                  : "Відкрийте наш блог"}
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      {language === "en"
-                          ? "Read about the best places, tips and experiences in Tenerife"
-                          : language === "ru"
-                              ? "Читайте о лучших местах, советах и впечатлениях на Тенерифе"
-                              : language === "pl"
-                                  ? "Czytaj o najlepszych miejscach, wskazówkach i doświadczeniach na Teneryfie"
-                                  : language === "fr"
-                                      ? "Lisez sur les meilleurs endroits, conseils et expériences à Tenerife"
-                                      : language === "ua"
-                                          ? "Читайте про найкращі місця, поради та враження на Тенеріфе"
-                                          : language === "de"
-                                              ? "Lesen Sie über die besten Orte, Tipps und Erfahrungen auf Teneriffa"
-                                              : language === "es"
-                                                  ? "Lee sobre los mejores lugares, consejos y experiencias en Tenerife"
-                                                  : "Читайте про найкращі місця, поради та враження на Тенеріфе"}
-                    </p>
-                    <button
-                        onClick={() => router.push(createLocaleLink("/blog"))}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      <BookOpen className="w-4 h-4"/>
-                      {language === "en"
-                          ? "Visit Blog"
-                          : language === "ru"
-                              ? "Перейти в блог"
-                              : language === "pl"
-                                  ? "Odwiedź blog"
-                                  : language === "fr"
-                                      ? "Visiter le blog"
-                                      : language === "ua"
-                                          ? "Відвідати блог"
-                                          : language === "de"
-                                              ? "Blog besuchen"
-                                              : language === "es"
-                                                  ? "Visitar el blog"
-                                                  : "Відвідати блог"}
-                    </button>
-                  </div>
-              )}
-
-              {/* Search Button */}
-              {activeTab !== "blog" && (
-                  <button
-                      onClick={handleSearch}
-                      className="mt-4 mx-auto flex h-12 w-full max-w-[280px] items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 text-base font-semibold text-white shadow-md transition-colors hover:bg-blue-700 sm:w-auto sm:min-w-[240px]"
-                  >
-                    <Search className="w-5 h-5"/>
-                    {t.hero.search}
-                  </button>
-              )}
             </div>
           </div>
 
-          <div className="mt-8 text-center sm:mt-10">
-            <Link
-              href={createLocaleLink("/world-tours")}
-              className="group inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-6 py-3 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25 motion-reduce:animate-none animate-hero-cta-pulse"
-            >
-              <Plane className="h-5 w-5 shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:rotate-12" />
-              {t.hero.searchGlobalTours}
-              <ArrowRight className="h-4 w-4 shrink-0 motion-reduce:animate-none animate-hero-cta-arrow" />
-            </Link>
-          </div>
         </div>
       </section>
 

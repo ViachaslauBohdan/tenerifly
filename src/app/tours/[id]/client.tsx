@@ -68,11 +68,11 @@ interface TourData {
 const languages = [
   { code: "en", name: "English", flag: "🇬🇧" },
   { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "pl", name: "Polski", flag: "🇵🇱" },
-  { code: "fr", name: "Français", flag: "🇫🇷" },
   { code: "ua", name: "Українська", flag: "🇺🇦" },
+  { code: "pl", name: "Polski", flag: "🇵🇱" },
   { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "fr", name: "Français", flag: "🇫🇷" },
 ];
 
 type TourLang = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
