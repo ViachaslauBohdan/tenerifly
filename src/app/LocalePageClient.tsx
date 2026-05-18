@@ -55,6 +55,7 @@ import {
   type Locale,
 } from "@/types/locale";
 import {
+  HERO_TAB_GROUPS,
   type HeroTab,
   parseHeroTab,
   isHeroTab,
@@ -170,6 +171,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [carTransmissions, setCarTransmissions] = useState<string[]>([]);
 
   const t = pickLocaleBundle(translations, language);
+  const heroTabGroups =
+    (
+      t.hero as {
+        tabGroups?: { tenerife: string; worldwide: string };
+      }
+    ).tabGroups ?? pickLocaleBundle(HERO_TAB_GROUPS, language);
   const worldToursCopy = pickLocaleBundle(
     worldToursJson as Record<
       string,
@@ -586,12 +593,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             <div className="mx-auto flex max-w-full flex-wrap items-end justify-center gap-2 sm:gap-3">
               <div className="flex flex-col items-center gap-1">
                 <span className={heroTabGroupLabelClass}>
-                  {t.hero.tabGroups.tenerife}
+                  {heroTabGroups.tenerife}
                 </span>
                 <nav
                     className={heroTabNavClass}
                     role="tablist"
-                    aria-label={t.hero.tabGroups.tenerife}
+                    aria-label={heroTabGroups.tenerife}
                 >
                   {[
                     {
@@ -632,12 +639,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               />
               <div className="flex flex-col items-center gap-1">
                 <span className={heroTabGroupLabelClass}>
-                  {t.hero.tabGroups.worldwide}
+                  {heroTabGroups.worldwide}
                 </span>
                 <nav
                     className={heroTabNavClass}
                     role="tablist"
-                    aria-label={t.hero.tabGroups.worldwide}
+                    aria-label={heroTabGroups.worldwide}
                 >
                   <button
                       type="button"
