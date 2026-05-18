@@ -124,6 +124,9 @@ const WORLD_TOUR_HIGHLIGHT_ITEMS = [
   { icon: ShieldPlus, key: "insurance" as const },
 ];
 
+const worldTourIconDividerClass =
+  "mx-0.5 h-4 w-px shrink-0 bg-gray-300 sm:h-5";
+
 function WorldTourHighlightIcons({
   highlights,
   className = "",
@@ -142,10 +145,7 @@ function WorldTourHighlightIcons({
         return (
           <div key={key} className="flex items-center">
             {index > 0 && (
-              <span
-                  className="mx-0.5 h-4 w-px shrink-0 bg-gray-300 sm:h-5"
-                  aria-hidden="true"
-              />
+              <span className={worldTourIconDividerClass} aria-hidden="true" />
             )}
             <span
                 className="flex h-7 w-7 items-center justify-center sm:h-8 sm:w-8"
@@ -156,6 +156,7 @@ function WorldTourHighlightIcons({
           </div>
         );
       })}
+      <span className={worldTourIconDividerClass} aria-hidden="true" />
     </div>
   );
 }
@@ -274,11 +275,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     "flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.24)] sm:flex-row";
   const worldToursHeroWidthClass = "mx-auto w-full min-w-0 lg:w-[70%]";
   const worldToursHeroSearchWrapClass =
-    "flex w-full min-w-0 flex-col flex-wrap overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.24)] sm:flex-row sm:flex-wrap";
+    "flex w-full min-w-0 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.24)] md:flex-row md:flex-wrap";
   const worldToursSearchBarClass =
-    "flex min-h-[44px] min-w-0 flex-1 basis-full flex-col divide-y divide-gray-200 sm:flex-row sm:divide-x sm:divide-y-0";
+    "flex min-h-[44px] min-w-0 w-full flex-col divide-y divide-gray-200 md:min-w-0 md:flex-1 md:flex-row md:divide-x md:divide-y-0";
   const worldToursSubmitClass =
-    "flex h-11 w-full shrink-0 basis-full items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 sm:h-auto sm:w-auto sm:basis-auto sm:border-t-0 sm:border-l sm:px-5 sm:min-w-[7.5rem]";
+    "flex h-11 w-full shrink-0 items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 md:h-auto md:w-auto md:min-w-[7.5rem] md:border-t-0 md:border-l md:px-5";
   const searchSubmitClass =
     "flex h-11 shrink-0 items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 sm:h-auto sm:border-t-0 sm:border-l sm:px-5 md:min-w-[7.5rem]";
   const heroTabGroupLabelClass =
@@ -949,7 +950,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                 role="group"
                                 aria-label={`${worldToursCopy.highlights.room}, ${worldToursCopy.highlights.transfer}, ${worldToursCopy.highlights.insurance}`}
                             />
-                            <p className="min-w-0 flex-1 text-balance text-center text-sm font-medium leading-snug text-gray-900 md:truncate">
+                            <p className="min-w-0 flex-1 text-balance text-center text-sm font-medium leading-snug text-gray-900 sm:line-clamp-2 md:line-clamp-none md:truncate">
                               {worldToursCopy.title}
                             </p>
                             <WorldTourHighlightIcons
