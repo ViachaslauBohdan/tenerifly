@@ -279,7 +279,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const worldToursSearchBarClass =
     "flex min-h-[44px] min-w-0 w-full flex-col divide-y divide-gray-200 md:min-w-0 md:flex-1 md:flex-row md:divide-x md:divide-y-0";
   const worldToursSubmitClass =
-    "flex h-11 w-full shrink-0 items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 md:h-auto md:w-auto md:min-w-[7.5rem] md:border-t-0 md:border-l md:px-5";
+    "flex h-11 w-full shrink-0 items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 md:h-auto md:w-auto md:min-w-[10.5rem] md:border-t-0 md:border-l md:px-7 lg:min-w-[11.5rem]";
   const searchSubmitClass =
     "flex h-11 shrink-0 items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 sm:h-auto sm:border-t-0 sm:border-l sm:px-5 md:min-w-[7.5rem]";
   const heroTabGroupLabelClass =
@@ -950,7 +950,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                 role="group"
                                 aria-label={`${worldToursCopy.highlights.room}, ${worldToursCopy.highlights.transfer}, ${worldToursCopy.highlights.insurance}`}
                             />
-                            <p className="min-w-0 flex-1 text-balance text-center text-sm font-medium leading-snug text-gray-900 sm:line-clamp-2 md:line-clamp-none md:truncate">
+                            <p className="min-w-0 flex-1 text-balance text-center text-sm font-medium leading-snug text-gray-900">
                               {worldToursCopy.title}
                             </p>
                             <WorldTourHighlightIcons
