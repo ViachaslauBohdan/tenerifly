@@ -6,7 +6,12 @@
     "badge": "Weltweit",
     "hint": "Suchen Sie Abflüge aus Ihrer Stadt zu Reisezielen auf der ganzen Welt.",
     "backToHome": "Zurück zur Startseite",
-    "selectLanguage": "Sprache wählen"
+    "selectLanguage": "Sprache wählen",
+    "highlights": {
+      "room": "Standardzimmer",
+      "transfer": "Transfer",
+      "insurance": "Versicherung"
+    }
   },
   "en": {
     "nav": "World tours",
@@ -15,7 +20,12 @@
     "badge": "Worldwide",
     "hint": "Search departures from your city to destinations around the world.",
     "backToHome": "Back to Home",
-    "selectLanguage": "Select language"
+    "selectLanguage": "Select language",
+    "highlights": {
+      "room": "Standard room",
+      "transfer": "Transfer",
+      "insurance": "Insurance"
+    }
   },
   "es": {
     "nav": "Tours del mundo",
@@ -24,7 +34,12 @@
     "badge": "Mundial",
     "hint": "Busca salidas desde tu ciudad a destinos de todo el mundo.",
     "backToHome": "Volver al inicio",
-    "selectLanguage": "Seleccionar idioma"
+    "selectLanguage": "Seleccionar idioma",
+    "highlights": {
+      "room": "Habitación estándar",
+      "transfer": "Traslado",
+      "insurance": "Seguro"
+    }
   },
   "fr": {
     "nav": "Tours monde",
@@ -33,7 +48,12 @@
     "badge": "Monde entier",
     "hint": "Recherchez des départs depuis votre ville vers des destinations du monde entier.",
     "backToHome": "Retour à l'accueil",
-    "selectLanguage": "Choisir la langue"
+    "selectLanguage": "Choisir la langue",
+    "highlights": {
+      "room": "Chambre standard",
+      "transfer": "Transfert",
+      "insurance": "Assurance"
+    }
   },
   "pl": {
     "nav": "Tury świata",
@@ -42,16 +62,26 @@
     "badge": "Na całym świecie",
     "hint": "Szukaj wylotów z Twojego miasta do kierunków na całym świecie.",
     "backToHome": "Powrót do strony głównej",
-    "selectLanguage": "Wybierz język"
+    "selectLanguage": "Wybierz język",
+    "highlights": {
+      "room": "Pokój standard",
+      "transfer": "Transfer",
+      "insurance": "Ubezpieczenie"
+    }
   },
   "ru": {
     "nav": "Туры мира",
-    "title": "Поиск туров по всему миру",
+    "title": "Система Поиска и Бронирования Туров",
     "subtitle": "Пакетные туры в любую страну, курорт или отель — не только Тенерифе",
     "badge": "По всему миру",
-    "hint": "Ищите вылеты из вашего города в направления по всему миру.",
+    "hint": "",
     "backToHome": "Назад на главную",
-    "selectLanguage": "Выберите язык"
+    "selectLanguage": "Выберите язык",
+    "highlights": {
+      "room": "Стандартный номер",
+      "transfer": "Трансфер",
+      "insurance": "Страхование"
+    }
   },
   "uk": {
     "nav": "Тури світу",
@@ -60,7 +90,12 @@
     "badge": "По всьому світу",
     "hint": "Шукайте вильоти з вашого міста до напрямків по всьому світу.",
     "backToHome": "Назад на головну",
-    "selectLanguage": "Оберіть мову"
+    "selectLanguage": "Оберіть мову",
+    "highlights": {
+      "room": "Standard Room",
+      "transfer": "Груповий трансфер",
+      "insurance": "Страхування"
+    }
   },
   "ua": {
     "nav": "Тури світу",
@@ -69,6 +104,11 @@
     "badge": "По всьому світу",
     "hint": "Шукайте вильоти з вашого міста до напрямків по всьому світу.",
     "backToHome": "Назад на головну",
-    "selectLanguage": "Оберіть мову"
+    "selectLanguage": "Оберіть мову",
+    "highlights": {
+      "room": "Standard Room",
+      "transfer": "Груповий трансфер",
+      "insurance": "Страхування"
+    }
   }
 }

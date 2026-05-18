@@ -24,6 +24,9 @@ import {
   ArrowRight,
   ExternalLink,
   Plane,
+  Bed,
+  Bus,
+  ShieldPlus,
 } from "lucide-react";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
@@ -90,17 +93,69 @@ function CompactSearchField({
   label,
   children,
   className = "",
+  hideLabel = false,
 }: {
   label: string;
   children: ReactNode;
   className?: string;
+  hideLabel?: boolean;
 }) {
   return (
-    <div className={`flex min-w-0 flex-1 flex-col justify-center px-2.5 py-1.5 sm:px-3 sm:py-2 ${className}`}>
-      <span className="mb-0.5 truncate text-[10px] font-medium leading-none text-gray-500 sm:text-[11px]">
-        {label}
-      </span>
+    <div
+        className={`flex min-w-0 flex-1 flex-col justify-center px-2.5 sm:px-3 ${
+          hideLabel ? "py-0" : "py-1.5 sm:py-2"
+        } ${className}`}
+    >
+      {hideLabel ? (
+        <span className="sr-only">{label}</span>
+      ) : (
+        <span className="mb-0.5 truncate text-[10px] font-medium leading-none text-gray-500 sm:text-[11px]">
+          {label}
+        </span>
+      )}
       {children}
+    </div>
+  );
+}
+
+const WORLD_TOUR_HIGHLIGHT_ITEMS = [
+  { icon: Bed, key: "room" as const },
+  { icon: Bus, key: "transfer" as const },
+  { icon: ShieldPlus, key: "insurance" as const },
+];
+
+function WorldTourHighlightIcons({
+  highlights,
+  className = "",
+  ...props
+}: {
+  highlights: { room: string; transfer: string; insurance: string };
+  className?: string;
+} & React.ComponentProps<"div">) {
+  return (
+    <div
+        className={`flex shrink-0 items-center gap-1 text-gray-600 sm:gap-1.5 ${className}`}
+        {...props}
+    >
+      {WORLD_TOUR_HIGHLIGHT_ITEMS.map(({ icon: Icon, key }, index) => {
+        const label = highlights[key];
+        return (
+          <div key={key} className="flex items-center">
+            {index > 0 && (
+              <span
+                  className="mx-0.5 h-4 w-px shrink-0 bg-gray-300 sm:h-5"
+                  aria-hidden="true"
+              />
+            )}
+            <span
+                className="flex h-7 w-7 items-center justify-center sm:h-8 sm:w-8"
+                title={label}
+            >
+              <Icon className="h-4 w-4 sm:h-5 sm:w-5" aria-label={label} />
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -180,7 +235,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const worldToursCopy = pickLocaleBundle(
     worldToursJson as Record<
       string,
-      { nav: string; hint: string; title: string; subtitle: string }
+      {
+        nav: string;
+        hint: string;
+        title: string;
+        subtitle: string;
+        highlights: { room: string; transfer: string; insurance: string };
+      }
     >,
     language
   );
@@ -211,6 +272,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     "flex min-h-[44px] flex-1 flex-col divide-y divide-gray-200 sm:flex-row sm:divide-x sm:divide-y-0";
   const heroSearchWrapClass =
     "flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.24)] sm:flex-row";
+  const worldToursHeroWidthClass = "mx-auto w-full md:w-[70%] lg:w-[70%]";
   const searchSubmitClass =
     "flex h-11 shrink-0 items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 sm:h-auto sm:border-t-0 sm:border-l sm:px-5 md:min-w-[7.5rem]";
   const heroTabGroupLabelClass =
@@ -590,7 +652,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           </div>
 
           <div className="flex w-full max-w-5xl flex-col gap-2 xl:max-w-6xl sm:gap-2.5">
-            <div className="mx-auto flex max-w-full flex-wrap items-end justify-center gap-2 sm:gap-3">
+            <div className="mx-auto mb-8 flex max-w-full flex-wrap items-end justify-center gap-2 sm:mb-10 sm:gap-3 md:mb-12">
               <div className="flex flex-col items-center gap-1">
                 <span className={heroTabGroupLabelClass}>
                   {heroTabGroups.tenerife}
@@ -877,18 +939,30 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               )}
 
               {activeTab === "world-tours" && (
-                  <div>
+                  <div className={worldToursHeroWidthClass}>
                     <div className={heroSearchWrapClass}>
-                      <div className="flex min-h-[44px] flex-1 items-center gap-2.5 px-3 py-2.5 sm:px-4">
-                        <Plane className="h-7 w-7 shrink-0 text-blue-600 sm:h-8 sm:w-8"/>
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-gray-900 sm:text-base">
-                            {worldToursCopy.title}
-                          </p>
-                          <p className="line-clamp-2 text-xs text-gray-600 sm:text-sm">
-                            {worldToursCopy.hint}
-                          </p>
-                        </div>
+                      <div className={searchBarClass}>
+                        <CompactSearchField
+                            label={worldToursCopy.title}
+                            hideLabel
+                            className="min-w-0 flex-[2] !py-0 lg:flex-[3]"
+                        >
+                          <div className="flex w-full items-center gap-2 py-2 sm:min-h-[44px] sm:gap-3 sm:py-0">
+                            <WorldTourHighlightIcons
+                                highlights={worldToursCopy.highlights}
+                                role="group"
+                                aria-label={`${worldToursCopy.highlights.room}, ${worldToursCopy.highlights.transfer}, ${worldToursCopy.highlights.insurance}`}
+                            />
+                            <p className="min-w-0 flex-1 text-balance text-center text-sm font-medium leading-snug text-gray-900 sm:truncate">
+                              {worldToursCopy.title}
+                            </p>
+                            <WorldTourHighlightIcons
+                                highlights={worldToursCopy.highlights}
+                                className="invisible pointer-events-none"
+                                aria-hidden="true"
+                            />
+                          </div>
+                        </CompactSearchField>
                       </div>
                       <button
                           type="button"
@@ -901,6 +975,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     </div>
                   </div>
               )}
+
+
 
             </div>
           </div>
