@@ -1,6 +1,10 @@
 "use client";
 
-import { useOtpuskSearch, type UseOtpuskSearchOptions } from "@/hooks/useOtpuskSearch";
+import {
+  useOtpuskSearch,
+  type OtpuskSearchStatus,
+  type UseOtpuskSearchOptions,
+} from "@/hooks/useOtpuskSearch";
 
 type OtpuskTourSearchSectionProps = {
   language: UseOtpuskSearchOptions["language"];
@@ -8,6 +12,29 @@ type OtpuskTourSearchSectionProps = {
   tourContainerId?: string;
   className?: string;
 };
+
+function OtpuskSearchSkeleton() {
+  return (
+    <div
+      className="mx-auto max-w-[1200px] overflow-hidden rounded px-3 sm:px-4"
+      aria-hidden="true"
+    >
+      <div className="rounded bg-gradient-to-r from-[#4c9ce0] via-[#54a3e6] to-[#65b2f3] p-4 sm:p-5">
+        <div className="mb-4 h-5 w-28 rounded bg-white/25" />
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-10 rounded bg-white shadow-sm sm:h-11"
+            />
+          ))}
+        </div>
+        <div className="mt-3 h-10 w-full rounded bg-[#f7941d] sm:mt-4" />
+        <div className="mt-3 h-4 w-40 rounded bg-white/20" />
+      </div>
+    </div>
+  );
+}
 
 export function OtpuskTourSearchSection({
   language,
@@ -18,39 +45,33 @@ export function OtpuskTourSearchSection({
   const searchContainer = `#${searchContainerId}`;
   const tourContainer = `#${tourContainerId}`;
 
-  useOtpuskSearch({ language, searchContainer, tourContainer });
+  const status: OtpuskSearchStatus = useOtpuskSearch({
+    language,
+    searchContainer,
+    tourContainer,
+  });
+
+  const isReady = status === "ready" || status === "error";
 
   return (
-    <>
-      <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=cyrillic"
-        rel="stylesheet"
-      />
-      <link
-        rel="stylesheet"
-        href="https://export.otpusk.com/os/onsite/form.css"
-        type="text/css"
-      />
-      <link
-        rel="stylesheet"
-        href="https://export.otpusk.com/os/onsite/result.css"
-        type="text/css"
-      />
-      <link
-        rel="stylesheet"
-        href="https://export.otpusk.com/os/onsite/tour.css"
-        type="text/css"
-      />
-      <section className={className}>
+    <section className={`${className} overflow-x-hidden`}>
+      <div className="relative mx-auto max-w-[1200px] px-3 sm:px-4">
+        {!isReady && <OtpuskSearchSkeleton />}
         <div
           id={searchContainerId}
-          className="new_os mx-auto min-h-[120px] max-w-[1200px] px-3 sm:px-4"
+          className={`new_os otpusk-search-host mx-auto min-h-[120px] w-full max-w-[1200px] transition-opacity duration-200 ${
+            isReady ? "relative opacity-100" : "pointer-events-none absolute inset-x-3 top-0 opacity-0 sm:inset-x-4"
+          }`}
+          aria-busy={!isReady}
+          aria-live="polite"
         />
-        <div
-          id={tourContainerId}
-          className="mx-auto max-w-[1200px] px-3 sm:px-4"
-        />
-      </section>
-    </>
+      </div>
+      <div
+        id={tourContainerId}
+        className={`mx-auto max-w-[1200px] px-3 transition-opacity duration-200 sm:px-4 ${
+          isReady ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </section>
   );
 }

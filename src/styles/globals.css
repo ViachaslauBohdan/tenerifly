@@ -999,6 +999,54 @@ html {
 }
 }
 
+/* Otpusk — prevent mobile horizontal flash before widget CSS/JS settle */
+#otpusk-search-container,
+#otpusk-world-search-container,
+#otpusk-search-container.otpusk-search-host,
+#otpusk-world-search-container.otpusk-search-host {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+@media (max-width: 639px) {
+  #otpusk-search-container .new_os:not(.new_m-mobile-form):not(.new_mobile-form)
+    .new_f-form
+    > .clearfix,
+  #otpusk-world-search-container .new_os:not(.new_m-mobile-form):not(.new_mobile-form)
+    .new_f-form
+    > .clearfix {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding: 0 9px !important;
+    box-sizing: border-box !important;
+  }
+
+  #otpusk-search-container .new_os:not(.new_m-mobile-form):not(.new_mobile-form)
+    .new_f-form-field,
+  #otpusk-search-container .new_os:not(.new_m-mobile-form):not(.new_mobile-form)
+    .new_f-form
+    .new_f-form-submit,
+  #otpusk-world-search-container .new_os:not(.new_m-mobile-form):not(.new_mobile-form)
+    .new_f-form-field,
+  #otpusk-world-search-container .new_os:not(.new_m-mobile-form):not(.new_mobile-form)
+    .new_f-form
+    .new_f-form-submit {
+    float: none !important;
+    width: calc(50% - 18px) !important;
+    max-width: calc(50% - 9px) !important;
+    margin: 0 9px 14px !important;
+    box-sizing: border-box !important;
+    border-radius: 3px !important;
+  }
+
+  #otpusk-search-container .new_os:not(.new_m-mobile-form):not(.new_mobile-form)
+    .new_f-form-field::before,
+  #otpusk-world-search-container .new_os:not(.new_m-mobile-form):not(.new_mobile-form)
+    .new_f-form-field::before {
+    display: none !important;
+  }
+}
+
 /* Otpusk tour search — extra space under the form row (inside blue bar) and below the widget */
 #otpusk-search-container .new_f-form,
 #otpusk-world-search-container .new_f-form {
