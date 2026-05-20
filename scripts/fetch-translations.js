@@ -209,8 +209,14 @@ async function main() {
     console.log("🎉 Скрипт успешно завершен!");
     console.log(`📊 Скачано записей: ${translationsData.length}`);
   } catch (error) {
-    console.error("💥 Скрипт завершился с ошибкой:", error.message);
-    process.exit(1);
+    console.warn("⚠️ Не удалось загрузить переводы из Strapi:", error.message);
+    // Check if existing translation files are available as fallback
+    if (fs.existsSync(I18N_DIR) && fs.readdirSync(I18N_DIR).some(f => f.endsWith('.json'))) {
+      console.warn("⚠️ Используем существующие файлы переводов из репозитория.");
+    } else {
+      console.error("💥 Нет существующих файлов переводов для fallback. Сборка прервана.");
+      process.exit(1);
+    }
   }
 }
 
