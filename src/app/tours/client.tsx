@@ -2,16 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ExternalLink, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import {localeDisplayCode, pickLocaleBundle} from "@/types/locale";
 import translations from "@/i18n/tours.json";
 import mainJson from "@/i18n/main.json";
-import {
-  ATLANTICO_EXCURSIONS_AFFILIATE_URL,
-  NEREIZERDIE_EXCURSIONS_URL,
-} from "@/lib/excursionAggregatorUrls";
-
 const languages = [
   { code: "en", name: "English", flag: "🇬🇧" },
   { code: "ru", name: "Русский", flag: "🇷🇺" },
@@ -61,51 +56,6 @@ export default function ToursPageClient() {
               : language === "ua"
                 ? "Автобусні тури, парки, море та VIP."
                 : "Coach tours, parks, boat trips & VIP.";
-
-  const nereBlurb =
-    language === "ru"
-      ? "Шоу, лодки, парки и активный отдых — Viajes Nere Izerdie."
-      : language === "pl"
-        ? "Showy, łodzie, parki i aktywności — Viajes Nere Izerdie."
-        : language === "fr"
-          ? "Spectacles, bateaux, parcs et activités — Viajes Nere Izerdie."
-          : language === "de"
-            ? "Shows, Boote, Parks und Aktivitäten — Viajes Nere Izerdie."
-            : language === "es"
-              ? "Espectáculos, barcos, parques y aventura — Viajes Nere Izerdie."
-              : language === "ua"
-                ? "Шоу, човни, парки та активності — Viajes Nere Izerdie."
-                : "Shows, boats, theme parks & adventure — Viajes Nere Izerdie.";
-
-  const ctaAtlantico =
-    language === "ru"
-      ? "Все туры"
-      : language === "pl"
-        ? "Wszystkie wycieczki"
-        : language === "fr"
-          ? "Toutes les visites"
-          : language === "de"
-            ? "Alle Touren"
-            : language === "es"
-              ? "Todos los tours"
-              : language === "ua"
-                ? "Всі тури"
-                : "View all tours";
-
-  const ctaNere =
-    language === "ru"
-      ? "Каталог"
-      : language === "pl"
-        ? "Katalog"
-        : language === "fr"
-          ? "Catalogue"
-          : language === "de"
-            ? "Katalog"
-            : language === "es"
-              ? "Catálogo"
-              : language === "ua"
-                ? "Каталог"
-                : "Open catalogue";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -214,7 +164,7 @@ export default function ToursPageClient() {
           ) : null}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="max-w-2xl mx-auto mb-6">
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
             <div className="flex items-center gap-4 p-4 md:p-5">
               <div className="flex-shrink-0">
@@ -229,44 +179,6 @@ export default function ToursPageClient() {
                 <p className="text-sm text-gray-600 line-clamp-2">
                   {atlanticoBlurb}
                 </p>
-              </div>
-              <div className="flex-shrink-0">
-                <a
-                  href={ATLANTICO_EXCURSIONS_AFFILIATE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md whitespace-nowrap"
-                >
-                  {ctaAtlantico}
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-emerald-100 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
-            <div className="flex items-center gap-4 p-4 md:p-5">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-emerald-600 to-teal-800 rounded-lg flex items-center justify-center">
-                  <MapPin className="w-6 h-6 md:w-7 md:h-7 text-white" />
-                </div>
-              </div>
-              <div className="flex-1 min-w-0">
-                <h2 className="text-base md:text-lg font-semibold text-gray-900 mb-1">
-                  Viajes Nere Izerdie
-                </h2>
-                <p className="text-sm text-gray-600 line-clamp-2">{nereBlurb}</p>
-              </div>
-              <div className="flex-shrink-0">
-                <a
-                  href={NEREIZERDIE_EXCURSIONS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-sm hover:shadow-md whitespace-nowrap"
-                >
-                  {ctaNere}
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
               </div>
             </div>
           </div>

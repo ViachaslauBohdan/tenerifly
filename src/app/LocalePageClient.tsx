@@ -22,7 +22,6 @@ import {
   Calendar,
   User,
   ArrowRight,
-  ExternalLink,
   Plane,
   Bed,
   Bus,
@@ -43,10 +42,6 @@ import {
   getCanariasRentacarAffiliateUrl,
   getCanariasRentacarBannerImageUrl,
 } from "@/lib/canariasAffiliate";
-import {
-  ATLANTICO_EXCURSIONS_AFFILIATE_URL,
-  NEREIZERDIE_EXCURSIONS_URL,
-} from "@/lib/excursionAggregatorUrls";
 import {
   TileCarPrice,
   TilePriceBadge,
@@ -1396,7 +1391,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       )}
 
 
-      {/* Excursion aggregators (Atlántico + Nere Izerdie) */}
+      {/* Excursion aggregator (Atlántico) */}
       <section
         id="excursions"
         className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-white"
@@ -1421,7 +1416,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="max-w-3xl mx-auto">
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-100 hover:shadow-2xl transition-all duration-300">
               <div className="md:flex items-stretch min-h-[280px]">
                 <div className="md:w-2/5 bg-gradient-to-br from-blue-600 to-indigo-700 p-8 md:p-10 flex items-center justify-center">
@@ -1480,110 +1475,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                 ? "Автобусні тури, парки розваг, морські прогулянки та VIP — бронюйте з Atlántico Excursiones."
                                 : "Coach tours, theme parks, boat trips and VIP experiences — book with Atlántico Excursiones."}
                   </p>
-                  <a
-                    href={ATLANTICO_EXCURSIONS_AFFILIATE_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg w-fit"
-                  >
-                    {language === "ru"
-                      ? "Посмотреть все туры"
-                      : language === "pl"
-                        ? "Zobacz wszystkie wycieczki"
-                        : language === "fr"
-                          ? "Voir toutes les visites"
-                          : language === "de"
-                            ? "Alle Touren anzeigen"
-                            : language === "es"
-                              ? "Ver todos los tours"
-                              : language === "ua"
-                                ? "Переглянути всі тури"
-                                : "View all tours"}
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-emerald-100 hover:shadow-2xl transition-all duration-300">
-              <div className="md:flex items-stretch min-h-[280px]">
-                <div className="md:w-2/5 bg-gradient-to-br from-emerald-600 to-teal-800 p-8 md:p-10 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
-                      <MapPin className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">
-                      Viajes Nere Izerdie
-                    </h3>
-                    <p className="text-emerald-100 text-sm">
-                      {language === "ru"
-                        ? "Каталог экскурсий и активностей"
-                        : language === "pl"
-                          ? "Katalog wycieczek i atrakcji"
-                          : language === "fr"
-                            ? "Catalogue d'excursions"
-                            : language === "de"
-                              ? "Ausflugs- & Aktivitätenkatalog"
-                              : language === "es"
-                                ? "Catálogo de excursiones"
-                                : language === "ua"
-                                  ? "Каталог екскурсій"
-                                  : "Excursions & activities"}
-                    </p>
-                  </div>
-                </div>
-                <div className="md:w-3/5 p-8 md:p-10 flex flex-col justify-center">
-                  <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                    {language === "ru"
-                      ? "Ещё один надёжный партнёр на Тенерифе"
-                      : language === "pl"
-                        ? "Kolejny sprawdzony partner na Teneryfie"
-                        : language === "fr"
-                          ? "Un autre partenaire sur Tenerife"
-                          : language === "de"
-                            ? "Weiterer Anbieter auf Teneriffa"
-                            : language === "es"
-                              ? "Otro catálogo en Tenerife"
-                              : language === "ua"
-                                ? "Ще один каталог на Тенеріфі"
-                                : "Another trusted Tenerife catalogue"}
-                  </h4>
-                  <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base">
-                    {language === "ru"
-                      ? "Автобусные экскурсии, вечерние шоу, морские прогулки, парки развлечений и активный отдых — см. предложения на Nere Izerdie."
-                      : language === "pl"
-                        ? "Wycieczki autokarowe, wieczorne show, rejsy, parki rozrywki i aktywności na świeżym powietrzu — zobacz ofertę Nere Izerdie."
-                        : language === "fr"
-                          ? "Excursions en bus, spectacles de soirée, sorties en mer, parcs à thème et activités outdoor — parcourez Nere Izerdie."
-                          : language === "de"
-                            ? "Busausflüge, Abendshows, Bootstouren, Freizeitparks und Outdoor-Aktivitäten — entdecken Sie Nere Izerdie."
-                            : language === "es"
-                              ? "Excursiones en bus, espectáculos nocturnos, barcos, parques temáticos y aventura — explora Nere Izerdie."
-                              : language === "ua"
-                                ? "Автобусні тури, вечірні шоу, морські прогулянки, парки та активності — перегляньте Nere Izerdie."
-                                : "Bus tours, night shows, boat trips, theme parks and outdoor fun — browse Nere Izerdie."}
-                  </p>
-                  <a
-                    href={NEREIZERDIE_EXCURSIONS_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-md hover:shadow-lg w-fit"
-                  >
-                    {language === "ru"
-                      ? "Открыть каталог"
-                      : language === "pl"
-                        ? "Otwórz katalog"
-                        : language === "fr"
-                          ? "Voir le catalogue"
-                          : language === "de"
-                            ? "Zum Katalog"
-                            : language === "es"
-                              ? "Ver catálogo"
-                              : language === "ua"
-                                ? "Відкрити каталог"
-                                : "Open catalogue"}
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
                 </div>
               </div>
             </div>

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import {localeDisplayCode, pickLocaleBundle} from "@/types/locale";
 import {
@@ -15,10 +14,6 @@ import {
 } from "@/components/ui/carousel";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translations from "@/i18n/tourDetail.json";
-import {
-  ATLANTICO_EXCURSIONS_AFFILIATE_URL,
-  NEREIZERDIE_EXCURSIONS_URL,
-} from "@/lib/excursionAggregatorUrls";
 interface TourData {
   id: number;
   documentId: string;
@@ -376,33 +371,16 @@ export default function TourDetailPageClient({ tour }: { tour: TourData }) {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-50 via-white to-emerald-50 rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
               <h2 className="text-xl font-bold text-gray-900 mb-2">
                 {partnerOffersTitle}
               </h2>
-              <p className="text-gray-600 text-sm mb-5 leading-relaxed">
+              <p className="text-gray-600 text-sm leading-relaxed">
                 {partnerOffersSubtitle}
               </p>
-              <div className="flex flex-col sm:flex-row flex-wrap gap-3">
-                <a
-                  href={ATLANTICO_EXCURSIONS_AFFILIATE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex flex-1 min-w-[200px] items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700"
-                >
-                  Atlántico Excursiones
-                  <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
-                </a>
-                <a
-                  href={NEREIZERDIE_EXCURSIONS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex flex-1 min-w-[200px] items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-emerald-700"
-                >
-                  Viajes Nere Izerdie
-                  <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
-                </a>
-              </div>
+              <p className="mt-4 text-base font-semibold text-gray-900">
+                Atlántico Excursiones
+              </p>
             </div>
 
             {/* Tour Details */}
