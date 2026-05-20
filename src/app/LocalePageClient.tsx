@@ -38,10 +38,7 @@ import {
   getTransferLocaleText,
   Transfer,
 } from "@/lib/transfers";
-import {
-  getCanariasRentacarAffiliateUrl,
-  getCanariasRentacarBannerImageUrl,
-} from "@/lib/canariasAffiliate";
+import { getCanariasRentacarBannerImageUrl } from "@/lib/canariasAffiliate";
 import {
   TileCarPrice,
   TilePriceBadge,
@@ -1145,18 +1142,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
           {/* Баннер партнерского сервиса аренды авто (Canarias.com) */}
           <div className="flex justify-center mb-10">
-            <a
-              href={getCanariasRentacarAffiliateUrl(language)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
-            >
+            <div className="inline-block rounded-xl overflow-hidden shadow-lg">
               <img
                 src={getCanariasRentacarBannerImageUrl(language)}
                 alt="rentacar canarias.com"
                 className="max-w-full h-auto"
               />
-            </a>
+            </div>
           </div>
 
           {dataLoading ? (
@@ -1693,14 +1685,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 >
                   Property Rental & Sales
                 </Link>
-                <Link
-                  href={getCanariasRentacarAffiliateUrl(language)}
-                  className="block text-gray-400 hover:text-white transition-colors"
-                  target="_blank"
-                  rel="nofollow"
-                >
+                <span className="block text-gray-400">
                   Car Rental Services
-                </Link>
+                </span>
               </div>
             </div>
             <div>

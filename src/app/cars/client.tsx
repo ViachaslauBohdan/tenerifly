@@ -13,10 +13,7 @@ import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
 import {localeDisplayCode, pickLocaleBundle, localeContentKey} from "@/types/locale";
 import translations from "@/i18n/cars.json";
-import {
-  getCanariasRentacarAffiliateUrl,
-  getCanariasRentacarBannerImageUrl,
-} from "@/lib/canariasAffiliate";
+import { getCanariasRentacarBannerImageUrl } from "@/lib/canariasAffiliate";
 
 const getLoadingCarsText = (language: string) => {
   const texts: Record<string, string> = {
@@ -670,14 +667,7 @@ export default function CarsPageClient({
         </div>
         <div className="flex justify-start items-center gap-2 py-2">
           <span className="ps-1 text-sm text-gray-600">Rent a car</span>
-          <Link
-              href={getCanariasRentacarAffiliateUrl(language)}
-              className="text-sm text-blue-600 hover:text-blue-600"
-              target="_blank"
-              rel="nofollow"
-          >
-            Canarias.com
-          </Link>
+          <span className="text-sm text-gray-600">Canarias.com</span>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
@@ -698,18 +688,13 @@ export default function CarsPageClient({
           <div className="flex-1">
             {/* Баннер Canarias.com рядом с верхней линией списка машин (на уровне с левым сайдбаром), выровнен по центру колонки */}
             <div className="mb-6 flex justify-center lg:justify-center">
-              <a
-                href={getCanariasRentacarAffiliateUrl(language)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
-              >
+              <div className="inline-block rounded-xl overflow-hidden shadow-lg">
                 <img
                   src={getCanariasRentacarBannerImageUrl(language)}
                   alt="rentacar canarias.com"
                   className="max-w-full h-auto"
                 />
-              </a>
+              </div>
             </div>
             {initialLoadComplete ? (
               <>
