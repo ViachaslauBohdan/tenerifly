@@ -182,11 +182,7 @@
         "tourOfTheDay": "Tagesausflug: bester Preis",
         "chooseTour": "Wähle deine Tour"
       },
-      "searchGlobalTours": "Globale Touren suchen",
-      "tabGroups": {
-        "tenerife": "Teneriffa",
-        "worldwide": "Weltweit"
-      }
+      "searchGlobalTours": "Globale Touren suchen"
     },
     "common": {
       "to": "Bis",
@@ -406,8 +402,8 @@
       "tabs": {
         "blog": "Blog",
         "cars": "Cars",
-        "excursions": "Tours",
-        "accommodation": "Stays"
+        "excursions": "Excursions",
+        "accommodation": "Accommodation"
       },
       "title": "Welcome to Tenerife",
       "search": "Search",
@@ -508,11 +504,7 @@
         "tourOfTheDay": "Tour of the day: best price",
         "chooseTour": "Choose your tour"
       },
-      "searchGlobalTours": "Search Global Tours",
-      "tabGroups": {
-        "tenerife": "Tenerife",
-        "worldwide": "Worldwide"
-      }
+      "searchGlobalTours": "Search Global Tours"
     },
     "common": {
       "to": "To",
@@ -834,11 +826,7 @@
         "tourOfTheDay": "Tour del día: mejor precio",
         "chooseTour": "Elige tu tour"
       },
-      "searchGlobalTours": "Buscar tours globales",
-      "tabGroups": {
-        "tenerife": "Tenerife",
-        "worldwide": "Mundial"
-      }
+      "searchGlobalTours": "Buscar tours globales"
     },
     "common": {
       "to": "Hasta",
@@ -1160,11 +1148,7 @@
         "tourOfTheDay": "Circuit du jour : meilleur prix",
         "chooseTour": "Choisir votre circuit"
       },
-      "searchGlobalTours": "Rechercher des tours mondiaux",
-      "tabGroups": {
-        "tenerife": "Ténérife",
-        "worldwide": "Monde entier"
-      }
+      "searchGlobalTours": "Rechercher des tours mondiaux"
     },
     "common": {
       "to": "À",
@@ -1486,11 +1470,7 @@
         "tourOfTheDay": "Wycieczka dnia: najlepsza cena",
         "chooseTour": "Wybierz swoją wycieczkę"
       },
-      "searchGlobalTours": "Szukaj tourów globalnych",
-      "tabGroups": {
-        "tenerife": "Teneryfa",
-        "worldwide": "Świat"
-      }
+      "searchGlobalTours": "Szukaj tourów globalnych"
     },
     "common": {
       "to": "Do",
@@ -1812,11 +1792,7 @@
         "tourOfTheDay": "Тур дня: лучшая цена",
         "chooseTour": "Выбрать свой тур"
       },
-      "searchGlobalTours": "Искать туры по всему миру",
-      "tabGroups": {
-        "tenerife": "Тенерифе",
-        "worldwide": "По всему миру"
-      }
+      "searchGlobalTours": "Искать туры по всему миру"
     },
     "common": {
       "to": "До",
@@ -2138,11 +2114,7 @@
         "tourOfTheDay": "Тур дня: найкраща ціна",
         "chooseTour": "Обрати свій тур"
       },
-      "searchGlobalTours": "Шукати глобальні тури",
-      "tabGroups": {
-        "tenerife": "Тенеріфе",
-        "worldwide": "Світ"
-      }
+      "searchGlobalTours": "Шукати глобальні тури"
     },
     "common": {
       "to": "До",
@@ -2464,11 +2436,7 @@
         "tourOfTheDay": "Тур дня: найкраща ціна",
         "chooseTour": "Обрати свій тур"
       },
-      "searchGlobalTours": "Шукати глобальні тури",
-      "tabGroups": {
-        "tenerife": "Тенеріфе",
-        "worldwide": "Світ"
-      }
+      "searchGlobalTours": "Шукати глобальні тури"
     },
     "common": {
       "to": "До",
