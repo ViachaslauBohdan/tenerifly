@@ -5,8 +5,9 @@ import { HeroSearchCtaLink } from "@/components/HeroSearchCta";
 import {
   heroSearchFieldsClass,
   heroSearchHintClass,
-  heroSearchInsetClass,
   heroSearchWrapClass,
+  heroCardTitleClass,
+  heroWorldToursCardClass,
 } from "@/lib/heroSearchLayout";
 
 export type WorldToursHeroSearchLabels = {
@@ -40,13 +41,8 @@ export function WorldToursHeroSearch({
         aria-hidden
       />
 
-      <div className={`relative pt-3 sm:pt-5 ${heroSearchInsetClass}`}>
-        <h2 className="mb-2 text-base font-bold leading-snug text-white sm:mb-3 sm:text-lg">
-          {labels.title}
-        </h2>
-      </div>
-
-      <div className={heroSearchInsetClass}>
+      <div className={`relative ${heroWorldToursCardClass}`}>
+        <h2 className={heroCardTitleClass}>{labels.title}</h2>
         <div className={heroSearchWrapClass}>
           <div className={heroSearchFieldsClass}>
             <p className={heroSearchHintClass}>{labels.hint}</p>
@@ -58,8 +54,6 @@ export function WorldToursHeroSearch({
           />
         </div>
       </div>
-
-      <div className="pb-3 sm:pb-8" aria-hidden="true" />
     </div>
   );
 }

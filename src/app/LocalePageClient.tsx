@@ -50,8 +50,12 @@ import {
 import { type HeroTab, parseHeroTab, isHeroTab } from "@/lib/heroTab";
 import {
   heroSearchFieldsClass,
+  heroBlockStackClass,
+  heroInnerClass,
   heroSearchInsetClass,
+  heroSectionClass,
   heroSearchWrapClass,
+  heroTitleClass,
 } from "@/lib/heroSearchLayout";
 // Переводы для всех языков
 const translations = translationsJson;
@@ -92,7 +96,7 @@ function CompactSearchField({
   return (
     <div
         className={`flex min-w-0 flex-1 flex-col justify-center px-3 sm:px-5 ${
-          hideLabel ? "py-0" : "py-2.5 sm:py-[15px]"
+          hideLabel ? "py-0" : "py-2 sm:py-[15px]"
         } ${className}`}
     >
       {hideLabel ? (
@@ -461,17 +465,16 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative flex min-h-[100svh] flex-col bg-cover bg-center bg-no-repeat sm:min-h-[70vh]"
+        className={heroSectionClass}
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}
       >
-        <div
-            className="relative z-10 flex w-full flex-1 flex-col justify-center gap-5 px-3 pt-[6rem] pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] min-[400px]:gap-6 min-[400px]:px-4 min-[400px]:pt-[6.25rem] md:pt-[5.5rem] sm:grid sm:min-h-0 sm:grid-rows-[1fr_auto_1fr_auto_1fr] sm:items-center sm:gap-0 sm:pt-[5.5rem] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
+        <div className={heroInnerClass}>
           <div aria-hidden className="hidden min-h-0 sm:block" />
-          <div className="mx-auto w-full max-w-5xl xl:max-w-6xl">
-              <div className="mb-3 text-center sm:mb-5">
-                <h1 className="text-xl font-bold text-white mb-2 drop-shadow-lg sm:mb-3 sm:text-2xl md:text-3xl lg:text-4xl">
+          <div className={`mx-auto w-full max-w-5xl xl:max-w-6xl ${heroBlockStackClass}`}>
+              <div className="text-center sm:mb-2">
+                <h1 className={`${heroTitleClass} mb-0`}>
                   {t.hero.title}
                 </h1>
               </div>
@@ -687,8 +690,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </div>
           </div>
           <div aria-hidden className="hidden min-h-0 sm:block" />
-          <div className="mx-auto w-full max-w-5xl xl:max-w-6xl">
-              <h2 className="mb-3 text-center text-base font-bold leading-snug text-white drop-shadow-lg sm:mb-5 sm:text-2xl md:mb-6 md:text-3xl lg:text-4xl">
+          <div className={`mx-auto w-full max-w-5xl xl:max-w-6xl ${heroBlockStackClass}`}>
+              <h2 className={`${heroTitleClass} mb-0 text-center sm:mb-2 md:mb-4`}>
                 {worldToursCopy.heading}
               </h2>
               <WorldToursHeroSearch
