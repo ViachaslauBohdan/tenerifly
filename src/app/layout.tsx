@@ -7,8 +7,10 @@ import "@mantine/dates/styles.css";
 import {ColorSchemeScript} from "@mantine/core";
 import {MantineProvider} from "@/components/providers/MantineProvider";
 
+import {OtpuskBodyClassGuard} from "@/components/OtpuskBodyClassGuard";
 import {ReferralCodeClient} from "@/components/ReferralCodeClient";
 import {WhatsAppFloatingButton} from "@/components/WhatsAppFloatingButton";
+import {OTPUSK_BODY_CLASS_GUARD_INLINE} from "@/lib/otpuskBodyClassGuard";
 import Script from 'next/script'
 import {
     DEFAULT_OG_IMAGE,
@@ -129,6 +131,10 @@ export default async function RootLayout({
             <link rel="preload" href={DEFAULT_OG_IMAGE} as="image"/>
         </head>
         <body suppressHydrationWarning>
+        <script
+            dangerouslySetInnerHTML={{__html: OTPUSK_BODY_CLASS_GUARD_INLINE}}
+        />
+        <OtpuskBodyClassGuard/>
         <MantineProvider>
             <ReferralCodeClient/>
             {children}

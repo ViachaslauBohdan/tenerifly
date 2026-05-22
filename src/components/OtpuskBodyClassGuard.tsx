@@ -8,39 +8,48 @@ function collectOtpuskBodyClasses(): string[] {
   );
 }
 
+function startBodyClassGuard(): () => void {
+  let preserved = collectOtpuskBodyClasses();
+
+  const restore = () => {
+    for (const cls of preserved) {
+      document.body.classList.add(cls);
+    }
+  };
+
+  const sync = () => {
+    const current = collectOtpuskBodyClasses();
+    if (current.length > 0) {
+      preserved = current;
+      return;
+    }
+    if (preserved.length > 0) {
+      restore();
+    }
+  };
+
+  sync();
+  const observer = new MutationObserver(sync);
+  observer.observe(document.body, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+
+  return () => observer.disconnect();
+}
+
 /**
  * Otpusk onsite JS adds layout classes to document.body. Next.js/React
  * overwrites body.className when it owns the attribute (e.g. font variables).
- * This guard re-applies Otpusk classes after React or other code strips them.
+ * Root layout also injects {@link OTPUSK_BODY_CLASS_GUARD_INLINE} before hydration;
+ * this client guard covers late navigations and re-mounts.
  */
 export function OtpuskBodyClassGuard() {
   useEffect(() => {
-    let preserved = new Set(collectOtpuskBodyClasses());
-
-    const restore = () => {
-      for (const cls of preserved) {
-        document.body.classList.add(cls);
-      }
-    };
-
-    const observer = new MutationObserver(() => {
-      const current = collectOtpuskBodyClasses();
-      if (current.length > 0) {
-        preserved = new Set(current);
-        return;
-      }
-
-      if (preserved.size > 0) {
-        restore();
-      }
-    });
-
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
+    if (!document.body) {
+      return;
+    }
+    return startBodyClassGuard();
   }, []);
 
   return null;

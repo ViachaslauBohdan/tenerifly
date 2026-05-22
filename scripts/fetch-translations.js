@@ -86,7 +86,7 @@ const HERO_LEISURE_LABEL = {
 /** Main hero H1 — Tenerife island search only (worldwide block has its own heading). */
 const HERO_TENERIFE_TITLE = {
   de: "Buchen Sie Erholung auf Teneriffa",
-  en: "Book your getaway on Tenerife",
+  en: "Book your leisure on Tenerife",
   es: "Reserva tu ocio en Tenerife",
   fr: "Réservez vos loisirs à Tenerife",
   pl: "Zarezerwuj wypoczynek na Teneryfie",
@@ -202,6 +202,37 @@ function applyMainLocalePatches(translation) {
   if (translation.uk && !translation.ua) {
     translation.ua = JSON.parse(JSON.stringify(translation.uk));
   }
+
+  const enHero = translation.en?.hero;
+  if (enHero) {
+    if (enHero.tabs) {
+      enHero.tabs.accommodation = "Stays";
+      enHero.tabs.excursions = "Tours";
+    }
+    enHero.subtitle = "Find stays, tours or car rental";
+    if (enHero.accommodation) {
+      enHero.accommodation.title = "Stays";
+    }
+    if (enHero.excursions) {
+      enHero.excursions.title = "Tours";
+      enHero.excursions.type = "Type of tour";
+      if (enHero.excursions.types?.[0]) {
+        enHero.excursions.types[0].label = "All tours";
+      }
+    }
+  }
+  if (translation.en?.navigation) {
+    translation.en.navigation.accommodation = "Stays";
+    translation.en.navigation.excursions = "Tours";
+  }
+  if (translation.en?.sections?.excursions) {
+    translation.en.sections.excursions.title = "Popular Tours";
+  }
+  if (translation.en?.sections?.accommodation) {
+    translation.en.sections.accommodation.subtitle =
+      "Find your perfect stay in Tenerife";
+  }
+
   return translation;
 }
 

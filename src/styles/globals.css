@@ -6,6 +6,13 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Site header: never show horizontal desktop nav on small screens */
+@media (max-width: 767px) {
+  .site-header-desktop-nav {
+    display: none !important;
+  }
+}
+
 /* Глобальные стили для улучшения дизайна сайта */
 [data-selected="true"] {
 /* Основные стили для HTML и body */

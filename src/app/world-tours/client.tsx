@@ -40,7 +40,7 @@ export default function WorldToursPageClient() {
       />
 
       <div className="pt-[6.25rem] min-[400px]:pt-[6.5rem] sm:pt-[6.25rem] md:pt-16">
-        <div className="mx-auto max-w-5xl px-3 pt-4 min-[400px]:px-4 sm:pt-6">
+        <div className="mx-auto max-w-5xl px-4 pt-4 min-[400px]:px-5 sm:px-6 sm:pt-6">
           <TourTaglinesHeader
             dreamTrip={t.hero.tourTaglines.dreamTrip}
             tourOfTheDay={t.hero.tourTaglines.tourOfTheDay}

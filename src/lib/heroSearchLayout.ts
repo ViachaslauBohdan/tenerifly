@@ -1,5 +1,9 @@
 /** Shared layout for homepage hero search (Tenerife) and World Tours white bar. */
 
+/** Horizontal inset for hero and page content on small screens. */
+export const heroGutterClass =
+  "px-4 min-[400px]:px-5 sm:px-6 md:px-8";
+
 /** Page-level hero headings (H1 + worldwide tours line above the blue card). */
 export const heroTitleClass =
   "text-xl font-bold leading-snug text-white drop-shadow-lg sm:text-2xl md:text-3xl lg:text-4xl";
@@ -14,12 +18,13 @@ export const heroSectionClass =
 
 /** Inner hero stack — gap between Stays block and World Tours block on mobile. */
 export const heroInnerClass =
-  "relative z-10 flex w-full flex-col justify-start gap-4 px-3 pt-[5.5rem] pb-6 min-[400px]:gap-5 min-[400px]:px-4 min-[400px]:pt-[6rem] sm:min-h-0 sm:flex-1 sm:justify-center sm:grid sm:grid-rows-[1fr_auto_1fr_auto_1fr] sm:items-center sm:gap-0 sm:px-3 sm:pt-[5.5rem] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] md:pt-[5.5rem]";
+  `relative z-10 flex w-full flex-col justify-start gap-4 pt-[5.25rem] pb-6 min-[400px]:gap-5 min-[400px]:pt-[5.75rem] sm:min-h-0 sm:flex-1 sm:justify-center sm:grid sm:grid-rows-[1fr_auto_1fr_auto_1fr] sm:items-center sm:gap-0 sm:pt-[5.5rem] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] md:pt-[5.5rem] ${heroGutterClass}`;
 
 /** Space between title and search card inside each hero group. */
-export const heroBlockStackClass = "flex flex-col gap-3";
+export const heroBlockStackClass = "flex flex-col gap-3 sm:gap-4";
 
-export const heroSearchInsetClass = "px-3 sm:px-5 md:px-8";
+/** Optional extra inset inside gutter (kept at 0 — cards align to hero gutter). */
+export const heroSearchInsetClass = "";
 
 /** World Tours blue card — single padding wrapper on mobile. */
 export const heroWorldToursCardClass =
