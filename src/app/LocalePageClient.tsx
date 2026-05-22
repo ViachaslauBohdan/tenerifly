@@ -513,7 +513,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-3 drop-shadow-lg pt-2 sm:pt-0">
               {t.hero.title}
             </h1>
-            <p className="text-base md:text-lg text-white/90 max-w-2xl mx-auto drop-shadow-md">
+            <p className="text-base md:text-lg text-white max-w-2xl mx-auto drop-shadow-md">
               {t.hero.subtitle}
             </p>
           </div>
