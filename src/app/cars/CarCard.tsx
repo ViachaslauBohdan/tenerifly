@@ -688,9 +688,8 @@ const CarCard = ({
           item={{
             name: selectedCar.title,
             price: selectedCar.rental_prices
-              ? `${getLocalizedCurrency(selectedCar)} ${getPrice(selectedCar)}${translations.pricePerDay}`
+              ? `${getLocalizedCurrency(selectedCar)} ${getPrice(selectedCar)}/day`
               : undefined,
-            currency: selectedCar.rental_prices?.currency,
             contactEmail: selectedCar.contact?.email,
           }}
           currentLocale={locale}

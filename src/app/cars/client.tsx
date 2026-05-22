@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import CarCard from "./CarCard";
 import CarsFilter from "./CarsFilter";
@@ -11,7 +10,8 @@ import {
 } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
-import {localeDisplayCode, pickLocaleBundle, localeContentKey} from "@/types/locale";
+import { pickLocaleBundle, localeContentKey } from "@/types/locale";
+import { CatalogDetailShell } from "@/components/CatalogDetailShell";
 import translations from "@/i18n/cars.json";
 import { getCanariasRentacarBannerImageUrl } from "@/lib/canariasAffiliate";
 
@@ -27,17 +27,6 @@ const getLoadingCarsText = (language: string) => {
   };
   return texts[localeContentKey(language)] || texts.en;
 };
-
-// Языки с флагами
-const languages = [
-  { code: "en", name: "English", flag: "🇬🇧" },
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "ua", name: "Українська", flag: "🇺🇦" },
-  { code: "pl", name: "Polski", flag: "🇵🇱" },
-  { code: "de", name: "Deutsch", flag: "🇩🇪" },
-  { code: "es", name: "Español", flag: "🇪🇸" },
-  { code: "fr", name: "Français", flag: "🇫🇷" },
-];
 
 const DEFAULT_CAR_FILTERS: CarFilterParams = {
   brand: "",
@@ -174,17 +163,8 @@ export default function CarsPageClient({
 }: CarsPageClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { locale, switchLocale, createLocaleLink } = useTranslation();
-
-  const [language, setLanguage] = useState<
-    "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es"
-  >(locale as "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es");
-  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-
-  // Синхронизируем язык с URL
-  useEffect(() => {
-    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es");
-  }, [locale]);
+  const { locale, createLocaleLink } = useTranslation();
+  const language = locale;
 
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<CarFilterParams>(() =>
@@ -481,7 +461,6 @@ export default function CarsPageClient({
   }, [initialCarsByLocale, language, loadCarsByLocales]);
 
   const t = pickLocaleBundle(translations, language);
-  const currentLanguage = languages.find((lang) => lang.code === language);
 
   // Обновляем отфильтрованные данные при смене языка (без догрузки)
   useEffect(() => {
@@ -504,16 +483,6 @@ export default function CarsPageClient({
       }
     }
   }, [searchParams, currentPage, filteredCars.length, itemsPerPage]);
-
-  // Переключение языка через URL
-  const handleLanguageChange = (
-    langCode: "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es"
-  ) => {
-    switchLocale(langCode);
-    setIsLanguageDropdownOpen(false);
-  };
-
-  // Мемоизированная функция сброса фильтров
 
   // Pagination logic
   const totalPages = Math.max(1, Math.ceil(filteredCars.length / itemsPerPage));
@@ -555,110 +524,7 @@ export default function CarsPageClient({
   console.log("filteredCars:", filteredCars);
   console.log("filteredCars:", initialCarsByLocale);
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Header with Language Switcher */}
-        <div className="flex justify-between items-center mb-6">
-          <Link
-            href={createLocaleLink("/")}
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
-          >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            {t.backToHome}
-          </Link>
-
-          <div className="relative">
-            <button
-              onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-            >
-              <span className="text-xl">{currentLanguage?.flag}</span>
-              <span className="font-medium text-gray-700 hidden sm:block">
-                {currentLanguage?.name}
-              </span>
-              <span className="font-medium text-gray-700 sm:hidden">
-                {localeDisplayCode(currentLanguage?.code)}
-              </span>
-              <svg
-                className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
-                  isLanguageDropdownOpen ? "rotate-180" : ""
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-
-            {/* Dropdown Menu */}
-            {isLanguageDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 animate-in slide-in-from-top-2 duration-200">
-                <div className="py-2">
-                  <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                    {t.selectLanguage}
-                  </div>
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() =>
-                        handleLanguageChange(
-                          lang.code as
-                            | "en"
-                            | "ru"
-                            | "pl"
-                            | "fr"
-                            | "ua"
-                            | "de"
-                            | "es"
-                        )
-                      }
-                      className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors duration-150 ${
-                        language === lang.code
-                          ? "bg-blue-50 text-blue-700"
-                          : "text-gray-700"
-                      }`}
-                    >
-                      <span className="text-lg">{lang.flag}</span>
-                      <span className="font-medium">{lang.name}</span>
-                      {language === lang.code && (
-                        <svg
-                          className="w-4 h-4 ml-auto text-blue-600"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
+    <CatalogDetailShell>
         {/* Page Title */}
         <div className="mb-4">
           <h1 className="text-3xl font-bold text-gray-900">
@@ -830,14 +696,6 @@ export default function CarsPageClient({
           </div>
         </div>
 
-        {/* Click outside to close dropdown */}
-        {isLanguageDropdownOpen && (
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setIsLanguageDropdownOpen(false)}
-          />
-        )}
-      </div>
-    </div>
+    </CatalogDetailShell>
   );
 }

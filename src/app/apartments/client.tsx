@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import ApartmentCard from "./ApartmentCard";
 import ApartmentsFilter from "./ApartmentsFilter";
@@ -11,7 +10,8 @@ import {
 } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
-import {localeDisplayCode, pickLocaleBundle} from "@/types/locale";
+import { pickLocaleBundle } from "@/types/locale";
+import { CatalogDetailShell } from "@/components/CatalogDetailShell";
 import translations from "@/i18n/apartments.json";
 
 const DEFAULT_APARTMENT_FILTERS: ApartmentFilterParams = {
@@ -41,7 +41,7 @@ const DEFAULT_APARTMENT_FILTERS: ApartmentFilterParams = {
   propertyStatus: "",
 };
 
-const getLoadingPropertiesText = (language: string) => {
+const getLoadingPropertiesText = (locale: string) => {
   const texts: Record<string, string> = {
     en: "Loading properties...",
     ru: "Загрузка недвижимости...",
@@ -51,19 +51,8 @@ const getLoadingPropertiesText = (language: string) => {
     de: "Immobilien werden geladen...",
     es: "Cargando inmuebles...",
   };
-  return texts[language] || texts.en;
+  return texts[locale] || texts.en;
 };
-
-// Языки с флагами
-const languages = [
-  { code: "en", name: "English", flag: "🇬🇧" },
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "ua", name: "Українська", flag: "🇺🇦" },
-  { code: "pl", name: "Polski", flag: "🇵🇱" },
-  { code: "de", name: "Deutsch", flag: "🇩🇪" },
-  { code: "es", name: "Español", flag: "🇪🇸" },
-  { code: "fr", name: "Français", flag: "🇫🇷" },
-];
 
 // Определяем интерфейс для недвижимости
 interface PropertyData {
@@ -143,11 +132,7 @@ export default function ApartmentsPageClient({
 }: ApartmentsPageClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { locale, switchLocale, createLocaleLink } = useTranslation();
-  const [language, setLanguage] = useState<
-    "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es"
-  >(locale as "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es");
-  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
+  const { locale, createLocaleLink } = useTranslation();
 
   // Инициализация фильтров из URL параметров
   const [filters, setFilters] = useState<ApartmentFilterParams>(() => {
@@ -260,13 +245,7 @@ export default function ApartmentsPageClient({
     }
   }, [initialProperties]);
 
-  const t = pickLocaleBundle(translations, language);
-  const currentLanguage = languages.find((lang) => lang.code === language);
-
-  // Синхронизируем язык с URL
-  useEffect(() => {
-    setLanguage(locale as "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es");
-  }, [locale]);
+  const t = pickLocaleBundle(translations, locale);
 
   // Синхронизация текущей страницы с URL при изменении searchParams
   useEffect(() => {
@@ -284,14 +263,6 @@ export default function ApartmentsPageClient({
       }
     }
   }, [searchParams, currentPage, filteredApartments.length, itemsPerPage]);
-
-  // Переключение языка через URL
-  const handleLanguageChange = (
-    langCode: "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es"
-  ) => {
-    switchLocale(langCode);
-    setIsLanguageDropdownOpen(false);
-  };
 
   // Функция для обновления URL с пагинацией
   const updateUrlWithPage = useCallback(
@@ -424,110 +395,7 @@ export default function ApartmentsPageClient({
   }, [currentPage, totalPages, handlePageChange]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Header with Language Switcher */}
-        <div className="flex justify-between items-center mb-6">
-          <Link
-            href={createLocaleLink("/")}
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
-          >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            {t.backToHome}
-          </Link>
-
-          <div className="relative">
-            <button
-              onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
-              className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-            >
-              <span className="text-xl">{currentLanguage?.flag}</span>
-              <span className="font-medium text-gray-700 hidden sm:block">
-                {currentLanguage?.name}
-              </span>
-              <span className="font-medium text-gray-700 sm:hidden">
-                {localeDisplayCode(currentLanguage?.code)}
-              </span>
-              <svg
-                className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
-                  isLanguageDropdownOpen ? "rotate-180" : ""
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-
-            {/* Dropdown Menu */}
-            {isLanguageDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 animate-in slide-in-from-top-2 duration-200">
-                <div className="py-2">
-                  <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-100">
-                    {t.selectLanguage}
-                  </div>
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() =>
-                        handleLanguageChange(
-                          lang.code as
-                            | "en"
-                            | "ru"
-                            | "pl"
-                            | "fr"
-                            | "ua"
-                            | "de"
-                            | "es"
-                        )
-                      }
-                      className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors duration-150 ${
-                        language === lang.code
-                          ? "bg-blue-50 text-blue-700"
-                          : "text-gray-700"
-                      }`}
-                    >
-                      <span className="text-lg">{lang.flag}</span>
-                      <span className="font-medium">{lang.name}</span>
-                      {language === lang.code && (
-                        <svg
-                          className="w-4 h-4 ml-auto text-blue-600"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
+    <CatalogDetailShell>
         {/* Page Title */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">
@@ -552,7 +420,7 @@ export default function ApartmentsPageClient({
               <>
                 <ApartmentCard
                   translations={t}
-                  language={language}
+                  language={locale}
                   apartments={currentApartments}
                   allFilteredApartments={filteredApartments}
                 />
@@ -562,13 +430,13 @@ export default function ApartmentsPageClient({
                   <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                     {/* Results info */}
                     <div className="text-sm text-gray-600">
-                      {language === "en"
+                      {locale === "en"
                         ? `Showing ${startIndex + 1}-${Math.min(endIndex, filteredApartments.length)} of ${filteredApartments.length} properties`
-                        : language === "ru"
+                        : locale === "ru"
                           ? `Показано ${startIndex + 1}-${Math.min(endIndex, filteredApartments.length)} из ${filteredApartments.length} объектов`
-                          : language === "pl"
+                          : locale === "pl"
                             ? `Pokazano ${startIndex + 1}-${Math.min(endIndex, filteredApartments.length)} z ${filteredApartments.length} nieruchomości`
-                            : language === "fr"
+                            : locale === "fr"
                               ? `Affichage de ${startIndex + 1}-${Math.min(endIndex, filteredApartments.length)} sur ${filteredApartments.length} propriétés`
                               : `Показано ${startIndex + 1}-${Math.min(endIndex, filteredApartments.length)} з ${filteredApartments.length} об'єктів`}
                     </div>
@@ -594,13 +462,13 @@ export default function ApartmentsPageClient({
                             d="M15 19l-7-7 7-7"
                           />
                         </svg>
-                        {language === "en"
+                        {locale === "en"
                           ? "Previous"
-                          : language === "ru"
+                          : locale === "ru"
                             ? "Назад"
-                            : language === "pl"
+                            : locale === "pl"
                               ? "Poprzednia"
-                              : language === "fr"
+                              : locale === "fr"
                                 ? "Précédent"
                                 : "Попередня"}
                       </button>
@@ -650,13 +518,13 @@ export default function ApartmentsPageClient({
                         disabled={currentPage === totalPages}
                         className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                       >
-                        {language === "en"
+                        {locale === "en"
                           ? "Next"
-                          : language === "ru"
+                          : locale === "ru"
                             ? "Вперед"
-                            : language === "pl"
+                            : locale === "pl"
                               ? "Następna"
-                              : language === "fr"
+                              : locale === "fr"
                                 ? "Suivant"
                                 : "Наступна"}
                         <svg
@@ -681,21 +549,13 @@ export default function ApartmentsPageClient({
               <div className="flex justify-center items-center h-64">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 <span className="ml-3 text-gray-600">
-                  {getLoadingPropertiesText(language)}
+                  {getLoadingPropertiesText(locale)}
                 </span>
               </div>
             )}
           </div>
         </div>
 
-        {/* Click outside to close dropdown */}
-        {isLanguageDropdownOpen && (
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setIsLanguageDropdownOpen(false)}
-          />
-        )}
-      </div>
-    </div>
+    </CatalogDetailShell>
   );
 }

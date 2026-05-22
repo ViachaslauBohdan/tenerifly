@@ -16,21 +16,32 @@ export async function POST(req: Request) {
     console.log('Message length:', message?.length || 0, 'characters')
     console.log('========================')
 
-    // Define recipients - always include main email and contact email if available
+    // Primary inbox — booking notifications always go here
     const defaultRecipient = process.env.NEXT_DEFAULT_EMAIL_RECIPIENT || 'slawandr1@gmail.com'
     const recipients = [defaultRecipient]
+
+    // Extra recipients (e.g. property owner) require a verified domain on Resend.
+    // Without RESEND_ENABLE_EXTRA_RECIPIENTS=true, Resend returns 403 validation_error
+    // when using onboarding@resend.dev or an unverified from domain.
+    const extraRecipientsEnabled = process.env.RESEND_ENABLE_EXTRA_RECIPIENTS === 'true'
 
     console.log('📧 RECIPIENTS SETUP:')
     console.log('   Default recipient (from env):', defaultRecipient)
     console.log('   User email (from form):', email)
     console.log('   Contact email (from property):', contactEmail)
+    console.log('   Extra recipients enabled:', extraRecipientsEnabled)
 
-    // Add contact email if provided and valid
-    if (contactEmail && contactEmail !== email && contactEmail.includes('@')) {
+    if (
+        extraRecipientsEnabled &&
+        contactEmail &&
+        contactEmail !== defaultRecipient &&
+        contactEmail.includes('@') &&
+        !recipients.includes(contactEmail)
+    ) {
         recipients.push(contactEmail)
         console.log('✅ Added contact email to recipients:', contactEmail)
-    } else {
-        console.log('❌ No valid contact email provided or same as user email')
+    } else if (contactEmail) {
+        console.log('ℹ️ Contact email included in body only (not in to:)')
     }
 
     console.log('📧 FINAL RECIPIENTS LIST:')
@@ -41,11 +52,19 @@ export async function POST(req: Request) {
 
     const resendApiKey =
         process.env.RESEND_API_KEY ||
+        process.env.NEXT_RESEND_API_KEY ||
         process.env.NEXT_PUBLIC_RESEND_API_KEY
 
     if (!resendApiKey) {
-        console.error('❌ RESEND_API_KEY / NEXT_PUBLIC_RESEND_API_KEY is not configured')
-        return NextResponse.json({ success: false, error: 'Email service not configured' }, { status: 500 })
+        console.error('❌ Resend API key missing. Set RESEND_API_KEY in .env.local')
+        return NextResponse.json(
+            {
+                success: false,
+                error:
+                    'Email service not configured. Add RESEND_API_KEY to .env.local and restart the dev server.',
+            },
+            { status: 500 }
+        )
     }
 
     console.log('✅ API Key found:', resendApiKey.substring(0, 10) + '...')
@@ -56,13 +75,24 @@ export async function POST(req: Request) {
         process.env.NEXT_PUBLIC_RESEND_EMAIL ||
         'onboarding@resend.dev'
 
+    const contactBlock =
+        contactEmail && !recipients.includes(contactEmail)
+            ? `<p><strong>Property contact:</strong> ${contactEmail}</p>`
+            : ''
+
+    const htmlBody = `
+        ${contactBlock}
+        <pre style="font-family: inherit; white-space: pre-wrap;">${message}</pre>
+    `.trim()
+
     try {
         console.log('SENDING EMAIL VIA RESEND...')
         const result = await resend.emails.send({
             from: fromEmail,
             to: recipients,
+            replyTo: email?.includes('@') ? email : undefined,
             subject,
-            html: `<p>${message}</p>`,
+            html: htmlBody,
         })
 
         if (result.data && !result.error) {
