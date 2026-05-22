@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useTranslation } from "@/hooks/useTranslation";
 import { pickLocaleBundle } from "@/types/locale";
+import { CatalogBackLink } from "@/components/CatalogBackLink";
 import { CatalogDetailShell } from "@/components/CatalogDetailShell";
 import {
   Carousel,
@@ -193,27 +193,10 @@ export default function PropertyDetailPage({
 
   return (
     <CatalogDetailShell>
-        <div className="mb-6">
-          <Link
-            href={createLocaleLink("/apartments")}
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm"
-          >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            {t.backToProperties}
-          </Link>
-        </div>
+        <CatalogBackLink
+          href={createLocaleLink("/apartments")}
+          label={t.backToProperties}
+        />
 
         {/* Page Title */}
         <div className="mb-6">

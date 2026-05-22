@@ -3,6 +3,7 @@
 import { MapPin } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { pickLocaleBundle } from "@/types/locale";
+import { CatalogBackLink } from "@/components/CatalogBackLink";
 import { CatalogDetailShell } from "@/components/CatalogDetailShell";
 import translations from "@/i18n/tours.json";
 import mainJson from "@/i18n/main.json";
@@ -12,7 +13,7 @@ type MainBundle = {
 };
 
 export default function ToursPageClient() {
-  const { locale } = useTranslation();
+  const { locale, createLocaleLink } = useTranslation();
   const language = locale;
 
   const t = pickLocaleBundle(translations, language);
@@ -36,6 +37,8 @@ export default function ToursPageClient() {
 
   return (
     <CatalogDetailShell>
+      <CatalogBackLink href={createLocaleLink("/")} label={t.backToHome} />
+
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-3">
           {excursionSection?.title ?? t.toursInTenerife}

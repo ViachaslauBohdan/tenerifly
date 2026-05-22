@@ -11,6 +11,7 @@ import {
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
 import { pickLocaleBundle } from "@/types/locale";
+import { CatalogBackLink } from "@/components/CatalogBackLink";
 import { CatalogDetailShell } from "@/components/CatalogDetailShell";
 import translations from "@/i18n/apartments.json";
 
@@ -396,6 +397,11 @@ export default function ApartmentsPageClient({
 
   return (
     <CatalogDetailShell>
+        <CatalogBackLink
+          href={createLocaleLink("/")}
+          label={t.backToHome}
+        />
+
         {/* Page Title */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">
