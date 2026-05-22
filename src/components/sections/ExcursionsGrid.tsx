@@ -16,9 +16,9 @@ export function ExcursionsGrid({ tours }: ExcursionsGridProps) {
   return (
     <>
       {tours.length === 0 ? (
-        <Text ta="center" py="xl">No excursions found</Text>
+        <Text ta="center" py="xl">No tours found</Text>
       ) : (
-        <section aria-label="Excursion listings">
+        <section aria-label="Tour listings">
           <Grid>
             {tours.map((tour) => (
               <Grid.Col key={tour.id} span={{ base: 12, sm: 6 }}>

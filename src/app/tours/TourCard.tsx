@@ -24,7 +24,7 @@ const getFoundText = (locale: string): string => {
 
 const getToursText = (locale: string): string => {
     const texts: Record<string, string> = {
-        en: 'excursions',
+        en: 'tours',
         ru: 'экскурсий',
         pl: 'wycieczek',
         fr: 'excursions',

@@ -98,7 +98,7 @@ export const SEO_HOME: Record<Locale, PageSeo> = {
       "Tenerife holiday",
       "Tenerife Canary Islands",
       "visit Tenerife",
-      "Tenerife accommodation",
+      "Tenerife stays",
       "Tenerife car rental",
       "Tenerife tours",
       "Tenerife travel",
@@ -208,11 +208,11 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
       "Tenerife apartment rental",
       "Tenerife apartments for rent",
       "holiday apartment Tenerife",
-      "Tenerife accommodation",
+      "Tenerife stays",
       "Tenerife apartments",
       "Tenerife villas",
       "holiday rental Tenerife",
-      "Canary Islands accommodation",
+      "Canary Islands stays",
     ],
   },
   pl: {
@@ -303,12 +303,12 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
 
 export const SEO_TOURS: Record<Locale, PageSeo> = {
   en: {
-    title: "Tours & excursions in Tenerife | Tenerifly.io",
+    title: "Tours in Tenerife | Tenerifly.io",
     description:
       "Book Teide, whale watching, hiking, and boat trips in Tenerife. Hand-picked experiences across the Canary Islands with trusted local operators.",
     keywords: [
       "Tenerife tours",
-      "Tenerife excursions",
+      "Tenerife day tours",
       "Teide tour",
       "whale watching Tenerife",
       "Canary Islands activities",

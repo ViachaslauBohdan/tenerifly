@@ -3214,19 +3214,19 @@
           "tabs": {
             "blog": "Blog",
             "cars": "Cars",
-            "excursions": "Excursions",
-            "accommodation": "Accommodation"
+            "excursions": "Tours",
+            "accommodation": "Stays"
           },
           "title": "Welcome to Tenerife",
           "search": "Search",
-          "subtitle": "Find accommodation, excursions or car rental",
+          "subtitle": "Find stays, tours or car rental",
           "excursions": {
             "date": "Date",
-            "type": "Type of excursion",
-            "title": "Excursions",
+            "type": "Type of tour",
+            "title": "Tours",
             "types": [
               {
-                "label": "All excursions",
+                "label": "All tours",
                 "value": "all"
               },
               {
@@ -3266,7 +3266,7 @@
           "accommodation": {
             "type": "Property type",
             "rooms": "Rooms",
-            "title": "Accommodation",
+            "title": "Stays",
             "types": [
               {
                 "label": "All types",
@@ -3415,7 +3415,7 @@
           },
           "excursions": {
             "price": "Price",
-            "title": "Popular Excursions",
+            "title": "Popular Tours",
             "viewAll": "View all",
             "duration": "Duration",
             "language": "Language",
@@ -3428,7 +3428,7 @@
             "viewAll": "View all",
             "bedrooms": "Bedrooms",
             "location": "Location",
-            "subtitle": "Find your perfect accommodation in Tenerife",
+            "subtitle": "Find your perfect stay in Tenerife",
             "amenities": "Amenities",
             "bathrooms": "Bathrooms"
           }
@@ -3438,8 +3438,8 @@
           "cars": "Cars",
           "home": "Home",
           "contact": "Contact",
-          "excursions": "Excursions",
-          "accommodation": "Accommodation"
+          "excursions": "Tours",
+          "accommodation": "Stays"
         },
         "selectLanguage": "Select language",
         "personalizedRequest": {

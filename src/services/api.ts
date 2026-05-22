@@ -333,7 +333,7 @@ export const excursionsAPI = {
       return { data: transformedData };
     } catch (error) {
       console.warn(`Excursion API failed for id ${id}:`, error);
-      throw new Error('Excursion not found');
+      throw new Error('Tour not found');
     }
   },
 

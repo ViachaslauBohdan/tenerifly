@@ -769,7 +769,7 @@ export async function getHomePageData(language: string = "en") {
               documentId: property.documentId,
               title: property.title || "Property",
               description:
-                property.description || "Beautiful accommodation in Tenerife",
+                property.description || "Beautiful stay in Tenerife",
               image: getImageUrl(property),
               price: `€${property.price?.amount || 0}/${property.type === "rent" ? getLocalizedText(language, "month") : getLocalizedText(language, "night")}`,
               location: property.location?.city || "Tenerife",

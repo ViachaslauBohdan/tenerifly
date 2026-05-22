@@ -1400,7 +1400,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   href={createLocaleLink("/tours")}
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
-                  Excursions & Tours
+                  Tours
                 </Link>
                 <Link
                   href={createLocaleLink("/apartments")}

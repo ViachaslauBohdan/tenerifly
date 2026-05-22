@@ -244,7 +244,7 @@ export function ClassicToursPageClient({ params }: ClassicToursPageClientProps) 
 
   const getTitle = (locale: Locale): string => {
     const texts = {
-      en: 'Tours & Excursions',
+      en: 'Tours',
       ru: 'Экскурсии и туры',
       pl: 'Wycieczki i ekskursje',
       fr: 'Tours et excursions',

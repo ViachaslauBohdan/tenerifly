@@ -212,7 +212,7 @@ export function useDataLoader(
               documentId: property.documentId,
               title: property.title || "Property",
               description:
-                property.description || "Beautiful accommodation in Tenerife",
+                property.description || "Beautiful stay in Tenerife",
               image: getImageUrl(
                 property as { images?: Array<{ url: string }> }
               ),

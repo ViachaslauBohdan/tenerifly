@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
-          alt: "Tenerife Accommodation",
+          alt: "Tenerife Stays",
         },
       ],
       locale: ogLocale("en"),

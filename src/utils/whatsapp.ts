@@ -37,9 +37,9 @@ export const openWhatsApp = (
 
   const messages = {
     en: {
-      excursion: `Hi! I'm interested in the excursion "${details.title}" (${details.duration}, ${details.language}) for ${details.price}`,
+      excursion: `Hi! I'm interested in the tour "${details.title}" (${details.duration}, ${details.language}) for ${details.price}`,
       car: `Hi! I'd like to rent a car ${details.brand} ${details.model} "${details.title}" for ${details.price}`,
-      accommodation: `Hi! I'm interested in the accommodation "${details.title}" for ${details.price}`,
+      accommodation: `Hi! I'm interested in the stay "${details.title}" for ${details.price}`,
       general: `Hi! I'd like to learn more about your services in Tenerife`,
     },
     pl: {
@@ -111,7 +111,7 @@ export const openBookingWhatsApp = (
     en: {
       accommodation: `Hi! I would like to book "${details.title}" for ${details.price}`,
       car: `Hi! I would like to book the car ${details.brand} ${details.model} "${details.title}" for ${details.price}`,
-      excursion: `Hi! I would like to book the excursion "${details.title}" (${details.duration}, ${details.language}) for ${details.price}`,
+      excursion: `Hi! I would like to book the tour "${details.title}" (${details.duration}, ${details.language}) for ${details.price}`,
     },
     pl: {
       accommodation: `Dzień dobry! Chciałbym zarezerwować "${details.title}" za ${details.price}`,

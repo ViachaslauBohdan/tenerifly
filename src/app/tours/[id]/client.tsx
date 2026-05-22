@@ -80,7 +80,7 @@ const PARTNER_OFFERS_FALLBACK: Record<
   en: {
     title: "Partner offers",
     subtitle:
-      "Book this or similar excursions with our trusted local partners.",
+      "Book this or similar tours with our trusted local partners.",
   },
   de: {
     title: "Partnerangebote",

@@ -60,7 +60,7 @@ export async function generateMetadata({
       description: description,
       keywords: [
         "Tenerife tours",
-        "Tenerife excursions",
+        "Tenerife tours",
         "Tenerife activities",
         "Tenerife travel",
         String(tour.category ?? "tour"),

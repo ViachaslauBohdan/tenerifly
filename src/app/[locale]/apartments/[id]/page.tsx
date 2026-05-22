@@ -66,7 +66,7 @@ export async function generateMetadata({
       title: `${title} | Tenerifly.io`,
       description: description,
       keywords: [
-        "Tenerife accommodation",
+        "Tenerife stays",
         "Tenerife property",
         "Tenerife apartment",
         "Tenerife villa",
