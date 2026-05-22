@@ -1,5 +1,6 @@
 "use client";
 
+import { OtpuskBodyClassGuard } from "@/components/OtpuskBodyClassGuard";
 import {
   useOtpuskSearch,
   type UseOtpuskSearchOptions,
@@ -29,6 +30,7 @@ export function OtpuskTourSearchSection({
 
   return (
     <section className={`${className} overflow-x-hidden`}>
+      <OtpuskBodyClassGuard />
       <div
         id={searchContainerId}
         className="new_os otpusk-search-host mx-auto min-h-[120px] w-full max-w-[1200px] px-3 sm:px-4"

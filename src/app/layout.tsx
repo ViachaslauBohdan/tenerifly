@@ -104,7 +104,11 @@ export default async function RootLayout({
     const htmlLang = headersList.get("x-locale") ?? "en";
 
     return (
-        <html lang={htmlLang} suppressHydrationWarning>
+        <html
+            lang={htmlLang}
+            className={`${geistSans.variable} ${geistMono.variable}`}
+            suppressHydrationWarning
+        >
         <head>
             <script
                 type="application/ld+json"
@@ -125,10 +129,7 @@ export default async function RootLayout({
             />
             <link rel="preload" href={DEFAULT_OG_IMAGE} as="image"/>
         </head>
-        <body
-            className={`${geistSans.variable} ${geistMono.variable}`}
-            suppressHydrationWarning
-        >
+        <body suppressHydrationWarning>
         <MantineProvider>
             <ReferralCodeClient/>
             {children}

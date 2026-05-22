@@ -80,15 +80,17 @@ function isOtpuskLayoutSettled(container: Element): boolean {
     return true;
   }
 
-  const root = getOtpuskRoot(container);
-  if (!root) {
-    return false;
-  }
+  const bodyHasMobile =
+    document.body.classList.contains("new_m-mobile-form") ||
+    document.body.classList.contains("new_mobile-form");
 
-  return (
-    root.classList.contains("new_m-mobile-form") ||
-    root.classList.contains("new_mobile-form")
-  );
+  const root = getOtpuskRoot(container);
+  const rootHasMobile =
+    root != null &&
+    (root.classList.contains("new_m-mobile-form") ||
+      root.classList.contains("new_mobile-form"));
+
+  return bodyHasMobile || rootHasMobile;
 }
 
 function waitForOtpuskLayout(
