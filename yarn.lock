@@ -452,22 +452,22 @@
   resolved "https://registry.npmjs.org/@mantine/store/-/store-7.17.8.tgz"
   integrity sha512-/FrB6PAVH4NEjQ1dsc9qOB+VvVlSuyjf4oOOlM9gscPuapDP/79Ryq7JkhHYfS55VWQ/YUlY24hDI2VV+VptXg==
 
-"@next/env@15.4.5":
-  version "15.4.5"
-  resolved "https://registry.npmjs.org/@next/env/-/env-15.4.5.tgz"
-  integrity sha512-ruM+q2SCOVCepUiERoxOmZY9ZVoecR3gcXNwCYZRvQQWRjhOiPJGmQ2fAiLR6YKWXcSAh7G79KEFxN3rwhs4LQ==
+"@next/env@15.4.11":
+  version "15.4.11"
+  resolved "https://registry.npmjs.org/@next/env/-/env-15.4.11.tgz"
+  integrity sha512-mIYp/091eYfPFezKX7ZPTWqrmSXq+ih6+LcUyKvLmeLQGhlPtot33kuEOd4U+xAA7sFfj21+OtCpIZx0g5SpvQ==
 
-"@next/eslint-plugin-next@15.4.5":
-  version "15.4.5"
-  resolved "https://registry.npmjs.org/@next/eslint-plugin-next/-/eslint-plugin-next-15.4.5.tgz"
-  integrity sha512-YhbrlbEt0m4jJnXHMY/cCUDBAWgd5SaTa5mJjzOt82QwflAFfW/h3+COp2TfVSzhmscIZ5sg2WXt3MLziqCSCw==
+"@next/eslint-plugin-next@15.4.11":
+  version "15.4.11"
+  resolved "https://registry.npmjs.org/@next/eslint-plugin-next/-/eslint-plugin-next-15.4.11.tgz"
+  integrity sha512-WSY6ZwahlbR3JLfXrBezo2H4OmCeF2aFpguZuTkGV/n7+C10wYP17gxsCXbKVI6TpWmHZysp/AhwovUObPjfEA==
   dependencies:
     fast-glob "3.3.1"
 
-"@next/swc-darwin-arm64@15.4.5":
-  version "15.4.5"
-  resolved "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-15.4.5.tgz"
-  integrity sha512-84dAN4fkfdC7nX6udDLz9GzQlMUwEMKD7zsseXrl7FTeIItF8vpk1lhLEnsotiiDt+QFu3O1FVWnqwcRD2U3KA==
+"@next/swc-darwin-arm64@15.4.8":
+  version "15.4.8"
+  resolved "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-15.4.8.tgz"
+  integrity sha512-Pf6zXp7yyQEn7sqMxur6+kYcywx5up1J849psyET7/8pG2gQTVMjU3NzgIt8SeEP5to3If/SaWmaA6H6ysBr1A==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -1728,12 +1728,12 @@ escodegen@^2.1.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-next@15.4.5:
-  version "15.4.5"
-  resolved "https://registry.npmjs.org/eslint-config-next/-/eslint-config-next-15.4.5.tgz"
-  integrity sha512-IMijiXaZ43qFB+Gcpnb374ipTKD8JIyVNR+6VsifFQ/LHyx+A9wgcgSIhCX5PYSjwOoSYD5LtNHKlM5uc23eww==
+eslint-config-next@~15.4.10:
+  version "15.4.11"
+  resolved "https://registry.npmjs.org/eslint-config-next/-/eslint-config-next-15.4.11.tgz"
+  integrity sha512-JgvFtb0R8tFyGRRzPZhX4mX+bgllh0v8WP7VxlRXWrh829ONZCi+Bv8OGH4QeQjmFIvZ7hgdQBRXHPf2TYgvsA==
   dependencies:
-    "@next/eslint-plugin-next" "15.4.5"
+    "@next/eslint-plugin-next" "15.4.11"
     "@rushstack/eslint-patch" "^1.10.3"
     "@typescript-eslint/eslint-plugin" "^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0"
     "@typescript-eslint/parser" "^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0"
@@ -2951,25 +2951,25 @@ netmask@^2.0.2:
   resolved "https://registry.npmjs.org/netmask/-/netmask-2.0.2.tgz"
   integrity sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg==
 
-next@15.4.5:
-  version "15.4.5"
-  resolved "https://registry.npmjs.org/next/-/next-15.4.5.tgz"
-  integrity sha512-nJ4v+IO9CPmbmcvsPebIoX3Q+S7f6Fu08/dEWu0Ttfa+wVwQRh9epcmsyCPjmL2b8MxC+CkBR97jgDhUUztI3g==
+next@~15.4.10:
+  version "15.4.11"
+  resolved "https://registry.npmjs.org/next/-/next-15.4.11.tgz"
+  integrity sha512-IJRyXal45mIsshZI5XJne/intjusslUP1F+FHVBIyMGEqbYtIq1Irdx5vdWBBg58smviPDycmDeV6txsfkv1RQ==
   dependencies:
-    "@next/env" "15.4.5"
+    "@next/env" "15.4.11"
     "@swc/helpers" "0.5.15"
     caniuse-lite "^1.0.30001579"
     postcss "8.4.31"
     styled-jsx "5.1.6"
   optionalDependencies:
-    "@next/swc-darwin-arm64" "15.4.5"
-    "@next/swc-darwin-x64" "15.4.5"
-    "@next/swc-linux-arm64-gnu" "15.4.5"
-    "@next/swc-linux-arm64-musl" "15.4.5"
-    "@next/swc-linux-x64-gnu" "15.4.5"
-    "@next/swc-linux-x64-musl" "15.4.5"
-    "@next/swc-win32-arm64-msvc" "15.4.5"
-    "@next/swc-win32-x64-msvc" "15.4.5"
+    "@next/swc-darwin-arm64" "15.4.8"
+    "@next/swc-darwin-x64" "15.4.8"
+    "@next/swc-linux-arm64-gnu" "15.4.8"
+    "@next/swc-linux-arm64-musl" "15.4.8"
+    "@next/swc-linux-x64-gnu" "15.4.8"
+    "@next/swc-linux-x64-musl" "15.4.8"
+    "@next/swc-win32-arm64-msvc" "15.4.8"
+    "@next/swc-win32-x64-msvc" "15.4.8"
     sharp "^0.34.3"
 
 node-domexception@^1.0.0:

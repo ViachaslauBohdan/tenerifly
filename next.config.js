@@ -44,6 +44,8 @@ const nextConfig = {
 
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
+    // Avoid intermittent pages-manifest ENOENT during production builds
+    webpackBuildWorker: false,
   },
 
   transpilePackages: [
