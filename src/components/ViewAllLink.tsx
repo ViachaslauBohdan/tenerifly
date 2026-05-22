@@ -15,7 +15,7 @@ export function ViewAllLink({ href, children, className }: ViewAllLinkProps) {
       href={href}
       trailingIcon="arrow"
       className={cn(
-        "flex shrink-0 items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8",
+        "flex shrink-0 items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl sm:ml-8",
         className
       )}
     >

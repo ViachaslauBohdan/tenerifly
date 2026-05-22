@@ -56,7 +56,7 @@ export default async function ApartmentsPage() {
     );
 
     return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={null}>
         <ApartmentsPageClient initialProperties={properties} />
       </Suspense>
     );
@@ -64,7 +64,7 @@ export default async function ApartmentsPage() {
     console.error("❌ SSG: Error in ApartmentsPage:", error);
     // Return page with empty data to prevent build failure
     return (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={null}>
         <ApartmentsPageClient initialProperties={[]} />
       </Suspense>
     );

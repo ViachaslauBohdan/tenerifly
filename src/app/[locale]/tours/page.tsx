@@ -61,7 +61,7 @@ export default async function ToursPage({
   params: Promise<{ locale: Locale }>;
 }) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={null}>
       <ToursPageClient />
     </Suspense>
   );

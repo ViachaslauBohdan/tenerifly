@@ -65,7 +65,7 @@ export default async function CarsPage({
   const carsByLocale = await getAllCarsAllLocales();
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={null}>
       <CarsPageClient
         initialCarsByLocale={carsByLocale as Record<string, unknown[]>}
       />

@@ -709,8 +709,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-gray-50"
       >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center mb-16">
-            <div className="text-center flex-1">
+          <div className="flex flex-col items-center gap-4 mb-12 sm:mb-16 sm:flex-row sm:justify-between sm:items-center">
+            <div className="min-w-0 w-full text-center sm:flex-1">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">
                 {t.sections.accommodation.title}
               </h2>
@@ -847,8 +847,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         className="scroll-mt-[6.5rem] pt-20 md:scroll-mt-16 bg-white"
       >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center mb-16">
-            <div className="text-center flex-1">
+          <div className="flex flex-col items-center gap-4 mb-12 sm:mb-16 sm:flex-row sm:justify-between sm:items-center">
+            <div className="min-w-0 w-full text-center sm:flex-1">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">
                 {t.sections.cars.title}
               </h2>
@@ -1199,8 +1199,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         className="scroll-mt-[6.5rem] py-20 md:scroll-mt-16 bg-white"
       >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center mb-16">
-            <div className="text-center flex-1">
+          <div className="flex flex-col items-center gap-4 mb-12 sm:mb-16 sm:flex-row sm:justify-between sm:items-center">
+            <div className="min-w-0 w-full text-center sm:flex-1">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">
                 {t.sections.blog.title}
               </h2>
