@@ -13,6 +13,8 @@ import {
   HOME_PREVIEW_LIMIT,
   homeListQuery,
   homePopulateQuery,
+  pickHomeCarsByLocale,
+  type HomeCarRow,
 } from "@/lib/homeListing";
 import {
   normalizeExcursionDocumentToTourCard,
@@ -646,15 +648,9 @@ export async function getAllBlogIds() {
   );
 }
 
-function strapiLocaleParam(language: string): string {
-  return localeContentKey(language as Locale);
-}
-
-type HomeCarItem = {
+type HomeCarStrapiRow = HomeCarRow & {
   id: number;
   documentId: string;
-  locale?: string;
-  title?: string;
   specifications?: {
     make?: string;
     model?: string;
@@ -666,33 +662,22 @@ type HomeCarItem = {
   images?: Array<{ url: string }>;
 };
 
-function toHomeCar(car: HomeCarItem) {
+function toHomeCar(car: HomeCarStrapiRow) {
+  const firstImage = car.images?.[0];
   return {
     id: car.id,
     documentId: car.documentId,
     title:
       car.title ||
       `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
-    images: car.images?.length ? [car.images[0]] : [],
+    images: firstImage?.url ? [firstImage] : [],
     specifications: car.specifications,
     type: car.type,
     rental_prices: car.rental_prices,
   };
 }
 
-function filterCarsByLocale(
-  rows: HomeCarItem[],
-  language: string
-): HomeCarItem[] {
-  const localeKey = strapiLocaleParam(language);
-  const forLocale = rows.filter((car) => car.locale === localeKey);
-  if (forLocale.length >= HOME_PREVIEW_LIMIT) {
-    return forLocale.slice(0, HOME_PREVIEW_LIMIT);
-  }
-  return rows.slice(0, HOME_PREVIEW_LIMIT);
-}
-
-async function getHomeCars(language: string): Promise<HomeCarItem[]> {
+async function getHomeCars(language: string) {
   const endpoint = `/cars?${homePopulateQuery()}&${homeListQuery(HOME_CARS_FETCH_LIMIT)}&sort=title:ASC`;
   const rows = await fetchWithCache(endpoint, "home-cars-list", [
     CMS_CACHE_TAGS.home,
@@ -700,8 +685,8 @@ async function getHomeCars(language: string): Promise<HomeCarItem[]> {
     CMS_CACHE_TAGS.carsAll,
   ]);
   if (!Array.isArray(rows)) return [];
-  return filterCarsByLocale(rows as HomeCarItem[], language).map((car) =>
-    toHomeCar(car)
+  return pickHomeCarsByLocale(rows as HomeCarStrapiRow[], language).map(
+    (car) => toHomeCar(car)
   );
 }
 

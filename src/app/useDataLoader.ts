@@ -7,6 +7,7 @@ import {
   HOME_PREVIEW_LIMIT,
   homeListQuery,
   homePopulateQuery,
+  pickHomeCarsByLocale,
 } from "@/lib/homeListing";
 import { localeContentKey } from "@/types/locale";
 
@@ -157,7 +158,6 @@ export function useDataLoader(
         setDataLoading(true);
         setHasError(false);
 
-        const localeKey = localeContentKey(language);
         const list = homeListQuery(HOME_PREVIEW_LIMIT);
         const populate = homePopulateQuery();
         const [carsResult, propertiesResult, blogsResult, transfersResult] =
@@ -181,24 +181,25 @@ export function useDataLoader(
           const carRows = carsResult.value.data as Array<
             Record<string, unknown> & { locale?: string }
           >;
-          const localeCars = carRows.filter((car) => car.locale === localeKey);
-          const picked =
-            localeCars.length >= HOME_PREVIEW_LIMIT
-              ? localeCars.slice(0, HOME_PREVIEW_LIMIT)
-              : carRows.slice(0, HOME_PREVIEW_LIMIT);
+          const picked = pickHomeCarsByLocale(carRows, language);
 
           setCars(
-            picked.map((car: Record<string, unknown>) => ({
-              id: car.id,
-              documentId: car.documentId,
-              title:
-                car.title ||
-                `${(car.specifications as { make?: string })?.make || "Car"} ${(car.specifications as { model?: string })?.model || ""}`.trim(),
-              images: Array.isArray(car.images) ? [car.images[0]] : [],
-              specifications: car.specifications,
-              type: car.type,
-              rental_prices: car.rental_prices,
-            }))
+            picked.map((car: Record<string, unknown>) => {
+              const first = Array.isArray(car.images)
+                ? (car.images[0] as { url?: string })
+                : undefined;
+              return {
+                id: car.id,
+                documentId: car.documentId,
+                title:
+                  car.title ||
+                  `${(car.specifications as { make?: string })?.make || "Car"} ${(car.specifications as { model?: string })?.model || ""}`.trim(),
+                images: first?.url ? [first] : [],
+                specifications: car.specifications,
+                type: car.type,
+                rental_prices: car.rental_prices,
+              };
+            })
           );
         }
 

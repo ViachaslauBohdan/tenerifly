@@ -31,6 +31,10 @@ import translationsJson from "../i18n/main.json";
 import { SiteHeader } from "@/components/SiteHeader";
 import { HomeCardImage } from "@/components/HomeCardImage";
 import {
+  getHomeCarImageUrl,
+  HOME_DISPLAY_LIMIT,
+} from "@/lib/homeListing";
+import {
   formatTransferPrice,
   getTransferImage,
   getTransferLocaleText,
@@ -220,14 +224,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const compactControlClass =
     "w-full min-w-0 border-0 bg-transparent p-0 text-base font-semibold leading-snug text-gray-900 shadow-none outline-none focus:ring-0 placeholder:font-normal placeholder:text-gray-400";
   const searchBarClass = heroSearchFieldsClass;
-  const getCarImage = (car: any) => {
-    const apiUrl =
-      process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://tenerifly.io";
-    const rawUrl = car.image || car.images?.[0]?.url;
-    if (!rawUrl) return "/placeholder.svg?height=400&width=600";
-    if (typeof rawUrl === "string" && rawUrl.startsWith("http")) return rawUrl;
-    return `${apiUrl}${rawUrl}`;
-  };
+  const strapiApiUrl =
+    process.env.NEXT_PUBLIC_STRAPI_API_URL ||
+    "https://tenerifly-strapi-production.up.railway.app";
 
   const getCarPrice = (car: any) =>
     car?.rental_prices?.day_1 ?? car?.price ?? 0;
@@ -886,16 +885,19 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             <EmptyState type="empty" />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {cars.map(
-                (car, index) =>
-                  index < 3 && (
+              {cars
+                .slice(0, HOME_DISPLAY_LIMIT)
+                .map((car, index) => {
+                  const imageSrc = getHomeCarImageUrl(car, strapiApiUrl);
+                  if (!imageSrc) return null;
+                  return (
                     <div
                       key={car.id || index}
                       className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                     >
                       <div className="aspect-video relative overflow-hidden">
                         <HomeCardImage
-                          src={getCarImage(car)}
+                          src={imageSrc}
                           alt={car.title}
                           onClick={() =>
                             router.push(
@@ -986,8 +988,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         </div>
                       </div>
                     </div>
-                  )
-              )}
+                  );
+                })}
             </div>
           )}
         </div>
