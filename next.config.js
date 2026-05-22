@@ -53,11 +53,6 @@ const nextConfig = {
     "@mantine/carousel",
   ],
 
-  // Упрощенная webpack конфигурация
-  webpack: (config) => {
-    return config;
-  },
-
   compress: true,
   trailingSlash: false,
   poweredByHeader: false,
