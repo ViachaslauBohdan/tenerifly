@@ -85,14 +85,14 @@ function CompactSearchField({
 }) {
   return (
     <div
-        className={`flex min-w-0 flex-1 flex-col justify-center px-2.5 sm:px-3 ${
-          hideLabel ? "py-0" : "py-1.5 sm:py-2"
+        className={`flex min-w-0 flex-1 flex-col justify-center px-4 sm:px-5 ${
+          hideLabel ? "py-0" : "py-3 sm:py-[15px]"
         } ${className}`}
     >
       {hideLabel ? (
         <span className="sr-only">{label}</span>
       ) : (
-        <span className="mb-0.5 truncate text-[10px] font-medium leading-none text-gray-500 sm:text-[11px]">
+        <span className="mb-1 truncate text-xs font-medium leading-none text-gray-500">
           {label}
         </span>
       )}
@@ -189,64 +189,23 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const iconFieldControlClass =
     "h-9 w-full rounded-lg border border-gray-200 bg-white pl-8 pr-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-100 placeholder:text-gray-400";
   const compactControlClass =
-    "w-full min-w-0 border-0 bg-transparent p-0 text-sm font-medium text-gray-900 shadow-none outline-none focus:ring-0 placeholder:text-gray-400";
+    "w-full min-w-0 border-0 bg-transparent p-0 text-base font-semibold leading-snug text-gray-900 shadow-none outline-none focus:ring-0 placeholder:font-normal placeholder:text-gray-400";
   const searchBarClass =
-    "flex min-h-[44px] flex-1 flex-col divide-y divide-gray-200 sm:flex-row sm:divide-x sm:divide-y-0";
+    "flex min-h-[52px] flex-1 flex-col divide-y divide-gray-300 sm:min-h-[68px] sm:flex-row sm:divide-x sm:divide-y-0";
   const heroSearchWrapClass =
-    "flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.24)] sm:flex-row";
+    "flex flex-col overflow-hidden rounded-xl border border-gray-300 bg-white shadow-[0_16px_48px_rgba(15,23,42,0.28)] sm:min-h-[68px] sm:flex-row";
   const searchSubmitClass =
-    "flex h-11 shrink-0 items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 sm:h-auto sm:border-t-0 sm:border-l sm:px-5 md:min-w-[7.5rem]";
+    "flex min-h-[52px] shrink-0 items-center justify-center gap-2 border-t border-gray-300 bg-blue-600 px-6 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-blue-700 sm:min-h-[68px] sm:self-stretch sm:border-t-0 sm:border-l sm:px-8 md:min-w-[9.5rem]";
   const heroTabNavClass =
-    "inline-flex max-w-full flex-wrap justify-center gap-1 rounded-lg bg-sky-950/55 p-1 ring-1 ring-white/15 backdrop-blur-sm";
+    "flex w-full flex-col gap-2 rounded-xl bg-sky-950/75 p-2 shadow-[0_8px_32px_rgba(0,0,0,0.35)] ring-1 ring-white/25 backdrop-blur-md min-[480px]:inline-flex min-[480px]:w-auto min-[480px]:flex-row min-[480px]:flex-nowrap min-[480px]:justify-center min-[480px]:gap-2 min-[480px]:p-1.5 md:gap-1.5 md:p-1.5 md:shadow-[0_10px_36px_rgba(0,0,0,0.4)]";
   const heroTabButtonClass = (isActive: boolean) =>
-    `inline-flex shrink-0 flex-row items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[11px] font-semibold leading-tight transition-all sm:gap-2 sm:px-3.5 sm:py-2 sm:text-sm ${
+    `flex w-full flex-row items-center justify-center gap-2.5 rounded-lg px-5 py-3 text-base font-bold leading-tight transition-all min-[480px]:inline-flex min-[480px]:w-auto min-[480px]:min-w-[7.25rem] min-[480px]:shrink-0 min-[480px]:gap-2 min-[480px]:px-5 min-[480px]:py-2.5 min-[480px]:text-sm md:min-w-[6.75rem] md:gap-1.5 md:px-4 md:py-2 md:text-sm lg:min-w-[7rem] lg:px-4 lg:py-2 ${
       isActive
-        ? "bg-white text-slate-900 shadow-sm"
-        : "border border-white/35 text-white hover:bg-white/10"
+        ? "bg-white text-slate-900 shadow-md ring-1 ring-gray-300 md:shadow-md"
+        : "border border-white/45 bg-white/5 text-white hover:border-white/60 hover:bg-white/15 min-[480px]:bg-white/10 min-[480px]:hover:bg-white/20"
     }`;
   const heroTabIconClass = (isActive: boolean) =>
-    `h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4 ${isActive ? "text-slate-800" : "text-white"}`;
-  const getMobileTabLabel = (key: string, fallback: string) => {
-    const labels: Record<LanguageCode, Record<string, string>> = {
-      en: {
-        accommodation: "Stays",
-        cars: "Cars",
-        tours: "Tours",
-      },
-      ru: {
-        accommodation: "Жилье",
-        cars: "Авто",
-        tours: "Туры",
-      },
-      pl: {
-        accommodation: "Nocleg",
-        cars: "Auta",
-        tours: "Wycieczki",
-      },
-      fr: {
-        accommodation: "Séjour",
-        cars: "Autos",
-        tours: "Excursions",
-      },
-      ua: {
-        accommodation: "Житло",
-        cars: "Авто",
-        tours: "Екскурсії",
-      },
-      de: {
-        accommodation: "Unterkunft",
-        cars: "Autos",
-        tours: "Touren",
-      },
-      es: {
-        accommodation: "Estancia",
-        cars: "Coches",
-        tours: "Excursiones",
-      },
-    };
-
-    return labels[language]?.[key] || fallback;
-  };
+    `h-5 w-5 shrink-0 min-[480px]:h-4 min-[480px]:w-4 md:h-4 md:w-4 ${isActive ? "text-slate-800" : "text-white"}`;
 
   const getCarImage = (car: any) => {
     const apiUrl =
@@ -561,7 +520,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
           <div className="flex w-full max-w-5xl flex-col gap-2 xl:max-w-6xl sm:gap-2.5">
             <nav
-                className={`${heroTabNavClass} mx-auto mb-8 sm:mb-10 md:mb-12`}
+                className={`${heroTabNavClass} mx-auto mb-6 min-[480px]:mb-8 md:mb-10`}
                 role="tablist"
                 aria-label={t.hero.subtitle}
             >
@@ -587,12 +546,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                       className={heroTabButtonClass(isActive)}
                   >
                     <Icon className={heroTabIconClass(isActive)} />
-                    <span className="max-w-[5.5rem] truncate sm:max-w-none">
-                      <span className="md:hidden">
-                        {getMobileTabLabel(key, label)}
-                      </span>
-                      <span className="hidden md:inline">{label}</span>
-                    </span>
+                    <span>{label}</span>
                   </button>
                 );
               })}
@@ -640,12 +594,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         </CompactSearchField>
                         <CompactSearchField label={t.hero.accommodation.guests}>
                           <div className="relative flex items-center">
-                            <Users className="absolute left-0 h-3.5 w-3.5 text-gray-400"/>
+                            <Users className="absolute left-0 h-4 w-4 text-gray-400"/>
                             <input
                                 type="number"
                                 min="1"
                                 max="10"
-                                className={`${compactControlClass} pl-5`}
+                                className={`${compactControlClass} pl-6`}
                                 value={guests}
                                 onChange={(e) => setGuests(Number(e.target.value))}
                             />
@@ -657,7 +611,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           onClick={handleSearch}
                           className={searchSubmitClass}
                       >
-                        <Search className="h-4 w-4 shrink-0"/>
+                        <Search className="h-5 w-5 shrink-0"/>
                         <span>{t.hero.search}</span>
                       </button>
                     </div>
@@ -737,7 +691,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           onClick={handleSearch}
                           className={searchSubmitClass}
                       >
-                        <Search className="h-4 w-4 shrink-0"/>
+                        <Search className="h-5 w-5 shrink-0"/>
                         <span>{t.hero.search}</span>
                       </button>
                     </div>
@@ -768,12 +722,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         </CompactSearchField>
                         <CompactSearchField label={t.hero.excursions.people}>
                           <div className="relative flex items-center">
-                            <Users className="absolute left-0 h-3.5 w-3.5 text-gray-400"/>
+                            <Users className="absolute left-0 h-4 w-4 text-gray-400"/>
                             <input
                                 type="number"
                                 min="1"
                                 max="20"
-                                className={`${compactControlClass} pl-5`}
+                                className={`${compactControlClass} pl-6`}
                                 value={guests}
                                 onChange={(e) => setGuests(Number(e.target.value))}
                             />
@@ -800,7 +754,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                           onClick={handleSearch}
                           className={searchSubmitClass}
                       >
-                        <Search className="h-4 w-4 shrink-0"/>
+                        <Search className="h-5 w-5 shrink-0"/>
                         <span>{t.hero.search}</span>
                       </button>
                     </div>

@@ -80,8 +80,8 @@
       "tabs": {
         "blog": "Blog",
         "cars": "Autos",
-        "excursions": "Ausflüge",
-        "accommodation": "Unterkunft"
+        "excursions": "Touren",
+        "accommodation": "Unterkünfte"
       },
       "title": "Willkommen auf Teneriffa",
       "search": "Suchen",
@@ -402,8 +402,8 @@
       "tabs": {
         "blog": "Blog",
         "cars": "Cars",
-        "excursions": "Excursions",
-        "accommodation": "Accommodation"
+        "excursions": "Tours",
+        "accommodation": "Stays"
       },
       "title": "Welcome to Tenerife",
       "search": "Search",
@@ -724,8 +724,8 @@
       "tabs": {
         "blog": "Blog",
         "cars": "Coches",
-        "excursions": "Excursiones",
-        "accommodation": "Alojamiento"
+        "excursions": "Tours",
+        "accommodation": "Estancias"
       },
       "title": "Bienvenido a Tenerife",
       "search": "Buscar",
@@ -1046,8 +1046,8 @@
       "tabs": {
         "blog": "Blog",
         "cars": "Voitures",
-        "excursions": "Excursions",
-        "accommodation": "Hébergement"
+        "excursions": "Tours",
+        "accommodation": "Séjours"
       },
       "title": "Bienvenue à Tenerife",
       "search": "Rechercher",
@@ -1369,7 +1369,7 @@
         "blog": "Blog",
         "cars": "Samochody",
         "excursions": "Wycieczki",
-        "accommodation": "Zakwaterowanie"
+        "accommodation": "Noclegi"
       },
       "title": "Witamy na Teneryfie",
       "search": "Szukaj",
@@ -1690,8 +1690,8 @@
       "tabs": {
         "blog": "Блог",
         "cars": "Автомобили",
-        "excursions": "Экскурсии",
-        "accommodation": "Жилье"
+        "excursions": "Туры",
+        "accommodation": "Жильё"
       },
       "title": "Добро пожаловать на Тенерифе",
       "search": "Поиск",
@@ -2012,7 +2012,7 @@
       "tabs": {
         "blog": "Блог",
         "cars": "Автомобілі",
-        "excursions": "Екскурсії",
+        "excursions": "Тури",
         "accommodation": "Житло"
       },
       "title": "Ласкаво просимо на Тенеріфе",
@@ -2334,7 +2334,7 @@
       "tabs": {
         "blog": "Блог",
         "cars": "Автомобілі",
-        "excursions": "Екскурсії",
+        "excursions": "Тури",
         "accommodation": "Житло"
       },
       "title": "Ласкаво просимо на Тенеріфе",
