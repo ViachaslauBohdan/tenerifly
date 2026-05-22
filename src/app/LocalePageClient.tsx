@@ -15,7 +15,6 @@ import {
   Phone,
   Eye,
   BookOpen,
-  Search,
   AlertCircle,
   Wifi,
   WifiOff,
@@ -24,6 +23,8 @@ import {
   ArrowRight,
   Plane,
 } from "lucide-react";
+import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
+import { HeroSearchCtaButton } from "@/components/HeroSearchCta";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
@@ -46,6 +47,11 @@ import {
   type Locale,
 } from "@/types/locale";
 import { type HeroTab, parseHeroTab, isHeroTab } from "@/lib/heroTab";
+import {
+  heroSearchFieldsClass,
+  heroSearchInsetClass,
+  heroSearchWrapClass,
+} from "@/lib/heroSearchLayout";
 // Переводы для всех языков
 const translations = translationsJson;
 
@@ -167,6 +173,30 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [carTransmissions, setCarTransmissions] = useState<string[]>([]);
 
   const t = pickLocaleBundle(translations, language);
+  const worldToursBase =
+    t.hero.worldTours ?? pickLocaleBundle(translations, "en").hero.worldTours;
+  const searchGlobalToursLabel =
+    (t.hero as { searchGlobalTours?: string }).searchGlobalTours ??
+    pickLocaleBundle(translations, "en").hero.searchGlobalTours;
+  const worldToursCopy = {
+    ...worldToursBase,
+    search: searchGlobalToursLabel ?? worldToursBase.search,
+  };
+  const heroTabOptions = useMemo(
+    () =>
+      [
+        {
+          key: "accommodation" as const,
+          icon: Home,
+          label: t.hero.tabs.accommodation,
+        },
+        { key: "cars" as const, icon: Car, label: t.hero.tabs.cars },
+        { key: "tours" as const, icon: MapPin, label: t.hero.tabs.excursions },
+      ],
+    [t.hero.tabs.accommodation, t.hero.tabs.cars, t.hero.tabs.excursions]
+  );
+  const activeHeroTab = heroTabOptions.find((tab) => tab.key === activeTab);
+  const ActiveHeroTabIcon = activeHeroTab?.icon ?? Home;
   const transferCopy = getTransferLocaleText(language);
   const datePlaceholder =
     language === "ru"
@@ -190,23 +220,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     "h-9 w-full rounded-lg border border-gray-200 bg-white pl-8 pr-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-100 placeholder:text-gray-400";
   const compactControlClass =
     "w-full min-w-0 border-0 bg-transparent p-0 text-base font-semibold leading-snug text-gray-900 shadow-none outline-none focus:ring-0 placeholder:font-normal placeholder:text-gray-400";
-  const searchBarClass =
-    "flex min-h-[52px] flex-1 flex-col divide-y divide-gray-300 sm:min-h-[68px] sm:flex-row sm:divide-x sm:divide-y-0";
-  const heroSearchWrapClass =
-    "flex flex-col overflow-hidden rounded-xl border border-gray-300 bg-white shadow-[0_16px_48px_rgba(15,23,42,0.28)] sm:min-h-[68px] sm:flex-row";
-  const searchSubmitClass =
-    "flex min-h-[52px] shrink-0 items-center justify-center gap-2 border-t border-gray-300 bg-blue-600 px-6 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-blue-700 sm:min-h-[68px] sm:self-stretch sm:border-t-0 sm:border-l sm:px-8 md:min-w-[9.5rem]";
-  const heroTabNavClass =
-    "flex w-full flex-col gap-2 rounded-xl bg-sky-950/75 p-2 shadow-[0_8px_32px_rgba(0,0,0,0.35)] ring-1 ring-white/25 backdrop-blur-md min-[480px]:inline-flex min-[480px]:w-auto min-[480px]:flex-row min-[480px]:flex-nowrap min-[480px]:justify-center min-[480px]:gap-2 min-[480px]:p-1.5 md:gap-1.5 md:p-1.5 md:shadow-[0_10px_36px_rgba(0,0,0,0.4)]";
-  const heroTabButtonClass = (isActive: boolean) =>
-    `flex w-full flex-row items-center justify-center gap-2.5 rounded-lg px-5 py-3 text-base font-bold leading-tight transition-all min-[480px]:inline-flex min-[480px]:w-auto min-[480px]:min-w-[7.25rem] min-[480px]:shrink-0 min-[480px]:gap-2 min-[480px]:px-5 min-[480px]:py-2.5 min-[480px]:text-sm md:min-w-[6.75rem] md:gap-1.5 md:px-4 md:py-2 md:text-sm lg:min-w-[7rem] lg:px-4 lg:py-2 ${
-      isActive
-        ? "bg-white text-slate-900 shadow-md ring-1 ring-gray-300 md:shadow-md"
-        : "border border-white/45 bg-white/5 text-white hover:border-white/60 hover:bg-white/15 min-[480px]:bg-white/10 min-[480px]:hover:bg-white/20"
-    }`;
-  const heroTabIconClass = (isActive: boolean) =>
-    `h-5 w-5 shrink-0 min-[480px]:h-4 min-[480px]:w-4 md:h-4 md:w-4 ${isActive ? "text-slate-800" : "text-white"}`;
-
+  const searchBarClass = heroSearchFieldsClass;
   const getCarImage = (car: any) => {
     const apiUrl =
       process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://tenerifly.io";
@@ -507,263 +521,236 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         }}
       >
         <div
-            className="relative z-10 flex w-full flex-1 flex-col items-center justify-center px-3 pt-[6.75rem] min-[400px]:px-4 md:pt-20 pb-[max(2rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
-          {/* Title - moved higher */}
-          <div className="text-center mb-4 sm:mb-6">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 sm:mb-3 drop-shadow-lg pt-2 sm:pt-0">
-              {t.hero.title}
-            </h1>
-            <p className="text-base md:text-lg text-white max-w-2xl mx-auto drop-shadow-md">
-              {t.hero.subtitle}
-            </p>
-          </div>
-
-          <div className="flex w-full max-w-5xl flex-col gap-2 xl:max-w-6xl sm:gap-2.5">
-            <nav
-                className={`${heroTabNavClass} mx-auto mb-6 min-[480px]:mb-8 md:mb-10`}
-                role="tablist"
-                aria-label={t.hero.subtitle}
-            >
-              {[
-                {
-                  key: "accommodation",
-                  icon: Home,
-                  label: t.hero.tabs.accommodation,
-                },
-                {key: "cars", icon: Car, label: t.hero.tabs.cars},
-                {key: "tours", icon: MapPin, label: t.hero.tabs.excursions},
-              ].map(({key, icon: Icon, label}) => {
-                const isActive = activeTab === key;
-                return (
-                  <button
-                      key={key}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      onClick={() => {
-                        if (isHeroTab(key)) selectHeroTab(key);
-                      }}
-                      className={heroTabButtonClass(isActive)}
+            className="relative z-10 grid min-h-0 w-full flex-1 grid-rows-[1fr_auto_1fr_auto_1fr] items-center px-3 pt-[5.25rem] min-[400px]:px-4 md:pt-[5.5rem] pb-[max(2rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
+          <div aria-hidden className="min-h-0" />
+          <div className="mx-auto w-full max-w-5xl xl:max-w-6xl">
+              <div className="mb-3 text-center sm:mb-5">
+                <h1 className="text-xl font-bold text-white mb-2 drop-shadow-lg sm:mb-3 sm:text-2xl md:text-3xl lg:text-4xl">
+                  {t.hero.title}
+                </h1>
+              </div>
+              <div className={heroSearchInsetClass}>
+                <div className={heroSearchWrapClass}>
+                <div className={searchBarClass}>
+                  <CompactSearchField
+                    label={
+                      t.hero.leisure ??
+                      pickLocaleBundle(translations, "en").hero.leisure
+                    }
+                    className="shrink-0 sm:min-w-[9.5rem] sm:max-w-[12.5rem] sm:flex-none"
                   >
-                    <Icon className={heroTabIconClass(isActive)} />
-                    <span>{label}</span>
-                  </button>
-                );
-              })}
-            </nav>
-
-            <div className="w-full">
-              {/* Accommodation Tab */}
-              {activeTab === "accommodation" && (
-                  <div>
-                    <div className={heroSearchWrapClass}>
-                      <div className={searchBarClass}>
-                        <CompactSearchField label={t.hero.accommodation.checkin}>
-                        <input
-                            type={dates[0] ? "date" : "text"}
-                            placeholder={datePlaceholder}
-                            className={compactControlClass}
-                            value={dates[0]}
-                            onFocus={(e) => {
-                              e.currentTarget.type = "date";
-                            }}
-                            onBlur={(e) => {
-                              if (!e.currentTarget.value) {
-                                e.currentTarget.type = "text";
-                              }
-                            }}
-                            onChange={(e) => setDates([e.target.value, dates[1]])}
-                        />
-                        </CompactSearchField>
-                        <CompactSearchField label={t.hero.accommodation.checkout}>
-                        <input
-                            type={dates[1] ? "date" : "text"}
-                            placeholder={datePlaceholder}
-                            className={compactControlClass}
-                            value={dates[1]}
-                            onFocus={(e) => {
-                              e.currentTarget.type = "date";
-                            }}
-                            onBlur={(e) => {
-                              if (!e.currentTarget.value) {
-                                e.currentTarget.type = "text";
-                              }
-                            }}
-                            onChange={(e) => setDates([dates[0], e.target.value])}
-                        />
-                        </CompactSearchField>
-                        <CompactSearchField label={t.hero.accommodation.guests}>
-                          <div className="relative flex items-center">
-                            <Users className="absolute left-0 h-4 w-4 text-gray-400"/>
-                            <input
-                                type="number"
-                                min="1"
-                                max="10"
-                                className={`${compactControlClass} pl-6`}
-                                value={guests}
-                                onChange={(e) => setGuests(Number(e.target.value))}
-                            />
-                          </div>
-                        </CompactSearchField>
-                      </div>
-                      <button
-                          type="button"
-                          onClick={handleSearch}
-                          className={searchSubmitClass}
+                    <div className="relative flex min-w-0 items-center gap-2">
+                      <ActiveHeroTabIcon
+                        className="h-4 w-4 shrink-0 text-gray-500"
+                        aria-hidden
+                      />
+                      <select
+                        value={activeTab}
+                        aria-label={
+                          t.hero.leisure ??
+                          pickLocaleBundle(translations, "en").hero.leisure
+                        }
+                        onChange={(e) => {
+                          const next = e.target.value;
+                          if (isHeroTab(next)) selectHeroTab(next);
+                        }}
+                        className={`${compactControlClass} w-full cursor-pointer appearance-none pr-7`}
                       >
-                        <Search className="h-5 w-5 shrink-0"/>
-                        <span>{t.hero.search}</span>
-                      </button>
+                        {heroTabOptions.map(({ key, label }) => (
+                          <option key={key} value={key}>
+                            {label}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown
+                        className="pointer-events-none absolute right-0 h-4 w-4 text-gray-400"
+                        aria-hidden
+                      />
                     </div>
+                  </CompactSearchField>
 
-                  </div>
-              )}
+                  {activeTab === "accommodation" && (
+                    <>
+                      <CompactSearchField label={t.hero.accommodation.checkin}>
+                        <input
+                          type={dates[0] ? "date" : "text"}
+                          placeholder={datePlaceholder}
+                          className={compactControlClass}
+                          value={dates[0]}
+                          onFocus={(e) => {
+                            e.currentTarget.type = "date";
+                          }}
+                          onBlur={(e) => {
+                            if (!e.currentTarget.value) {
+                              e.currentTarget.type = "text";
+                            }
+                          }}
+                          onChange={(e) =>
+                            setDates([e.target.value, dates[1]])
+                          }
+                        />
+                      </CompactSearchField>
+                      <CompactSearchField label={t.hero.accommodation.checkout}>
+                        <input
+                          type={dates[1] ? "date" : "text"}
+                          placeholder={datePlaceholder}
+                          className={compactControlClass}
+                          value={dates[1]}
+                          onFocus={(e) => {
+                            e.currentTarget.type = "date";
+                          }}
+                          onBlur={(e) => {
+                            if (!e.currentTarget.value) {
+                              e.currentTarget.type = "text";
+                            }
+                          }}
+                          onChange={(e) =>
+                            setDates([dates[0], e.target.value])
+                          }
+                        />
+                      </CompactSearchField>
+                      <CompactSearchField label={t.hero.accommodation.guests}>
+                        <div className="relative flex items-center">
+                          <Users className="absolute left-0 h-4 w-4 text-gray-400" />
+                          <input
+                            type="number"
+                            min="1"
+                            max="10"
+                            className={`${compactControlClass} pl-6`}
+                            value={guests}
+                            onChange={(e) => setGuests(Number(e.target.value))}
+                          />
+                        </div>
+                      </CompactSearchField>
+                    </>
+                  )}
 
-              {activeTab === "cars" && (
-                  <div>
-                    <div className={heroSearchWrapClass}>
-                      <div className={searchBarClass}>
-                        <CompactSearchField label={t.hero.cars.bodyType}>
+                  {activeTab === "cars" && (
+                    <>
+                      <CompactSearchField label={t.hero.cars.bodyType}>
                         <select
-                            className={compactControlClass}
-                            value={carType}
-                            onChange={(e) => setCarType(e.target.value)}
+                          className={compactControlClass}
+                          value={carType}
+                          onChange={(e) => setCarType(e.target.value)}
                         >
-                          {/* <option value="">
-                          {language === "en"
-                            ? "Select car type"
-                            : language === "ru"
-                              ? "Выберите тип авто"
-                              : language === "pl"
-                                ? "Wybierz typ samochodu"
-                                : language === "fr"
-                                  ? "Sélectionner le type de voiture"
-                                  : language === "de"
-                                    ? "Auto-Typ auswählen"
-                                    : language === "es"
-                                      ? "Seleccionar tipo de coche"
-                                      : "Оберіть тип авто"}
-                        </option> */}
                           {t.hero.cars.bodyTypeOptions.map((type) => (
-                              <option key={type.value} value={type.value}>
-                                {type.label}
-                              </option>
+                            <option key={type.value} value={type.value}>
+                              {type.label}
+                            </option>
                           ))}
                         </select>
-                        </CompactSearchField>
-                        <CompactSearchField label={t.hero.cars.pickup}>
+                      </CompactSearchField>
+                      <CompactSearchField label={t.hero.cars.pickup}>
                         <input
-                            type={dates[0] ? "date" : "text"}
-                            placeholder={datePlaceholder}
-                            className={compactControlClass}
-                            value={dates[0]}
-                            onFocus={(e) => {
-                              e.currentTarget.type = "date";
-                            }}
-                            onBlur={(e) => {
-                              if (!e.currentTarget.value) {
-                                e.currentTarget.type = "text";
-                              }
-                            }}
-                            onChange={(e) => setDates([e.target.value, dates[1]])}
+                          type={dates[0] ? "date" : "text"}
+                          placeholder={datePlaceholder}
+                          className={compactControlClass}
+                          value={dates[0]}
+                          onFocus={(e) => {
+                            e.currentTarget.type = "date";
+                          }}
+                          onBlur={(e) => {
+                            if (!e.currentTarget.value) {
+                              e.currentTarget.type = "text";
+                            }
+                          }}
+                          onChange={(e) =>
+                            setDates([e.target.value, dates[1]])
+                          }
                         />
-                        </CompactSearchField>
-                        <CompactSearchField label={t.hero.cars.dropoff}>
+                      </CompactSearchField>
+                      <CompactSearchField label={t.hero.cars.dropoff}>
                         <input
-                            type={dates[1] ? "date" : "text"}
-                            placeholder={datePlaceholder}
-                            className={compactControlClass}
-                            value={dates[1]}
-                            onFocus={(e) => {
-                              e.currentTarget.type = "date";
-                            }}
-                            onBlur={(e) => {
-                              if (!e.currentTarget.value) {
-                                e.currentTarget.type = "text";
-                              }
-                            }}
-                            onChange={(e) => setDates([dates[0], e.target.value])}
+                          type={dates[1] ? "date" : "text"}
+                          placeholder={datePlaceholder}
+                          className={compactControlClass}
+                          value={dates[1]}
+                          onFocus={(e) => {
+                            e.currentTarget.type = "date";
+                          }}
+                          onBlur={(e) => {
+                            if (!e.currentTarget.value) {
+                              e.currentTarget.type = "text";
+                            }
+                          }}
+                          onChange={(e) =>
+                            setDates([dates[0], e.target.value])
+                          }
                         />
-                        </CompactSearchField>
-                      </div>
-                      <button
-                          type="button"
-                          onClick={handleSearch}
-                          className={searchSubmitClass}
-                      >
-                        <Search className="h-5 w-5 shrink-0"/>
-                        <span>{t.hero.search}</span>
-                      </button>
-                    </div>
+                      </CompactSearchField>
+                    </>
+                  )}
 
-                  </div>
-              )}
-
-              {activeTab === "tours" && (
-                  <div>
-                    <div className={heroSearchWrapClass}>
-                      <div className={searchBarClass}>
-                        <CompactSearchField label={t.hero.excursions.date}>
+                  {activeTab === "tours" && (
+                    <>
+                      <CompactSearchField label={t.hero.excursions.date}>
                         <input
-                            type={dates[0] ? "date" : "text"}
-                            placeholder={datePlaceholder}
-                            className={compactControlClass}
-                            value={dates[0]}
-                            onFocus={(e) => {
-                              e.currentTarget.type = "date";
-                            }}
-                            onBlur={(e) => {
-                              if (!e.currentTarget.value) {
-                                e.currentTarget.type = "text";
-                              }
-                            }}
-                            onChange={(e) => setDates([e.target.value, dates[1]])}
+                          type={dates[0] ? "date" : "text"}
+                          placeholder={datePlaceholder}
+                          className={compactControlClass}
+                          value={dates[0]}
+                          onFocus={(e) => {
+                            e.currentTarget.type = "date";
+                          }}
+                          onBlur={(e) => {
+                            if (!e.currentTarget.value) {
+                              e.currentTarget.type = "text";
+                            }
+                          }}
+                          onChange={(e) =>
+                            setDates([e.target.value, dates[1]])
+                          }
                         />
-                        </CompactSearchField>
-                        <CompactSearchField label={t.hero.excursions.people}>
-                          <div className="relative flex items-center">
-                            <Users className="absolute left-0 h-4 w-4 text-gray-400"/>
-                            <input
-                                type="number"
-                                min="1"
-                                max="20"
-                                className={`${compactControlClass} pl-6`}
-                                value={guests}
-                                onChange={(e) => setGuests(Number(e.target.value))}
-                            />
-                          </div>
-                        </CompactSearchField>
-                        <CompactSearchField label={t.hero.excursions.language}>
+                      </CompactSearchField>
+                      <CompactSearchField label={t.hero.excursions.people}>
+                        <div className="relative flex items-center">
+                          <Users className="absolute left-0 h-4 w-4 text-gray-400" />
+                          <input
+                            type="number"
+                            min="1"
+                            max="20"
+                            className={`${compactControlClass} pl-6`}
+                            value={guests}
+                            onChange={(e) => setGuests(Number(e.target.value))}
+                          />
+                        </div>
+                      </CompactSearchField>
+                      <CompactSearchField label={t.hero.excursions.language}>
                         <select
-                            className={compactControlClass}
-                            value={tourLanguage}
-                            onChange={(e) => setTourLanguage(e.target.value)}
+                          className={compactControlClass}
+                          value={tourLanguage}
+                          onChange={(e) => setTourLanguage(e.target.value)}
                         >
                           {t.hero.excursions.languageOptions.map(
-                              (opt: { value: string; label: string }) => (
-                                  <option key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                  </option>
-                              )
+                            (opt: { value: string; label: string }) => (
+                              <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </option>
+                            )
                           )}
                         </select>
-                        </CompactSearchField>
-                      </div>
-                      <button
-                          type="button"
-                          onClick={handleSearch}
-                          className={searchSubmitClass}
-                      >
-                        <Search className="h-5 w-5 shrink-0"/>
-                        <span>{t.hero.search}</span>
-                      </button>
-                    </div>
-                  </div>
-              )}
-
-            </div>
+                      </CompactSearchField>
+                    </>
+                  )}
+                </div>
+                <HeroSearchCtaButton
+                  label={t.hero.search}
+                  onClick={handleSearch}
+                />
+                </div>
+              </div>
           </div>
-
+          <div aria-hidden className="min-h-0" />
+          <div className="mx-auto w-full max-w-5xl xl:max-w-6xl">
+              <h2 className="mb-4 text-center text-xl font-bold text-white drop-shadow-lg sm:mb-5 sm:text-2xl md:mb-6 md:text-3xl lg:text-4xl">
+                {worldToursCopy.heading}
+              </h2>
+              <WorldToursHeroSearch
+                href={createLocaleLink("/world-tours")}
+                labels={worldToursCopy}
+              />
+          </div>
+          <div aria-hidden className="min-h-0" />
         </div>
       </section>
 

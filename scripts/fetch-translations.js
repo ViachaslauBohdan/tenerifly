@@ -64,8 +64,84 @@ const HERO_SEARCH_GLOBAL_TOURS = {
   fr: "Rechercher des tours mondiaux",
   pl: "Szukaj tourów globalnych",
   ru: "Искать туры по всему миру",
-  uk: "Шукати глобальні тури",
-  ua: "Шукати глобальні тури",
+  uk: "Знайти",
+  ua: "Знайти",
+};
+
+/** Label for hero tab selector (accommodation / cars / tours). */
+const HERO_LEISURE_LABEL = {
+  de: "Erholung",
+  en: "Leisure",
+  es: "Ocio",
+  fr: "Loisirs",
+  pl: "Wypoczynek",
+  ru: "Отдых",
+  uk: "Відпочинок",
+  ua: "Відпочинок",
+};
+
+/** Main hero H1 — Tenerife island search only (worldwide block has its own heading). */
+const HERO_TENERIFE_TITLE = {
+  de: "Buchen Sie Erholung auf Teneriffa",
+  en: "Book your getaway on Tenerife",
+  es: "Reserva tu ocio en Tenerife",
+  fr: "Réservez vos loisirs à Tenerife",
+  pl: "Zarezerwuj wypoczynek na Teneryfie",
+  ru: "Бронируйте отдых на Тенерифе",
+  uk: "Бронюйте відпочинок на Тенеріфі",
+  ua: "Бронюйте відпочинок на Тенеріфі",
+};
+
+/** Homepage world-tours CTA (redirects to /world-tours). */
+const HERO_WORLD_TOURS = {
+  de: {
+    heading: "System zur weltweiten Tour-Suche und -Buchung",
+    title: "Toursuche",
+    hint: "Um zur Seite aller Touren zu gelangen, klicken Sie auf «Globale Touren suchen»",
+    search: "Suchen",
+  },
+  en: {
+    heading: "Worldwide tour search and booking system",
+    title: "Search for a tour",
+    hint: "To go to the page with all tours, click Search Global Tours",
+    search: "Find",
+  },
+  es: {
+    heading: "Sistema de búsqueda y reserva de tours en todo el mundo",
+    title: "Buscar tour",
+    hint: "Para ir a la página con todos los tours, pulse «Buscar tours globales»",
+    search: "Buscar",
+  },
+  fr: {
+    heading: "Système de recherche et de réservation de circuits dans le monde",
+    title: "Recherche de circuit",
+    hint: "Pour accéder à la page de tous les circuits, cliquez sur «Rechercher des tours mondiaux»",
+    search: "Trouver",
+  },
+  pl: {
+    heading: "System wyszukiwania i rezerwacji tourów na całym świecie",
+    title: "Wyszukiwarka tourów",
+    hint: "Aby przejść na stronę wszystkich turów, kliknij «Szukaj tourów globalnych»",
+    search: "Znajdź",
+  },
+  ru: {
+    heading: "Система поиска и бронирования туров по всему миру",
+    title: "Поиск тура",
+    hint: "Для перехода на страницу всех туров нажмите «Искать туры по всему миру»",
+    search: "Найти",
+  },
+  uk: {
+    heading: "Система пошуку і бронювання турів по всьому світу",
+    title: "Пошук туру",
+    hint: "Для переходу на сторінку всіх турів натисніть «Знайти»",
+    search: "Знайти",
+  },
+  ua: {
+    heading: "Система пошуку і бронювання турів по всьому світу",
+    title: "Пошук туру",
+    hint: "Для переходу на сторінку всіх турів натисніть «Знайти»",
+    search: "Знайти",
+  },
 };
 
 function applyMainLocalePatches(translation) {
@@ -76,11 +152,35 @@ function applyMainLocalePatches(translation) {
         translation[locale].hero.searchGlobalTours =
           HERO_SEARCH_GLOBAL_TOURS[locale];
       }
+      if (HERO_WORLD_TOURS[locale]) {
+        translation[locale].hero.worldTours = {
+          ...HERO_WORLD_TOURS[locale],
+          search:
+            HERO_SEARCH_GLOBAL_TOURS[locale] ?? HERO_WORLD_TOURS[locale].search,
+        };
+      }
+      if (HERO_TENERIFE_TITLE[locale]) {
+        translation[locale].hero.title = HERO_TENERIFE_TITLE[locale];
+      }
+      if (HERO_LEISURE_LABEL[locale]) {
+        translation[locale].hero.leisure = HERO_LEISURE_LABEL[locale];
+      }
     }
   }
   if (translation.uk?.hero && translation.ua?.hero) {
     translation.ua.hero.searchGlobalTours =
       HERO_SEARCH_GLOBAL_TOURS.ua ?? HERO_SEARCH_GLOBAL_TOURS.uk;
+    translation.ua.hero.worldTours = {
+      ...(HERO_WORLD_TOURS.ua ?? HERO_WORLD_TOURS.uk),
+      search:
+        HERO_SEARCH_GLOBAL_TOURS.ua ??
+        HERO_SEARCH_GLOBAL_TOURS.uk ??
+        (HERO_WORLD_TOURS.ua ?? HERO_WORLD_TOURS.uk).search,
+    };
+    translation.ua.hero.title =
+      HERO_TENERIFE_TITLE.ua ?? HERO_TENERIFE_TITLE.uk;
+    translation.ua.hero.leisure =
+      HERO_LEISURE_LABEL.ua ?? HERO_LEISURE_LABEL.uk;
   }
   if (translation.uk && !translation.ua) {
     translation.ua = JSON.parse(JSON.stringify(translation.uk));

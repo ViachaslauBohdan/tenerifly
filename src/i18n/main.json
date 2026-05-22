@@ -81,9 +81,11 @@
         "blog": "Blog",
         "cars": "Autos",
         "excursions": "Touren",
-        "accommodation": "Unterkünfte"
+        "accommodation": "Unterkünfte",
+        "worldTours": "Touren weltweit"
       },
-      "title": "Buchen Sie Teneriffa-Unterkünfte & globale Touren",
+      "title": "Buchen Sie Erholung auf Teneriffa",
+      "leisure": "Erholung",
       "search": "Suchen",
       "subtitle": "Willkommen — Unterkünfte, Autos & Touren auf der Insel, plus Pauschalreisen weltweit",
       "excursions": {
@@ -176,6 +178,12 @@
             "value": "4+"
           }
         ]
+      },
+      "worldTours": {
+        "heading": "System zur weltweiten Tour-Suche und -Buchung",
+        "title": "Toursuche",
+        "hint": "Um zur Seite aller Touren zu gelangen, klicken Sie auf «Globale Touren suchen»",
+        "search": "Globale Touren suchen"
       },
       "tourTaglines": {
         "dreamTrip": "Deine Traumreise beginnt hier",
@@ -403,9 +411,11 @@
         "blog": "Blog",
         "cars": "Cars",
         "excursions": "Tours",
-        "accommodation": "Stays"
+        "accommodation": "Stays",
+        "worldTours": "Tours worldwide"
       },
-      "title": "Book Tenerife stays & global tours",
+      "title": "Book your getaway on Tenerife",
+      "leisure": "Leisure",
       "search": "Search",
       "subtitle": "Welcome — island stays, cars & tours, plus packages worldwide",
       "excursions": {
@@ -498,6 +508,12 @@
             "value": "4+"
           }
         ]
+      },
+      "worldTours": {
+        "heading": "Worldwide tour search and booking system",
+        "title": "Search for a tour",
+        "hint": "To go to the page with all tours, click Search Global Tours",
+        "search": "Search Global Tours"
       },
       "tourTaglines": {
         "dreamTrip": "Your dream trip starts here",
@@ -725,9 +741,11 @@
         "blog": "Blog",
         "cars": "Coches",
         "excursions": "Tours",
-        "accommodation": "Estancias"
+        "accommodation": "Estancias",
+        "worldTours": "Tours por todo el mundo"
       },
-      "title": "Reserva estancias en Tenerife y tours globales",
+      "title": "Reserva tu ocio en Tenerife",
+      "leisure": "Ocio",
       "search": "Buscar",
       "subtitle": "Bienvenido — estancias, coches y tours en la isla, más paquetes en todo el mundo",
       "excursions": {
@@ -820,6 +838,12 @@
             "value": "4+"
           }
         ]
+      },
+      "worldTours": {
+        "heading": "Sistema de búsqueda y reserva de tours en todo el mundo",
+        "title": "Buscar tour",
+        "hint": "Para ir a la página con todos los tours, pulse «Buscar tours globales»",
+        "search": "Buscar tours globales"
       },
       "tourTaglines": {
         "dreamTrip": "Tu viaje soñado comienza aquí",
@@ -1047,9 +1071,11 @@
         "blog": "Blog",
         "cars": "Voitures",
         "excursions": "Tours",
-        "accommodation": "Séjours"
+        "accommodation": "Séjours",
+        "worldTours": "Tours dans le monde"
       },
-      "title": "Réservez des séjours à Tenerife et des tours mondiaux",
+      "title": "Réservez vos loisirs à Tenerife",
+      "leisure": "Loisirs",
       "search": "Rechercher",
       "subtitle": "Bienvenue — séjours, voitures et tours sur l’île, plus forfaits dans le monde entier",
       "excursions": {
@@ -1142,6 +1168,12 @@
             "value": "4+"
           }
         ]
+      },
+      "worldTours": {
+        "heading": "Système de recherche et de réservation de circuits dans le monde",
+        "title": "Recherche de circuit",
+        "hint": "Pour accéder à la page de tous les circuits, cliquez sur «Rechercher des tours mondiaux»",
+        "search": "Rechercher des tours mondiaux"
       },
       "tourTaglines": {
         "dreamTrip": "Votre voyage de rêve commence ici",
@@ -1369,9 +1401,11 @@
         "blog": "Blog",
         "cars": "Samochody",
         "excursions": "Wycieczki",
-        "accommodation": "Noclegi"
+        "accommodation": "Noclegi",
+        "worldTours": "Tury na całym świecie"
       },
-      "title": "Zarezerwuj noclegi na Teneryfie i globalne toury",
+      "title": "Zarezerwuj wypoczynek na Teneryfie",
+      "leisure": "Wypoczynek",
       "search": "Szukaj",
       "subtitle": "Witamy — noclegi, samochody i wycieczki na wyspie oraz pakiety na całym świecie",
       "excursions": {
@@ -1464,6 +1498,12 @@
             "value": "4+"
           }
         ]
+      },
+      "worldTours": {
+        "heading": "System wyszukiwania i rezerwacji tourów na całym świecie",
+        "title": "Wyszukiwarka tourów",
+        "hint": "Aby przejść na stronę wszystkich turów, kliknij «Szukaj tourów globalnych»",
+        "search": "Szukaj tourów globalnych"
       },
       "tourTaglines": {
         "dreamTrip": "Twoja wymarzona podróż zaczyna się tutaj",
@@ -1691,9 +1731,11 @@
         "blog": "Блог",
         "cars": "Автомобили",
         "excursions": "Туры",
-        "accommodation": "Жильё"
+        "accommodation": "Жильё",
+        "worldTours": "Туры по всему миру"
       },
-      "title": "Бронируйте жильё на Тенерифе и глобальные туры",
+      "title": "Бронируйте отдых на Тенерифе",
+      "leisure": "Отдых",
       "search": "Поиск",
       "subtitle": "Добро пожаловать — жильё, автомобили и туры на острове, а также пакеты по всему миру",
       "excursions": {
@@ -1786,6 +1828,12 @@
             "value": "4+"
           }
         ]
+      },
+      "worldTours": {
+        "heading": "Система поиска и бронирования туров по всему миру",
+        "title": "Поиск тура",
+        "hint": "Для перехода на страницу всех туров нажмите «Искать туры по всему миру»",
+        "search": "Искать туры по всему миру"
       },
       "tourTaglines": {
         "dreamTrip": "Твоё путешествие мечты начинается здесь",
@@ -2013,10 +2061,12 @@
         "blog": "Блог",
         "cars": "Автомобілі",
         "excursions": "Тури",
-        "accommodation": "Житло"
+        "accommodation": "Житло",
+        "worldTours": "Тури по всьому світу"
       },
-      "title": "Бронюйте житло на Тенеріфі та глобальні тури",
-      "search": "Пошук",
+      "title": "Бронюйте відпочинок на Тенеріфі",
+      "leisure": "Відпочинок",
+      "search": "Знайти",
       "subtitle": "Ласкаво просимо — житло, авто та тури на острові, а також пакети в усьому світі",
       "excursions": {
         "date": "Дата",
@@ -2109,12 +2159,18 @@
           }
         ]
       },
+      "worldTours": {
+        "heading": "Система пошуку і бронювання турів по всьому світу",
+        "title": "Пошук туру",
+        "hint": "Для переходу на сторінку всіх турів натисніть «Знайти»",
+        "search": "Знайти"
+      },
       "tourTaglines": {
         "dreamTrip": "Твоя подорож мрії починається тут",
         "tourOfTheDay": "Тур дня: найкраща ціна",
         "chooseTour": "Обрати свій тур"
       },
-      "searchGlobalTours": "Шукати глобальні тури"
+      "searchGlobalTours": "Знайти"
     },
     "common": {
       "to": "До",
@@ -2335,10 +2391,12 @@
         "blog": "Блог",
         "cars": "Автомобілі",
         "excursions": "Тури",
-        "accommodation": "Житло"
+        "accommodation": "Житло",
+        "worldTours": "Тури по всьому світу"
       },
-      "title": "Бронюйте житло на Тенеріфі та глобальні тури",
-      "search": "Пошук",
+      "title": "Бронюйте відпочинок на Тенеріфі",
+      "leisure": "Відпочинок",
+      "search": "Знайти",
       "subtitle": "Ласкаво просимо — житло, авто та тури на острові, а також пакети в усьому світі",
       "excursions": {
         "date": "Дата",
@@ -2431,12 +2489,18 @@
           }
         ]
       },
+      "worldTours": {
+        "heading": "Система пошуку і бронювання турів по всьому світу",
+        "title": "Пошук туру",
+        "hint": "Для переходу на сторінку всіх турів натисніть «Знайти»",
+        "search": "Знайти"
+      },
       "tourTaglines": {
         "dreamTrip": "Твоя подорож мрії починається тут",
         "tourOfTheDay": "Тур дня: найкраща ціна",
         "chooseTour": "Обрати свій тур"
       },
-      "searchGlobalTours": "Шукати глобальні тури"
+      "searchGlobalTours": "Знайти"
     },
     "common": {
       "to": "До",

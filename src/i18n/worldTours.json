@@ -1,6 +1,6 @@
 {
   "de": {
-    "nav": "Weltreisen",
+    "nav": "Touren weltweit",
     "title": "Weltweite Toursuche",
     "subtitle": "Pauschalreisen in jedes Land, jeden Ort und jedes Hotel — nicht nur Teneriffa",
     "badge": "Weltweit",
@@ -14,7 +14,7 @@
     }
   },
   "en": {
-    "nav": "World tours",
+    "nav": "Tours worldwide",
     "title": "Worldwide tour search",
     "subtitle": "Package tours to any country, resort, or hotel — not only Tenerife",
     "badge": "Worldwide",
@@ -28,7 +28,7 @@
     }
   },
   "es": {
-    "nav": "Tours del mundo",
+    "nav": "Tours por todo el mundo",
     "title": "Búsqueda de tours en todo el mundo",
     "subtitle": "Viajes organizados a cualquier país, resort u hotel — no solo Tenerife",
     "badge": "Mundial",
@@ -42,7 +42,7 @@
     }
   },
   "fr": {
-    "nav": "Tours monde",
+    "nav": "Tours dans le monde",
     "title": "Recherche de circuits dans le monde",
     "subtitle": "Séjours packagés vers tout pays, resort ou hôtel — pas seulement Tenerife",
     "badge": "Monde entier",
@@ -56,7 +56,7 @@
     }
   },
   "pl": {
-    "nav": "Tury świata",
+    "nav": "Tury na całym świecie",
     "title": "Wyszukiwarka tourów na całym świecie",
     "subtitle": "Wycieczki pakietowe do dowolnego kraju, kurortu lub hotelu — nie tylko Teneryfa",
     "badge": "Na całym świecie",
@@ -84,7 +84,7 @@
     }
   },
   "uk": {
-    "nav": "Тури світу",
+    "nav": "Тури по всьому світу",
     "title": "Пошук туру по всьому світу",
     "subtitle": "Пакетні тури в будь-яку країну, курорт чи готель — не лише Тенеріфе",
     "badge": "По всьому світу",
@@ -98,7 +98,7 @@
     }
   },
   "ua": {
-    "nav": "Тури світу",
+    "nav": "Тури по всьому світу",
     "title": "Пошук туру по всьому світу",
     "subtitle": "Пакетні тури в будь-яку країну, курорт чи готель — не лише Тенеріфе",
     "badge": "По всьому світу",
