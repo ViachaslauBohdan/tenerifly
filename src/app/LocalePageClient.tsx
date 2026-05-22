@@ -20,7 +20,6 @@ import {
   WifiOff,
   Calendar,
   User,
-  ArrowRight,
   Plane,
 } from "lucide-react";
 import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
@@ -29,6 +28,8 @@ import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
 import { SiteHeader } from "@/components/SiteHeader";
+import { ViewAllLink } from "@/components/ViewAllLink";
+import { ViewDetailsLink } from "@/components/ViewDetailsLink";
 import { HomeCardImage } from "@/components/HomeCardImage";
 import {
   getHomeCarImageUrl,
@@ -717,13 +718,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 {t.sections.accommodation.subtitle}
               </p>
             </div>
-            <button
-                onClick={() => router.push(createLocaleLink("/apartments"))}
-                className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
-            >
+            <ViewAllLink href={createLocaleLink("/apartments")}>
               {t.sections.accommodation.viewAll}
-              <ArrowRight className="w-4 h-4"/>
-            </button>
+            </ViewAllLink>
           </div>
 
           {dataLoading ? (
@@ -859,13 +856,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 {t.sections.cars.subtitle}
               </p>
             </div>
-            <button
-              onClick={() => router.push(createLocaleLink("/cars"))}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
-            >
+            <ViewAllLink href={createLocaleLink("/cars")}>
               {t.sections.cars.viewAll}
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            </ViewAllLink>
           </div>
 
           {/* Баннер партнерского сервиса аренды авто (Canarias.com) */}
@@ -1012,22 +1005,27 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {transfers.slice(0, 2).map((transfer) => (
+              {transfers.slice(0, 2).map((transfer) => {
+                const transferDetailHref = createLocaleLink(
+                  `/transfers/${transfer.documentId}`
+                );
+
+                return (
                 <div
                   key={transfer.documentId || transfer.id}
                   className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                 >
-                  <div className="aspect-video relative overflow-hidden bg-gray-100">
+                  <Link
+                    href={transferDetailHref}
+                    prefetch
+                    className="block aspect-video relative overflow-hidden bg-gray-100 group"
+                  >
                     <HomeCardImage
                       src={getTransferImage(transfer)}
                       alt={transfer.title}
-                      onClick={() =>
-                        router.push(
-                          createLocaleLink(`/transfers/${transfer.documentId}`)
-                        )
-                      }
+                      className="group-hover:scale-105 transition-transform duration-300"
                     />
-                  </div>
+                  </Link>
                   <div className="p-6">
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
                       <div>
@@ -1074,16 +1072,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <button
-                        onClick={() =>
-                          router.push(
-                            createLocaleLink(`/transfers/${transfer.documentId}`)
-                          )
-                        }
-                        className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-                      >
+                      <ViewDetailsLink href={transferDetailHref}>
                         {transferCopy.viewDetails}
-                      </button>
+                      </ViewDetailsLink>
                       <button
                         onClick={() =>
                           openBookingModal("transfer", {
@@ -1105,7 +1096,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
           </div>
         </section>
@@ -1127,14 +1119,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 {t.sections.excursions.subtitle}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => router.push(createLocaleLink("/tours"))}
-              className="flex shrink-0 items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl sm:ml-8"
+            <ViewAllLink
+              href={createLocaleLink("/tours")}
+              className="sm:ml-8"
             >
               {t.sections.excursions.viewAll}
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            </ViewAllLink>
           </div>
 
           <div className="max-w-3xl mx-auto">
@@ -1218,13 +1208,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 {t.sections.blog.subtitle}
               </p>
             </div>
-            <button
-              onClick={() => router.push(createLocaleLink("/blog"))}
-              className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl ml-8"
-            >
+            <ViewAllLink href={createLocaleLink("/blog")}>
               {t.sections.blog.viewAll}
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            </ViewAllLink>
           </div>
 
           {dataLoading ? (

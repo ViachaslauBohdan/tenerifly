@@ -1096,3 +1096,22 @@ html {
     margin-bottom: 2.5rem !important;
   }
 }
+
+@keyframes navigation-progress {
+  0% {
+    transform: scaleX(0.08);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleX(0.65);
+  }
+  100% {
+    transform: scaleX(0.92);
+    opacity: 0.9;
+  }
+}
+
+.navigation-progress-bar {
+  transform-origin: left;
+  animation: navigation-progress 1.1s ease-in-out infinite;
+}

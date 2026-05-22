@@ -1,5 +1,6 @@
 import type {Metadata} from "next";
 import {headers} from "next/headers";
+import {Suspense} from "react";
 import {Geist, Geist_Mono} from "next/font/google";
 import "../styles/globals.css";
 import "@mantine/core/styles.css";
@@ -8,6 +9,7 @@ import {ColorSchemeScript} from "@mantine/core";
 import {MantineProvider} from "@/components/providers/MantineProvider";
 
 import {OtpuskBodyClassGuard} from "@/components/OtpuskBodyClassGuard";
+import {NavigationProgress} from "@/components/NavigationProgress";
 import {ReferralCodeClient} from "@/components/ReferralCodeClient";
 import {WhatsAppFloatingButton} from "@/components/WhatsAppFloatingButton";
 import {OTPUSK_BODY_CLASS_GUARD_INLINE} from "@/lib/otpuskBodyClassGuard";
@@ -136,6 +138,9 @@ export default async function RootLayout({
         />
         <OtpuskBodyClassGuard/>
         <MantineProvider>
+            <Suspense fallback={null}>
+                <NavigationProgress/>
+            </Suspense>
             <ReferralCodeClient/>
             {children}
             <WhatsAppFloatingButton/>
