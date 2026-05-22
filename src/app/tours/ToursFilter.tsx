@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { CatalogFilterMoreToggle } from "@/components/CatalogFilterMoreToggle";
 import {
   applyClientTourFilters,
   fetchStrapiTourListPayload,
@@ -80,6 +81,26 @@ export default function ToursFilter({
     languages: [],
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
+
+  const hasHiddenActiveFilters = Boolean(
+    filters.duration ||
+      (filters.durationType && filters.durationType !== "hours") ||
+      filters.availableFrom ||
+      filters.language ||
+      filters.category ||
+      filters.groupSize ||
+      filters.difficulty ||
+      filters.transport ||
+      filters.meals ||
+      filters.tickets
+  );
+
+  useEffect(() => {
+    if (hasHiddenActiveFilters) {
+      setFiltersExpanded(true);
+    }
+  }, [hasHiddenActiveFilters]);
 
   // Функция для создания заголовков с авторизацией
   const getAuthHeaders = () => {
@@ -361,6 +382,15 @@ export default function ToursFilter({
           </div>
         </div>
 
+        <CatalogFilterMoreToggle
+          expanded={filtersExpanded}
+          onToggle={() => setFiltersExpanded((prev) => !prev)}
+          showMoreLabel={t.showMoreFilters || "Show more filters"}
+          showLessLabel={t.showLessFilters || "Show less filters"}
+        />
+
+        {filtersExpanded && (
+          <>
         {/* Продолжительность */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -515,6 +545,8 @@ export default function ToursFilter({
             </label>
           </div>
         </div>
+          </>
+        )}
 
         {/* Reset Filters */}
         <button

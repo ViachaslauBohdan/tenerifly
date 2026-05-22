@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ApartmentFilterParams } from "@/utils/filterUtils";
+import { CatalogFilterMoreToggle } from "@/components/CatalogFilterMoreToggle";
 
 // Используем ApartmentFilterParams из utils
 type FilterState = ApartmentFilterParams;
@@ -36,6 +37,37 @@ export default function ApartmentsFilter({
     propertyTypes: [],
     conditions: [],
   });
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
+
+  const hasHiddenActiveFilters = Boolean(
+    filters.propertyStatus ||
+      filters.propertyType ||
+      filters.rooms ||
+      filters.areaFrom ||
+      filters.areaTo ||
+      filters.priceFrom ||
+      filters.priceTo ||
+      filters.floorFrom ||
+      filters.floorTo ||
+      filters.yearBuiltFrom ||
+      filters.yearBuiltTo ||
+      filters.condition ||
+      filters.balcony ||
+      filters.terrace ||
+      filters.garden ||
+      filters.parking ||
+      filters.furnished ||
+      filters.airConditioner ||
+      filters.wifi ||
+      filters.washingMachine ||
+      filters.dishwasher
+  );
+
+  useEffect(() => {
+    if (hasHiddenActiveFilters) {
+      setFiltersExpanded(true);
+    }
+  }, [hasHiddenActiveFilters]);
 
   // Загрузка опций фильтров из переданных данных
   useEffect(() => {
@@ -367,6 +399,15 @@ export default function ApartmentsFilter({
           </select>
         </div>
 
+        <CatalogFilterMoreToggle
+          expanded={filtersExpanded}
+          onToggle={() => setFiltersExpanded((prev) => !prev)}
+          showMoreLabel={t.showMoreFilters || "Show more filters"}
+          showLessLabel={t.showLessFilters || "Show less filters"}
+        />
+
+        {filtersExpanded && (
+          <>
         {/* Статус недвижимости */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -644,6 +685,8 @@ export default function ApartmentsFilter({
             </label>
           </div>
         </div>
+          </>
+        )}
 
         {/* Reset Filters */}
         <button

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { CatalogFilterMoreToggle } from "@/components/CatalogFilterMoreToggle";
 
 interface FilterState {
   brand: string;
@@ -98,6 +99,34 @@ export default function CarsFilter({
     regions: [],
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
+
+  const hasHiddenActiveFilters = Boolean(
+    filters.model ||
+      filters.yearFrom ||
+      filters.yearTo ||
+      filters.priceFrom ||
+      filters.priceTo ||
+      filters.mileageFrom ||
+      filters.mileageTo ||
+      filters.fuel ||
+      filters.transmission ||
+      filters.bodyType ||
+      filters.color ||
+      filters.doors ||
+      filters.powerFrom ||
+      filters.powerTo ||
+      filters.location ||
+      filters.airConditioner ||
+      filters.rearCamera ||
+      filters.multimedia
+  );
+
+  useEffect(() => {
+    if (hasHiddenActiveFilters) {
+      setFiltersExpanded(true);
+    }
+  }, [hasHiddenActiveFilters]);
 
   // Загрузка опций фильтров из переданных данных
   useEffect(() => {
@@ -425,6 +454,15 @@ export default function CarsFilter({
           </select>
         </div>
 
+        <CatalogFilterMoreToggle
+          expanded={filtersExpanded}
+          onToggle={() => setFiltersExpanded((prev) => !prev)}
+          showMoreLabel={t.showMoreFilters || "Show more filters"}
+          showLessLabel={t.showLessFilters || "Show less filters"}
+        />
+
+        {filtersExpanded && (
+          <>
         {/* Модель */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -701,6 +739,8 @@ export default function CarsFilter({
             </label>
           </div>
         </div>
+          </>
+        )}
 
         {/* Reset Filters */}
         <button
