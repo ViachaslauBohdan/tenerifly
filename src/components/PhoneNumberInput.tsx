@@ -60,7 +60,14 @@ function nationalFromE164(
 
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 
-const countrySelectData = getCountries()
+type CountrySelectMeta = {
+  value: Country;
+  label: string;
+  name: string;
+  dial: string;
+};
+
+const countrySelectData: CountrySelectMeta[] = getCountries()
   .map((code) => {
     const dial = getCountryCallingCode(code);
     const name = regionNames.of(code) ?? code;
@@ -72,6 +79,10 @@ const countrySelectData = getCountries()
     };
   })
   .sort((a, b) => a.name.localeCompare(b.name));
+
+const countryMetaByCode = new Map(
+  countrySelectData.map((item) => [item.value, item])
+);
 
 export function isPhoneNumberValid(
   country: Country | undefined,
@@ -153,29 +164,32 @@ export function PhoneNumberInput({
           leftSectionWidth={36}
           w={168}
           comboboxProps={{ withinPortal: true, zIndex: 400 }}
-          renderOption={({ option }) => (
-            <Group gap="xs" wrap="nowrap">
-              <CountryFlag country={option.value as Country} />
-              <Text size="sm" style={{ flex: 1 }}>
-                {option.name}
-              </Text>
-              <Text size="sm" c="dimmed">
-                +{option.dial}
-              </Text>
-            </Group>
-          )}
+          renderOption={({ option }) => {
+            const meta = countryMetaByCode.get(option.value as Country);
+            return (
+              <Group gap="xs" wrap="nowrap">
+                <CountryFlag country={option.value as Country} />
+                <Text size="sm" style={{ flex: 1 }}>
+                  {meta?.name ?? option.label}
+                </Text>
+                <Text size="sm" c="dimmed">
+                  +{meta?.dial ?? ""}
+                </Text>
+              </Group>
+            );
+          }}
           filter={({ options, search }) => {
             const q = search.toLowerCase().trim().replace(/^\+/, "");
             if (!q) return options;
             return options.filter((option) => {
-              const name = String(option.name ?? "").toLowerCase();
-              const dial = String(option.dial ?? "");
-              const label = String(option.label ?? "").toLowerCase();
+              if (!("value" in option)) return true;
+              const meta = countryMetaByCode.get(option.value as Country);
+              if (!meta) return false;
               return (
-                name.includes(q) ||
-                dial.startsWith(q) ||
-                label.includes(`+${q}`) ||
-                String(option.value).toLowerCase().includes(q)
+                meta.name.toLowerCase().includes(q) ||
+                meta.dial.startsWith(q) ||
+                meta.label.toLowerCase().includes(`+${q}`) ||
+                meta.value.toLowerCase().includes(q)
               );
             });
           }}
