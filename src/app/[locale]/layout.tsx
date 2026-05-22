@@ -12,8 +12,8 @@ import {
   openGraphAlternateLocales,
 } from "@/lib/seo";
 
-// ISR настройки для layout
-export const revalidate = 86400; // Обновление каждые 24 часа для основного layout
+// 7 days — keep in sync with CMS_PAGE_REVALIDATE in src/config/cmsCache.ts
+export const revalidate = 604800;
 
 export async function generateMetadata({
   params,

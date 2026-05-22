@@ -3,70 +3,17 @@
 import { useState, useEffect } from "react";
 import { Transfer } from "@/lib/transfers";
 import {
-  fetchStrapiTourListPayload,
-  normalizeExcursionDocumentToTourCard,
-} from "@/lib/strapiExcursionTours";
+  HOME_CARS_FETCH_LIMIT,
+  HOME_PREVIEW_LIMIT,
+  homeListQuery,
+  homePopulateQuery,
+} from "@/lib/homeListing";
 import { localeContentKey } from "@/types/locale";
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
 
-// Добавить эту функцию в начало файла useDataLoader.ts
 const getLocalizedText = (language: LanguageCode, textKey: string): string => {
   const texts: Record<string, Record<string, string>> = {
-    max: {
-      en: "Max",
-      ru: "Макс",
-      pl: "Maks",
-      fr: "Max",
-      uk: "Макс",
-      de: "Max",
-      es: "Máx",
-    },
-    people: {
-      en: "people",
-      ru: "человек",
-      pl: "osób",
-      fr: "personnes",
-      uk: "осіб",
-      de: "Personen",
-      es: "personas",
-    },
-    day: {
-      en: "day",
-      ru: "день",
-      pl: "dzień",
-      fr: "jour",
-      uk: "день",
-      de: "Tag",
-      es: "día",
-    },
-    seats: {
-      en: "seats",
-      ru: "мест",
-      pl: "miejsc",
-      fr: "places",
-      uk: "місць",
-      de: "Sitze",
-      es: "asientos",
-    },
-    automatic: {
-      en: "Automatic",
-      ru: "Автомат",
-      pl: "Automatyczna",
-      fr: "Automatique",
-      uk: "Автомат",
-      de: "Automatik",
-      es: "Automático",
-    },
-    manual: {
-      en: "Manual",
-      ru: "Механика",
-      pl: "Manualna",
-      fr: "Manuelle",
-      uk: "Механіка",
-      de: "Manuell",
-      es: "Manual",
-    },
     airConditioning: {
       en: "AC",
       ru: "Кондиционер",
@@ -127,51 +74,44 @@ const getLocalizedText = (language: LanguageCode, textKey: string): string => {
   return texts[textKey]?.[lang] || texts[textKey]?.en || "";
 };
 
-// Функция для API запросов
 const fetchFromStrapi = async (endpoint: string) => {
   const API_URL =
     process.env.NEXT_PUBLIC_STRAPI_API_URL ||
     "https://tenerifly-strapi-production.up.railway.app";
   const API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
 
-  try {
-    const response = await fetch(`${API_URL}/api${endpoint}`, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(API_TOKEN && { Authorization: `Bearer ${API_TOKEN}` }),
-      },
-    });
+  const response = await fetch(`${API_URL}/api${endpoint}`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...(API_TOKEN && { Authorization: `Bearer ${API_TOKEN}` }),
+    },
+  });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw error;
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
+
+  return response.json();
 };
 
-// Функция для получения URL изображения (по образцу CarCard.tsx)
-const getImageUrl = (item: any): string => {
+const getImageUrl = (item: {
+  images?: Array<{ url: string }>;
+  image?: { url: string } | string;
+}): string => {
   if (typeof item.image === "string") {
     return item.image;
   }
 
   if (item.images && item.images.length > 0) {
-    // Если URL уже полный (начинается с http), возвращаем как есть
     if (item.images[0].url.startsWith("http")) {
       return item.images[0].url;
     }
-    // Если URL относительный, добавляем базовый URL Strapi
     const apiUrl =
       process.env.NEXT_PUBLIC_STRAPI_API_URL ||
       "https://tenerifly-strapi-production.up.railway.app";
     return `${apiUrl}${item.images[0].url}`;
   }
 
-  // Для других полей изображений
   if (item.image?.url) {
     if (item.image.url.startsWith("http")) {
       return item.image.url;
@@ -185,16 +125,31 @@ const getImageUrl = (item: any): string => {
   return "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg";
 };
 
-export function useDataLoader(mounted: boolean, language: LanguageCode) {
-  const [excursions, setExcursions] = useState<any[]>([]);
-  const [cars, setCars] = useState<any[]>([]);
-  const [accommodation, setAccommodation] = useState<any[]>([]);
-  const [blogPosts, setBlogPosts] = useState<any[]>([]);
+type UseDataLoaderOptions = {
+  enabled?: boolean;
+};
+
+export function useDataLoader(
+  mounted: boolean,
+  language: LanguageCode,
+  options?: UseDataLoaderOptions
+) {
+  const enabled = options?.enabled ?? true;
+  const [cars, setCars] = useState<Record<string, unknown>[]>([]);
+  const [accommodation, setAccommodation] = useState<Record<string, unknown>[]>(
+    []
+  );
+  const [blogPosts, setBlogPosts] = useState<Record<string, unknown>[]>([]);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
-  const [dataLoading, setDataLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(enabled);
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
+    if (!enabled) {
+      setDataLoading(false);
+      return;
+    }
+
     const loadFeaturedData = async () => {
       if (!language) return;
 
@@ -202,152 +157,110 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
         setDataLoading(true);
         setHasError(false);
 
-        const API_URL =
-          process.env.NEXT_PUBLIC_STRAPI_API_URL ||
-          "https://tenerifly-strapi-production.up.railway.app";
-        const API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-        const strapiAuthHeaders = {
-          "Content-Type": "application/json",
-          ...(API_TOKEN && { Authorization: `Bearer ${API_TOKEN}` }),
-        } as HeadersInit;
-
-        // Параллельная загрузка всех данных
-        const [
-          toursResult,
-          carsResult,
-          propertiesResult,
-          blogsResult,
-          transfersResult,
-        ] =
+        const localeKey = localeContentKey(language);
+        const list = homeListQuery(HOME_PREVIEW_LIMIT);
+        const populate = homePopulateQuery();
+        const [carsResult, propertiesResult, blogsResult, transfersResult] =
           await Promise.allSettled([
-            fetchStrapiTourListPayload(API_URL, strapiAuthHeaders),
-            fetchFromStrapi("/cars/?populate=*&pagination[pageSize]=1000"),
-            fetchFromStrapi("/properties/?populate=*&pagination[pageSize]=1000"),
-            fetchFromStrapi("/blog-posts/?populate=*&pagination[pageSize]=1000"),
-            fetchFromStrapi("/transfers/?populate=*&pagination[pageSize]=100"),
+            fetchFromStrapi(
+              `/cars?${populate}&${homeListQuery(HOME_CARS_FETCH_LIMIT)}&sort=title:ASC`
+            ),
+            fetchFromStrapi(
+              `/properties?${populate}&${list}&sort=updatedAt:DESC`
+            ),
+            fetchFromStrapi(
+              `/blog-posts?${populate}&${list}&sort=publishedAt:DESC`
+            ),
+            fetchFromStrapi(`/transfers?${populate}&${list}`),
           ]);
 
-        // Обработка туров
-        if (
-          toursResult.status === "fulfilled" &&
-          toursResult.value?.data?.length > 0
-        ) {
-          const transformedTours = toursResult.value.data.map((raw: unknown) => {
-            const tour = normalizeExcursionDocumentToTourCard(raw);
-            return {
-            id: tour.id,
-            documentId: tour.documentId,
-            slug: tour.slug,
-            isPopular: tour.isPopular === true,
-            title: tour.name || tour.title || "Tour",
-            description:
-              tour.description || "Discover amazing places in Tenerife",
-            duration: tour.duration || "3 hours",
-            price: `€${tour.price?.amount || 50}`,
-            rating: 4.8,
-            groupSize: `${getLocalizedText(language, "max")} ${tour.maxGroupSize ?? 20} ${getLocalizedText(language, "people")}`,
-            image: getImageUrl(tour),
-          };
-          });
-          setExcursions(transformedTours);
-        }
-
-        // Обработка машин
         if (
           carsResult.status === "fulfilled" &&
           carsResult.value?.data?.length > 0
         ) {
-          const transformedCars = carsResult.value.data.map((car: any) => ({
-            id: car.id,
-            documentId: car.documentId,
-            title:
-              car.title ||
-              `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
-            description: car.description || "Reliable car for your journey",
-            image: getImageUrl(car),
-            price: `€${car.rental_prices?.day_1 || 30}/${getLocalizedText(language, "day")}`,
-            transmission:
-              car.specifications?.transmission === "automatic"
-                ? getLocalizedText(language, "automatic")
-                : getLocalizedText(language, "manual"),
-            features: [
-              car.features?.air_conditioning &&
-                getLocalizedText(language, "airConditioning"),
-              `${car.specifications?.seats || 5} ${getLocalizedText(language, "seats")}`,
-              car.features?.bluetooth && "Bluetooth",
-              car.specifications?.fuel,
-              car.specifications?.year && `${car.specifications.year}`,
-            ]
-              .filter(Boolean)
-              .join(", "),
-            rating: 4.6,
-            specifications: car.specifications,
-            location: car.location,
-            rental_prices: car.rental_prices,
-            type: car.type,
-            car_status: car.car_status,
-          }));
-          setCars(transformedCars);
+          const carRows = carsResult.value.data as Array<
+            Record<string, unknown> & { locale?: string }
+          >;
+          const localeCars = carRows.filter((car) => car.locale === localeKey);
+          const picked =
+            localeCars.length >= HOME_PREVIEW_LIMIT
+              ? localeCars.slice(0, HOME_PREVIEW_LIMIT)
+              : carRows.slice(0, HOME_PREVIEW_LIMIT);
+
+          setCars(
+            picked.map((car: Record<string, unknown>) => ({
+              id: car.id,
+              documentId: car.documentId,
+              title:
+                car.title ||
+                `${(car.specifications as { make?: string })?.make || "Car"} ${(car.specifications as { model?: string })?.model || ""}`.trim(),
+              images: Array.isArray(car.images) ? [car.images[0]] : [],
+              specifications: car.specifications,
+              type: car.type,
+              rental_prices: car.rental_prices,
+            }))
+          );
         }
 
-        // Обработка недвижимости
         if (
           propertiesResult.status === "fulfilled" &&
           propertiesResult.value?.data?.length > 0
         ) {
-          const transformedProperties = propertiesResult.value.data.map(
-            (property: any) => ({
+          setAccommodation(
+            propertiesResult.value.data.map((property: Record<string, unknown>) => ({
               id: property.id,
               documentId: property.documentId,
               title: property.title || "Property",
               description:
                 property.description || "Beautiful accommodation in Tenerife",
-              image: getImageUrl(property),
-              price: `€${property.price?.amount || 0}/${
+              image: getImageUrl(
+                property as { images?: Array<{ url: string }> }
+              ),
+              price: `€${(property.price as { amount?: number })?.amount || 0}/${
                 property.type === "rent"
                   ? getLocalizedText(language, "month")
                   : getLocalizedText(language, "night")
               }`,
-              location: property.location?.city || "Tenerife",
+              location:
+                (property.location as { city?: string })?.city || "Tenerife",
               amenities: [
                 "WiFi",
                 getLocalizedText(language, "airConditioning"),
-                property.specifications?.bedrooms &&
-                  `${property.specifications.bedrooms} ${getLocalizedText(language, "bedrooms")}`,
-                property.specifications?.bathrooms &&
-                  `${property.specifications.bathrooms} ${getLocalizedText(language, "bathrooms")}`,
+                (property.specifications as { bedrooms?: number })?.bedrooms &&
+                  `${(property.specifications as { bedrooms?: number }).bedrooms} ${getLocalizedText(language, "bedrooms")}`,
+                (property.specifications as { bathrooms?: number })?.bathrooms &&
+                  `${(property.specifications as { bathrooms?: number }).bathrooms} ${getLocalizedText(language, "bathrooms")}`,
               ]
                 .filter(Boolean)
                 .join(", "),
               rating: 4.5,
-              contact: property.contact, // ✅ Added contact field
-            })
+              contact: property.contact,
+            }))
           );
-          setAccommodation(transformedProperties);
         }
 
-        // Обработка блогов
         if (
           blogsResult.status === "fulfilled" &&
           blogsResult.value?.data?.length > 0
         ) {
-          const transformedBlogs = blogsResult.value.data.map((blog: any) => ({
-            id: blog.id,
-            documentId: blog.documentId,
-            title: blog.title || "Blog Post",
-            description:
-              blog.excerpt ||
-              blog.description ||
-              "Interesting article about Tenerife",
-            image: getImageUrl(blog),
-            author: blog.author || "Admin",
-            readTime: `${blog.readTime || blog.read_time || 5} ${getLocalizedText(language, "minRead")}`,
-            publishedDate: blog.publishedAt
-              ? new Date(blog.publishedAt).toLocaleDateString()
-              : new Date().toLocaleDateString(),
-            rating: 4.7,
-          }));
-          setBlogPosts(transformedBlogs);
+          setBlogPosts(
+            blogsResult.value.data.map((blog: Record<string, unknown>) => ({
+              id: blog.id,
+              documentId: blog.documentId,
+              title: blog.title || "Blog Post",
+              description:
+                blog.excerpt ||
+                blog.description ||
+                "Interesting article about Tenerife",
+              image: getImageUrl(blog as { images?: Array<{ url: string }> }),
+              author: blog.author || "Admin",
+              readTime: `${blog.readTime || blog.read_time || 5} ${getLocalizedText(language, "minRead")}`,
+              publishedDate: blog.publishedAt
+                ? new Date(blog.publishedAt as string).toLocaleDateString()
+                : new Date().toLocaleDateString(),
+              rating: 4.7,
+            }))
+          );
         }
 
         if (transfersResult.status === "fulfilled") {
@@ -355,28 +268,29 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
             ? transfersResult.value.data
             : [];
           setTransfers(
-            transfersData.map((transfer: any) => ({
-              id: transfer.id,
-              documentId: transfer.documentId,
-              title: transfer.title || "Airport transfer",
+            transfersData.map((transfer: Record<string, unknown>) => ({
+              id: transfer.id as number,
+              documentId: transfer.documentId as string,
+              title: (transfer.title as string) || "Airport transfer",
               description:
-                transfer.description || "Private airport transfer in Tenerife",
+                (transfer.description as string) ||
+                "Private airport transfer in Tenerife",
               seats: Number(transfer.seats || 0),
               price_south_airport: Number(transfer.price_south_airport || 50),
               price_north_airport: Number(transfer.price_north_airport || 100),
-              currency: transfer.currency || "EUR",
+              currency: (transfer.currency as string) || "EUR",
               image:
                 typeof transfer.image === "string" && transfer.image.length > 0
                   ? transfer.image
                   : undefined,
-              images: transfer.images,
-              contact: transfer.contact,
+              images: transfer.images as Transfer["images"],
+              contact: transfer.contact as Transfer["contact"],
             }))
           );
         } else {
           setTransfers([]);
         }
-      } catch (error) {
+      } catch {
         setHasError(true);
       } finally {
         setDataLoading(false);
@@ -386,10 +300,9 @@ export function useDataLoader(mounted: boolean, language: LanguageCode) {
     if (mounted && language) {
       loadFeaturedData();
     }
-  }, [mounted, language]);
+  }, [enabled, mounted, language]);
 
   return {
-    excursions,
     cars,
     accommodation,
     blogPosts,

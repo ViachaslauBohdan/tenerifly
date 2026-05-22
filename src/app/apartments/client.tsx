@@ -236,11 +236,7 @@ export default function ApartmentsPageClient({
 
           const response = await fetch(
             `${apiUrl}/api/properties?populate=*&pagination[pageSize]=1000`,
-            {
-              headers: getAuthHeaders(),
-              // Add client-side caching
-              next: { revalidate: 300 }, // 5 minutes
-            }
+            { headers: getAuthHeaders() }
           );
 
           if (!response.ok) {

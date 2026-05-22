@@ -18,7 +18,8 @@ import {
   ogLocale,
 } from "@/lib/seo";
 
-export const revalidate = 86400;
+// 7 days — keep in sync with CMS_PAGE_REVALIDATE in src/config/cmsCache.ts
+export const revalidate = 604800;
 
 export async function generateStaticParams() {
   try {

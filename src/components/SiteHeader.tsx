@@ -49,10 +49,10 @@ const headerNavTransfers: Record<string, string> = {
 };
 
 const headerAnchorClass =
-  "touch-manipulation text-[10px] font-medium leading-tight text-white/90 hover:text-white whitespace-nowrap rounded-md px-1 py-1 transition-colors hover:bg-white/10 min-[400px]:text-[11px] min-[400px]:px-1.5 sm:rounded-lg sm:px-2.5 sm:text-sm sm:leading-normal md:py-1.5";
+  "touch-manipulation whitespace-nowrap rounded-md px-1.5 py-1 text-[11px] font-medium leading-tight text-white/90 transition-colors hover:bg-white/10 hover:text-white min-[400px]:rounded-lg min-[400px]:px-2 min-[400px]:py-1.5 min-[400px]:text-xs sm:px-2 sm:py-1.5 sm:text-sm sm:leading-normal md:py-1.5 lg:px-2.5";
 
 const headerAnchorActiveClass =
-  "touch-manipulation text-[10px] font-medium leading-tight text-white whitespace-nowrap rounded-md bg-white/15 px-1 py-1 min-[400px]:text-[11px] min-[400px]:px-1.5 sm:rounded-lg sm:px-2.5 sm:text-sm sm:leading-normal md:py-1.5";
+  "touch-manipulation whitespace-nowrap rounded-md bg-white/15 px-1.5 py-1 text-[11px] font-medium leading-tight text-white min-[400px]:rounded-lg min-[400px]:px-2 min-[400px]:py-1.5 min-[400px]:text-xs sm:px-2 sm:py-1.5 sm:text-sm sm:leading-normal md:py-1.5 lg:px-2.5";
 
 type SiteHeaderProps = {
   language: SiteHeaderLanguage;
@@ -85,7 +85,7 @@ export function SiteHeader({
   onScrollToSection,
 }: SiteHeaderProps) {
   const worldToursNav = pickLocaleBundle(
-    worldToursJson as Record<string, { nav: string }>,
+    worldToursJson as Record<string, { badge: string }>,
     language
   );
   const homeHref = createLocaleLink("/");
@@ -107,7 +107,7 @@ export function SiteHeader({
     activePage === "world-tours" ? headerAnchorActiveClass : headerAnchorClass;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 backdrop-blur-md pt-[env(safe-area-inset-top,0px)]">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-slate-950/55 backdrop-blur-md pt-[env(safe-area-inset-top,0px)]">
       <div className="mx-auto flex w-full min-w-0 max-w-7xl flex-col gap-1.5 px-2 pb-2 pt-1.5 min-[400px]:gap-2 min-[400px]:px-2.5 min-[400px]:pb-2.5 sm:px-3 md:flex-row md:items-center md:gap-2 md:py-2 md:pb-2 lg:gap-3 lg:px-4">
         <div className="flex w-full min-w-0 items-center justify-between gap-2 md:contents">
           <div
@@ -150,7 +150,7 @@ export function SiteHeader({
         </div>
 
         <nav
-          className="-mx-2 flex min-h-[2.25rem] min-w-0 w-full touch-pan-x flex-nowrap items-center gap-0 overflow-x-auto overscroll-x-contain px-2 [-ms-overflow-style:none] [scrollbar-width:none] min-[400px]:min-h-[2.5rem] min-[400px]:gap-px sm:mx-0 sm:gap-0.5 sm:px-0 md:order-2 md:min-h-0 md:flex-1 md:justify-start md:overflow-x-auto md:overflow-y-visible [&::-webkit-scrollbar]:hidden"
+          className="-mx-2 flex min-h-[2.25rem] min-w-0 w-full touch-pan-x flex-nowrap items-center gap-0 overflow-x-auto overscroll-x-contain scroll-pr-3 px-2 [-ms-overflow-style:none] [scrollbar-width:none] min-[400px]:min-h-[2.5rem] min-[400px]:gap-px sm:mx-0 sm:min-h-0 sm:gap-0.5 sm:scroll-pr-4 sm:px-0 md:order-2 md:min-h-0 md:max-w-full md:flex-1 md:justify-start md:overflow-x-auto md:overflow-y-visible lg:scroll-pr-0 [&::-webkit-scrollbar]:hidden"
           aria-label="Page sections"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
@@ -188,7 +188,7 @@ export function SiteHeader({
             className={worldToursClassName}
             aria-current={activePage === "world-tours" ? "page" : undefined}
           >
-            {worldToursNav.nav}
+            {worldToursNav.badge}
           </Link>
         </nav>
       </div>

@@ -6,7 +6,7 @@
     "node": "20.18.1"
   },
   "scripts": {
-    "dev": "npm run fetch-translations && next dev --hostname 127.0.0.1",
+    "dev": "npm run fetch-translations && next dev --hostname 127.0.0.1 --turbo",
     "build": "npm run fetch-translations && next build",
     "start": "next start",
     "lint": "next lint",

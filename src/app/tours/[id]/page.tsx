@@ -14,8 +14,8 @@ import {
   ogLocale,
 } from "@/lib/seo";
 
-// ISR настройки - обновление каждые 24 часа
-export const revalidate = 86400;
+// 7 days — keep in sync with CMS_PAGE_REVALIDATE in src/config/cmsCache.ts
+export const revalidate = 604800;
 
 // Генерация статических путей для всех туров
 export async function generateStaticParams() {

@@ -29,6 +29,7 @@ import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
 import { SiteHeader } from "@/components/SiteHeader";
+import { HomeCardImage } from "@/components/HomeCardImage";
 import {
   formatTransferPrice,
   getTransferImage,
@@ -72,7 +73,6 @@ interface LocalePageClientProps {
   initialData?: {
     properties: any[];
     cars: any[];
-    tours: any[];
     blogs: any[];
     transfers?: Transfer[];
   };
@@ -91,8 +91,8 @@ function CompactSearchField({
 }) {
   return (
     <div
-        className={`flex min-w-0 flex-1 flex-col justify-center px-4 sm:px-5 ${
-          hideLabel ? "py-0" : "py-3 sm:py-[15px]"
+        className={`flex min-w-0 flex-1 flex-col justify-center px-3 sm:px-5 ${
+          hideLabel ? "py-0" : "py-2.5 sm:py-[15px]"
         } ${className}`}
     >
       {hideLabel ? (
@@ -166,11 +166,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
 
   // State для FAQ секции
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
-
-  // Dynamic filter options extracted from useDataLoader data (same pattern as individual pages)
-  const [carTypes, setCarTypes] = useState<string[]>([]);
-  const [carBrands, setCarBrands] = useState<string[]>([]);
-  const [carTransmissions, setCarTransmissions] = useState<string[]>([]);
 
   const t = pickLocaleBundle(translations, language);
   const worldToursBase =
@@ -250,8 +245,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     return parts.join(" • ") || "—";
   };
 
-  // Используем initialData если доступно, иначе загружаем через хук
-  const dataFromHook = useDataLoader(mounted, language);
+  const dataFromHook = useDataLoader(mounted, language, {
+    enabled: !initialData,
+  });
   const { cars, accommodation, blogPosts, transfers, dataLoading } =
     initialData
       ? {
@@ -268,56 +264,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           transfers: dataFromHook.transfers,
           dataLoading: dataFromHook.dataLoading,
         };
-
-  // Extract filter options from useDataLoader data (same pattern as individual pages)
-  useEffect(() => {
-    if (mounted && accommodation && cars) {
-      // Extract car filter options from cars data
-      const carTypesArray = [
-        ...new Set(
-          cars
-            .map((car: { type?: string }) => car.type)
-            .filter(
-              (value): value is string =>
-                Boolean(value) && typeof value === "string"
-            )
-        ),
-      ].sort();
-
-      const carBrandsArray = [
-        ...new Set(
-          cars
-            .map(
-              (car: { specifications?: { make?: string } }) =>
-                car.specifications?.make
-            )
-            .filter(
-              (value: string | undefined): value is string =>
-                Boolean(value) && typeof value === "string"
-            )
-        ),
-      ].sort();
-
-      const carTransmissionsArray = [
-        ...new Set(
-          cars
-            .map(
-              (car: { specifications?: { transmission?: string } }) =>
-                car.specifications?.transmission
-            )
-            .filter(
-              (value): value is string =>
-                Boolean(value) && typeof value === "string"
-            )
-        ),
-      ].sort();
-
-      // Set all filter options (simple string arrays like individual pages)
-      setCarTypes(carTypesArray);
-      setCarBrands(carBrandsArray);
-      setCarTransmissions(carTransmissionsArray);
-    }
-  }, [mounted, accommodation, cars]);
 
   // Функция для открытия модального окна бронирования
   const openBookingModal = (
@@ -515,14 +461,14 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       {/* Hero Section */}
       <section
         id="home"
-        className="relative flex min-h-dvh flex-col bg-cover bg-center bg-no-repeat sm:min-h-[70vh]"
+        className="relative flex min-h-[100svh] flex-col bg-cover bg-center bg-no-repeat sm:min-h-[70vh]"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}
       >
         <div
-            className="relative z-10 grid min-h-0 w-full flex-1 grid-rows-[1fr_auto_1fr_auto_1fr] items-center px-3 pt-[5.25rem] min-[400px]:px-4 md:pt-[5.5rem] pb-[max(2rem,env(safe-area-inset-bottom,0px))] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
-          <div aria-hidden className="min-h-0" />
+            className="relative z-10 flex w-full flex-1 flex-col justify-center gap-5 px-3 pt-[6rem] pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] min-[400px]:gap-6 min-[400px]:px-4 min-[400px]:pt-[6.25rem] md:pt-[5.5rem] sm:grid sm:min-h-0 sm:grid-rows-[1fr_auto_1fr_auto_1fr] sm:items-center sm:gap-0 sm:pt-[5.5rem] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
+          <div aria-hidden className="hidden min-h-0 sm:block" />
           <div className="mx-auto w-full max-w-5xl xl:max-w-6xl">
               <div className="mb-3 text-center sm:mb-5">
                 <h1 className="text-xl font-bold text-white mb-2 drop-shadow-lg sm:mb-3 sm:text-2xl md:text-3xl lg:text-4xl">
@@ -740,9 +686,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 </div>
               </div>
           </div>
-          <div aria-hidden className="min-h-0" />
+          <div aria-hidden className="hidden min-h-0 sm:block" />
           <div className="mx-auto w-full max-w-5xl xl:max-w-6xl">
-              <h2 className="mb-4 text-center text-xl font-bold text-white drop-shadow-lg sm:mb-5 sm:text-2xl md:mb-6 md:text-3xl lg:text-4xl">
+              <h2 className="mb-3 text-center text-base font-bold leading-snug text-white drop-shadow-lg sm:mb-5 sm:text-2xl md:mb-6 md:text-3xl lg:text-4xl">
                 {worldToursCopy.heading}
               </h2>
               <WorldToursHeroSearch
@@ -750,7 +696,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                 labels={worldToursCopy}
               />
           </div>
-          <div aria-hidden className="min-h-0" />
+          <div aria-hidden className="hidden min-h-0 sm:block" />
         </div>
       </section>
 
@@ -792,10 +738,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                                 className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                             >
                               <div className="aspect-video relative overflow-hidden">
-                                <img
+                                <HomeCardImage
                                     src={place.image || "/placeholder.svg"}
                                     alt={place.title}
-                                    className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                                     onClick={() =>
                                         router.push(
                                             createLocaleLink(
@@ -946,10 +891,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                       className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                     >
                       <div className="aspect-video relative overflow-hidden">
-                        <img
+                        <HomeCardImage
                           src={getCarImage(car)}
                           alt={car.title}
-                          className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                           onClick={() =>
                             router.push(
                               createLocaleLink(`/cars/${car.documentId}`)
@@ -1069,10 +1013,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                 >
                   <div className="aspect-video relative overflow-hidden bg-gray-100">
-                    <img
+                    <HomeCardImage
                       src={getTransferImage(transfer)}
                       alt={transfer.title}
-                      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                       onClick={() =>
                         router.push(
                           createLocaleLink(`/transfers/${transfer.documentId}`)
@@ -1293,10 +1236,9 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                       className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                     >
                       <div className="aspect-video relative overflow-hidden">
-                        <img
+                        <HomeCardImage
                           src={post.image || "/placeholder.svg"}
                           alt={post.title}
-                          className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
                           onClick={() =>
                             router.push(
                               createLocaleLink(

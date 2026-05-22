@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const heroSearchCtaBaseClass =
-  "flex min-h-[52px] shrink-0 items-center justify-center gap-2 px-6 text-sm font-bold uppercase tracking-wide text-white outline-none transition-colors focus-visible:outline-none sm:min-h-[68px] sm:self-stretch sm:px-8 md:min-w-[9.5rem]";
+  "flex min-h-[48px] shrink-0 items-center justify-center gap-2 px-5 text-sm font-bold normal-case tracking-normal text-white outline-none transition-colors focus-visible:outline-none sm:min-h-[68px] sm:self-stretch sm:px-8 sm:uppercase sm:tracking-wide md:min-w-[9.5rem]";
 
 export const heroSearchCtaClass = `${heroSearchCtaBaseClass} bg-blue-600 hover:bg-blue-700`;
 

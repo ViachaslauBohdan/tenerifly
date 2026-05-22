@@ -39,7 +39,7 @@ export default function WorldToursPageClient() {
         createLocaleLink={createLocaleLink}
       />
 
-      <div className="pt-[5.5rem] min-[400px]:pt-[6rem] sm:pt-[6.25rem] md:pt-16">
+      <div className="pt-[6.25rem] min-[400px]:pt-[6.5rem] sm:pt-[6.25rem] md:pt-16">
         <div className="mx-auto max-w-5xl px-3 pt-4 min-[400px]:px-4 sm:pt-6">
           <TourTaglinesHeader
             dreamTrip={t.hero.tourTaglines.dreamTrip}

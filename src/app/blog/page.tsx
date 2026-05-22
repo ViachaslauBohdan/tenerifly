@@ -9,8 +9,8 @@ import {
   ogLocale,
 } from "@/lib/seo";
 
-// ISR настройки - обновление каждые 12 часов
-export const revalidate = 43200;
+// 7 days — keep in sync with CMS_PAGE_REVALIDATE in src/config/cmsCache.ts
+export const revalidate = 604800;
 
 // Генерация метаданных для страницы
 export async function generateMetadata(): Promise<Metadata> {

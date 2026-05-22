@@ -1,45 +1,19 @@
 "use client";
 
-import React from "react";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
 
-const WHATSAPP_NUMBER = "34613211069"; // +34613211069 without +
+const WHATSAPP_NUMBER = "34613211069";
 
 export function WhatsAppFloatingButton() {
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}`;
-
   return (
     <a
-      href={whatsappUrl}
+      href={`https://wa.me/${WHATSAPP_NUMBER}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contact us on WhatsApp"
-      style={{
-        position: "fixed",
-        bottom: 24,
-        right: 24,
-        zIndex: 1000,
-        width: 56,
-        height: 56,
-        borderRadius: "50%",
-        backgroundColor: "#25D366",
-        color: "white",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "scale(1.08)";
-        e.currentTarget.style.boxShadow = "0 6px 20px rgba(37, 211, 102, 0.4)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "scale(1)";
-        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
-      }}
+      className="fixed z-[1000] flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-[transform,box-shadow] hover:scale-105 hover:shadow-[0_6px_20px_rgba(37,211,102,0.4)] max-sm:bottom-[calc(5.75rem+env(safe-area-inset-bottom,0px))] max-sm:right-3 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14"
     >
-      <IconBrandWhatsapp size={32} stroke={2} />
+      <IconBrandWhatsapp className="h-7 w-7 sm:h-8 sm:w-8" stroke={2} />
     </a>
   );
 }

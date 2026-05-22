@@ -1,8 +1,19 @@
-import { localeContentKey } from "@/types/locale";
+import { localeContentKey, type Locale } from "@/types/locale";
 // Сервис для получения данных на сервере для SSG
 
 import { Transfer } from "@/lib/transfers";
-import { pickFeaturedHomeTours } from "@/lib/featuredHomeTours";
+import {
+  CMS_CACHE_TAGS,
+  CMS_FETCH_REVALIDATE,
+  CMS_MEMORY_CACHE_MS,
+  type CmsCacheTag,
+} from "@/config/cmsCache";
+import {
+  HOME_CARS_FETCH_LIMIT,
+  HOME_PREVIEW_LIMIT,
+  homeListQuery,
+  homePopulateQuery,
+} from "@/lib/homeListing";
 import {
   normalizeExcursionDocumentToTourCard,
   type NormalizedExcursionTour,
@@ -13,9 +24,19 @@ const API_URL =
   "https://tenerifly-strapi-production.up.railway.app";
 const API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
 
-// Кэш на уровне приложения
-const cache = new Map();
-const CACHE_TTL = 5 * 60 * 1000; // 5 минут
+// In-process cache for repeated reads during build / warm server
+const cache = new Map<string, { data: unknown; timestamp: number }>();
+
+const defaultFetchTags: CmsCacheTag[] = [
+  CMS_CACHE_TAGS.properties,
+  CMS_CACHE_TAGS.apartments,
+  CMS_CACHE_TAGS.cars,
+];
+
+const fetchCacheOptions = (tags: CmsCacheTag[]) => ({
+  revalidate: CMS_FETCH_REVALIDATE,
+  tags: [...new Set(tags)],
+});
 
 // Функция для создания заголовков с авторизацией
 const getAuthHeaders = () => {
@@ -167,12 +188,15 @@ const getLocalizedText = (language: string, textKey: string): string => {
   return texts[textKey]?.[language] || texts[textKey]?.["en"] || "";
 };
 
-// Функция для кэшированного запроса
-async function fetchWithCache(endpoint: string, cacheKey: string) {
+async function fetchWithCache(
+  endpoint: string,
+  cacheKey: string,
+  tags: CmsCacheTag[] = defaultFetchTags
+) {
   const now = Date.now();
   const cached = cache.get(cacheKey);
 
-  if (cached && now - cached.timestamp < CACHE_TTL) {
+  if (cached && now - cached.timestamp < CMS_MEMORY_CACHE_MS) {
     return cached.data;
   }
 
@@ -181,10 +205,7 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
 
     const response = await fetch(url, {
       headers: getAuthHeaders(),
-      next: {
-        revalidate: 3600, // Кэширование на уровне Next.js (1 час)
-        tags: ["properties", "apartments", "cars"], // Для инвалидации кэша
-      },
+      next: fetchCacheOptions(tags),
     });
 
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -203,12 +224,13 @@ async function fetchWithCache(endpoint: string, cacheKey: string) {
 /** Like fetchWithCache but returns null on non-OK (no console.error). Used to probe `/excursions` before legacy `/tours`. */
 async function fetchWithCacheMaybe(
   endpoint: string,
-  cacheKey: string
+  cacheKey: string,
+  tags: CmsCacheTag[] = [CMS_CACHE_TAGS.tours, CMS_CACHE_TAGS.excursions]
 ): Promise<unknown | null> {
   const now = Date.now();
   const cached = cache.get(cacheKey);
 
-  if (cached && now - cached.timestamp < CACHE_TTL) {
+  if (cached && now - cached.timestamp < CMS_MEMORY_CACHE_MS) {
     return cached.data;
   }
 
@@ -217,10 +239,7 @@ async function fetchWithCacheMaybe(
 
     const response = await fetch(url, {
       headers: getAuthHeaders(),
-      next: {
-        revalidate: 3600,
-        tags: ["properties", "apartments", "cars"],
-      },
+      next: fetchCacheOptions(tags),
     });
 
     if (!response.ok) return null;
@@ -238,7 +257,7 @@ async function fetchWithCacheMaybe(
 async function fetchTransfersQuiet(endpoint: string) {
   const response = await fetch(`${API_URL}/api${endpoint}`, {
     headers: getAuthHeaders(),
-    cache: "no-store",
+    next: fetchCacheOptions([CMS_CACHE_TAGS.transfers, CMS_CACHE_TAGS.home]),
   });
 
   if (!response.ok) {
@@ -265,16 +284,32 @@ export async function getAllProperties() {
   }
 }
 
-// Функция для принудительной инвалидации кэша апартаментов
-export async function revalidateProperties() {
-  try {
-    const { revalidateTag } = await import("next/cache");
-    await revalidateTag("properties");
-    await revalidateTag("apartments");
-    console.log("🔄 SSG: Cache invalidated for properties");
-  } catch (error) {
-    console.error("❌ SSG: Error invalidating cache:", error);
+/** Bust Next.js data cache after a CMS publish (call from /api/revalidate). */
+export async function revalidateCmsCache(tag?: CmsCacheTag | "all") {
+  const { revalidateTag, revalidatePath } = await import("next/cache");
+  const tags =
+    !tag || tag === "all"
+      ? (Object.values(CMS_CACHE_TAGS) as CmsCacheTag[])
+      : [tag];
+
+  for (const t of tags) {
+    revalidateTag(t);
   }
+
+  if (!tag || tag === "all" || tag === CMS_CACHE_TAGS.home) {
+    revalidatePath("/", "page");
+    const { LOCALES } = await import("@/types/locale");
+    for (const { code } of LOCALES) {
+      revalidatePath(`/${code}`, "page");
+    }
+  }
+
+  console.log("🔄 CMS cache revalidated:", tags.join(", "));
+}
+
+/** @deprecated Use revalidateCmsCache — kept for existing webhook payloads. */
+export async function revalidateProperties() {
+  await revalidateCmsCache(CMS_CACHE_TAGS.properties);
 }
 
 // Получение всех автомобилей через Documents API (правильное отображение записей)
@@ -298,10 +333,7 @@ export async function getAllCars() {
 
     const response = await fetch(url, {
       headers: getAuthHeaders(),
-      next: {
-        revalidate: 3600,
-        tags: ["cars-all"],
-      },
+      next: fetchCacheOptions([CMS_CACHE_TAGS.carsAll, CMS_CACHE_TAGS.cars]),
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const json = await response.json();
@@ -614,136 +646,113 @@ export async function getAllBlogIds() {
   );
 }
 
+function strapiLocaleParam(language: string): string {
+  return localeContentKey(language as Locale);
+}
+
+type HomeCarItem = {
+  id: number;
+  documentId: string;
+  locale?: string;
+  title?: string;
+  specifications?: {
+    make?: string;
+    model?: string;
+    transmission?: string;
+    fuel?: string;
+  };
+  rental_prices?: { day_1?: number; currency?: string };
+  type?: string;
+  images?: Array<{ url: string }>;
+};
+
+function toHomeCar(car: HomeCarItem) {
+  return {
+    id: car.id,
+    documentId: car.documentId,
+    title:
+      car.title ||
+      `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
+    images: car.images?.length ? [car.images[0]] : [],
+    specifications: car.specifications,
+    type: car.type,
+    rental_prices: car.rental_prices,
+  };
+}
+
+function filterCarsByLocale(
+  rows: HomeCarItem[],
+  language: string
+): HomeCarItem[] {
+  const localeKey = strapiLocaleParam(language);
+  const forLocale = rows.filter((car) => car.locale === localeKey);
+  if (forLocale.length >= HOME_PREVIEW_LIMIT) {
+    return forLocale.slice(0, HOME_PREVIEW_LIMIT);
+  }
+  return rows.slice(0, HOME_PREVIEW_LIMIT);
+}
+
+async function getHomeCars(language: string): Promise<HomeCarItem[]> {
+  const endpoint = `/cars?${homePopulateQuery()}&${homeListQuery(HOME_CARS_FETCH_LIMIT)}&sort=title:ASC`;
+  const rows = await fetchWithCache(endpoint, "home-cars-list", [
+    CMS_CACHE_TAGS.home,
+    CMS_CACHE_TAGS.cars,
+    CMS_CACHE_TAGS.carsAll,
+  ]);
+  if (!Array.isArray(rows)) return [];
+  return filterCarsByLocale(rows as HomeCarItem[], language).map((car) =>
+    toHomeCar(car)
+  );
+}
+
+async function getHomeProperties(): Promise<unknown[]> {
+  const endpoint = `/properties?${homePopulateQuery()}&${homeListQuery(HOME_PREVIEW_LIMIT)}&sort=updatedAt:DESC`;
+  const rows = await fetchWithCache(endpoint, "home-properties", [
+    CMS_CACHE_TAGS.home,
+    CMS_CACHE_TAGS.properties,
+    CMS_CACHE_TAGS.apartments,
+  ]);
+  return Array.isArray(rows) ? rows : [];
+}
+
+async function getHomeBlogs(language: string): Promise<unknown[]> {
+  const endpoint = `/blog-posts?${homePopulateQuery()}&${homeListQuery(HOME_PREVIEW_LIMIT)}&sort=publishedAt:DESC`;
+  const rows = await fetchWithCache(endpoint, `home-blogs-${language}`, [
+    CMS_CACHE_TAGS.home,
+    CMS_CACHE_TAGS.blogs,
+  ]);
+  return Array.isArray(rows) ? rows : [];
+}
+
+async function getHomeTransfers(): Promise<unknown[]> {
+  try {
+    const transfers = await fetchTransfersQuiet(
+      `/transfers?${homePopulateQuery()}&${homeListQuery(HOME_PREVIEW_LIMIT)}`
+    );
+    return Array.isArray(transfers) ? transfers : [];
+  } catch {
+    return [];
+  }
+}
+
 // Получение данных для главной страницы с трансформацией
 export async function getHomePageData(language: string = "en") {
   try {
-    const [
-      toursResult,
-      carsResult,
-      propertiesResult,
-      blogsResult,
-      transfersResult,
-    ] =
+    const [carsResult, propertiesResult, blogsResult, transfersResult] =
       await Promise.allSettled([
-        getAllTours(),
-        getAllCarsAllLocales(), // Получаем все автомобили для главной страницы
-        getAllProperties(),
-        getAllBlogs(),
-        getAllTransfers(),
+        getHomeCars(language),
+        getHomeProperties(),
+        getHomeBlogs(language),
+        getHomeTransfers(),
       ]);
 
-    // Трансформация туров
-    const tours =
-      toursResult.status === "fulfilled"
-        ? toursResult.value.map(
-            (tour: NormalizedExcursionTour) => ({
-              id: tour.id,
-              documentId: tour.documentId,
-              slug: tour.slug,
-              isPopular: tour.isPopular === true,
-              title: tour.name || tour.title || "Tour",
-              description:
-                tour.description || "Discover amazing places in Tenerife",
-              duration: tour.duration || "3 hours",
-              price: `€${tour.price?.amount ?? 50}`,
-              rating: 4.8,
-              groupSize: `${getLocalizedText(language, "max")} ${tour.maxGroupSize ?? 20} ${getLocalizedText(language, "people")}`,
-              image: getImageUrl(tour),
-            })
-          )
-        : [];
-
-    const featuredTours = pickFeaturedHomeTours(tours);
-
-    // Трансформация автомобилей
-    type CarItem = {
-      id: number;
-      documentId: string;
-      title?: string;
-      description?: string;
-      specifications?: {
-        make?: string;
-        model?: string;
-        transmission?: string;
-        seats?: number;
-        fuel?: string;
-        year?: number;
-      };
-      features?: { air_conditioning?: boolean; bluetooth?: boolean };
-      rental_prices?: { day_1?: number };
-      location?: { city?: string; region?: string };
-      type?: string;
-      car_status?: string;
-      images?: Array<{ url: string }>;
-    };
-
-    const carsByLocale =
-      carsResult.status === "fulfilled"
-        ? (carsResult.value as Record<string, CarItem[]>)
-        : {};
-    const carsRaw: CarItem[] =
-      carsByLocale[localeContentKey(language)] ??
-      carsByLocale[language] ??
-      [];
-    // const cars = carsRaw.map(
-    //   (car: {
-    //     id: number;
-    //     documentId: string;
-    //     title?: string;
-    //     description?: string;
-    //     specifications?: {
-    //       make?: string;
-    //       model?: string;
-    //       transmission?: string;
-    //       seats?: number;
-    //       fuel?: string;
-    //       year?: number;
-    //     };
-    //     features?: { air_conditioning?: boolean; bluetooth?: boolean };
-    //     rental_prices?: { day_1?: number };
-    //     location?: { city?: string; region?: string };
-    //     type?: string;
-    //     car_status?: string;
-    //     images?: Array<{ url: string }>;
-    //   }) => ({
-    //     id: car.id,
-    //     documentId: car.documentId,
-    //     title:
-    //       car.title ||
-    //       `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
-    //     description: car.description || "Reliable car for your journey",
-    //     image: getImageUrl(car),
-    //     price: `€${car.rental_prices?.day_1 || 30}/${getLocalizedText(language, "day")}`,
-    //     transmission:
-    //       car.specifications?.transmission === "automatic"
-    //         ? getLocalizedText(language, "automatic")
-    //         : getLocalizedText(language, "manual"),
-    //     features: [
-    //       car.features?.air_conditioning &&
-    //         getLocalizedText(language, "airConditioning"),
-    //       `${car.specifications?.seats || 5} ${getLocalizedText(language, "seats")}`,
-    //       car.features?.bluetooth && "Bluetooth",
-    //       car.specifications?.fuel,
-    //       car.specifications?.year && `${car.specifications.year}`,
-    //     ]
-    //       .filter(Boolean)
-    //       .join(", "),
-    //     rating: 4.6,
-    //     specifications: car.specifications,
-    //     location: car.location,
-    //     rental_prices: car.rental_prices,
-    //     type: car.type,
-    //     car_status: car.car_status,
-    //   })
-    // );
-
-    const cars = carsRaw;
+    const cars =
+      carsResult.status === "fulfilled" ? carsResult.value : [];
 
     // Трансформация недвижимости
     const properties =
       propertiesResult.status === "fulfilled"
-        ? propertiesResult.value.map(
-            (property: {
+        ? (propertiesResult.value as Array<{
               id: number;
               documentId: string;
               title?: string;
@@ -755,7 +764,7 @@ export async function getHomePageData(language: string = "en") {
               price?: { amount: number };
               contact?: { name?: string; email?: string; phone?: string };
               images?: Array<{ url: string }>;
-            }) => ({
+            }>).map((property) => ({
               id: property.id,
               documentId: property.documentId,
               title: property.title || "Property",
@@ -783,8 +792,7 @@ export async function getHomePageData(language: string = "en") {
     // Трансформация блогов
     const blogs =
       blogsResult.status === "fulfilled"
-        ? blogsResult.value.map(
-            (blog: {
+        ? (blogsResult.value as Array<{
               id: number;
               documentId: string;
               title?: string;
@@ -795,7 +803,7 @@ export async function getHomePageData(language: string = "en") {
               read_time?: number;
               publishedAt?: string;
               images?: Array<{ url: string }>;
-            }) => ({
+            }>).map((blog) => ({
               id: blog.id,
               documentId: blog.documentId,
               title: blog.title || "Blog Post",
@@ -835,14 +843,12 @@ export async function getHomePageData(language: string = "en") {
     const transfers =
       transfersResult.status === "fulfilled" &&
       Array.isArray(transfersResult.value)
-        ? transfersResult.value.map(normalizeTransfer)
+        ? (transfersResult.value as Transfer[]).map(normalizeTransfer)
         : [];
 
     return {
       properties,
       cars,
-      tours,
-      featuredTours,
       blogs,
       transfers,
     };
@@ -851,8 +857,6 @@ export async function getHomePageData(language: string = "en") {
     return {
       properties: [],
       cars: [],
-      tours: [],
-      featuredTours: [],
       blogs: [],
       transfers: [],
     };

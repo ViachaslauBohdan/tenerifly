@@ -32,16 +32,16 @@ export function WorldToursHeroSearch({
       className={`relative overflow-hidden rounded-xl bg-[#5DADE2] shadow-[0_16px_48px_rgba(15,23,42,0.35)] ${className}`}
     >
       <Compass
-        className="pointer-events-none absolute -left-2 top-1/2 h-28 w-28 -translate-y-1/2 text-white opacity-[0.14] sm:left-2 sm:h-36 sm:w-36"
+        className="pointer-events-none absolute -left-2 top-1/2 hidden h-28 w-28 -translate-y-1/2 text-white opacity-[0.14] sm:left-2 sm:block sm:h-36 sm:w-36"
         aria-hidden
       />
       <Plane
-        className="pointer-events-none absolute -right-2 top-1/2 h-24 w-24 -translate-y-1/2 text-white opacity-[0.14] sm:right-2 sm:h-32 sm:w-32"
+        className="pointer-events-none absolute -right-2 top-1/2 hidden h-24 w-24 -translate-y-1/2 text-white opacity-[0.14] sm:right-2 sm:block sm:h-32 sm:w-32"
         aria-hidden
       />
 
       <div className={`relative pt-3 sm:pt-5 ${heroSearchInsetClass}`}>
-        <h2 className="mb-2 text-[18px] font-bold leading-tight tracking-tight text-white sm:mb-3">
+        <h2 className="mb-2 text-base font-bold leading-snug text-white sm:mb-3 sm:text-lg">
           {labels.title}
         </h2>
       </div>
@@ -59,7 +59,7 @@ export function WorldToursHeroSearch({
         </div>
       </div>
 
-      <div className="pb-5 sm:pb-8" aria-hidden="true" />
+      <div className="pb-3 sm:pb-8" aria-hidden="true" />
     </div>
   );
 }
