@@ -1,0 +1,25 @@
+.countrySelect {
+  flex-shrink: 0;
+}
+
+.numberInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.flagWrap {
+  width: 22px;
+  height: 16px;
+  line-height: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flagWrap :global(svg) {
+  width: 22px;
+  height: 16px;
+  display: block;
+}

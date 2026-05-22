@@ -9,26 +9,31 @@ import {
   Group,
   Textarea,
   TextInput,
-  Select,
-  Stepper,
   Box,
   Alert,
 } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
+import { DatePickerInput, DatesProvider } from "@mantine/dates";
+import type { DatesRangeValue } from "@mantine/dates";
 import {
-  IconMessage,
   IconSend,
   IconCalendar,
-  IconUser,
-  IconPhone,
-  IconBrandWhatsapp,
-  IconBrandTelegram,
   IconCheck,
   IconMapPin,
-  IconArrowRight,
-  IconArrowLeft,
 } from "@tabler/icons-react";
 import type { Locale } from "@/types/locale";
+import "dayjs/locale/de";
+import "dayjs/locale/en";
+import "dayjs/locale/es";
+import "dayjs/locale/fr";
+import "dayjs/locale/pl";
+import "dayjs/locale/ru";
+import "dayjs/locale/uk";
+import {
+  PhoneNumberInput,
+  isPhoneNumberValid,
+  type Country,
+} from "@/components/PhoneNumberInput";
+import type { E164Number } from "libphonenumber-js";
 
 interface SimpleBookingPopupProps {
   opened: boolean;
@@ -44,6 +49,10 @@ interface SimpleBookingPopupProps {
   currentLocale?: Locale;
 }
 
+function dayjsLocale(locale: Locale): string {
+  return locale === "ua" ? "uk" : locale;
+}
+
 export function SimpleBookingPopup({
   opened,
   onClose,
@@ -54,23 +63,20 @@ export function SimpleBookingPopup({
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [comments, setComments] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phoneCountry, setPhoneCountry] = useState<Country | undefined>();
+  const [phone, setPhone] = useState<E164Number | undefined>();
   const [email, setEmail] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [telegram, setTelegram] = useState("");
-  const [preferredContact, setPreferredContact] = useState<string>("");
   const [isSending, setIsSending] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
-  const [step, setStep] = useState(0);
 
   useEffect(() => {
     if (opened) {
-      setStep(0);
       setSendError(null);
       setShowSuccess(false);
+      setPhoneCountry(undefined);
+      setPhone(undefined);
     }
   }, [opened]);
 
@@ -80,25 +86,19 @@ export function SimpleBookingPopup({
       itemName: "Property",
       price: "Price",
       contactInfo: "Contact Information",
-      firstName: "First Name",
-      lastName: "Last Name",
+      fullName: "Full Name",
       phone: "Phone Number",
       email: "Email",
-      whatsapp: "WhatsApp (Optional)",
-      telegram: "Telegram (Optional)",
-      preferredContact: "Preferred contact",
-      selectDates: "SELECT DATES",
+      selectDates: "Rent Period",
+      rentPeriodPlaceholder: "Select start and end dates",
       comments: "Request Description",
       commentsPlaceholder: "Any special requests or additional information...",
       close: "Close",
-      send: "Send Contact Request",
+      send: "Send",
       success:
         "Thanks for your contact request. Our Tenerifly team will analyze it and respond soon",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Please enter a valid email address",
-      phoneError: "Please enter a valid phone number (at least 10 digits)",
+      phoneError: "Please select a country and enter a valid phone number",
       premium: "Premium Service",
       instantResponse: "Instant Response",
       secureBooking: "Secure Booking",
@@ -112,23 +112,17 @@ export function SimpleBookingPopup({
       itemName: "Объект",
       price: "Цена",
       contactInfo: "Контактная информация",
-      firstName: "Имя",
-      lastName: "Фамилия",
+      fullName: "Полное имя",
       phone: "Номер телефона",
       email: "Email",
-      whatsapp: "WhatsApp (Необязательно)",
-      telegram: "Telegram (Необязательно)",
-      preferredContact: "Предпочтительный способ связи",
-      selectDates: "ВЫБРАТЬ ДАТЫ (НЕОБЯЗАТЕЛЬНО)",
+      selectDates: "Период аренды",
+      rentPeriodPlaceholder: "Выберите даты заезда и выезда",
       comments: "Описание запроса",
       commentsPlaceholder: "Особые пожелания или дополнительная информация...",
       close: "Закрыть",
-      send: "Отправить запрос на связь",
+      send: "Отправить",
       success:
         "Спасибо за ваш запрос на связь. Наша команда Tenerifly проанализирует его и ответит в ближайшее время",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Пожалуйста, введите корректный email адрес",
       phoneError:
         "Пожалуйста, введите корректный номер телефона (минимум 10 цифр)",
@@ -144,23 +138,17 @@ export function SimpleBookingPopup({
       itemName: "Nieruchomość",
       price: "Cena",
       contactInfo: "Informacje kontaktowe",
-      firstName: "Imię",
-      lastName: "Nazwisko",
+      fullName: "Imię i nazwisko",
       phone: "Numer telefonu",
       email: "Email",
-      whatsapp: "WhatsApp (Opcjonalnie)",
-      telegram: "Telegram (Opcjonalnie)",
-      preferredContact: "Preferowana metoda kontaktu",
-      selectDates: "WYBIERZ DATY (OPCJONALNIE)",
+      selectDates: "Okres wynajmu",
+      rentPeriodPlaceholder: "Wybierz daty rozpoczęcia i zakończenia",
       comments: "Opis żądania",
       commentsPlaceholder: "Specjalne życzenia lub dodatkowe informacje...",
       close: "Zamknij",
-      send: "Wyślij prośbę o kontakt",
+      send: "Wyślij",
       success:
         "Dziękujemy za Twoją prośbę o kontakt. Nasz zespół Tenerifly przeanalizuje ją i odpowie wkrótce",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Proszę wprowadzić poprawny adres email",
       phoneError:
         "Proszę wprowadzić poprawny numer telefonu (co najmniej 10 cyfr)",
@@ -176,24 +164,18 @@ export function SimpleBookingPopup({
       itemName: "Propriété",
       price: "Prix",
       contactInfo: "Informations de contact",
-      firstName: "Prénom",
-      lastName: "Nom de famille",
+      fullName: "Nom complet",
       phone: "Numéro de téléphone",
       email: "Email",
-      whatsapp: "WhatsApp (Optionnel)",
-      telegram: "Telegram (Optionnel)",
-      preferredContact: "Méthode de contact préférée",
-      selectDates: "SÉLECTIONNER LES DATES (OPTIONNEL)",
+      selectDates: "Période de location",
+      rentPeriodPlaceholder: "Choisissez les dates d'arrivée et de départ",
       comments: "Description de la demande",
       commentsPlaceholder:
         "Demandes spéciales ou informations supplémentaires...",
       close: "Fermer",
-      send: "Envoyer la demande de contact",
+      send: "Envoyer",
       success:
         "Merci pour votre demande de contact. Notre équipe Tenerifly l'analysera et répondra bientôt",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Veuillez saisir une adresse email valide",
       phoneError:
         "Veuillez saisir un numéro de téléphone valide (au moins 10 chiffres)",
@@ -209,23 +191,17 @@ export function SimpleBookingPopup({
       itemName: "Об'єкт",
       price: "Ціна",
       contactInfo: "Контактна інформація",
-      firstName: "Ім'я",
-      lastName: "Прізвище",
+      fullName: "Повне ім'я",
       phone: "Номер телефону",
       email: "Email",
-      whatsapp: "WhatsApp (Необов'язково)",
-      telegram: "Telegram (Необов'язково)",
-      preferredContact: "Бажаний спосіб зв'язку",
-      selectDates: "ВИБРАТИ ДАТИ (НЕОБОВ'ЯЗКОВО)",
+      selectDates: "Період оренди",
+      rentPeriodPlaceholder: "Оберіть дати заїзду та виїзду",
       comments: "Опис запиту",
       commentsPlaceholder: "Особливі побажання або додаткова інформація...",
       close: "Закрити",
-      send: "Надіслати запит на зв'язок",
+      send: "Надіслати",
       success:
         "Дякуємо за ваш запит на зв'язок. Наша команда Tenerifly проаналізує його і відповість найближчим часом",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Будь ласка, введіть коректну email адресу",
       phoneError:
         "Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)",
@@ -241,24 +217,18 @@ export function SimpleBookingPopup({
       itemName: "Objekt",
       price: "Preis",
       contactInfo: "Kontaktinformationen",
-      firstName: "Vorname",
-      lastName: "Nachname",
+      fullName: "Vollständiger Name",
       phone: "Telefonnummer",
       email: "E-Mail",
-      whatsapp: "WhatsApp (Optional)",
-      telegram: "Telegram (Optional)",
-      preferredContact: "Bevorzugte Kontaktmethode",
-      selectDates: "DATUM AUSWÄHLEN (OPTIONAL)",
+      selectDates: "Mietzeitraum",
+      rentPeriodPlaceholder: "Start- und Enddatum wählen",
       comments: "Anfragebeschreibung",
       commentsPlaceholder:
         "Besondere Wünsche oder zusätzliche Informationen...",
       close: "Schließen",
-      send: "Kontaktanfrage senden",
+      send: "Senden",
       success:
         "Vielen Dank für Ihre Kontaktanfrage. Unser Tenerifly-Team wird sie analysieren und bald antworten",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "E-Mail",
       emailError: "Bitte geben Sie eine gültige E-Mail-Adresse ein",
       phoneError:
         "Bitte geben Sie eine gültige Telefonnummer ein (mindestens 10 Ziffern)",
@@ -274,23 +244,17 @@ export function SimpleBookingPopup({
       itemName: "Propiedad",
       price: "Precio",
       contactInfo: "Información de contacto",
-      firstName: "Nombre",
-      lastName: "Apellido",
+      fullName: "Nombre completo",
       phone: "Número de teléfono",
       email: "Email",
-      whatsapp: "WhatsApp (Opcional)",
-      telegram: "Telegram (Opcional)",
-      preferredContact: "Método de contacto preferido",
-      selectDates: "SELECCIONAR FECHAS (OPCIONAL)",
+      selectDates: "Período de alquiler",
+      rentPeriodPlaceholder: "Seleccione fechas de entrada y salida",
       comments: "Descripción de la solicitud",
       commentsPlaceholder: "Solicitudes especiales o información adicional...",
       close: "Cerrar",
-      send: "Enviar solicitud de contacto",
+      send: "Enviar",
       success:
         "Gracias por su solicitud de contacto. Nuestro equipo Tenerifly la analizará y responderá pronto",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Por favor, introduzca una dirección de email válida",
       phoneError:
         "Por favor, introduzca un número de teléfono válido (mínimo 10 dígitos)",
@@ -308,25 +272,19 @@ export function SimpleBookingPopup({
       itemName: "Property",
       price: "Price",
       contactInfo: "Contact Information",
-      firstName: "First Name",
-      lastName: "Last Name",
+      fullName: "Full Name",
       phone: "Phone Number",
       email: "Email",
-      whatsapp: "WhatsApp (Optional)",
-      telegram: "Telegram (Optional)",
-      preferredContact: "Preferred contact",
-      selectDates: "SELECT DATES",
+      selectDates: "Rent Period",
+      rentPeriodPlaceholder: "Select start and end dates",
       comments: "Request Description",
       commentsPlaceholder: "Any special requests or additional information...",
       close: "Close",
-      send: "Send Booking Request",
+      send: "Pre-book",
       success:
         "Thanks for your pre-booking request. Our Tenerifly team will analyze it and respond soon",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Please enter a valid email address",
-      phoneError: "Please enter a valid phone number (at least 10 digits)",
+      phoneError: "Please select a country and enter a valid phone number",
       premium: "Premium Service",
       instantResponse: "Instant Response",
       secureBooking: "Secure Booking",
@@ -340,23 +298,17 @@ export function SimpleBookingPopup({
       itemName: "Объект",
       price: "Цена",
       contactInfo: "Контактная информация",
-      firstName: "Имя",
-      lastName: "Фамилия",
+      fullName: "Полное имя",
       phone: "Номер телефона",
       email: "Email",
-      whatsapp: "WhatsApp (Необязательно)",
-      telegram: "Telegram (Необязательно)",
-      preferredContact: "Предпочтительный способ связи",
-      selectDates: "ВЫБРАТЬ ДАТЫ (НЕОБЯЗАТЕЛЬНО)",
+      selectDates: "Период аренды",
+      rentPeriodPlaceholder: "Выберите даты заезда и выезда",
       comments: "Описание запроса",
       commentsPlaceholder: "Особые пожелания или дополнительная информация...",
       close: "Закрыть",
-      send: "Отправить заявку на бронирование",
+      send: "Забронировать",
       success:
         "Спасибо за ваш запрос на предварительное бронирование. Наша команда Tenerifly проанализирует его и ответит в ближайшее время",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Пожалуйста, введите корректный email адрес",
       phoneError:
         "Пожалуйста, введите корректный номер телефона (минимум 10 цифр)",
@@ -372,23 +324,17 @@ export function SimpleBookingPopup({
       itemName: "Nieruchomość",
       price: "Cena",
       contactInfo: "Informacje kontaktowe",
-      firstName: "Imię",
-      lastName: "Nazwisko",
+      fullName: "Imię i nazwisko",
       phone: "Numer telefonu",
       email: "Email",
-      whatsapp: "WhatsApp (Opcjonalnie)",
-      telegram: "Telegram (Opcjonalnie)",
-      preferredContact: "Preferowana metoda kontaktu",
-      selectDates: "WYBIERZ DATY (OPCJONALNIE)",
+      selectDates: "Okres wynajmu",
+      rentPeriodPlaceholder: "Wybierz daty rozpoczęcia i zakończenia",
       comments: "Opis żądania",
       commentsPlaceholder: "Specjalne życzenia lub dodatkowe informacje...",
       close: "Zamknij",
-      send: "Wyślij prośbę o rezerwację",
+      send: "Rezerwuj",
       success:
         "Dziękujemy za Twoją prośbę o przedwstępną rezerwację. Nasz zespół Tenerifly przeanalizuje ją i odpowie wkrótce",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Proszę wprowadzić poprawny adres email",
       phoneError:
         "Proszę wprowadzić poprawny numer telefonu (co najmniej 10 cyfr)",
@@ -404,24 +350,18 @@ export function SimpleBookingPopup({
       itemName: "Propriété",
       price: "Prix",
       contactInfo: "Informations de contact",
-      firstName: "Prénom",
-      lastName: "Nom de famille",
+      fullName: "Nom complet",
       phone: "Numéro de téléphone",
       email: "Email",
-      whatsapp: "WhatsApp (Optionnel)",
-      telegram: "Telegram (Optionnel)",
-      preferredContact: "Méthode de contact préférée",
-      selectDates: "SÉLECTIONNER LES DATES (OPTIONNEL)",
+      selectDates: "Période de location",
+      rentPeriodPlaceholder: "Choisissez les dates d'arrivée et de départ",
       comments: "Description de la demande",
       commentsPlaceholder:
         "Demandes spéciales ou informations supplémentaires...",
       close: "Fermer",
-      send: "Envoyer la demande de réservation",
+      send: "Réserver",
       success:
         "Merci pour votre demande de pré-réservation. Notre équipe Tenerifly l'analysera et répondra bientôt",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Veuillez saisir une adresse email valide",
       phoneError:
         "Veuillez saisir un numéro de téléphone valide (au moins 10 chiffres)",
@@ -437,23 +377,17 @@ export function SimpleBookingPopup({
       itemName: "Об'єкт",
       price: "Ціна",
       contactInfo: "Контактна інформація",
-      firstName: "Ім'я",
-      lastName: "Прізвище",
+      fullName: "Повне ім'я",
       phone: "Номер телефону",
       email: "Email",
-      whatsapp: "WhatsApp (Необов'язково)",
-      telegram: "Telegram (Необов'язково)",
-      preferredContact: "Бажаний спосіб зв'язку",
-      selectDates: "ВИБРАТИ ДАТИ (НЕОБОВ'ЯЗКОВО)",
+      selectDates: "Період оренди",
+      rentPeriodPlaceholder: "Оберіть дати заїзду та виїзду",
       comments: "Опис запиту",
       commentsPlaceholder: "Особливі побажання або додаткова інформація...",
       close: "Закрити",
-      send: "Надіслати заявку на бронювання",
+      send: "Забронювати",
       success:
         "Дякуємо за ваш запит на попереднє бронювання. Наша команда Tenerifly проаналізує його і відповість найближчим часом",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Будь ласка, введіть коректну email адресу",
       phoneError:
         "Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)",
@@ -469,24 +403,18 @@ export function SimpleBookingPopup({
       itemName: "Objekt",
       price: "Preis",
       contactInfo: "Kontaktinformationen",
-      firstName: "Vorname",
-      lastName: "Nachname",
+      fullName: "Vollständiger Name",
       phone: "Telefonnummer",
       email: "E-Mail",
-      whatsapp: "WhatsApp (Optional)",
-      telegram: "Telegram (Optional)",
-      preferredContact: "Bevorzugte Kontaktmethode",
-      selectDates: "DATUM AUSWÄHLEN (OPTIONAL)",
+      selectDates: "Mietzeitraum",
+      rentPeriodPlaceholder: "Start- und Enddatum wählen",
       comments: "Anfragebeschreibung",
       commentsPlaceholder:
         "Besondere Wünsche oder zusätzliche Informationen...",
       close: "Schließen",
-      send: "Buchungsanfrage senden",
+      send: "Buchen",
       success:
         "Vielen Dank für Ihre Vorab-Buchungsanfrage. Unser Tenerifly-Team wird sie analysieren und bald antworten",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "E-Mail",
       emailError: "Bitte geben Sie eine gültige E-Mail-Adresse ein",
       phoneError:
         "Bitte geben Sie eine gültige Telefonnummer ein (mindestens 10 Ziffern)",
@@ -502,23 +430,17 @@ export function SimpleBookingPopup({
       itemName: "Propiedad",
       price: "Precio",
       contactInfo: "Información de contacto",
-      firstName: "Nombre",
-      lastName: "Apellido",
+      fullName: "Nombre completo",
       phone: "Número de teléfono",
       email: "Email",
-      whatsapp: "WhatsApp (Opcional)",
-      telegram: "Telegram (Opcional)",
-      preferredContact: "Método de contacto preferido",
-      selectDates: "SELECCIONAR FECHAS (OPCIONAL)",
+      selectDates: "Período de alquiler",
+      rentPeriodPlaceholder: "Seleccione fechas de entrada y salida",
       comments: "Descripción de la solicitud",
       commentsPlaceholder: "Solicitudes especiales o información adicional...",
       close: "Cerrar",
-      send: "Enviar solicitud de reserva",
+      send: "Reservar",
       success:
         "Gracias por su solicitud de reserva anticipada. Nuestro equipo Tenerifly la analizará y responderá pronto",
-      whatsappLabel: "WhatsApp",
-      telegramLabel: "Telegram",
-      emailLabel: "Email",
       emailError: "Por favor, introduzca una dirección de email válida",
       phoneError:
         "Por favor, introduzca un número de teléfono válido (mínimo 10 dígitos)",
@@ -548,16 +470,12 @@ export function SimpleBookingPopup({
 Новая заявка на бронирование:
 
 ${item.name ? `Объект: ${item.name}` : ""}
-${item.price ? `Цена: ${item.currency} ${item.price}` : ""}
+${item.price ? `Цена: ${item.price}` : ""}
 
 Контактная информация:
-Имя: ${firstName}
-Фамилия: ${lastName}
-Телефон: ${phone}
+Имя: ${fullName}
+Телефон: ${phone ?? ""}
 Email: ${email}
-${whatsapp ? `WhatsApp: ${whatsapp}` : ""}
-${telegram ? `Telegram: ${telegram}` : ""}
-${preferredContact ? `Предпочтительный способ связи: ${preferredContact}` : ""}
 
 ${startDate || endDate ? "Даты:" : ""}
 ${startDate ? `Дата начала: ${startDate.toLocaleDateString()}` : ""}
@@ -588,27 +506,23 @@ ${comments ? `Дополнительная информация: ${comments}` : 
         // Reset form after successful submission
         setTimeout(() => {
           setShowSuccess(false);
-          setStep(0);
           onClose();
           // Reset form
           setStartDate(null);
           setEndDate(null);
           setComments("");
-          setFirstName("");
-          setLastName("");
-          setPhone("");
+          setFullName("");
+          setPhone(undefined);
+          setPhoneCountry(undefined);
           setEmail("");
-          setWhatsapp("");
-          setTelegram("");
-          setPreferredContact("");
         }, 2000);
       } else {
         console.error("Failed to send email:", data.error);
-        setSendError(
+        const errMsg =
           typeof data.error === "string"
             ? data.error
-            : bookingTranslations.en.sendError
-        );
+            : data.error?.message ?? data.error?.error;
+        setSendError(errMsg || bookingTranslations.en.sendError);
       }
     } catch (error) {
       console.error("Error sending email:", error);
@@ -624,21 +538,15 @@ ${comments ? `Дополнительная информация: ${comments}` : 
     return emailRegex.test(email);
   };
 
-  // Phone validation function
-  const isValidPhone = (phone: string) => {
-    // Remove all non-digit characters
-    const cleanPhone = phone.replace(/\D/g, "");
-    // Spain uses 9-digit mobiles; allow 9+ digits internationally
-    return cleanPhone.length >= 9;
-  };
+  const phoneIsValid = isPhoneNumberValid(phoneCountry, phone);
 
   const isFormValid =
-    firstName &&
-    lastName &&
+    fullName &&
     phone &&
+    phoneCountry &&
     email &&
     isValidEmail(email) &&
-    isValidPhone(phone);
+    phoneIsValid;
 
   const inputStyles = {
     input: {
@@ -654,7 +562,7 @@ ${comments ? `Дополнительная информация: ${comments}` : 
   return (
     <Modal
       opened={opened}
-      onClose={() => { setStep(0); onClose(); }}
+      onClose={onClose}
       title={null}
       size="md"
       centered
@@ -670,25 +578,15 @@ ${comments ? `Дополнительная информация: ${comments}` : 
         },
       }}
     >
-      {/* Header with stepper */}
       <Box px="md" pt="md" pb="xs">
         <Group justify="space-between" align="center">
           <Text size="lg" fw={600} c="#1a202c">
             {t.title}
           </Text>
-          <Button variant="subtle" color="gray" size="sm" onClick={() => { setStep(0); onClose(); }}>✕</Button>
+          <Button variant="subtle" color="gray" size="sm" onClick={onClose}>
+            ✕
+          </Button>
         </Group>
-        <Stepper
-          size="xs"
-          active={step}
-          onStepClick={setStep}
-          mt="sm"
-          allowNextStepsSelect={false}
-          styles={{ stepBody: { display: "none" }, separator: { marginLeft: 4, marginRight: 4 } }}
-        >
-          <Stepper.Step label={t.contactInfo} />
-          <Stepper.Step label={t.selectDates} />
-        </Stepper>
       </Box>
 
       {/* Success state */}
@@ -703,104 +601,112 @@ ${comments ? `Дополнительная информация: ${comments}` : 
         </Box>
       ) : (
         <Box px="md" pb="md">
-          {/* Step 0: Contact */}
-          {step === 0 && (
-            <Stack gap="sm">
-              <Group gap="xs" mb={4}>
-                <IconMapPin size={16} color="#3182ce" />
-                <Text size="sm" fw={500} c="dimmed">{item.name}{item.price ? ` · ${item.price}` : ""}</Text>
-              </Group>
-              <Group grow>
-                <TextInput label={t.firstName} placeholder={t.firstName} value={firstName} onChange={(e) => setFirstName(e.target.value)} required withAsterisk styles={inputStyles} />
-                <TextInput label={t.lastName} placeholder={t.lastName} value={lastName} onChange={(e) => setLastName(e.target.value)} required withAsterisk styles={inputStyles} />
-              </Group>
-              <TextInput label={t.phone} placeholder={t.phone} value={phone} onChange={(e) => setPhone(e.target.value)} required withAsterisk error={phone && !isValidPhone(phone) ? t.phoneError : undefined} styles={inputStyles} />
-              <TextInput label={t.email} placeholder={t.email} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required withAsterisk error={email && !isValidEmail(email) ? t.emailError : undefined} styles={inputStyles} />
-              <Group grow>
-                <TextInput placeholder={t.whatsapp} value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} leftSection={<IconBrandWhatsapp size={16} color="#25D366" />} styles={inputStyles} />
-                <TextInput placeholder={t.telegram} value={telegram} onChange={(e) => setTelegram(e.target.value)} leftSection={<IconBrandTelegram size={16} color="#0088cc" />} styles={inputStyles} />
-              </Group>
-              <Select placeholder={t.preferredContact} value={preferredContact} onChange={(v) => setPreferredContact(v || "")} data={[{ value: "email", label: t.emailLabel }, { value: "whatsapp", label: t.whatsappLabel }, { value: "telegram", label: t.telegramLabel }]} styles={inputStyles} />
-              {sendError && (
-                <Alert color="red" variant="light">
-                  {sendError}
-                </Alert>
-              )}
-              <Group justify="space-between" mt="md">
-                <Button variant="subtle" color="gray" onClick={onClose}>{t.close}</Button>
-                <Group gap="xs">
-                  <Button
-                    type="button"
-                    variant="light"
-                    leftSection={<IconSend size={16} />}
-                    onClick={handleSend}
-                    disabled={!isFormValid || isSending}
-                    loading={isSending}
-                  >
-                    {t.send}
-                  </Button>
-                  <Button
-                    type="button"
-                    rightSection={<IconArrowRight size={16} />}
-                    onClick={() => setStep(1)}
-                    disabled={!isFormValid || isSending}
-                  >
-                    {t.next}
-                  </Button>
-                </Group>
-              </Group>
-            </Stack>
-          )}
-
-          {/* Step 1: Dates & comments */}
-          {step === 1 && (
-            <Stack gap="sm">
-              {sendError && (
-                <Alert color="red" variant="light">
-                  {sendError}
-                </Alert>
-              )}
-              <Group grow>
-                <DateInput
-                  value={startDate}
-                  onChange={setStartDate}
-                  placeholder="Start date"
-                  leftSection={<IconCalendar size={16} />}
-                  clearable
-                  valueFormat="DD/MM/YYYY"
-                  minDate={new Date()}
-                  maxDate={new Date(new Date().getFullYear() + 1, 11, 31)}
-                  styles={inputStyles}
-                />
-                <DateInput
-                  value={endDate}
-                  onChange={setEndDate}
-                  placeholder="End date"
-                  leftSection={<IconCalendar size={16} />}
-                  clearable
-                  valueFormat="DD/MM/YYYY"
-                  minDate={startDate || new Date()}
-                  maxDate={new Date(new Date().getFullYear() + 1, 11, 31)}
-                  styles={inputStyles}
-                />
-              </Group>
-              <Textarea placeholder={t.commentsPlaceholder} value={comments} onChange={(e) => setComments(e.target.value)} minRows={2} maxRows={3} autosize styles={{ ...inputStyles, input: { ...inputStyles.input, resize: "none" } }} />
-              <Group justify="space-between" mt="md">
-                <Button variant="subtle" leftSection={<IconArrowLeft size={16} />} onClick={() => setStep(0)}>
-                  {t.back}
-                </Button>
-                <Button
-                  type="button"
-                  leftSection={<IconSend size={16} />}
-                  onClick={handleSend}
-                  disabled={!isFormValid || isSending}
-                  loading={isSending}
-                >
-                  {t.send}
-                </Button>
-              </Group>
-            </Stack>
-          )}
+          <Stack gap="sm">
+            <Group gap="xs" mb={4}>
+              <IconMapPin size={16} color="#3182ce" />
+              <Text size="sm" fw={500} c="dimmed">
+                {item.name}
+                {item.price ? ` · ${item.price}` : ""}
+              </Text>
+            </Group>
+            <TextInput
+              label={t.fullName}
+              placeholder={t.fullName}
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+              withAsterisk
+              styles={inputStyles}
+            />
+            <PhoneNumberInput
+              label={t.phone}
+              required
+              country={phoneCountry}
+              value={phone}
+              onCountryChange={setPhoneCountry}
+              onChange={setPhone}
+              placeholder="612 345 678"
+              error={
+                (phone || phoneCountry) && !phoneIsValid
+                  ? t.phoneError
+                  : undefined
+              }
+              styles={inputStyles}
+            />
+            <TextInput
+              label={t.email}
+              placeholder={t.email}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              withAsterisk
+              error={email && !isValidEmail(email) ? t.emailError : undefined}
+              styles={inputStyles}
+            />
+            <DatesProvider
+              settings={{
+                locale: dayjsLocale(currentLocale),
+                firstDayOfWeek: 1,
+                weekendDays: [0, 6],
+              }}
+            >
+              <DatePickerInput
+                type="range"
+                label={t.selectDates}
+                placeholder={t.rentPeriodPlaceholder}
+                value={[startDate, endDate]}
+                onChange={(range: DatesRangeValue) => {
+                  const [start, end] = range ?? [null, null];
+                  setStartDate(start);
+                  setEndDate(end);
+                }}
+                leftSection={<IconCalendar size={16} />}
+                clearable
+                allowSingleDateInRange
+                numberOfColumns={2}
+                valueFormat="DD/MM/YYYY"
+                minDate={new Date()}
+                maxDate={
+                  new Date(new Date().getFullYear() + 1, 11, 31)
+                }
+                popoverProps={{ withinPortal: true, zIndex: 400 }}
+                styles={inputStyles}
+              />
+            </DatesProvider>
+            <Textarea
+              label={t.comments}
+              placeholder={t.commentsPlaceholder}
+              value={comments}
+              onChange={(e) => setComments(e.target.value)}
+              minRows={2}
+              maxRows={3}
+              autosize
+              styles={{
+                ...inputStyles,
+                input: { ...inputStyles.input, resize: "none" },
+              }}
+            />
+            {sendError && (
+              <Alert color="red" variant="light">
+                {sendError}
+              </Alert>
+            )}
+            <Group justify="space-between" mt="md">
+              <Button variant="subtle" color="gray" onClick={onClose}>
+                {t.close}
+              </Button>
+              <Button
+                type="button"
+                leftSection={<IconSend size={16} />}
+                onClick={handleSend}
+                disabled={!isFormValid || isSending}
+                loading={isSending}
+              >
+                {t.send}
+              </Button>
+            </Group>
+          </Stack>
         </Box>
       )}
     </Modal>
