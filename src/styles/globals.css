@@ -1006,13 +1006,17 @@ html {
 }
 }
 
-/* Otpusk — prevent mobile horizontal flash before widget CSS/JS settle */
+/* Otpusk — width cap only; avoid overflow-x:hidden (clips open dropdowns) */
 #otpusk-search-container,
 #otpusk-world-search-container,
 #otpusk-search-container.otpusk-search-host,
 #otpusk-world-search-container.otpusk-search-host {
-  overflow-x: hidden;
   max-width: 100%;
+}
+
+#otpusk-search-container .new_f-form,
+#otpusk-world-search-container .new_f-form {
+  overflow: visible;
 }
 
 @media (max-width: 639px) {

@@ -28,7 +28,7 @@ export function OtpuskTourSearchSection({
   });
 
   return (
-    <section className={`${className} overflow-x-hidden`}>
+    <section className={className}>
       <div
         id={searchContainerId}
         className="new_os otpusk-search-host mx-auto min-h-[120px] w-full max-w-[1200px] px-4 min-[400px]:px-5 sm:px-6"
