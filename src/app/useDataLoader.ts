@@ -10,6 +10,7 @@ import {
   pickHomeCarsByLocale,
 } from "@/lib/homeListing";
 import { localeContentKey } from "@/types/locale";
+import { formatPropertyPriceLabel } from "@/utils/propertyPrice";
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
 
@@ -217,11 +218,12 @@ export function useDataLoader(
               image: getImageUrl(
                 property as { images?: Array<{ url: string }> }
               ),
-              price: `€${(property.price as { amount?: number })?.amount || 0}/${
-                property.type === "rent"
-                  ? getLocalizedText(language, "month")
-                  : getLocalizedText(language, "night")
-              }`,
+              price: formatPropertyPriceLabel({
+                amount: (property.price as { amount?: number })?.amount || 0,
+                currency: (property.price as { currency?: string })?.currency,
+                period: (property.price as { period?: string })?.period,
+                language,
+              }),
               location:
                 (property.location as { city?: string })?.city || "Tenerife",
               amenities: [

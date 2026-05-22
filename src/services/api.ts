@@ -8,6 +8,7 @@ import {
   BlogPostLegacy, 
   StrapiResponseLegacy 
 } from '@/types/strapi-legacy';
+import { formatPropertyPriceLabel } from '@/utils/propertyPrice';
 
 // Получаем URL и TOKEN из environment переменных
 const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337/api';
@@ -394,7 +395,7 @@ export const propertiesAPI = {
         price: {
           amount: property.attributes.price.amount,
           currency: property.attributes.price.currency,
-          period: property.attributes.type === 'rent' ? 'month' : 'total'
+          period: property.attributes.price.period
         },
         specifications: {
           bedrooms: property.attributes.specifications.bedrooms,
@@ -439,7 +440,12 @@ export const propertiesAPI = {
         id: property.id,
         title: property.attributes.title,
         description: property.attributes.description,
-        price: `€${property.attributes.price.amount}/${property.attributes.type === 'rent' ? 'месяц' : 'всего'}`,
+        price: formatPropertyPriceLabel({
+          amount: property.attributes.price.amount,
+          currency: property.attributes.price.currency,
+          period: property.attributes.price.period,
+          language: locale,
+        }),
         bedrooms: property.attributes.specifications.bedrooms,
         bathrooms: property.attributes.specifications.bathrooms,
         area: property.attributes.specifications.total_area,

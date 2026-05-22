@@ -15,6 +15,10 @@ import {
 } from "@/components/ui/carousel";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translations from "@/i18n/apartmentDetail.json";
+import {
+  formatPropertyPriceWithCurrency,
+  getPropertyPeriodLabel,
+} from "@/utils/propertyPrice";
 
 interface PropertyData {
   id: number;
@@ -665,7 +669,7 @@ export default function PropertyDetailPage({
                     {property.price.amount.toLocaleString()}
                   </div>
                   <div className="text-sm text-gray-600">
-                    {property.type === "rent" ? `/ ${t.month}` : t.price}
+                    / {getPropertyPeriodLabel(property.price.period, locale)}
                   </div>
                 </div>
               )}
@@ -865,7 +869,12 @@ export default function PropertyDetailPage({
             item={{
               name: property.title,
               price: property.price
-                ? `${property.price.currency} ${property.price.amount.toLocaleString()}/${property.type === "rent" ? "month" : "night"}`
+                ? formatPropertyPriceWithCurrency({
+                    amount: property.price.amount,
+                    currency: property.price.currency,
+                    period: property.price.period,
+                    language: locale,
+                  })
                 : undefined,
               currency: property.price?.currency,
               contactEmail: property.contact?.email,

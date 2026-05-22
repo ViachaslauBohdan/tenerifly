@@ -16,6 +16,7 @@ import {
   pickHomeCarsByLocale,
   type HomeCarRow,
 } from "@/lib/homeListing";
+import { formatPropertyPriceLabel } from "@/utils/propertyPrice";
 import {
   normalizeExcursionDocumentToTourCard,
   type NormalizedExcursionTour,
@@ -746,7 +747,7 @@ export async function getHomePageData(language: string = "en") {
               location?: { city?: string };
               category?: string;
               specifications?: { bedrooms?: number; bathrooms?: number };
-              price?: { amount: number };
+              price?: { amount: number; currency?: string; period?: string };
               contact?: { name?: string; email?: string; phone?: string };
               images?: Array<{ url: string }>;
             }>).map((property) => ({
@@ -756,7 +757,12 @@ export async function getHomePageData(language: string = "en") {
               description:
                 property.description || "Beautiful stay in Tenerife",
               image: getImageUrl(property),
-              price: `€${property.price?.amount || 0}/${property.type === "rent" ? getLocalizedText(language, "month") : getLocalizedText(language, "night")}`,
+              price: formatPropertyPriceLabel({
+                amount: property.price?.amount || 0,
+                currency: property.price?.currency,
+                period: property.price?.period,
+                language,
+              }),
               location: property.location?.city || "Tenerife",
               amenities: [
                 "WiFi",
