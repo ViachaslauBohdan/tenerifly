@@ -23,14 +23,10 @@ import {
   User,
   ArrowRight,
   Plane,
-  Bed,
-  Bus,
-  ShieldPlus,
 } from "lucide-react";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
-import worldToursJson from "../i18n/worldTours.json";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
   formatTransferPrice,
@@ -49,12 +45,7 @@ import {
   pickLocaleBundle,
   type Locale,
 } from "@/types/locale";
-import {
-  HERO_TAB_GROUPS,
-  type HeroTab,
-  parseHeroTab,
-  isHeroTab,
-} from "@/lib/heroTab";
+import { type HeroTab, parseHeroTab, isHeroTab } from "@/lib/heroTab";
 // Переводы для всех языков
 const translations = translationsJson;
 
@@ -106,49 +97,6 @@ function CompactSearchField({
         </span>
       )}
       {children}
-    </div>
-  );
-}
-
-const WORLD_TOUR_HIGHLIGHT_ITEMS = [
-  { icon: Bed, key: "room" as const },
-  { icon: Bus, key: "transfer" as const },
-  { icon: ShieldPlus, key: "insurance" as const },
-];
-
-const worldTourIconDividerClass =
-  "mx-0.5 h-4 w-px shrink-0 bg-gray-300 sm:h-5";
-
-function WorldTourHighlightIcons({
-  highlights,
-  className = "",
-  ...props
-}: {
-  highlights: { room: string; transfer: string; insurance: string };
-  className?: string;
-} & React.ComponentProps<"div">) {
-  return (
-    <div
-        className={`flex shrink-0 items-center gap-1 text-gray-600 sm:gap-1.5 ${className}`}
-        {...props}
-    >
-      {WORLD_TOUR_HIGHLIGHT_ITEMS.map(({ icon: Icon, key }, index) => {
-        const label = highlights[key];
-        return (
-          <div key={key} className="flex items-center">
-            {index > 0 && (
-              <span className={worldTourIconDividerClass} aria-hidden="true" />
-            )}
-            <span
-                className="flex h-7 w-7 items-center justify-center sm:h-8 sm:w-8"
-                title={label}
-            >
-              <Icon className="h-4 w-4 sm:h-5 sm:w-5" aria-label={label} />
-            </span>
-          </div>
-        );
-      })}
-      <span className={worldTourIconDividerClass} aria-hidden="true" />
     </div>
   );
 }
@@ -219,25 +167,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [carTransmissions, setCarTransmissions] = useState<string[]>([]);
 
   const t = pickLocaleBundle(translations, language);
-  const heroTabGroups =
-    (
-      t.hero as {
-        tabGroups?: { tenerife: string; worldwide: string };
-      }
-    ).tabGroups ?? pickLocaleBundle(HERO_TAB_GROUPS, language);
-  const worldToursCopy = pickLocaleBundle(
-    worldToursJson as Record<
-      string,
-      {
-        nav: string;
-        hint: string;
-        title: string;
-        subtitle: string;
-        highlights: { room: string; transfer: string; insurance: string };
-      }
-    >,
-    language
-  );
   const transferCopy = getTransferLocaleText(language);
   const datePlaceholder =
     language === "ru"
@@ -265,17 +194,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     "flex min-h-[44px] flex-1 flex-col divide-y divide-gray-200 sm:flex-row sm:divide-x sm:divide-y-0";
   const heroSearchWrapClass =
     "flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.24)] sm:flex-row";
-  const worldToursHeroWidthClass = "mx-auto w-full min-w-0 lg:w-[70%]";
-  const worldToursHeroSearchWrapClass =
-    "flex w-full min-w-0 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.24)] md:flex-row md:flex-wrap";
-  const worldToursSearchBarClass =
-    "flex min-h-[44px] min-w-0 w-full flex-col divide-y divide-gray-200 md:min-w-0 md:flex-1 md:flex-row md:divide-x md:divide-y-0";
-  const worldToursSubmitClass =
-    "flex h-11 w-full shrink-0 items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 md:h-auto md:w-auto md:min-w-[10.5rem] md:border-t-0 md:border-l md:px-7 lg:min-w-[11.5rem]";
   const searchSubmitClass =
     "flex h-11 shrink-0 items-center justify-center gap-1.5 border-t border-gray-200 bg-blue-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 sm:h-auto sm:border-t-0 sm:border-l sm:px-5 md:min-w-[7.5rem]";
-  const heroTabGroupLabelClass =
-    "text-[10px] font-semibold uppercase tracking-wider text-white/70 sm:text-xs";
   const heroTabNavClass =
     "inline-flex max-w-full flex-wrap justify-center gap-1 rounded-lg bg-sky-950/55 p-1 ring-1 ring-white/15 backdrop-blur-sm";
   const heroTabButtonClass = (isActive: boolean) =>
@@ -531,10 +451,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         params.append("language", tourLanguage);
         router.push(`${createLocaleLink("/tours")}?${params.toString()}`);
         break;
-
-      case "world-tours":
-        router.push(createLocaleLink("/world-tours"));
-        break;
     }
   };
 
@@ -644,79 +560,43 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           </div>
 
           <div className="flex w-full max-w-5xl flex-col gap-2 xl:max-w-6xl sm:gap-2.5">
-            <div className="mx-auto mb-8 flex max-w-full flex-wrap items-end justify-center gap-2 sm:mb-10 sm:gap-3 md:mb-12">
-              <div className="flex flex-col items-center gap-1">
-                <span className={heroTabGroupLabelClass}>
-                  {heroTabGroups.tenerife}
-                </span>
-                <nav
-                    className={heroTabNavClass}
-                    role="tablist"
-                    aria-label={heroTabGroups.tenerife}
-                >
-                  {[
-                    {
-                      key: "accommodation",
-                      icon: Home,
-                      label: t.hero.tabs.accommodation,
-                    },
-                    {key: "cars", icon: Car, label: t.hero.tabs.cars},
-                    {key: "tours", icon: MapPin, label: t.hero.tabs.excursions},
-                  ].map(({key, icon: Icon, label}) => {
-                    const isActive = activeTab === key;
-                    return (
-                      <button
-                          key={key}
-                          type="button"
-                          role="tab"
-                          aria-selected={isActive}
-                          onClick={() => {
-                            if (isHeroTab(key)) selectHeroTab(key);
-                          }}
-                          className={heroTabButtonClass(isActive)}
-                      >
-                        <Icon className={heroTabIconClass(isActive)} />
-                        <span className="max-w-[5.5rem] truncate sm:max-w-none">
-                          <span className="md:hidden">
-                            {getMobileTabLabel(key, label)}
-                          </span>
-                          <span className="hidden md:inline">{label}</span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </nav>
-              </div>
-              <div
-                  className="mb-1.5 hidden h-8 w-px shrink-0 bg-white/30 sm:block"
-                  aria-hidden="true"
-              />
-              <div className="flex flex-col items-center gap-1">
-                <span className={heroTabGroupLabelClass}>
-                  {heroTabGroups.worldwide}
-                </span>
-                <nav
-                    className={heroTabNavClass}
-                    role="tablist"
-                    aria-label={heroTabGroups.worldwide}
-                >
+            <nav
+                className={`${heroTabNavClass} mx-auto mb-8 sm:mb-10 md:mb-12`}
+                role="tablist"
+                aria-label={t.hero.subtitle}
+            >
+              {[
+                {
+                  key: "accommodation",
+                  icon: Home,
+                  label: t.hero.tabs.accommodation,
+                },
+                {key: "cars", icon: Car, label: t.hero.tabs.cars},
+                {key: "tours", icon: MapPin, label: t.hero.tabs.excursions},
+              ].map(({key, icon: Icon, label}) => {
+                const isActive = activeTab === key;
+                return (
                   <button
+                      key={key}
                       type="button"
                       role="tab"
-                      aria-selected={activeTab === "world-tours"}
-                      onClick={() => selectHeroTab("world-tours")}
-                      className={heroTabButtonClass(activeTab === "world-tours")}
+                      aria-selected={isActive}
+                      onClick={() => {
+                        if (isHeroTab(key)) selectHeroTab(key);
+                      }}
+                      className={heroTabButtonClass(isActive)}
                   >
-                    <Plane
-                        className={heroTabIconClass(activeTab === "world-tours")}
-                    />
-                    <span className="max-w-[8rem] truncate sm:max-w-none">
-                      {worldToursCopy.nav}
+                    <Icon className={heroTabIconClass(isActive)} />
+                    <span className="max-w-[5.5rem] truncate sm:max-w-none">
+                      <span className="md:hidden">
+                        {getMobileTabLabel(key, label)}
+                      </span>
+                      <span className="hidden md:inline">{label}</span>
                     </span>
                   </button>
-                </nav>
-              </div>
-            </div>
+                );
+              })}
+            </nav>
 
             <div className="w-full">
               {/* Accommodation Tab */}
@@ -926,46 +806,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     </div>
                   </div>
               )}
-
-              {activeTab === "world-tours" && (
-                  <div className={worldToursHeroWidthClass}>
-                    <div className={worldToursHeroSearchWrapClass}>
-                      <div className={worldToursSearchBarClass}>
-                        <CompactSearchField
-                            label={worldToursCopy.title}
-                            hideLabel
-                            className="min-w-0 flex-1 !py-0"
-                        >
-                          <div className="flex w-full min-w-0 items-center gap-2 py-2 sm:min-h-[44px] sm:gap-3 sm:py-0">
-                            <WorldTourHighlightIcons
-                                highlights={worldToursCopy.highlights}
-                                role="group"
-                                aria-label={`${worldToursCopy.highlights.room}, ${worldToursCopy.highlights.transfer}, ${worldToursCopy.highlights.insurance}`}
-                            />
-                            <p className="min-w-0 flex-1 text-balance text-center text-sm font-medium leading-snug text-gray-900">
-                              {worldToursCopy.title}
-                            </p>
-                            <WorldTourHighlightIcons
-                                highlights={worldToursCopy.highlights}
-                                className="pointer-events-none invisible hidden lg:flex"
-                                aria-hidden="true"
-                            />
-                          </div>
-                        </CompactSearchField>
-                      </div>
-                      <button
-                          type="button"
-                          onClick={handleSearch}
-                          className={worldToursSubmitClass}
-                      >
-                        <Search className="h-4 w-4 shrink-0"/>
-                        <span>{t.hero.search}</span>
-                      </button>
-                    </div>
-                  </div>
-              )}
-
-
 
             </div>
           </div>

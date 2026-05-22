@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Text,
@@ -10,6 +12,7 @@ import {
   Select,
   Stepper,
   Box,
+  Alert,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import {
@@ -60,7 +63,16 @@ export function SimpleBookingPopup({
   const [preferredContact, setPreferredContact] = useState<string>("");
   const [isSending, setIsSending] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (opened) {
+      setStep(0);
+      setSendError(null);
+      setShowSuccess(false);
+    }
+  }, [opened]);
 
   const contactTranslations = {
     en: {
@@ -92,6 +104,7 @@ export function SimpleBookingPopup({
       secureBooking: "Secure Booking",
       next: "Next",
       back: "Back",
+      sendError: "Could not send your request. Please try again or contact us on WhatsApp.",
     },
   
     ru: {
@@ -319,6 +332,7 @@ export function SimpleBookingPopup({
       secureBooking: "Secure Booking",
       next: "Next",
       back: "Back",
+      sendError: "Could not send your request. Please try again or contact us on WhatsApp.",
     },
   
     ru: {
@@ -524,9 +538,10 @@ export function SimpleBookingPopup({
   const t = translations[currentLocale] ?? translations.en;
 
   const handleSend = async () => {
-    if (!firstName || !lastName || !phone || !email) return;
+    if (!isFormValid) return;
 
     setIsSending(true);
+    setSendError(null);
 
     // Create email message with all booking details
     const emailMessage = `
@@ -589,11 +604,15 @@ ${comments ? `Дополнительная информация: ${comments}` : 
         }, 2000);
       } else {
         console.error("Failed to send email:", data.error);
-        // You might want to show an error message here
+        setSendError(
+          typeof data.error === "string"
+            ? data.error
+            : bookingTranslations.en.sendError
+        );
       }
     } catch (error) {
       console.error("Error sending email:", error);
-      // You might want to show an error message here
+      setSendError(bookingTranslations.en.sendError);
     } finally {
       setIsSending(false);
     }
@@ -609,8 +628,8 @@ ${comments ? `Дополнительная информация: ${comments}` : 
   const isValidPhone = (phone: string) => {
     // Remove all non-digit characters
     const cleanPhone = phone.replace(/\D/g, "");
-    // Check if it has at least 10 digits (international standard)
-    return cleanPhone.length >= 10;
+    // Spain uses 9-digit mobiles; allow 9+ digits internationally
+    return cleanPhone.length >= 9;
   };
 
   const isFormValid =
@@ -702,11 +721,33 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                 <TextInput placeholder={t.telegram} value={telegram} onChange={(e) => setTelegram(e.target.value)} leftSection={<IconBrandTelegram size={16} color="#0088cc" />} styles={inputStyles} />
               </Group>
               <Select placeholder={t.preferredContact} value={preferredContact} onChange={(v) => setPreferredContact(v || "")} data={[{ value: "email", label: t.emailLabel }, { value: "whatsapp", label: t.whatsappLabel }, { value: "telegram", label: t.telegramLabel }]} styles={inputStyles} />
+              {sendError && (
+                <Alert color="red" variant="light">
+                  {sendError}
+                </Alert>
+              )}
               <Group justify="space-between" mt="md">
                 <Button variant="subtle" color="gray" onClick={onClose}>{t.close}</Button>
-                <Button rightSection={<IconArrowRight size={16} />} onClick={() => setStep(1)} disabled={!isFormValid}>
-                  {t.next}
-                </Button>
+                <Group gap="xs">
+                  <Button
+                    type="button"
+                    variant="light"
+                    leftSection={<IconSend size={16} />}
+                    onClick={handleSend}
+                    disabled={!isFormValid || isSending}
+                    loading={isSending}
+                  >
+                    {t.send}
+                  </Button>
+                  <Button
+                    type="button"
+                    rightSection={<IconArrowRight size={16} />}
+                    onClick={() => setStep(1)}
+                    disabled={!isFormValid || isSending}
+                  >
+                    {t.next}
+                  </Button>
+                </Group>
               </Group>
             </Stack>
           )}
@@ -714,6 +755,11 @@ ${comments ? `Дополнительная информация: ${comments}` : 
           {/* Step 1: Dates & comments */}
           {step === 1 && (
             <Stack gap="sm">
+              {sendError && (
+                <Alert color="red" variant="light">
+                  {sendError}
+                </Alert>
+              )}
               <Group grow>
                 <DateInput
                   value={startDate}
@@ -743,7 +789,13 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                 <Button variant="subtle" leftSection={<IconArrowLeft size={16} />} onClick={() => setStep(0)}>
                   {t.back}
                 </Button>
-                <Button leftSection={<IconSend size={16} />} onClick={handleSend} disabled={!isFormValid || isSending} loading={isSending}>
+                <Button
+                  type="button"
+                  leftSection={<IconSend size={16} />}
+                  onClick={handleSend}
+                  disabled={!isFormValid || isSending}
+                  loading={isSending}
+                >
                   {t.send}
                 </Button>
               </Group>

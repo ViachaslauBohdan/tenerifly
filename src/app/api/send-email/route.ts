@@ -39,20 +39,27 @@ export async function POST(req: Request) {
     })
     console.log('📧 TOTAL RECIPIENTS:', recipients.length)
 
-    // Check if API key is configured
-    if (!process.env.NEXT_PUBLIC_RESEND_API_KEY) {
-        console.error('❌ NEXT_PUBLIC_RESEND_API_KEY is not configured')
+    const resendApiKey =
+        process.env.RESEND_API_KEY ||
+        process.env.NEXT_PUBLIC_RESEND_API_KEY
+
+    if (!resendApiKey) {
+        console.error('❌ RESEND_API_KEY / NEXT_PUBLIC_RESEND_API_KEY is not configured')
         return NextResponse.json({ success: false, error: 'Email service not configured' }, { status: 500 })
     }
 
-    console.log('✅ API Key found:', process.env.NEXT_PUBLIC_RESEND_API_KEY.substring(0, 10) + '...')
+    console.log('✅ API Key found:', resendApiKey.substring(0, 10) + '...')
 
-    const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY)
+    const resend = new Resend(resendApiKey)
+    const fromEmail =
+        process.env.RESEND_FROM_EMAIL ||
+        process.env.NEXT_PUBLIC_RESEND_EMAIL ||
+        'onboarding@resend.dev'
 
     try {
         console.log('SENDING EMAIL VIA RESEND...')
         const result = await resend.emails.send({
-            from: `${process.env.NEXT_PUBLIC_RESEND_EMAIL}` || 'onboarding@resend.dev',
+            from: fromEmail,
             to: recipients,
             subject,
             html: `<p>${message}</p>`,
