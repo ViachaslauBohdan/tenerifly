@@ -57,16 +57,19 @@ const HERO_TOUR_TAGLINES = {
   },
 };
 
-const HERO_SEARCH_GLOBAL_TOURS = {
-  de: "Globale Touren suchen",
-  en: "Search Global Tours",
-  es: "Buscar tours globales",
-  fr: "Rechercher des tours mondiaux",
-  pl: "Szukaj tourów globalnych",
-  ru: "Искать туры по всему миру",
+/** Short «Find» label on both hero search buttons (not «Search»). */
+const HERO_SEARCH_BUTTON = {
+  de: "Finden",
+  en: "Find",
+  es: "Buscar",
+  fr: "Trouver",
+  pl: "Znajdź",
+  ru: "Найти",
   uk: "Знайти",
   ua: "Знайти",
 };
+
+const HERO_SEARCH_GLOBAL_TOURS = { ...HERO_SEARCH_BUTTON };
 
 /** Label for hero tab selector (accommodation / cars / tours). */
 const HERO_LEISURE_LABEL = {
@@ -93,54 +96,65 @@ const HERO_TENERIFE_TITLE = {
 };
 
 /** Homepage world-tours CTA (redirects to /world-tours). */
+const HERO_WORLD_TOURS_HINT = {
+  de: "Um zur Seite aller Touren zu gelangen, klicken Sie auf «Finden»",
+  en: "To go to the page with all tours, click Find",
+  es: "Para ir a la página con todos los tours, pulse «Buscar»",
+  fr: "Pour accéder à la page de tous les circuits, cliquez sur «Trouver»",
+  pl: "Aby przejść na stronę wszystkich turów, kliknij «Znajdź»",
+  ru: "Для перехода на страницу всех туров нажмите «Найти»",
+  uk: "Для переходу на сторінку всіх турів натисніть «Знайти»",
+  ua: "Для переходу на сторінку всіх турів натисніть «Знайти»",
+};
+
 const HERO_WORLD_TOURS = {
   de: {
     heading: "System zur weltweiten Tour-Suche und -Buchung",
     title: "Toursuche",
-    hint: "Um zur Seite aller Touren zu gelangen, klicken Sie auf «Globale Touren suchen»",
-    search: "Suchen",
+    hint: HERO_WORLD_TOURS_HINT.de,
+    search: HERO_SEARCH_BUTTON.de,
   },
   en: {
     heading: "Worldwide tour search and booking system",
     title: "Search for a tour",
-    hint: "To go to the page with all tours, click Search Global Tours",
-    search: "Find",
+    hint: HERO_WORLD_TOURS_HINT.en,
+    search: HERO_SEARCH_BUTTON.en,
   },
   es: {
     heading: "Sistema de búsqueda y reserva de tours en todo el mundo",
     title: "Buscar tour",
-    hint: "Para ir a la página con todos los tours, pulse «Buscar tours globales»",
-    search: "Buscar",
+    hint: HERO_WORLD_TOURS_HINT.es,
+    search: HERO_SEARCH_BUTTON.es,
   },
   fr: {
     heading: "Système de recherche et de réservation de circuits dans le monde",
     title: "Recherche de circuit",
-    hint: "Pour accéder à la page de tous les circuits, cliquez sur «Rechercher des tours mondiaux»",
-    search: "Trouver",
+    hint: HERO_WORLD_TOURS_HINT.fr,
+    search: HERO_SEARCH_BUTTON.fr,
   },
   pl: {
     heading: "System wyszukiwania i rezerwacji tourów na całym świecie",
     title: "Wyszukiwarka tourów",
-    hint: "Aby przejść na stronę wszystkich turów, kliknij «Szukaj tourów globalnych»",
-    search: "Znajdź",
+    hint: HERO_WORLD_TOURS_HINT.pl,
+    search: HERO_SEARCH_BUTTON.pl,
   },
   ru: {
     heading: "Система поиска и бронирования туров по всему миру",
     title: "Поиск тура",
-    hint: "Для перехода на страницу всех туров нажмите «Искать туры по всему миру»",
-    search: "Найти",
+    hint: HERO_WORLD_TOURS_HINT.ru,
+    search: HERO_SEARCH_BUTTON.ru,
   },
   uk: {
     heading: "Система пошуку і бронювання турів по всьому світу",
     title: "Пошук туру",
-    hint: "Для переходу на сторінку всіх турів натисніть «Знайти»",
-    search: "Знайти",
+    hint: HERO_WORLD_TOURS_HINT.uk,
+    search: HERO_SEARCH_BUTTON.uk,
   },
   ua: {
     heading: "Система пошуку і бронювання турів по всьому світу",
     title: "Пошук туру",
-    hint: "Для переходу на сторінку всіх турів натисніть «Знайти»",
-    search: "Знайти",
+    hint: HERO_WORLD_TOURS_HINT.ua,
+    search: HERO_SEARCH_BUTTON.ua,
   },
 };
 
@@ -148,7 +162,8 @@ function applyMainLocalePatches(translation) {
   for (const [locale, taglines] of Object.entries(HERO_TOUR_TAGLINES)) {
     if (translation[locale]?.hero) {
       translation[locale].hero.tourTaglines = taglines;
-      if (HERO_SEARCH_GLOBAL_TOURS[locale]) {
+      if (HERO_SEARCH_BUTTON[locale]) {
+        translation[locale].hero.search = HERO_SEARCH_BUTTON[locale];
         translation[locale].hero.searchGlobalTours =
           HERO_SEARCH_GLOBAL_TOURS[locale];
       }
@@ -168,6 +183,8 @@ function applyMainLocalePatches(translation) {
     }
   }
   if (translation.uk?.hero && translation.ua?.hero) {
+    translation.ua.hero.search =
+      HERO_SEARCH_BUTTON.ua ?? HERO_SEARCH_BUTTON.uk;
     translation.ua.hero.searchGlobalTours =
       HERO_SEARCH_GLOBAL_TOURS.ua ?? HERO_SEARCH_GLOBAL_TOURS.uk;
     translation.ua.hero.worldTours = {
