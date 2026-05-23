@@ -34,6 +34,7 @@ import {
   type Country,
 } from "@/components/PhoneNumberInput";
 import type { E164Number } from "libphonenumber-js";
+import {gtagReportConversion} from "@/lib/gtag";
 
 interface SimpleBookingPopupProps {
   opened: boolean;
@@ -515,6 +516,7 @@ ${comments ? `Дополнительная информация: ${comments}` : 
           setPhone(undefined);
           setPhoneCountry(undefined);
           setEmail("");
+          gtagReportConversion();
         }, 2000);
       } else {
         console.error("Failed to send email:", data.error);
@@ -698,6 +700,7 @@ ${comments ? `Дополнительная информация: ${comments}` : 
               </Button>
               <Button
                 type="button"
+                className={"test-book"}
                 leftSection={<IconSend size={16} />}
                 onClick={handleSend}
                 disabled={!isFormValid || isSending}
