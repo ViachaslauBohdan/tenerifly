@@ -87,6 +87,22 @@ interface LocalePageClientProps {
   };
 }
 
+const HERO_DATES_STORAGE_KEY = "hero-search-dates";
+
+const getTodayIsoDate = () => {
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  return now.toISOString().split("T")[0];
+};
+
+const getIsoDatePlusDays = (isoDate: string, daysToAdd: number) => {
+  const date = new Date(`${isoDate}T00:00:00`);
+  date.setDate(date.getDate() + daysToAdd);
+  return date.toISOString().split("T")[0];
+};
+
+const isIsoDate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value);
+
 function CompactSearchField({
   label,
   children,
@@ -133,7 +149,10 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [activeTab, setActiveTab] = useState<HeroTab>(() =>
     parseHeroTab(searchParams.get("tab"))
   );
-  const [dates, setDates] = useState(["", ""]);
+  const [dates, setDates] = useState<[string, string]>(() => {
+    const today = getTodayIsoDate();
+    return [today, getIsoDatePlusDays(today, 5)];
+  });
   const [guests, setGuests] = useState(2);
   const [carType, setCarType] = useState("");
 
@@ -202,20 +221,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const activeHeroTab = heroTabOptions.find((tab) => tab.key === activeTab);
   const ActiveHeroTabIcon = activeHeroTab?.icon ?? Home;
   const transferCopy = getTransferLocaleText(language);
-  const datePlaceholder =
-    language === "ru"
-      ? "Выберите дату"
-      : language === "pl"
-        ? "Wybierz datę"
-        : language === "fr"
-          ? "Choisir une date"
-          : language === "ua"
-            ? "Оберіть дату"
-            : language === "de"
-              ? "Datum wählen"
-              : language === "es"
-                ? "Elegir fecha"
-                : "Choose date";
   const fieldLabelClass =
     "block text-[11px] font-medium text-gray-500 mb-1";
   const fieldControlClass =
@@ -293,6 +298,28 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   }, [locale]);
 
   useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(HERO_DATES_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { checkIn?: string; checkOut?: string };
+      if (!parsed.checkIn || !parsed.checkOut) return;
+      if (!isIsoDate(parsed.checkIn) || !isIsoDate(parsed.checkOut)) return;
+      const normalizedCheckOut =
+        parsed.checkOut < parsed.checkIn ? parsed.checkIn : parsed.checkOut;
+      setDates([parsed.checkIn, normalizedCheckOut]);
+    } catch {
+      // Ignore invalid persisted data.
+    }
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      HERO_DATES_STORAGE_KEY,
+      JSON.stringify({ checkIn: dates[0], checkOut: dates[1] })
+    );
+  }, [dates]);
+
+  useEffect(() => {
     if (!mounted) return;
     setActiveTab(parseHeroTab(searchParams.get("tab")));
   }, [mounted, searchParams]);
@@ -325,6 +352,38 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     },
     []
   );
+
+  const openNativeDatePicker = (e: React.MouseEvent<HTMLInputElement>) => {
+    const input = e.currentTarget as HTMLInputElement & {
+      showPicker?: () => void;
+    };
+    input.focus();
+    try {
+      input.showPicker?.();
+    } catch {
+      // Some browsers block programmatic picker open; native click/focus remains.
+    }
+  };
+
+  const handleCheckInChange = (nextCheckIn: string) => {
+    setDates(([_, currentCheckOut]) => {
+      if (!nextCheckIn) return ["", currentCheckOut];
+      if (!currentCheckOut || currentCheckOut < nextCheckIn) {
+        return [nextCheckIn, nextCheckIn];
+      }
+      return [nextCheckIn, currentCheckOut];
+    });
+  };
+
+  const handleCheckOutChange = (nextCheckOut: string) => {
+    setDates(([currentCheckIn, _]) => {
+      if (!nextCheckOut) return [currentCheckIn, ""];
+      if (currentCheckIn && nextCheckOut < currentCheckIn) {
+        return [currentCheckIn, currentCheckIn];
+      }
+      return [currentCheckIn, nextCheckOut];
+    });
+  };
 
   const handleSearch = () => {
     // Build query parameters based on active tab and filters
@@ -522,40 +581,23 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     <>
                       <CompactSearchField label={t.hero.accommodation.checkin}>
                         <input
-                          type={dates[0] ? "date" : "text"}
-                          placeholder={datePlaceholder}
-                          className={compactControlClass}
+                          type="date"
+                          className={`${compactControlClass} compact-date-input`}
                           value={dates[0]}
-                          onFocus={(e) => {
-                            e.currentTarget.type = "date";
-                          }}
-                          onBlur={(e) => {
-                            if (!e.currentTarget.value) {
-                              e.currentTarget.type = "text";
-                            }
-                          }}
-                          onChange={(e) =>
-                            setDates([e.target.value, dates[1]])
-                          }
+                          aria-label={t.hero.accommodation.checkin}
+                          onClick={openNativeDatePicker}
+                          onChange={(e) => handleCheckInChange(e.target.value)}
                         />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.accommodation.checkout}>
                         <input
-                          type={dates[1] ? "date" : "text"}
-                          placeholder={datePlaceholder}
-                          className={compactControlClass}
+                          type="date"
+                          className={`${compactControlClass} compact-date-input`}
                           value={dates[1]}
-                          onFocus={(e) => {
-                            e.currentTarget.type = "date";
-                          }}
-                          onBlur={(e) => {
-                            if (!e.currentTarget.value) {
-                              e.currentTarget.type = "text";
-                            }
-                          }}
-                          onChange={(e) =>
-                            setDates([dates[0], e.target.value])
-                          }
+                          min={dates[0]}
+                          aria-label={t.hero.accommodation.checkout}
+                          onClick={openNativeDatePicker}
+                          onChange={(e) => handleCheckOutChange(e.target.value)}
                         />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.accommodation.guests}>
@@ -591,40 +633,23 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.cars.pickup}>
                         <input
-                          type={dates[0] ? "date" : "text"}
-                          placeholder={datePlaceholder}
-                          className={compactControlClass}
+                          type="date"
+                          className={`${compactControlClass} compact-date-input`}
                           value={dates[0]}
-                          onFocus={(e) => {
-                            e.currentTarget.type = "date";
-                          }}
-                          onBlur={(e) => {
-                            if (!e.currentTarget.value) {
-                              e.currentTarget.type = "text";
-                            }
-                          }}
-                          onChange={(e) =>
-                            setDates([e.target.value, dates[1]])
-                          }
+                          aria-label={t.hero.cars.pickup}
+                          onClick={openNativeDatePicker}
+                          onChange={(e) => handleCheckInChange(e.target.value)}
                         />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.cars.dropoff}>
                         <input
-                          type={dates[1] ? "date" : "text"}
-                          placeholder={datePlaceholder}
-                          className={compactControlClass}
+                          type="date"
+                          className={`${compactControlClass} compact-date-input`}
                           value={dates[1]}
-                          onFocus={(e) => {
-                            e.currentTarget.type = "date";
-                          }}
-                          onBlur={(e) => {
-                            if (!e.currentTarget.value) {
-                              e.currentTarget.type = "text";
-                            }
-                          }}
-                          onChange={(e) =>
-                            setDates([dates[0], e.target.value])
-                          }
+                          min={dates[0]}
+                          aria-label={t.hero.cars.dropoff}
+                          onClick={openNativeDatePicker}
+                          onChange={(e) => handleCheckOutChange(e.target.value)}
                         />
                       </CompactSearchField>
                     </>
@@ -634,21 +659,12 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                     <>
                       <CompactSearchField label={t.hero.excursions.date}>
                         <input
-                          type={dates[0] ? "date" : "text"}
-                          placeholder={datePlaceholder}
-                          className={compactControlClass}
+                          type="date"
+                          className={`${compactControlClass} compact-date-input`}
                           value={dates[0]}
-                          onFocus={(e) => {
-                            e.currentTarget.type = "date";
-                          }}
-                          onBlur={(e) => {
-                            if (!e.currentTarget.value) {
-                              e.currentTarget.type = "text";
-                            }
-                          }}
-                          onChange={(e) =>
-                            setDates([e.target.value, dates[1]])
-                          }
+                          aria-label={t.hero.excursions.date}
+                          onClick={openNativeDatePicker}
+                          onChange={(e) => handleCheckInChange(e.target.value)}
                         />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.excursions.people}>

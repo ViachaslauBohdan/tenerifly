@@ -1115,3 +1115,7 @@ html {
   transform-origin: left;
   animation: navigation-progress 1.1s ease-in-out infinite;
 }
+
+input.compact-date-input {
+  cursor: pointer;
+}
