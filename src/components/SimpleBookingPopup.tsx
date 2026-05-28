@@ -21,13 +21,7 @@ import {
   IconMapPin,
 } from "@tabler/icons-react";
 import type { Locale } from "@/types/locale";
-import "dayjs/locale/de";
-import "dayjs/locale/en";
-import "dayjs/locale/es";
-import "dayjs/locale/fr";
-import "dayjs/locale/pl";
-import "dayjs/locale/ru";
-import "dayjs/locale/uk";
+import { dayjsLocale, getDateValueFormat } from "@/lib/dateLocale";
 import {
   PhoneNumberInput,
   isPhoneNumberValid,
@@ -48,10 +42,6 @@ interface SimpleBookingPopupProps {
   mode?: "contact" | "booking";
   /** Current locale for translations. Defaults to "en" if not provided. */
   currentLocale?: Locale;
-}
-
-function dayjsLocale(locale: Locale): string {
-  return locale === "ua" ? "uk" : locale;
 }
 
 export function SimpleBookingPopup({
@@ -667,7 +657,7 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                 clearable
                 allowSingleDateInRange
                 numberOfColumns={2}
-                valueFormat="DD/MM/YYYY"
+                valueFormat={getDateValueFormat(currentLocale)}
                 minDate={new Date()}
                 maxDate={
                   new Date(new Date().getFullYear() + 1, 11, 31)

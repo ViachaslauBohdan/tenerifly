@@ -1118,4 +1118,13 @@ html {
 
 input.compact-date-input {
   cursor: pointer;
+  text-align: left;
+}
+
+#home .mantine-DatePickerInput-input.compact-date-input {
+  text-align: left;
+}
+
+#home .mantine-DatePickerInput-wrapper {
+  justify-content: flex-start;
 }

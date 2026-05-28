@@ -22,8 +22,10 @@ import {
   User,
   Plane,
 } from "lucide-react";
+import { DatesProvider } from "@mantine/dates";
 import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
 import { HeroSearchCtaButton } from "@/components/HeroSearchCta";
+import { HeroCompactDateInput } from "@/components/HeroCompactDateInput";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
@@ -53,6 +55,12 @@ import {
   type Locale,
 } from "@/types/locale";
 import { type HeroTab, parseHeroTab, isHeroTab } from "@/lib/heroTab";
+import {
+  dayjsLocale,
+  getIsoDatePlusDays,
+  getTodayIsoDate,
+  isIsoDate,
+} from "@/lib/dateLocale";
 import {
   heroSearchFieldsClass,
   heroBlockStackClass,
@@ -89,20 +97,6 @@ interface LocalePageClientProps {
 
 const HERO_DATES_STORAGE_KEY = "hero-search-dates";
 
-const getTodayIsoDate = () => {
-  const now = new Date();
-  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  return now.toISOString().split("T")[0];
-};
-
-const getIsoDatePlusDays = (isoDate: string, daysToAdd: number) => {
-  const date = new Date(`${isoDate}T00:00:00`);
-  date.setDate(date.getDate() + daysToAdd);
-  return date.toISOString().split("T")[0];
-};
-
-const isIsoDate = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value);
-
 function CompactSearchField({
   label,
   children,
@@ -116,7 +110,7 @@ function CompactSearchField({
 }) {
   return (
     <div
-        className={`flex min-w-0 flex-1 flex-col justify-center px-3 sm:px-5 ${
+        className={`flex min-w-0 flex-1 flex-col items-start justify-center px-3 sm:px-5 ${
           hideLabel ? "py-0" : "py-2 sm:py-[15px]"
         } ${className}`}
     >
@@ -353,18 +347,6 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
     []
   );
 
-  const openNativeDatePicker = (e: React.MouseEvent<HTMLInputElement>) => {
-    const input = e.currentTarget as HTMLInputElement & {
-      showPicker?: () => void;
-    };
-    input.focus();
-    try {
-      input.showPicker?.();
-    } catch {
-      // Some browsers block programmatic picker open; native click/focus remains.
-    }
-  };
-
   const handleCheckInChange = (nextCheckIn: string) => {
     setDates(([_, currentCheckOut]) => {
       if (!nextCheckIn) return ["", currentCheckOut];
@@ -539,6 +521,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </div>
               <div className={heroSearchInsetClass}>
                 <div className={heroSearchWrapClass}>
+                <DatesProvider
+                  settings={{
+                    locale: dayjsLocale(language),
+                    firstDayOfWeek: 1,
+                    weekendDays: [0, 6],
+                  }}
+                >
                 <div className={searchBarClass}>
                   <CompactSearchField
                     label={
@@ -580,24 +569,20 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   {activeTab === "accommodation" && (
                     <>
                       <CompactSearchField label={t.hero.accommodation.checkin}>
-                        <input
-                          type="date"
-                          className={`${compactControlClass} compact-date-input`}
+                        <HeroCompactDateInput
+                          locale={language}
                           value={dates[0]}
                           aria-label={t.hero.accommodation.checkin}
-                          onClick={openNativeDatePicker}
-                          onChange={(e) => handleCheckInChange(e.target.value)}
+                          onChange={handleCheckInChange}
                         />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.accommodation.checkout}>
-                        <input
-                          type="date"
-                          className={`${compactControlClass} compact-date-input`}
+                        <HeroCompactDateInput
+                          locale={language}
                           value={dates[1]}
                           min={dates[0]}
                           aria-label={t.hero.accommodation.checkout}
-                          onClick={openNativeDatePicker}
-                          onChange={(e) => handleCheckOutChange(e.target.value)}
+                          onChange={handleCheckOutChange}
                         />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.accommodation.guests}>
@@ -632,24 +617,20 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         </select>
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.cars.pickup}>
-                        <input
-                          type="date"
-                          className={`${compactControlClass} compact-date-input`}
+                        <HeroCompactDateInput
+                          locale={language}
                           value={dates[0]}
                           aria-label={t.hero.cars.pickup}
-                          onClick={openNativeDatePicker}
-                          onChange={(e) => handleCheckInChange(e.target.value)}
+                          onChange={handleCheckInChange}
                         />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.cars.dropoff}>
-                        <input
-                          type="date"
-                          className={`${compactControlClass} compact-date-input`}
+                        <HeroCompactDateInput
+                          locale={language}
                           value={dates[1]}
                           min={dates[0]}
                           aria-label={t.hero.cars.dropoff}
-                          onClick={openNativeDatePicker}
-                          onChange={(e) => handleCheckOutChange(e.target.value)}
+                          onChange={handleCheckOutChange}
                         />
                       </CompactSearchField>
                     </>
@@ -658,13 +639,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   {activeTab === "tours" && (
                     <>
                       <CompactSearchField label={t.hero.excursions.date}>
-                        <input
-                          type="date"
-                          className={`${compactControlClass} compact-date-input`}
+                        <HeroCompactDateInput
+                          locale={language}
                           value={dates[0]}
                           aria-label={t.hero.excursions.date}
-                          onClick={openNativeDatePicker}
-                          onChange={(e) => handleCheckInChange(e.target.value)}
+                          onChange={handleCheckInChange}
                         />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.excursions.people}>
@@ -702,6 +681,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                   label={t.hero.search}
                   onClick={handleSearch}
                 />
+                </DatesProvider>
                 </div>
               </div>
           </div>
