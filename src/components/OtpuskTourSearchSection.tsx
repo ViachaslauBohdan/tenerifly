@@ -31,11 +31,11 @@ export function OtpuskTourSearchSection({
     <section className={className}>
       <div
         id={searchContainerId}
-        className="new_os otpusk-search-host mx-auto min-h-[120px] w-full max-w-[1200px] px-4 min-[400px]:px-5 sm:px-6"
+        className="new_os otpusk-search-host mx-auto min-h-[100px] w-full max-w-[min(100%,1050px)] px-4 min-[400px]:px-5 sm:px-6"
       />
       <div
         id={tourContainerId}
-        className="mx-auto max-w-[1200px] px-4 min-[400px]:px-5 sm:px-6"
+        className="mx-auto w-full max-w-[min(100%,1050px)] px-4 min-[400px]:px-5 sm:px-6"
       />
     </section>
   );
