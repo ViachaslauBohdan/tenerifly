@@ -1,4 +1,3 @@
-import { getHomePageData } from "@/services/ssgDataService";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { HomePageFallback } from "@/components/HomePageFallback";
@@ -66,15 +65,9 @@ export default async function LocaleRootPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const localeCode = LOCALES.some((l) => l.code === locale)
-    ? (locale as Locale)
-    : LOCALES[0].code;
-  // Получаем данные на сервере для SSG с трансформацией
-  const homeData = await getHomePageData(localeCode);
-
   return (
     <Suspense fallback={<HomePageFallback />}>
-      <LocalePageClient initialData={homeData} />
+      <LocalePageClient />
     </Suspense>
   );
 }

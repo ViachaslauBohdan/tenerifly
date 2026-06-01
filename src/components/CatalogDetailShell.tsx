@@ -24,12 +24,7 @@ export function CatalogDetailShell({ children }: CatalogDetailShellProps) {
         language={language}
         onLanguageChange={switchLocale}
         selectLanguageLabel={t.selectLanguage}
-        tabLabels={{
-          accommodation: t.hero.tabs.accommodation,
-          cars: t.hero.tabs.cars,
-          excursions: t.hero.tabs.excursions,
-          blog: t.hero.tabs.blog,
-        }}
+        excursionsLabel={t.hero.tabs.excursions}
         variant="standalone"
         createLocaleLink={createLocaleLink}
       />

@@ -28,15 +28,21 @@ type HeroSearchCtaLinkProps = {
   href: string;
   label: string;
   variant?: "blue" | "orange";
+  className?: string;
 };
 
 export function HeroSearchCtaLink({
   href,
   label,
   variant = "blue",
+  className: classNameProp,
 }: HeroSearchCtaLinkProps) {
-  const className =
-    variant === "orange" ? heroSearchCtaOrangeClass : heroSearchCtaClass;
+  const className = [
+    variant === "orange" ? heroSearchCtaOrangeClass : heroSearchCtaClass,
+    classNameProp,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <Link href={href} className={className}>

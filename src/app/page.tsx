@@ -1,4 +1,3 @@
-import { getHomePageData } from "@/services/ssgDataService";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { HomePageFallback } from "@/components/HomePageFallback";
@@ -45,14 +44,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function RootPage() {
-  // Получаем данные на сервере для SSG с трансформацией
-  // По умолчанию английский, но LocalePageClient будет переключать языки динамически
-  const homeData = await getHomePageData();
-
+export default function RootPage() {
   return (
     <Suspense fallback={<HomePageFallback />}>
-      <LocalePageClient initialData={homeData} />
+      <LocalePageClient />
     </Suspense>
   );
 }

@@ -4,7 +4,6 @@ import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { ChevronDown, Languages, Menu, X } from "lucide-react";
 import { localeDisplayCode } from "@/types/locale";
-import worldToursJson from "@/i18n/worldTours.json";
 import { pickLocaleBundle } from "@/types/locale";
 
 const languages = [
@@ -41,22 +40,8 @@ const headerNavFaq: Record<string, string> = {
   es: "FAQ",
 };
 
-const headerNavTransfers: Record<string, string> = {
-  en: "Transfers",
-  ru: "Трансферы",
-  pl: "Transfery",
-  fr: "Transferts",
-  uk: "Трансфери",
-  ua: "Трансфери",
-  de: "Transfers",
-  es: "Traslados",
-};
-
 const headerAnchorClass =
   "touch-manipulation whitespace-nowrap rounded-lg px-2 py-1.5 text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white lg:px-2.5";
-
-const headerAnchorActiveClass =
-  "touch-manipulation whitespace-nowrap rounded-lg bg-white/15 px-2 py-1.5 text-sm font-medium text-white lg:px-2.5";
 
 const mobileNavLinkClass =
   "touch-manipulation block w-full rounded-lg px-3 py-3 text-left text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15";
@@ -65,15 +50,8 @@ type SiteHeaderProps = {
   language: SiteHeaderLanguage;
   onLanguageChange: (code: SiteHeaderLanguage) => void;
   selectLanguageLabel: string;
-  tabLabels: {
-    accommodation: string;
-    cars: string;
-    excursions: string;
-    blog: string;
-  };
+  excursionsLabel: string;
   variant?: "home" | "standalone";
-  showTransfers?: boolean;
-  activePage?: "world-tours";
   createLocaleLink: (path: string) => string;
   onScrollToSection?: (
     sectionId: string
@@ -84,10 +62,8 @@ export function SiteHeader({
   language,
   onLanguageChange,
   selectLanguageLabel,
-  tabLabels,
+  excursionsLabel,
   variant = "standalone",
-  showTransfers = false,
-  activePage,
   createLocaleLink,
   onScrollToSection,
 }: SiteHeaderProps) {
@@ -110,11 +86,6 @@ export function SiteHeader({
   }, [mobileMenuOpen]);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
-
-  const worldToursNav = pickLocaleBundle(
-    worldToursJson as Record<string, { badge: string }>,
-    language
-  );
   const homeHref = createLocaleLink("/");
 
   const sectionHref = (sectionId: string) =>
@@ -142,53 +113,51 @@ export function SiteHeader({
     };
   };
 
-  const worldToursClassName =
-    activePage === "world-tours" ? headerAnchorActiveClass : headerAnchorClass;
+  const excursionsLink =
+    variant === "home" ? (
+      <a {...navLinkProps("excursions")} className={headerAnchorClass}>
+        {excursionsLabel}
+      </a>
+    ) : (
+      <Link
+        href={createLocaleLink("/tours")}
+        className={headerAnchorClass}
+        onClick={closeMobileMenu}
+      >
+        {excursionsLabel}
+      </Link>
+    );
 
-  const mobileWorldToursClassName =
-    activePage === "world-tours"
-      ? `${mobileNavLinkClass} bg-white/15 text-white`
-      : mobileNavLinkClass;
+  const excursionsLinkMobile =
+    variant === "home" ? (
+      <a {...navLinkPropsMobile("excursions")} className={mobileNavLinkClass}>
+        {excursionsLabel}
+      </a>
+    ) : (
+      <Link
+        href={createLocaleLink("/tours")}
+        className={mobileNavLinkClass}
+        onClick={closeMobileMenu}
+      >
+        {excursionsLabel}
+      </Link>
+    );
 
-  const renderNavLinks = (linkClass: string, worldToursLinkClass: string) => (
+  const renderNavLinks = () => (
     <>
       {variant === "home" ? (
-        <a {...navLinkProps("home")} className={linkClass}>
+        <a {...navLinkProps("home")} className={headerAnchorClass}>
           {pickLocaleBundle(headerNavHome, language)}
         </a>
       ) : (
-        <Link href={homeHref} className={linkClass} onClick={closeMobileMenu}>
+        <Link href={homeHref} className={headerAnchorClass} onClick={closeMobileMenu}>
           {pickLocaleBundle(headerNavHome, language)}
         </Link>
       )}
-      <a {...navLinkProps("accommodation")} className={linkClass}>
-        {tabLabels.accommodation}
-      </a>
-      <a {...navLinkProps("cars")} className={linkClass}>
-        {tabLabels.cars}
-      </a>
-      {showTransfers && (
-        <a {...navLinkProps("transfers")} className={linkClass}>
-          {pickLocaleBundle(headerNavTransfers, language)}
-        </a>
-      )}
-      <a {...navLinkProps("excursions")} className={linkClass}>
-        {tabLabels.excursions}
-      </a>
-      <a {...navLinkProps("blog")} className={linkClass}>
-        {tabLabels.blog}
-      </a>
-      <a {...navLinkProps("faq")} className={linkClass}>
+      {excursionsLink}
+      <a {...navLinkProps("faq")} className={headerAnchorClass}>
         {pickLocaleBundle(headerNavFaq, language)}
       </a>
-      <Link
-        href={createLocaleLink("/world-tours")}
-        className={worldToursLinkClass}
-        aria-current={activePage === "world-tours" ? "page" : undefined}
-        onClick={closeMobileMenu}
-      >
-        {worldToursNav.badge}
-      </Link>
     </>
   );
 
@@ -207,34 +176,10 @@ export function SiteHeader({
           {pickLocaleBundle(headerNavHome, language)}
         </Link>
       )}
-      <a {...navLinkPropsMobile("accommodation")} className={mobileNavLinkClass}>
-        {tabLabels.accommodation}
-      </a>
-      <a {...navLinkPropsMobile("cars")} className={mobileNavLinkClass}>
-        {tabLabels.cars}
-      </a>
-      {showTransfers && (
-        <a {...navLinkPropsMobile("transfers")} className={mobileNavLinkClass}>
-          {pickLocaleBundle(headerNavTransfers, language)}
-        </a>
-      )}
-      <a {...navLinkPropsMobile("excursions")} className={mobileNavLinkClass}>
-        {tabLabels.excursions}
-      </a>
-      <a {...navLinkPropsMobile("blog")} className={mobileNavLinkClass}>
-        {tabLabels.blog}
-      </a>
+      {excursionsLinkMobile}
       <a {...navLinkPropsMobile("faq")} className={mobileNavLinkClass}>
         {pickLocaleBundle(headerNavFaq, language)}
       </a>
-      <Link
-        href={createLocaleLink("/world-tours")}
-        className={mobileWorldToursClassName}
-        aria-current={activePage === "world-tours" ? "page" : undefined}
-        onClick={closeMobileMenu}
-      >
-        {worldToursNav.badge}
-      </Link>
     </>
   );
 
@@ -296,26 +241,23 @@ export function SiteHeader({
   );
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 backdrop-blur-md pt-[env(safe-area-inset-top,0px)]">
+    <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 pt-[env(safe-area-inset-top,0px)] backdrop-blur-md">
       <div className="mx-auto w-full max-w-7xl px-4 min-[400px]:px-5 sm:px-6 lg:px-8">
-        {/* Mobile: language + menu only */}
         <div className="flex items-center justify-between gap-3 py-2 md:hidden">
           {languageSelector}
           {menuButton}
         </div>
 
-        {/* Desktop: nav + language */}
         <div className="hidden min-h-0 items-center gap-3 py-2 md:flex">
           <nav
             className="site-header-desktop-nav flex min-h-0 min-w-0 flex-1 flex-wrap items-center gap-0.5 lg:gap-1"
             aria-label="Page sections"
           >
-            {renderNavLinks(headerAnchorClass, worldToursClassName)}
+            {renderNavLinks()}
           </nav>
           {languageSelector}
         </div>
 
-        {/* Mobile menu panel */}
         {mobileMenuOpen ? (
           <>
             <button

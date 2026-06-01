@@ -16,6 +16,21 @@ export const heroCardTitleClass =
 export const heroSectionClass =
   "relative flex min-h-0 flex-col bg-cover bg-center bg-no-repeat pb-8 sm:min-h-[70vh] sm:pb-0";
 
+/** Homepage hero (title + single CTA). */
+export const heroSectionCompactClass =
+  "relative flex flex-col bg-cover bg-center bg-no-repeat pb-8 sm:min-h-[55vh] sm:justify-center sm:pb-10";
+
+export const heroInnerCompactClass =
+  `relative z-10 flex w-full flex-1 flex-col items-center justify-center gap-4 pt-[5rem] pb-6 min-[400px]:pt-[5.5rem] sm:gap-5 sm:pt-[5.5rem] sm:pb-8 md:pt-[5.75rem] ${heroGutterClass}`;
+
+export const heroBlockStackCompactClass =
+  "mx-auto flex w-full max-w-6xl flex-col gap-4 sm:max-w-7xl sm:gap-5";
+
+export const heroTitleCompactClass = heroTitleClass;
+
+export const heroCtaWrapCompactClass =
+  "mx-auto flex w-full max-w-xs flex-col overflow-hidden rounded-xl bg-white shadow-[0_16px_48px_rgba(15,23,42,0.28)] min-[400px]:max-w-sm sm:max-w-md sm:min-h-[68px]";
+
 /** Inner hero stack — gap between Stays block and World Tours block on mobile. */
 export const heroInnerClass =
   `relative z-10 flex w-full flex-col justify-start gap-4 pt-[5.25rem] pb-6 min-[400px]:gap-5 min-[400px]:pt-[5.75rem] sm:min-h-0 sm:flex-1 sm:justify-center sm:grid sm:grid-rows-[1fr_auto_1fr_auto_1fr] sm:items-center sm:gap-0 sm:pt-[5.5rem] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] md:pt-[5.5rem] ${heroGutterClass}`;

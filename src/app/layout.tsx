@@ -39,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
         title: {
             default:
-                "Tenerifly.io — Tenerife holidays: apartments, car hire & tours (Canary Islands)",
+                "Tenerifly.io — Tenerife excursions & tours (Canary Islands)",
             template: "%s | Tenerifly.io",
         },
         description: seo.description,
