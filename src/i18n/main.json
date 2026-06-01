@@ -85,7 +85,6 @@
       },
       "title": "Buchen Sie Erholung auf Teneriffa",
       "search": "Finden",
-      "viewExcursions": "Ausflüge ansehen",
       "subtitle": "Finden Sie Unterkunft, Ausflüge oder Autovermietung",
       "excursions": {
         "date": "Datum",
@@ -190,7 +189,8 @@
         "hint": "Um zur Seite aller Touren zu gelangen, klicken Sie auf «Finden»",
         "search": "Finden"
       },
-      "leisure": "Erholung"
+      "leisure": "Erholung",
+      "viewExcursions": "Ausflüge ansehen"
     },
     "common": {
       "to": "Bis",
@@ -415,7 +415,6 @@
       },
       "title": "Book your leisure on Tenerife",
       "search": "Find",
-      "viewExcursions": "View Excursions",
       "subtitle": "Find stays, tours or car rental",
       "excursions": {
         "date": "Date",
@@ -520,7 +519,8 @@
         "hint": "To go to the page with all tours, click Find",
         "search": "Find"
       },
-      "leisure": "Leisure"
+      "leisure": "Leisure",
+      "viewExcursions": "View Excursions"
     },
     "common": {
       "to": "To",
@@ -745,7 +745,6 @@
       },
       "title": "Reserva tu ocio en Tenerife",
       "search": "Buscar",
-      "viewExcursions": "Ver excursiones",
       "subtitle": "Encuentra alojamiento, excursiones o alquiler de coches",
       "excursions": {
         "date": "Fecha",
@@ -850,7 +849,8 @@
         "hint": "Para ir a la página con todos los tours, pulse «Buscar»",
         "search": "Buscar"
       },
-      "leisure": "Ocio"
+      "leisure": "Ocio",
+      "viewExcursions": "Ver excursiones"
     },
     "common": {
       "to": "Hasta",
@@ -1075,7 +1075,6 @@
       },
       "title": "Réservez vos loisirs à Tenerife",
       "search": "Trouver",
-      "viewExcursions": "Voir les excursions",
       "subtitle": "Trouvez un hébergement, des excursions ou une location de voiture",
       "excursions": {
         "date": "Date",
@@ -1180,7 +1179,8 @@
         "hint": "Pour accéder à la page de tous les circuits, cliquez sur «Trouver»",
         "search": "Trouver"
       },
-      "leisure": "Loisirs"
+      "leisure": "Loisirs",
+      "viewExcursions": "Voir les excursions"
     },
     "common": {
       "to": "À",
@@ -1405,7 +1405,6 @@
       },
       "title": "Zarezerwuj wypoczynek na Teneryfie",
       "search": "Znajdź",
-      "viewExcursions": "Zobacz wycieczki",
       "subtitle": "Znajdź zakwaterowanie, wycieczki lub wynajem samochodu",
       "excursions": {
         "date": "Data",
@@ -1510,7 +1509,8 @@
         "hint": "Aby przejść na stronę wszystkich turów, kliknij «Znajdź»",
         "search": "Znajdź"
       },
-      "leisure": "Wypoczynek"
+      "leisure": "Wypoczynek",
+      "viewExcursions": "Zobacz wycieczki"
     },
     "common": {
       "to": "Do",
@@ -1735,7 +1735,6 @@
       },
       "title": "Бронируйте отдых на Тенерифе",
       "search": "Найти",
-      "viewExcursions": "Смотреть экскурсии",
       "subtitle": "Найдите жилье, экскурсии или аренду автомобиля",
       "excursions": {
         "date": "Дата",
@@ -1840,7 +1839,8 @@
         "hint": "Для перехода на страницу всех туров нажмите «Найти»",
         "search": "Найти"
       },
-      "leisure": "Отдых"
+      "leisure": "Отдых",
+      "viewExcursions": "Смотреть экскурсии"
     },
     "common": {
       "to": "До",
@@ -2065,7 +2065,6 @@
       },
       "title": "Бронюйте відпочинок на Тенеріфі",
       "search": "Знайти",
-      "viewExcursions": "Переглянути екскурсії",
       "subtitle": "Знайдіть житло, екскурсії або оренду автомобіля",
       "excursions": {
         "date": "Дата",
@@ -2170,7 +2169,8 @@
         "hint": "Для переходу на сторінку всіх турів натисніть «Знайти»",
         "search": "Знайти"
       },
-      "leisure": "Відпочинок"
+      "leisure": "Відпочинок",
+      "viewExcursions": "Переглянути екскурсії"
     },
     "common": {
       "to": "До",
@@ -2395,7 +2395,6 @@
       },
       "title": "Бронюйте відпочинок на Тенеріфі",
       "search": "Знайти",
-      "viewExcursions": "Переглянути екскурсії",
       "subtitle": "Знайдіть житло, екскурсії або оренду автомобіля",
       "excursions": {
         "date": "Дата",
@@ -2500,7 +2499,8 @@
         "hint": "Для переходу на сторінку всіх турів натисніть «Знайти»",
         "search": "Знайти"
       },
-      "leisure": "Відпочинок"
+      "leisure": "Відпочинок",
+      "viewExcursions": "Переглянути екскурсії"
     },
     "common": {
       "to": "До",

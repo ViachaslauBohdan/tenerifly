@@ -71,6 +71,18 @@ const HERO_SEARCH_BUTTON = {
 
 const HERO_SEARCH_GLOBAL_TOURS = { ...HERO_SEARCH_BUTTON };
 
+/** Homepage hero CTA — Tenerife excursions list. */
+const HERO_VIEW_EXCURSIONS = {
+  de: "Ausflüge ansehen",
+  en: "View Excursions",
+  es: "Ver excursiones",
+  fr: "Voir les excursions",
+  pl: "Zobacz wycieczki",
+  ru: "Смотреть экскурсии",
+  uk: "Переглянути екскурсії",
+  ua: "Переглянути екскурсії",
+};
+
 /** Label for hero tab selector (accommodation / cars / tours). */
 const HERO_LEISURE_LABEL = {
   de: "Erholung",
@@ -180,6 +192,9 @@ function applyMainLocalePatches(translation) {
       if (HERO_LEISURE_LABEL[locale]) {
         translation[locale].hero.leisure = HERO_LEISURE_LABEL[locale];
       }
+      if (HERO_VIEW_EXCURSIONS[locale]) {
+        translation[locale].hero.viewExcursions = HERO_VIEW_EXCURSIONS[locale];
+      }
     }
   }
   if (translation.uk?.hero && translation.ua?.hero) {
@@ -198,6 +213,8 @@ function applyMainLocalePatches(translation) {
       HERO_TENERIFE_TITLE.ua ?? HERO_TENERIFE_TITLE.uk;
     translation.ua.hero.leisure =
       HERO_LEISURE_LABEL.ua ?? HERO_LEISURE_LABEL.uk;
+    translation.ua.hero.viewExcursions =
+      HERO_VIEW_EXCURSIONS.ua ?? HERO_VIEW_EXCURSIONS.uk;
   }
   if (translation.uk && !translation.ua) {
     translation.ua = JSON.parse(JSON.stringify(translation.uk));

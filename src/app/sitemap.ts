@@ -8,11 +8,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = LOCALES.flatMap((locale) =>
-    (["", "/tours"] as const).map((path) => ({
+    (["", "/tours", "/world-tours"] as const).map((path) => ({
       url: absoluteUrlForLocale(locale.code, path),
       lastModified: now,
       changeFrequency: path === "" ? ("daily" as const) : ("weekly" as const),
-      priority: path === "" ? 1 : 0.9,
+      priority: path === "" ? 1 : path === "/world-tours" ? 0.85 : 0.9,
     }))
   );
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ChevronDown, MapPin, Phone } from "lucide-react";
 import { HeroSearchCtaLink } from "@/components/HeroSearchCta";
+import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
 import translationsJson from "../i18n/main.json";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ViewAllLink } from "@/components/ViewAllLink";
@@ -33,12 +34,17 @@ export function LocalePageClient() {
   const t = pickLocaleBundle(translations, language);
   const viewExcursionsLabel =
     (t.hero as { viewExcursions?: string }).viewExcursions ??
-    (
-      pickLocaleBundle(translations, "en").hero as {
-        viewExcursions?: string;
-      }
-    ).viewExcursions ??
     "View Excursions";
+
+  const worldToursBase =
+    t.hero.worldTours ?? pickLocaleBundle(translations, "en").hero.worldTours;
+  const searchGlobalToursLabel =
+    (t.hero as { searchGlobalTours?: string }).searchGlobalTours ??
+    pickLocaleBundle(translations, "en").hero.searchGlobalTours;
+  const worldToursCopy = {
+    ...worldToursBase,
+    search: searchGlobalToursLabel ?? worldToursBase.search,
+  };
 
   const atlanticoTagline =
     language === "ru"
@@ -128,7 +134,7 @@ export function LocalePageClient() {
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg')`,
         }}
       >
-        <div className={heroInnerCompactClass}>
+        <div className={`${heroInnerCompactClass} gap-6 sm:gap-8`}>
           <div className={heroBlockStackCompactClass}>
             <div className="text-center">
               <h1 className={`${heroTitleCompactClass} mb-0`}>
@@ -145,6 +151,15 @@ export function LocalePageClient() {
                 className="w-full rounded-xl text-base min-h-[52px] py-3.5 sm:min-h-[68px] sm:px-8 sm:text-lg sm:!normal-case sm:!tracking-normal"
               />
             </div>
+          </div>
+          <div className={heroBlockStackCompactClass}>
+            <h2 className={`${heroTitleCompactClass} text-center`}>
+              {worldToursCopy.heading}
+            </h2>
+            <WorldToursHeroSearch
+              href={createLocaleLink("/world-tours")}
+              labels={worldToursCopy}
+            />
           </div>
         </div>
       </section>

@@ -18,7 +18,7 @@ export const heroSectionClass =
 
 /** Homepage hero (title + single CTA). */
 export const heroSectionCompactClass =
-  "relative flex flex-col bg-cover bg-center bg-no-repeat pb-8 sm:min-h-[55vh] sm:justify-center sm:pb-10";
+  "relative flex flex-col bg-cover bg-center bg-no-repeat pb-8 sm:min-h-[65vh] sm:justify-center sm:pb-10";
 
 export const heroInnerCompactClass =
   `relative z-10 flex w-full flex-1 flex-col items-center justify-center gap-4 pt-[5rem] pb-6 min-[400px]:pt-[5.5rem] sm:gap-5 sm:pt-[5.5rem] sm:pb-8 md:pt-[5.75rem] ${heroGutterClass}`;
