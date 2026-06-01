@@ -1,3 +1,12 @@
+export default function WorldToursLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return children;
+}
+
+/*
 const OTPUSK_FORM_CSS = "https://export.otpusk.com/os/onsite/form.css";
 const OTPUSK_RESULT_CSS = "https://export.otpusk.com/os/onsite/result.css";
 const OTPUSK_TOUR_CSS = "https://export.otpusk.com/os/onsite/tour.css";
@@ -17,3 +26,4 @@ export default function WorldToursLayout({
     </>
   );
 }
+*/

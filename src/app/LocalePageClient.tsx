@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ChevronDown, MapPin, Phone } from "lucide-react";
 import { HeroSearchCtaLink } from "@/components/HeroSearchCta";
-import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
+import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
+// import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
 import translationsJson from "../i18n/main.json";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ViewAllLink } from "@/components/ViewAllLink";
@@ -32,19 +33,22 @@ export function LocalePageClient() {
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
 
   const t = pickLocaleBundle(translations, language);
+  const excursionsIntermediaryNotice =
+    (t.sections.excursions as { intermediaryNotice?: string })
+      .intermediaryNotice ?? "";
   const viewExcursionsLabel =
     (t.hero as { viewExcursions?: string }).viewExcursions ??
     "View Excursions";
 
-  const worldToursBase =
-    t.hero.worldTours ?? pickLocaleBundle(translations, "en").hero.worldTours;
-  const searchGlobalToursLabel =
-    (t.hero as { searchGlobalTours?: string }).searchGlobalTours ??
-    pickLocaleBundle(translations, "en").hero.searchGlobalTours;
-  const worldToursCopy = {
-    ...worldToursBase,
-    search: searchGlobalToursLabel ?? worldToursBase.search,
-  };
+  // const worldToursBase =
+  //   t.hero.worldTours ?? pickLocaleBundle(translations, "en").hero.worldTours;
+  // const searchGlobalToursLabel =
+  //   (t.hero as { searchGlobalTours?: string }).searchGlobalTours ??
+  //   pickLocaleBundle(translations, "en").hero.searchGlobalTours;
+  // const worldToursCopy = {
+  //   ...worldToursBase,
+  //   search: searchGlobalToursLabel ?? worldToursBase.search,
+  // };
 
   const atlanticoTagline =
     language === "ru"
@@ -137,11 +141,22 @@ export function LocalePageClient() {
         <div className={`${heroInnerCompactClass} gap-6 sm:gap-8`}>
           <div className={heroBlockStackCompactClass}>
             <div className="text-center">
-              <h1 className={`${heroTitleCompactClass} mb-0`}>
-                {t.hero.title}
-              </h1>
+              {excursionsIntermediaryNotice ? (
+                <ExcursionsIntermediaryNotice
+                  text={excursionsIntermediaryNotice}
+                  as="h1"
+                  variant="hero"
+                  className="mx-auto max-w-3xl"
+                />
+              ) : (
+                <h1 className={`${heroTitleCompactClass} mb-0`}>
+                  {t.hero.title}
+                </h1>
+              )}
               <p className="mt-3 text-lg text-white/90 sm:mt-4 sm:text-xl">
-                {t.sections.excursions.subtitle}
+                {excursionsIntermediaryNotice
+                  ? t.hero.title
+                  : t.sections.excursions.subtitle}
               </p>
             </div>
             <div className={heroCtaWrapCompactClass}>
@@ -152,6 +167,7 @@ export function LocalePageClient() {
               />
             </div>
           </div>
+          {/* World tours — disabled
           <div className={heroBlockStackCompactClass}>
             <h2 className={`${heroTitleCompactClass} text-center`}>
               {worldToursCopy.heading}
@@ -161,6 +177,7 @@ export function LocalePageClient() {
               labels={worldToursCopy}
             />
           </div>
+          */}
         </div>
       </section>
 
@@ -171,9 +188,18 @@ export function LocalePageClient() {
         <div className="mx-auto max-w-7xl px-4">
           <div className="mb-12 flex flex-col items-center justify-between gap-4 sm:mb-14 sm:flex-row md:mb-14">
             <div className="w-full flex-1 text-center sm:w-auto sm:text-left">
-              <h2 className="mb-4 text-4xl font-bold text-gray-900">
-                {t.sections.excursions.title}
-              </h2>
+              {excursionsIntermediaryNotice ? (
+                <ExcursionsIntermediaryNotice
+                  text={excursionsIntermediaryNotice}
+                  as="h2"
+                  variant="section"
+                  className="mx-auto max-w-3xl sm:mx-0"
+                />
+              ) : (
+                <h2 className="mb-4 text-4xl font-bold text-gray-900">
+                  {t.sections.excursions.title}
+                </h2>
+              )}
               <p className="mx-auto max-w-3xl text-xl text-gray-600 sm:mx-0">
                 {t.sections.excursions.subtitle}
               </p>

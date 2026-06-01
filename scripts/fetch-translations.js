@@ -83,6 +83,37 @@ const HERO_VIEW_EXCURSIONS = {
   ua: "Переглянути екскурсії",
 };
 
+/** Legal copy: Tenerifly is an intermediary, not the excursion operator. */
+const EXCURSIONS_INTERMEDIARY_NOTICE = {
+  de: "Tenerifly — Vermittler beim Verkauf von Ausflügen auf Teneriffa",
+  en: "Tenerifly — intermediary in the sale of excursions in Tenerife",
+  es: "Tenerifly — intermediario en la venta de excursiones en Tenerife",
+  fr: "Tenerifly — intermédiaire dans la vente d'excursions à Tenerife",
+  pl: "Tenerifly — pośrednik w sprzedaży wycieczek na Teneryfie",
+  ru: "Tenerifly — посредник в продаже экскурсий на Тенерифе",
+  uk: "Tenerifly — посередник у продажу екскурсій на Тенеріфе",
+  ua: "Tenerifly — посередник у продажу екскурсій на Тенеріфе",
+};
+
+function applyExcursionsIntermediaryPatches(translation) {
+  for (const [locale, notice] of Object.entries(EXCURSIONS_INTERMEDIARY_NOTICE)) {
+    if (!translation[locale]) continue;
+    if (translation[locale].sections?.excursions) {
+      translation[locale].sections.excursions.intermediaryNotice = notice;
+    }
+    translation[locale].intermediaryNotice = notice;
+  }
+  if (translation.uk && translation.ua) {
+    const notice =
+      EXCURSIONS_INTERMEDIARY_NOTICE.ua ?? EXCURSIONS_INTERMEDIARY_NOTICE.uk;
+    if (translation.ua.sections?.excursions) {
+      translation.ua.sections.excursions.intermediaryNotice = notice;
+    }
+    translation.ua.intermediaryNotice = notice;
+  }
+  return translation;
+}
+
 /** Label for hero tab selector (accommodation / cars / tours). */
 const HERO_LEISURE_LABEL = {
   de: "Erholung",
@@ -332,6 +363,13 @@ async function saveAllTranslations(translationsData) {
 
       if (safeFileName === "main") {
         translation = applyMainLocalePatches(translation);
+      }
+      if (
+        safeFileName === "main" ||
+        safeFileName === "tours" ||
+        safeFileName === "tourdetail"
+      ) {
+        translation = applyExcursionsIntermediaryPatches(translation);
       }
 
       // Сохраняем только содержимое поля translation

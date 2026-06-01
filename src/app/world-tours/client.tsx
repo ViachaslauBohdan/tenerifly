@@ -1,3 +1,9 @@
+/** World tours page client — disabled (see commented implementation below). */
+export default function WorldToursPageClient() {
+  return null;
+}
+
+/*
 "use client";
 
 import { useEffect, useState } from "react";
@@ -53,3 +59,4 @@ export default function WorldToursPageClient() {
     </main>
   );
 }
+*/

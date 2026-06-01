@@ -1,3 +1,30 @@
+import { redirect } from "next/navigation";
+import { LOCALES } from "@/types/locale";
+
+// 7 days — keep in sync with CMS_PAGE_REVALIDATE in src/config/cmsCache.ts
+export const revalidate = 604800;
+
+export function generateStaticParams() {
+  return LOCALES.map((locale) => ({
+    locale: locale.code,
+  }));
+}
+
+/** World tours route disabled — redirects to locale home. */
+export default async function WorldToursPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const localeCode = LOCALES.some((l) => l.code === locale)
+    ? locale
+    : LOCALES[0].code;
+  redirect(`/${localeCode}`);
+}
+
+/* World tours page — disabled (restore when re-enabling)
+
 import { Metadata } from "next";
 import { Suspense } from "react";
 import WorldToursPageClient from "../../world-tours/client";
@@ -9,15 +36,6 @@ import {
   hreflangAlternates,
   ogLocale,
 } from "@/lib/seo";
-
-// 7 days — keep in sync with CMS_PAGE_REVALIDATE in src/config/cmsCache.ts
-export const revalidate = 604800;
-
-export function generateStaticParams() {
-  return LOCALES.map((locale) => ({
-    locale: locale.code,
-  }));
-}
 
 export async function generateMetadata({
   params,
@@ -61,3 +79,5 @@ export default async function WorldToursPage() {
     </Suspense>
   );
 }
+
+*/

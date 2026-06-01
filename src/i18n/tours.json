@@ -72,7 +72,8 @@
     "difficultyLevel": "Schwierigkeitsgrad",
     "dolphinWatching": "Delfin-Beobachtung",
     "toursInTenerife": "Touren auf Teneriffa",
-    "excitingDescription": "Spannende und unvergessliche Tour-Erfahrung auf Teneriffa!"
+    "excitingDescription": "Spannende und unvergessliche Tour-Erfahrung auf Teneriffa!",
+    "intermediaryNotice": "Tenerifly — Vermittler beim Verkauf von Ausflügen auf Teneriffa"
   },
   "en": {
     "to": "To",
@@ -147,7 +148,8 @@
     "difficultyLevel": "Difficulty level",
     "dolphinWatching": "Dolphin watching",
     "toursInTenerife": "Tours in Tenerife",
-    "excitingDescription": "Exciting and unforgettable tour experience in Tenerife!"
+    "excitingDescription": "Exciting and unforgettable tour experience in Tenerife!",
+    "intermediaryNotice": "Tenerifly — intermediary in the sale of excursions in Tenerife"
   },
   "es": {
     "to": "Hasta",
@@ -222,7 +224,8 @@
     "difficultyLevel": "Nivel de dificultad",
     "dolphinWatching": "Avistamiento de delfines",
     "toursInTenerife": "Excursiones en Tenerife",
-    "excitingDescription": "¡Experiencia de excursión emocionante e inolvidable en Tenerife!"
+    "excitingDescription": "¡Experiencia de excursión emocionante e inolvidable en Tenerife!",
+    "intermediaryNotice": "Tenerifly — intermediario en la venta de excursiones en Tenerife"
   },
   "fr": {
     "to": "À",
@@ -297,7 +300,8 @@
     "difficultyLevel": "Niveau de difficulté",
     "dolphinWatching": "Observation des dauphins",
     "toursInTenerife": "Excursions à Tenerife",
-    "excitingDescription": "Excursion passionnante et inoubliable à Tenerife!"
+    "excitingDescription": "Excursion passionnante et inoubliable à Tenerife!",
+    "intermediaryNotice": "Tenerifly — intermédiaire dans la vente d'excursions à Tenerife"
   },
   "pl": {
     "to": "Do",
@@ -372,7 +376,8 @@
     "difficultyLevel": "Poziom trudności",
     "dolphinWatching": "Obserwacja delfinów",
     "toursInTenerife": "Wycieczki na Teneryfie",
-    "excitingDescription": "Ekscytująca i niezapomniana wycieczka na Teneryfie!"
+    "excitingDescription": "Ekscytująca i niezapomniana wycieczka na Teneryfie!",
+    "intermediaryNotice": "Tenerifly — pośrednik w sprzedaży wycieczek na Teneryfie"
   },
   "ru": {
     "to": "До",
@@ -447,7 +452,8 @@
     "difficultyLevel": "Уровень сложности",
     "dolphinWatching": "Наблюдение за дельфинами",
     "toursInTenerife": "Экскурсии в Тенерифе",
-    "excitingDescription": "Захватывающая и незабываемая экскурсия в Тенерифе!"
+    "excitingDescription": "Захватывающая и незабываемая экскурсия в Тенерифе!",
+    "intermediaryNotice": "Tenerifly — посредник в продаже экскурсий на Тенерифе"
   },
   "uk": {
     "to": "До",
@@ -522,6 +528,7 @@
     "difficultyLevel": "Рівень складності",
     "dolphinWatching": "Спостереження за дельфінами",
     "toursInTenerife": "Екскурсії на Тенеріфе",
-    "excitingDescription": "Захоплююча та незабутня екскурсія на Тенеріфе!"
+    "excitingDescription": "Захоплююча та незабутня екскурсія на Тенеріфе!",
+    "intermediaryNotice": "Tenerifly — посередник у продажу екскурсій на Тенеріфе"
   }
 }

@@ -300,7 +300,8 @@
         "duration": "Dauer",
         "language": "Sprache",
         "subtitle": "Entdecken Sie das Beste auf Teneriffa",
-        "groupSize": "Gruppengröße"
+        "groupSize": "Gruppengröße",
+        "intermediaryNotice": "Tenerifly — Vermittler beim Verkauf von Ausflügen auf Teneriffa"
       },
       "accommodation": {
         "area": "Fläche",
@@ -327,7 +328,8 @@
       "button": "Anfrage senden",
       "subtitle": "Schreiben Sie uns über Ihre spezifischen Bedürfnisse und wir helfen Ihnen, die perfekte Lösung zu finden",
       "placeholder": "Erzählen Sie uns von Ihren Anforderungen, Daten, Vorlieben oder besonderen Wünschen..."
-    }
+    },
+    "intermediaryNotice": "Tenerifly — Vermittler beim Verkauf von Ausflügen auf Teneriffa"
   },
   "en": {
     "cta": {
@@ -630,7 +632,8 @@
         "duration": "Duration",
         "language": "Language",
         "subtitle": "Discover the best of Tenerife",
-        "groupSize": "Group Size"
+        "groupSize": "Group Size",
+        "intermediaryNotice": "Tenerifly — intermediary in the sale of excursions in Tenerife"
       },
       "accommodation": {
         "area": "Area",
@@ -657,7 +660,8 @@
       "button": "Send Request",
       "subtitle": "Text us your specific needs and we'll help you find the perfect solution",
       "placeholder": "Tell us about your requirements, dates, preferences, or any special requests..."
-    }
+    },
+    "intermediaryNotice": "Tenerifly — intermediary in the sale of excursions in Tenerife"
   },
   "es": {
     "cta": {
@@ -960,7 +964,8 @@
         "duration": "Duración",
         "language": "Idioma",
         "subtitle": "Descubre lo mejor de Tenerife",
-        "groupSize": "Tamaño del grupo"
+        "groupSize": "Tamaño del grupo",
+        "intermediaryNotice": "Tenerifly — intermediario en la venta de excursiones en Tenerife"
       },
       "accommodation": {
         "area": "Área",
@@ -987,7 +992,8 @@
       "button": "Enviar solicitud",
       "subtitle": "Escríbenos sobre tus necesidades específicas y te ayudaremos a encontrar la solución perfecta",
       "placeholder": "Cuéntanos sobre tus requisitos, fechas, preferencias o deseos especiales..."
-    }
+    },
+    "intermediaryNotice": "Tenerifly — intermediario en la venta de excursiones en Tenerife"
   },
   "fr": {
     "cta": {
@@ -1290,7 +1296,8 @@
         "duration": "Durée",
         "language": "Langue",
         "subtitle": "Découvrez le meilleur de Tenerife",
-        "groupSize": "Taille du groupe"
+        "groupSize": "Taille du groupe",
+        "intermediaryNotice": "Tenerifly — intermédiaire dans la vente d'excursions à Tenerife"
       },
       "accommodation": {
         "area": "Superficie",
@@ -1317,7 +1324,8 @@
       "button": "Envoyer la demande",
       "subtitle": "Écrivez-nous vos besoins spécifiques et nous vous aiderons à trouver la solution parfaite",
       "placeholder": "Parlez-nous de vos exigences, dates, préférences ou demandes spéciales..."
-    }
+    },
+    "intermediaryNotice": "Tenerifly — intermédiaire dans la vente d'excursions à Tenerife"
   },
   "pl": {
     "cta": {
@@ -1620,7 +1628,8 @@
         "duration": "Czas trwania",
         "language": "Język",
         "subtitle": "Odkryj najlepsze miejsca na Teneryfie",
-        "groupSize": "Rozmiar grupy"
+        "groupSize": "Rozmiar grupy",
+        "intermediaryNotice": "Tenerifly — pośrednik w sprzedaży wycieczek na Teneryfie"
       },
       "accommodation": {
         "area": "Powierzchnia",
@@ -1647,7 +1656,8 @@
       "button": "Wyślij prośbę",
       "subtitle": "Napisz nam o swoich konkretnych potrzebach, a pomożemy Ci znaleźć idealne rozwiązanie",
       "placeholder": "Opowiedz nam o swoich wymaganiach, datach, preferencjach lub specjalnych prośbach..."
-    }
+    },
+    "intermediaryNotice": "Tenerifly — pośrednik w sprzedaży wycieczek na Teneryfie"
   },
   "ru": {
     "cta": {
@@ -1950,7 +1960,8 @@
         "duration": "Продолжительность",
         "language": "Язык",
         "subtitle": "Откройте для себя лучшее на Тенерифе",
-        "groupSize": "Размер группы"
+        "groupSize": "Размер группы",
+        "intermediaryNotice": "Tenerifly — посредник в продаже экскурсий на Тенерифе"
       },
       "accommodation": {
         "area": "Площадь",
@@ -1977,7 +1988,8 @@
       "button": "Отправить запрос",
       "subtitle": "Напишите нам о своих конкретных потребностях, и мы поможем найти идеальное решение",
       "placeholder": "Расскажите о своих требованиях, датах, предпочтениях или особых пожеланиях..."
-    }
+    },
+    "intermediaryNotice": "Tenerifly — посредник в продаже экскурсий на Тенерифе"
   },
   "uk": {
     "cta": {
@@ -2280,7 +2292,8 @@
         "duration": "Тривалість",
         "language": "Мова",
         "subtitle": "Відкрийте для себе найкраще на Тенеріфе",
-        "groupSize": "Розмір групи"
+        "groupSize": "Розмір групи",
+        "intermediaryNotice": "Tenerifly — посередник у продажу екскурсій на Тенеріфе"
       },
       "accommodation": {
         "area": "Площа",
@@ -2307,7 +2320,8 @@
       "button": "Надіслати запит",
       "subtitle": "Напишіть нам про свої конкретні потреби, і ми допоможемо знайти ідеальне рішення",
       "placeholder": "Розкажіть про свої вимоги, дати, уподобання або особливі побажання..."
-    }
+    },
+    "intermediaryNotice": "Tenerifly — посередник у продажу екскурсій на Тенеріфе"
   },
   "ua": {
     "cta": {
@@ -2610,7 +2624,8 @@
         "duration": "Тривалість",
         "language": "Мова",
         "subtitle": "Відкрийте для себе найкраще на Тенеріфе",
-        "groupSize": "Розмір групи"
+        "groupSize": "Розмір групи",
+        "intermediaryNotice": "Tenerifly — посередник у продажу екскурсій на Тенеріфе"
       },
       "accommodation": {
         "area": "Площа",
@@ -2637,6 +2652,7 @@
       "button": "Надіслати запит",
       "subtitle": "Напишіть нам про свої конкретні потреби, і ми допоможемо знайти ідеальне рішення",
       "placeholder": "Розкажіть про свої вимоги, дати, уподобання або особливі побажання..."
-    }
+    },
+    "intermediaryNotice": "Tenerifly — посередник у продажу екскурсій на Тенеріфе"
   }
 }

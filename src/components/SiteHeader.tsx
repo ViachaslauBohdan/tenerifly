@@ -4,7 +4,7 @@ import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { ChevronDown, Languages, Menu, X } from "lucide-react";
 import { localeDisplayCode, pickLocaleBundle } from "@/types/locale";
-import worldToursJson from "@/i18n/worldTours.json";
+// import worldToursJson from "@/i18n/worldTours.json";
 
 const languages = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -43,8 +43,8 @@ const headerNavFaq: Record<string, string> = {
 const headerAnchorClass =
   "touch-manipulation whitespace-nowrap rounded-lg px-2 py-1.5 text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white lg:px-2.5";
 
-const headerAnchorActiveClass =
-  "touch-manipulation whitespace-nowrap rounded-lg bg-white/15 px-2 py-1.5 text-sm font-medium text-white lg:px-2.5";
+// const headerAnchorActiveClass =
+//   "touch-manipulation whitespace-nowrap rounded-lg bg-white/15 px-2 py-1.5 text-sm font-medium text-white lg:px-2.5";
 
 const mobileNavLinkClass =
   "touch-manipulation block w-full rounded-lg px-3 py-3 text-left text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15";
@@ -55,7 +55,7 @@ type SiteHeaderProps = {
   selectLanguageLabel: string;
   excursionsLabel: string;
   variant?: "home" | "standalone";
-  activePage?: "world-tours";
+  // activePage?: "world-tours";
   createLocaleLink: (path: string) => string;
   onScrollToSection?: (
     sectionId: string
@@ -68,7 +68,7 @@ export function SiteHeader({
   selectLanguageLabel,
   excursionsLabel,
   variant = "standalone",
-  activePage,
+  // activePage,
   createLocaleLink,
   onScrollToSection,
 }: SiteHeaderProps) {
@@ -92,17 +92,17 @@ export function SiteHeader({
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const homeHref = createLocaleLink("/");
-  const worldToursNav = pickLocaleBundle(
-    worldToursJson as Record<string, { badge: string }>,
-    language
-  );
-  const worldToursHref = createLocaleLink("/world-tours");
-  const worldToursLinkClass =
-    activePage === "world-tours" ? headerAnchorActiveClass : headerAnchorClass;
-  const worldToursMobileLinkClass =
-    activePage === "world-tours"
-      ? `${mobileNavLinkClass} bg-white/15 text-white`
-      : mobileNavLinkClass;
+  // const worldToursNav = pickLocaleBundle(
+  //   worldToursJson as Record<string, { badge: string }>,
+  //   language
+  // );
+  // const worldToursHref = createLocaleLink("/world-tours");
+  // const worldToursLinkClass =
+  //   activePage === "world-tours" ? headerAnchorActiveClass : headerAnchorClass;
+  // const worldToursMobileLinkClass =
+  //   activePage === "world-tours"
+  //     ? `${mobileNavLinkClass} bg-white/15 text-white`
+  //     : mobileNavLinkClass;
 
   const sectionHref = (sectionId: string) =>
     variant === "home" ? `#${sectionId}` : `${homeHref}#${sectionId}`;
@@ -174,6 +174,7 @@ export function SiteHeader({
       <a {...navLinkProps("faq")} className={headerAnchorClass}>
         {pickLocaleBundle(headerNavFaq, language)}
       </a>
+      {/* World tours nav — disabled
       <Link
         href={worldToursHref}
         className={worldToursLinkClass}
@@ -182,6 +183,7 @@ export function SiteHeader({
       >
         {worldToursNav.badge}
       </Link>
+      */}
     </>
   );
 
@@ -204,6 +206,7 @@ export function SiteHeader({
       <a {...navLinkPropsMobile("faq")} className={mobileNavLinkClass}>
         {pickLocaleBundle(headerNavFaq, language)}
       </a>
+      {/* World tours nav — disabled
       <Link
         href={worldToursHref}
         className={worldToursMobileLinkClass}
@@ -212,6 +215,7 @@ export function SiteHeader({
       >
         {worldToursNav.badge}
       </Link>
+      */}
     </>
   );
 

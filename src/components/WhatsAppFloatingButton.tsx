@@ -1,21 +1,16 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
 
-const DEFAULT_WHATSAPP_NUMBER = "34613211069";
-/** World-tours page contact (Vladislava). */
-const WORLD_TOURS_WHATSAPP_NUMBER = "380959390292";
+const WHATSAPP_NUMBER = "34613211069";
+// World-tours WhatsApp — disabled
+// import { usePathname } from "next/navigation";
+// const WORLD_TOURS_WHATSAPP_NUMBER = "380959390292";
 
 export function WhatsAppFloatingButton() {
-  const pathname = usePathname();
-  const whatsappNumber = pathname?.includes("/world-tours")
-    ? WORLD_TOURS_WHATSAPP_NUMBER
-    : DEFAULT_WHATSAPP_NUMBER;
-
   return (
     <a
-      href={`https://wa.me/${whatsappNumber}`}
+      href={`https://wa.me/${WHATSAPP_NUMBER}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contact us on WhatsApp"
