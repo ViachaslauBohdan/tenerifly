@@ -107,14 +107,31 @@ const FOOTER_LEGAL_NOTICE = {
   ua: "PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт tenerifly.io. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.",
 };
 
+/** Footer nav column title (was «Quick Links»). */
+const FOOTER_QUICK_LINKS = {
+  de: "Links",
+  en: "Links",
+  es: "Enlaces",
+  fr: "Liens",
+  pl: "Linki",
+  ru: "Ссылки",
+  uk: "Посилання",
+  ua: "Посилання",
+};
+
 function applyFooterLegalNoticePatches(translation) {
   for (const [locale, notice] of Object.entries(FOOTER_LEGAL_NOTICE)) {
     if (!translation[locale]?.footer) continue;
     translation[locale].footer.legalNotice = notice;
+    if (FOOTER_QUICK_LINKS[locale]) {
+      translation[locale].footer.quickLinks = FOOTER_QUICK_LINKS[locale];
+    }
   }
   if (translation.uk?.footer && translation.ua?.footer) {
     translation.ua.footer.legalNotice =
       FOOTER_LEGAL_NOTICE.ua ?? FOOTER_LEGAL_NOTICE.uk;
+    translation.ua.footer.quickLinks =
+      FOOTER_QUICK_LINKS.ua ?? FOOTER_QUICK_LINKS.uk;
   }
   return translation;
 }

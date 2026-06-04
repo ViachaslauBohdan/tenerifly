@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronDown, Languages, Menu, X } from "lucide-react";
 import { localeDisplayCode, pickLocaleBundle } from "@/types/locale";
 import mainJson from "@/i18n/main.json";
+import { navShortFaqLabel } from "@/lib/navShortLabels";
 // import worldToursJson from "@/i18n/worldTours.json";
 
 type MainHeaderBundle = {
@@ -32,17 +33,6 @@ const headerNavHome: Record<string, string> = {
   ua: "Головна",
   de: "Start",
   es: "Inicio",
-};
-
-const headerNavFaq: Record<string, string> = {
-  en: "FAQ",
-  ru: "Вопросы",
-  pl: "FAQ",
-  fr: "FAQ",
-  uk: "Питання",
-  ua: "Питання",
-  de: "FAQ",
-  es: "FAQ",
 };
 
 const headerAnchorClass =
@@ -182,7 +172,7 @@ export function SiteHeader({
       )}
       {excursionsLink}
       <a {...navLinkProps("faq")} className={headerAnchorClass}>
-        {pickLocaleBundle(headerNavFaq, language)}
+        {pickLocaleBundle(navShortFaqLabel, language)}
       </a>
       {legalPageTitle ? (
         <Link
@@ -223,7 +213,7 @@ export function SiteHeader({
       )}
       {excursionsLinkMobile}
       <a {...navLinkPropsMobile("faq")} className={mobileNavLinkClass}>
-        {pickLocaleBundle(headerNavFaq, language)}
+        {pickLocaleBundle(navShortFaqLabel, language)}
       </a>
       {legalPageTitle ? (
         <Link

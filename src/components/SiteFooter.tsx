@@ -5,25 +5,33 @@ import { Phone } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { pickLocaleBundle } from "@/types/locale";
 import mainJson from "@/i18n/main.json";
+import { navShortFaqLabel } from "@/lib/navShortLabels";
 
 type FooterBundle = {
   footer?: {
     description?: string;
     contacts?: string;
+    quickLinks?: string;
     legalNotice?: string;
   };
   sections?: { excursions?: { title?: string } };
-  faq?: { title?: string };
+  legalPage?: { title?: string };
 };
+
+const footerNavLinkClass =
+  "block text-gray-400 transition-colors hover:text-white";
 
 export function SiteFooter() {
   const { locale, createLocaleLink } = useTranslation();
   const t = pickLocaleBundle(mainJson as Record<string, FooterBundle>, locale);
+  const faqLabel = pickLocaleBundle(navShortFaqLabel, locale);
+  const excursionsTitle = t.sections?.excursions?.title?.trim();
+  const legalPageTitle = t.legalPage?.title?.trim();
 
   return (
     <footer className="py-16 md:py-20" style={{ backgroundColor: "#1a1b1e" }}>
       <div className="mx-auto max-w-7xl px-4">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div>
             <h3 className="mb-4 text-2xl font-bold text-white">Tenerifly.io</h3>
             {t.footer?.description ? (
@@ -33,6 +41,36 @@ export function SiteFooter() {
               © {new Date().getFullYear()} Tenerifly. All rights reserved.
             </p>
           </div>
+
+          <div>
+            {t.footer?.quickLinks ? (
+              <h4 className="mb-6 text-lg font-semibold text-white">
+                {t.footer.quickLinks}
+              </h4>
+            ) : null}
+            <nav className="space-y-3" aria-label={t.footer?.quickLinks}>
+              {excursionsTitle ? (
+                <Link
+                  href={createLocaleLink("/#excursions")}
+                  className={footerNavLinkClass}
+                >
+                  {excursionsTitle}
+                </Link>
+              ) : null}
+              <Link href={createLocaleLink("/#faq")} className={footerNavLinkClass}>
+                {faqLabel}
+              </Link>
+              {legalPageTitle ? (
+                <Link
+                  href={createLocaleLink("/aviso-legal")}
+                  className={footerNavLinkClass}
+                >
+                  {legalPageTitle}
+                </Link>
+              ) : null}
+            </nav>
+          </div>
+
           <div>
             {t.footer?.contacts ? (
               <h4 className="mb-6 text-lg font-semibold text-white">
@@ -46,24 +84,6 @@ export function SiteFooter() {
               <Phone className="h-4 w-4" />
               +34613211069
             </a>
-            <div className="mt-6 space-y-3">
-              {t.sections?.excursions?.title ? (
-                <Link
-                  href={createLocaleLink("/#excursions")}
-                  className="block text-gray-400 transition-colors hover:text-white"
-                >
-                  {t.sections.excursions.title}
-                </Link>
-              ) : null}
-              {t.faq?.title ? (
-                <Link
-                  href={createLocaleLink("/#faq")}
-                  className="block text-gray-400 transition-colors hover:text-white"
-                >
-                  {t.faq.title}
-                </Link>
-              ) : null}
-            </div>
           </div>
         </div>
 
