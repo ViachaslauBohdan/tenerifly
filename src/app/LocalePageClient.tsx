@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { ChevronDown, ExternalLink, MapPin } from "lucide-react";
-import { getAtlanticoExcursionsAffiliateUrl } from "@/lib/excursionAggregatorUrls";
+import { ChevronDown } from "lucide-react";
+import { AtlanticoExcursionCard } from "@/components/AtlanticoExcursionCard";
 import { HeroSearchCtaLink } from "@/components/HeroSearchCta";
 import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
 // import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
@@ -49,66 +49,6 @@ export function LocalePageClient() {
   //   ...worldToursBase,
   //   search: searchGlobalToursLabel ?? worldToursBase.search,
   // };
-
-  const atlanticoTagline =
-    language === "ru"
-      ? "Больше туров и активностей"
-      : language === "pl"
-        ? "Więcej wycieczek i aktywności"
-        : language === "fr"
-          ? "Plus de visites et d'activités"
-          : language === "de"
-            ? "Mehr Touren & Aktivitäten"
-            : language === "es"
-              ? "Más tours y actividades"
-              : language === "ua"
-                ? "Більше турів та активностей"
-                : "More tours & activities";
-
-  const atlanticoPartnerTitle =
-    language === "ru"
-      ? "Наш партнёр Atlántico Excursiones"
-      : language === "pl"
-        ? "Nasz partner: Atlántico Excursiones"
-        : language === "fr"
-          ? "Notre partenaire Atlántico Excursiones"
-          : language === "de"
-            ? "Unser Partner Atlántico Excursiones"
-            : language === "es"
-              ? "Nuestro socio Atlántico Excursiones"
-              : language === "ua"
-                ? "Партнер Atlántico Excursiones"
-                : "Our partner Atlántico Excursiones";
-
-  const atlanticoDescription =
-    language === "ru"
-      ? "Автобусные туры, тематические парки, морские прогулки и VIP — бронируйте с Atlántico Excursiones."
-      : language === "pl"
-        ? "Wycieczki autokarowe, parki rozrywki, rejsy i VIP — rezerwuj z Atlántico Excursiones."
-        : language === "fr"
-          ? "Circuits en bus, parcs à thème, croisières et expériences VIP — réservez avec Atlántico Excursiones."
-          : language === "de"
-            ? "Busreisen, Freizeitparks, Bootstouren und VIP — buchen Sie bei Atlántico Excursiones."
-            : language === "es"
-              ? "Excursiones en bus, parques temáticos, barcos y experiencias VIP — reserva con Atlántico Excursiones."
-              : language === "ua"
-                ? "Автобусні тури, парки розваг, морські прогулянки та VIP — бронюйте з Atlántico Excursiones."
-                : "Coach tours, theme parks, boat trips and VIP experiences — book with Atlántico Excursiones.";
-
-  const atlanticoCtaLabel =
-    language === "ru"
-      ? "Посмотреть все туры"
-      : language === "pl"
-        ? "Zobacz wszystkie wycieczki"
-        : language === "fr"
-          ? "Voir toutes les visites"
-          : language === "de"
-            ? "Alle Touren anzeigen"
-            : language === "es"
-              ? "Ver todos los tours"
-              : language === "ua"
-                ? "Переглянути всі тури"
-                : "View all tours";
 
   useEffect(() => {
     setMounted(true);
@@ -227,40 +167,7 @@ export function LocalePageClient() {
             </ViewAllLink>
           </div>
 
-          <div className="mx-auto max-w-3xl">
-            <div className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-xl transition-all duration-300 hover:shadow-2xl">
-              <div className="flex min-h-[280px] items-stretch md:flex">
-                <div className="flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 p-8 md:w-2/5 md:p-10">
-                  <div className="text-center">
-                    <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
-                      <MapPin className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="mb-2 text-2xl font-bold text-white">
-                      Atlántico Excursiones
-                    </h3>
-                    <p className="text-sm text-blue-100">{atlanticoTagline}</p>
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center p-8 md:w-3/5 md:p-10">
-                  <h4 className="mb-3 text-xl font-semibold text-gray-900">
-                    {atlanticoPartnerTitle}
-                  </h4>
-                  <p className="mb-6 text-sm leading-relaxed text-gray-600 md:text-base">
-                    {atlanticoDescription}
-                  </p>
-                  <a
-                    href={getAtlanticoExcursionsAffiliateUrl(language)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-medium text-white shadow-md transition-colors hover:bg-blue-700 hover:shadow-lg"
-                  >
-                    {atlanticoCtaLabel}
-                    <ExternalLink className="h-4 w-4" aria-hidden />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+          <AtlanticoExcursionCard locale={language} variant="home" />
         </div>
       </section>
 
