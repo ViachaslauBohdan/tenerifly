@@ -4,7 +4,12 @@ import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { ChevronDown, Languages, Menu, X } from "lucide-react";
 import { localeDisplayCode, pickLocaleBundle } from "@/types/locale";
+import mainJson from "@/i18n/main.json";
 // import worldToursJson from "@/i18n/worldTours.json";
+
+type MainHeaderBundle = {
+  legalPage?: { title?: string };
+};
 
 const languages = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -92,6 +97,11 @@ export function SiteHeader({
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const homeHref = createLocaleLink("/");
+  const legalPageTitle = pickLocaleBundle(
+    mainJson as Record<string, MainHeaderBundle>,
+    language
+  ).legalPage?.title?.trim();
+  const legalPageHref = createLocaleLink("/aviso-legal");
   // const worldToursNav = pickLocaleBundle(
   //   worldToursJson as Record<string, { badge: string }>,
   //   language
@@ -174,6 +184,15 @@ export function SiteHeader({
       <a {...navLinkProps("faq")} className={headerAnchorClass}>
         {pickLocaleBundle(headerNavFaq, language)}
       </a>
+      {legalPageTitle ? (
+        <Link
+          href={legalPageHref}
+          className={headerAnchorClass}
+          onClick={closeMobileMenu}
+        >
+          {legalPageTitle}
+        </Link>
+      ) : null}
       {/* World tours nav — disabled
       <Link
         href={worldToursHref}
@@ -206,6 +225,15 @@ export function SiteHeader({
       <a {...navLinkPropsMobile("faq")} className={mobileNavLinkClass}>
         {pickLocaleBundle(headerNavFaq, language)}
       </a>
+      {legalPageTitle ? (
+        <Link
+          href={legalPageHref}
+          className={mobileNavLinkClass}
+          onClick={closeMobileMenu}
+        >
+          {legalPageTitle}
+        </Link>
+      ) : null}
       {/* World tours nav — disabled
       <Link
         href={worldToursHref}

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import { useTranslation } from "@/hooks/useTranslation";
-import { ChevronDown, MapPin, Phone } from "lucide-react";
+import { ChevronDown, ExternalLink, MapPin } from "lucide-react";
+import { getAtlanticoExcursionsAffiliateUrl } from "@/lib/excursionAggregatorUrls";
 import { HeroSearchCtaLink } from "@/components/HeroSearchCta";
 import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
 // import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
@@ -94,6 +94,21 @@ export function LocalePageClient() {
               : language === "ua"
                 ? "Автобусні тури, парки розваг, морські прогулянки та VIP — бронюйте з Atlántico Excursiones."
                 : "Coach tours, theme parks, boat trips and VIP experiences — book with Atlántico Excursiones.";
+
+  const atlanticoCtaLabel =
+    language === "ru"
+      ? "Посмотреть все туры"
+      : language === "pl"
+        ? "Zobacz wszystkie wycieczki"
+        : language === "fr"
+          ? "Voir toutes les visites"
+          : language === "de"
+            ? "Alle Touren anzeigen"
+            : language === "es"
+              ? "Ver todos los tours"
+              : language === "ua"
+                ? "Переглянути всі тури"
+                : "View all tours";
 
   useEffect(() => {
     setMounted(true);
@@ -230,9 +245,18 @@ export function LocalePageClient() {
                   <h4 className="mb-3 text-xl font-semibold text-gray-900">
                     {atlanticoPartnerTitle}
                   </h4>
-                  <p className="text-sm leading-relaxed text-gray-600 md:text-base">
+                  <p className="mb-6 text-sm leading-relaxed text-gray-600 md:text-base">
                     {atlanticoDescription}
                   </p>
+                  <a
+                    href={getAtlanticoExcursionsAffiliateUrl(language)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex w-fit items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-medium text-white shadow-md transition-colors hover:bg-blue-700 hover:shadow-lg"
+                  >
+                    {atlanticoCtaLabel}
+                    <ExternalLink className="h-4 w-4" aria-hidden />
+                  </a>
                 </div>
               </div>
             </div>
@@ -280,47 +304,6 @@ export function LocalePageClient() {
         </div>
       </section>
 
-      <footer className="py-20" style={{ backgroundColor: "#1a1b1e" }}>
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <div>
-              <h3 className="mb-4 text-2xl font-bold text-white">
-                Tenerifly.io
-              </h3>
-              <p className="mb-4 text-gray-400">{t.footer.description}</p>
-              <p className="text-sm text-gray-500">
-                © {new Date().getFullYear()} Tenerifly. All rights reserved.
-              </p>
-            </div>
-            <div>
-              <h4 className="mb-6 text-lg font-semibold text-white">
-                {t.footer.contacts}
-              </h4>
-              <a
-                href="tel:+34613211069"
-                className="flex items-center gap-2 text-gray-400 transition-colors hover:text-white"
-              >
-                <Phone className="h-4 w-4" />
-                +34613211069
-              </a>
-              <div className="mt-6 space-y-3">
-                <Link
-                  href={createLocaleLink("/#excursions")}
-                  className="block text-gray-400 transition-colors hover:text-white"
-                >
-                  {t.sections.excursions.title}
-                </Link>
-                <Link
-                  href={createLocaleLink("/#faq")}
-                  className="block text-gray-400 transition-colors hover:text-white"
-                >
-                  {t.faq.title}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }

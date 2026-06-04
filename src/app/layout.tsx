@@ -10,6 +10,7 @@ import {MantineProvider} from "@/components/providers/MantineProvider";
 import {OtpuskBodyClassGuard} from "@/components/OtpuskBodyClassGuard";
 import {ReferralCodeClient} from "@/components/ReferralCodeClient";
 import {WhatsAppFloatingButton} from "@/components/WhatsAppFloatingButton";
+import {SiteFooter} from "@/components/SiteFooter";
 import {OTPUSK_BODY_CLASS_GUARD_INLINE} from "@/lib/otpuskBodyClassGuard";
 import Script from 'next/script'
 import {
@@ -138,6 +139,7 @@ export default async function RootLayout({
         <MantineProvider>
             <ReferralCodeClient/>
             {children}
+            <SiteFooter/>
             <WhatsAppFloatingButton/>
         </MantineProvider>
         <Script

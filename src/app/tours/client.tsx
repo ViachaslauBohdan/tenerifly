@@ -1,6 +1,7 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import { ExternalLink, MapPin } from "lucide-react";
+import { getAtlanticoExcursionsAffiliateUrl } from "@/lib/excursionAggregatorUrls";
 import { useTranslation } from "@/hooks/useTranslation";
 import { pickLocaleBundle } from "@/types/locale";
 import { CatalogBackLink } from "@/components/CatalogBackLink";
@@ -27,20 +28,65 @@ export default function ToursPageClient() {
   const mainT = pickLocaleBundle(mainJson as Record<string, MainBundle>, language);
   const excursionSection = mainT?.sections?.excursions;
 
-  const atlanticoBlurb =
+  const atlanticoTagline =
     language === "ru"
-      ? "Автобусные туры, парки, морские прогулки и VIP."
+      ? "Больше туров и активностей"
       : language === "pl"
-        ? "Wycieczki autokarowe, parki, rejsy i VIP."
+        ? "Więcej wycieczek i aktywności"
         : language === "fr"
-          ? "Bus, parcs, croisières et expériences VIP."
+          ? "Plus de visites et d'activités"
           : language === "de"
-            ? "Busreisen, Parks, Bootstouren und VIP."
+            ? "Mehr Touren & Aktivitäten"
             : language === "es"
-              ? "Autobús, parques, barcos y VIP."
+              ? "Más tours y actividades"
               : language === "ua"
-                ? "Автобусні тури, парки, море та VIP."
-                : "Coach tours, parks, boat trips & VIP.";
+                ? "Більше турів та активностей"
+                : "More tours & activities";
+
+  const atlanticoPartnerTitle =
+    language === "ru"
+      ? "Наш партнёр Atlántico Excursiones"
+      : language === "pl"
+        ? "Nasz partner: Atlántico Excursiones"
+        : language === "fr"
+          ? "Notre partenaire Atlántico Excursiones"
+          : language === "de"
+            ? "Unser Partner Atlántico Excursiones"
+            : language === "es"
+              ? "Nuestro socio Atlántico Excursiones"
+              : language === "ua"
+                ? "Партнер Atlántico Excursiones"
+                : "Our partner Atlántico Excursiones";
+
+  const atlanticoDescription =
+    language === "ru"
+      ? "Автобусные туры, тематические парки, морские прогулки и VIP — бронируйте с Atlántico Excursiones."
+      : language === "pl"
+        ? "Wycieczki autokarowe, parki rozrywki, rejsy i VIP — rezerwuj z Atlántico Excursiones."
+        : language === "fr"
+          ? "Circuits en bus, parcs à thème, croisières et expériences VIP — réservez avec Atlántico Excursiones."
+          : language === "de"
+            ? "Busreisen, Freizeitparks, Bootstouren und VIP — buchen Sie bei Atlántico Excursiones."
+            : language === "es"
+              ? "Excursiones en bus, parques temáticos, barcos y experiencias VIP — reserva con Atlántico Excursiones."
+              : language === "ua"
+                ? "Автобусні тури, парки розваг, морські прогулянки та VIP — бронюйте з Atlántico Excursiones."
+                : "Coach tours, theme parks, boat trips and VIP experiences — book with Atlántico Excursiones.";
+
+  const atlanticoCtaLabel =
+    language === "ru"
+      ? "Посмотреть все туры"
+      : language === "pl"
+        ? "Zobacz wszystkie wycieczki"
+        : language === "fr"
+          ? "Voir toutes les visites"
+          : language === "de"
+            ? "Alle Touren anzeigen"
+            : language === "es"
+              ? "Ver todos los tours"
+              : language === "ua"
+                ? "Переглянути всі тури"
+                : "View all tours";
 
   return (
     <CatalogDetailShell>
@@ -79,19 +125,36 @@ export default function ToursPageClient() {
         )}
       </div>
 
-      <div className="max-w-2xl mx-auto mb-6">
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
-          <div className="flex items-center gap-4 p-4 md:p-5">
-            <div className="flex-shrink-0">
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg flex items-center justify-center">
-                <MapPin className="w-6 h-6 md:w-7 md:h-7 text-white" />
+      <div className="mx-auto mb-10 w-full max-w-6xl">
+        <div className="overflow-hidden rounded-2xl border-2 border-blue-200 bg-white shadow-xl ring-1 ring-blue-100 transition-all duration-300 hover:shadow-2xl">
+          <div className="flex min-h-0 flex-col md:flex-row">
+            <div className="flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 px-8 py-8 md:w-[38%] md:px-10 md:py-9">
+              <div className="text-center">
+                <div className="mb-3 inline-flex h-14 w-14 items-center justify-center rounded-full bg-white/20 shadow-inner md:h-16 md:w-16">
+                  <MapPin className="h-7 w-7 text-white md:h-8 md:w-8" aria-hidden />
+                </div>
+                <h2 className="mb-1 text-xl font-bold text-white md:text-2xl">
+                  Atlántico Excursiones
+                </h2>
+                <p className="text-sm text-blue-100 md:text-base">{atlanticoTagline}</p>
               </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <h2 className="text-base md:text-lg font-semibold text-gray-900 mb-1">
-                Atlántico Excursiones
-              </h2>
-              <p className="text-sm text-gray-600 line-clamp-2">{atlanticoBlurb}</p>
+            <div className="flex flex-col justify-center px-8 py-8 md:w-[62%] md:px-10 md:py-9">
+              <h3 className="mb-2 text-lg font-semibold text-gray-900 md:text-xl">
+                {atlanticoPartnerTitle}
+              </h3>
+              <p className="mb-6 text-sm leading-relaxed text-gray-600 md:text-base">
+                {atlanticoDescription}
+              </p>
+              <a
+                href={getAtlanticoExcursionsAffiliateUrl(language)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-blue-700 hover:shadow-xl sm:w-fit sm:min-w-[220px]"
+              >
+                {atlanticoCtaLabel}
+                <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
+              </a>
             </div>
           </div>
         </div>

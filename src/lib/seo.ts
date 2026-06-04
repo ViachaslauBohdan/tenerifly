@@ -550,6 +550,79 @@ export const SEO_CARS: Record<Locale, PageSeo> = {
   },
 };
 
+export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
+  en: {
+    title: "Legal Notice | Tenerifly.io",
+    description:
+      "Legal notice for tenerifly.io: PanaFera acts as an online tourism intermediary. Intermediary conditions, scope of services, and claims procedure.",
+    keywords: [
+      "Tenerifly legal notice",
+      "PanaFera intermediary",
+      "tourism intermediation Tenerife",
+    ],
+  },
+  pl: {
+    title: "Informacja prawna | Tenerifly.io",
+    description:
+      "Informacja prawna tenerifly.io: PanaFera jako pośrednik turystyczny online. Warunki pośrednictwa i zakres usług.",
+    keywords: [
+      "informacja prawna Tenerifly",
+      "PanaFera pośrednik",
+      "pośrednictwo turystyczne Teneryfa",
+    ],
+  },
+  fr: {
+    title: "Mentions légales | Tenerifly.io",
+    description:
+      "Mentions légales de tenerifly.io : PanaFera, service d'intermédiation touristique en ligne. Conditions d'intermédiation et champ des prestations.",
+    keywords: [
+      "mentions légales Tenerifly",
+      "PanaFera intermédiaire",
+      "intermédiation touristique Ténérife",
+    ],
+  },
+  ru: {
+    title: "Правовое уведомление | Tenerifly.io",
+    description:
+      "Правовое уведомление tenerifly.io: PanaFera как онлайн-посредник в туризме. Условия посредничества и объём услуг.",
+    keywords: [
+      "правовое уведомление Tenerifly",
+      "PanaFera посредник",
+      "туристическое посредничество Тенерифе",
+    ],
+  },
+  ua: {
+    title: "Правове повідомлення | Tenerifly.io",
+    description:
+      "Правове повідомлення tenerifly.io: PanaFera як онлайн-посередник у туризмі. Умови посередництва та обсяг послуг.",
+    keywords: [
+      "правове повідомлення Tenerifly",
+      "PanaFera посередник",
+      "туристичне посередництво Тенеріфе",
+    ],
+  },
+  de: {
+    title: "Rechtlicher Hinweis | Tenerifly.io",
+    description:
+      "Rechtlicher Hinweis zu tenerifly.io: PanaFera als Online-Tourismevermittler. Vermittlerbedingungen und Leistungsumfang.",
+    keywords: [
+      "rechtlicher Hinweis Tenerifly",
+      "PanaFera Vermittler",
+      "Tourismusvermittlung Teneriffa",
+    ],
+  },
+  es: {
+    title: "Aviso Legal | Tenerifly.io",
+    description:
+      "Aviso legal de tenerifly.io: PanaFera como intermediario turístico online. Condición de intermediario y alcance de los servicios.",
+    keywords: [
+      "aviso legal Tenerifly",
+      "PanaFera intermediario",
+      "intermediación turística Tenerife",
+    ],
+  },
+};
+
 export const SEO_BLOG: Record<Locale, PageSeo> = {
   en: {
     title: "Tenerife travel blog | tips & local guides | Tenerifly.io",

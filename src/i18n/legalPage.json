@@ -1,0 +1,50 @@
+{
+  "de": {
+    "title": "Rechtlicher Hinweis",
+    "backToHome": "Zur Startseite",
+    "intermediaryTitle": "Vermittlerbedingung",
+    "intermediaryText": "Der Nutzer akzeptiert und versteht, dass PanaFera ausschließlich als unabhängiger Vermittler zwischen dem Endkunden und den tatsächlichen Organisatoren der Aktivitäten (Ausflüge, Boote, Helikopter, Shows) tätig ist. PanaFera ist weder Eigentümer, Betreiber noch Beförderer dieser Leistungen und übernimmt daher keine unmittelbare Verantwortung für die Durchführung der Aktivitäten und organisiert keine verknüpften Leistungen über 24 Stunden hinaus. Jede Beschwerde zum Service ist an den direkten Anbieter der Aktivität zu richten."
+  },
+  "en": {
+    "title": "Legal Notice",
+    "backToHome": "Back to home",
+    "intermediaryTitle": "Intermediary Condition",
+    "intermediaryText": "The user accepts and understands that PanaFera acts solely and exclusively as an independent intermediary between the end customer and the actual organisers of the activities (excursions, boats, helicopters, shows). PanaFera is neither the owner, operator nor carrier of such services, and therefore does not assume direct responsibility for the performance of the activities nor does it organise linked services exceeding 24 hours. Any claim regarding the service must be directed to the direct provider of the activity."
+  },
+  "es": {
+    "title": "Aviso Legal",
+    "backToHome": "Volver al inicio",
+    "intermediaryTitle": "Condición de Intermediario",
+    "intermediaryText": "El usuario acepta y comprende que PanaFera actúa única y exclusivamente en calidad de intermediario independiente entre el cliente final y los organizadores reales de las actividades (excursiones, barcos, helicópteros, espectáculos). PanaFera no es propietaria, ni operadora, ni transportista de dichos servicios, por lo tanto, no asume la responsabilidad directa de la ejecución de las actividades ni organiza servicios vinculados superiores a 24 horas. Toda reclamación sobre el servicio deberá dirigirse al proveedor directo de la actividad."
+  },
+  "fr": {
+    "title": "Mentions légales",
+    "backToHome": "Retour à l'accueil",
+    "intermediaryTitle": "Condition d'intermédiation",
+    "intermediaryText": "L'utilisateur accepte et comprend que PanaFera agit uniquement et exclusivement en qualité d'intermédiaire indépendant entre le client final et les organisateurs réels des activités (excursions, bateaux, hélicoptères, spectacles). PanaFera n'est ni propriétaire, ni exploitant, ni transporteur de ces services ; elle n'assume donc pas la responsabilité directe de l'exécution des activités et n'organise pas de services liés dépassant 24 heures. Toute réclamation concernant le service doit être adressée au prestataire direct de l'activité."
+  },
+  "pl": {
+    "title": "Informacja prawna",
+    "backToHome": "Powrót do strony głównej",
+    "intermediaryTitle": "Warunek pośrednictwa",
+    "intermediaryText": "Użytkownik akceptuje i rozumie, że PanaFera działa wyłącznie jako niezależny pośrednik między klientem końcowym a rzeczywistymi organizatorami aktywności (wycieczki, łodzie, helikoptery, spektakle). PanaFera nie jest właścicielem, operatorem ani przewoźnikiem tych usług, dlatego nie ponosi bezpośredniej odpowiedzialności za realizację aktywności ani nie organizuje powiązanych usług przekraczających 24 godziny. Wszelkie reklamacje dotyczące usługi należy kierować bezpośrednio do dostawcy danej aktywności."
+  },
+  "ru": {
+    "title": "Правовое уведомление",
+    "backToHome": "На главную",
+    "intermediaryTitle": "Условие посредничества",
+    "intermediaryText": "Пользователь принимает и понимает, что PanaFera действует исключительно как независимый посредник между конечным клиентом и фактическими организаторами мероприятий (экскурсии, катера, вертолёты, шоу). PanaFera не является владельцем, оператором или перевозчиком таких услуг, поэтому не несёт прямой ответственности за исполнение мероприятий и не организует связанные услуги продолжительностью более 24 часов. Все претензии по услуге следует направлять непосредственно поставщику соответствующей активности."
+  },
+  "uk": {
+    "title": "Правове повідомлення",
+    "backToHome": "На головну",
+    "intermediaryTitle": "Умова посередництва",
+    "intermediaryText": "Користувач приймає та розуміє, що PanaFera діє виключно як незалежний посередник між кінцевим клієнтом і фактичними організаторами заходів (екскурсії, човни, гелікоптери, шоу). PanaFera не є власником, оператором чи перевізником таких послуг, тому не несе прямої відповідальності за виконання заходів і не організує пов’язані послуги тривалістю понад 24 години. Усі скарги щодо послуги слід надсилати безпосередньо постачальнику відповідної активності."
+  },
+  "ua": {
+    "title": "Правове повідомлення",
+    "backToHome": "На головну",
+    "intermediaryTitle": "Умова посередництва",
+    "intermediaryText": "Користувач приймає та розуміє, що PanaFera діє виключно як незалежний посередник між кінцевим клієнтом і фактичними організаторами заходів (екскурсії, човни, гелікоптери, шоу). PanaFera не є власником, оператором чи перевізником таких послуг, тому не несе прямої відповідальності за виконання заходів і не організує пов’язані послуги тривалістю понад 24 години. Усі скарги щодо послуги слід надсилати безпосередньо постачальнику відповідної активності."
+  }
+}
