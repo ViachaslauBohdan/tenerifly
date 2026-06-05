@@ -5,7 +5,13 @@ import Link from "next/link";
 import { ChevronDown, Languages, Menu, X } from "lucide-react";
 import { localeDisplayCode } from "@/types/locale";
 import worldToursJson from "@/i18n/worldTours.json";
+import mainJson from "@/i18n/main.json";
 import { pickLocaleBundle } from "@/types/locale";
+import { navShortFaqLabel } from "@/lib/navShortLabels";
+
+type MainHeaderBundle = {
+  legalPage?: { title?: string };
+};
 
 const languages = [
   { code: "en", name: "English", flag: "🇬🇧" },
@@ -28,17 +34,6 @@ const headerNavHome: Record<string, string> = {
   ua: "Головна",
   de: "Start",
   es: "Inicio",
-};
-
-const headerNavFaq: Record<string, string> = {
-  en: "FAQ",
-  ru: "Вопросы",
-  pl: "FAQ",
-  fr: "FAQ",
-  uk: "Питання",
-  ua: "Питання",
-  de: "FAQ",
-  es: "FAQ",
 };
 
 const headerNavTransfers: Record<string, string> = {
@@ -110,13 +105,17 @@ export function SiteHeader({
   }, [mobileMenuOpen]);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
+  const homeHref = createLocaleLink("/");
+  const legalPageTitle = pickLocaleBundle(
+    mainJson as Record<string, MainHeaderBundle>,
+    language
+  ).legalPage?.title?.trim();
+  const legalPageHref = createLocaleLink("/aviso-legal");
 
   const worldToursNav = pickLocaleBundle(
     worldToursJson as Record<string, { badge: string }>,
     language
   );
-  const homeHref = createLocaleLink("/");
-
   const sectionHref = (sectionId: string) =>
     variant === "home" ? `#${sectionId}` : `${homeHref}#${sectionId}`;
 
@@ -179,8 +178,17 @@ export function SiteHeader({
         {tabLabels.blog}
       </a>
       <a {...navLinkProps("faq")} className={linkClass}>
-        {pickLocaleBundle(headerNavFaq, language)}
+        {pickLocaleBundle(navShortFaqLabel, language)}
       </a>
+      {legalPageTitle ? (
+        <Link
+          href={legalPageHref}
+          className={linkClass}
+          onClick={closeMobileMenu}
+        >
+          {legalPageTitle}
+        </Link>
+      ) : null}
       <Link
         href={createLocaleLink("/world-tours")}
         className={worldToursLinkClass}
@@ -225,8 +233,17 @@ export function SiteHeader({
         {tabLabels.blog}
       </a>
       <a {...navLinkPropsMobile("faq")} className={mobileNavLinkClass}>
-        {pickLocaleBundle(headerNavFaq, language)}
+        {pickLocaleBundle(navShortFaqLabel, language)}
       </a>
+      {legalPageTitle ? (
+        <Link
+          href={legalPageHref}
+          className={mobileNavLinkClass}
+          onClick={closeMobileMenu}
+        >
+          {legalPageTitle}
+        </Link>
+      ) : null}
       <Link
         href={createLocaleLink("/world-tours")}
         className={mobileWorldToursClassName}

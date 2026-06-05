@@ -30,6 +30,7 @@ import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
 import { SiteHeader } from "@/components/SiteHeader";
+import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
 import { ViewAllLink } from "@/components/ViewAllLink";
 import { ViewDetailsLink } from "@/components/ViewDetailsLink";
 import { HomeCardImage } from "@/components/HomeCardImage";
@@ -190,6 +191,11 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
 
   const t = pickLocaleBundle(translations, language);
+  const excursionsIntermediaryNotice =
+    (t.sections.excursions as { intermediaryNotice?: string })
+      .intermediaryNotice ?? "";
+  const legalPageTitle = (t as { legalPage?: { title?: string } }).legalPage
+    ?.title;
   const worldToursBase =
     t.hero.worldTours ?? pickLocaleBundle(translations, "en").hero.worldTours;
   const searchGlobalToursLabel =
@@ -515,9 +521,18 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           <div aria-hidden className="hidden min-h-0 sm:block" />
           <div className={`mx-auto w-full max-w-5xl xl:max-w-6xl ${heroBlockStackClass}`}>
               <div className="text-center sm:mb-2">
-                <h1 className={`${heroTitleClass} mb-0`}>
-                  {t.hero.title}
-                </h1>
+                {excursionsIntermediaryNotice ? (
+                  <ExcursionsIntermediaryNotice
+                    text={excursionsIntermediaryNotice}
+                    as="h1"
+                    variant="hero"
+                    className="mx-auto max-w-3xl"
+                  />
+                ) : (
+                  <h1 className={`${heroTitleClass} mb-0`}>
+                    {t.hero.title}
+                  </h1>
+                )}
               </div>
               <div className={heroSearchInsetClass}>
                 <div className={heroSearchWrapClass}>
@@ -1108,9 +1123,18 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-12 md:mb-14 gap-4">
             <div className="text-center flex-1 w-full sm:w-auto">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                {t.sections.excursions.title}
-              </h2>
+              {excursionsIntermediaryNotice ? (
+                <ExcursionsIntermediaryNotice
+                  text={excursionsIntermediaryNotice}
+                  as="h2"
+                  variant="section"
+                  className="mx-auto max-w-3xl sm:mx-0"
+                />
+              ) : (
+                <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                  {t.sections.excursions.title}
+                </h2>
+              )}
               <p className="text-xl text-gray-600 max-w-3xl mx-auto sm:mx-0 sm:max-w-none">
                 {t.sections.excursions.subtitle}
               </p>
@@ -1360,7 +1384,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
       </section>
 
       {/* Footer */}
-      <footer className="py-20" style={{ backgroundColor: "#1a1b1e" }}>
+      <footer className="py-16 md:py-20" style={{ backgroundColor: "#1a1b1e" }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
@@ -1374,31 +1398,30 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             </div>
             <div>
               <h4 className="text-lg font-semibold text-white mb-6">
-                {t.footer.services}
+                {t.footer.quickLinks}
               </h4>
-              <div className="space-y-3">
+              <nav className="space-y-3" aria-label={t.footer.quickLinks}>
                 <Link
-                  href={createLocaleLink("/#transfers")}
+                  href={createLocaleLink("/#excursions")}
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
-                  Airport Transfers
+                  {t.sections.excursions.title}
                 </Link>
                 <Link
-                  href={createLocaleLink("/tours")}
+                  href={createLocaleLink("/#faq")}
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
-                  Tours
+                  FAQ
                 </Link>
-                <Link
-                  href={createLocaleLink("/apartments")}
-                  className="block text-gray-400 hover:text-white transition-colors"
-                >
-                  Property Rental & Sales
-                </Link>
-                <span className="block text-gray-400">
-                  Car Rental Services
-                </span>
-              </div>
+                {legalPageTitle ? (
+                  <Link
+                    href={createLocaleLink("/aviso-legal")}
+                    className="block text-gray-400 hover:text-white transition-colors"
+                  >
+                    {legalPageTitle}
+                  </Link>
+                ) : null}
+              </nav>
             </div>
             <div>
               <h4 className="text-lg font-semibold text-white mb-6">
@@ -1415,6 +1438,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </div>
             </div>
           </div>
+          {(t.footer as { legalNotice?: string }).legalNotice ? (
+            <div className="mt-10 border-t border-gray-700 pt-8 md:mt-12 md:pt-10">
+              <p className="text-xs leading-relaxed text-gray-500 sm:text-sm">
+                {(t.footer as { legalNotice?: string }).legalNotice}
+              </p>
+            </div>
+          ) : null}
         </div>
       </footer>
 

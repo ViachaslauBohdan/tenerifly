@@ -71,6 +71,169 @@ const HERO_SEARCH_BUTTON = {
 
 const HERO_SEARCH_GLOBAL_TOURS = { ...HERO_SEARCH_BUTTON };
 
+/** Legal copy: Tenerifly is an intermediary, not the excursion operator. */
+const EXCURSIONS_INTERMEDIARY_NOTICE = {
+  de: "Tenerifly — Vermittler beim Verkauf von Ausflügen auf Teneriffa",
+  en: "Tenerifly — intermediary in the sale of excursions in Tenerife",
+  es: "Tenerifly — intermediario en la venta de excursiones en Tenerife",
+  fr: "Tenerifly — intermédiaire dans la vente d'excursions à Tenerife",
+  pl: "Tenerifly — pośrednik w sprzedaży wycieczek na Teneryfie",
+  ru: "Tenerifly — посредник в продаже экскурсий на Тенерифе",
+  uk: "Tenerifly — посередник у продажу екскурсій на Тенеріфе",
+  ua: "Tenerifly — посередник у продажу екскурсій на Тенеріфе",
+};
+
+/** Legal notice — PanaFera / tenerifly.io (footer, all locales). */
+const FOOTER_LEGAL_NOTICE = {
+  de: "PanaFera betreibt ausschließlich einen Online-Vermittlungsdienst für Tourismus über die Website tenerifly.io. Wir organisieren keine Pauschalreisen, Reisepakete, Unterkunftsdienste oder Transfers. Wir beschränken uns ausschließlich auf die Bewerbung und den Verkauf von Ausflügen, Freizeitaktivitäten und Einzeleintritten autorisierter lokaler Anbieter.",
+  en: "PanaFera operates exclusively as an online tourism intermediation service through the website tenerifly.io. We do not organise package tours, tourist packages, accommodation services or transfers. We are limited solely and exclusively to promoting and selling excursions, leisure activities and individual tickets from authorised local providers.",
+  es: "PanaFera opera exclusivamente como un servicio de intermediación turística online a través de la web tenerifly.io. No organizamos viajes combinados, paquetes turísticos, servicios de alojamiento ni traslados. Nos limitamos única y exclusivamente a la promoción y venta de excursiones, actividades de ocio y entradas individuales de proveedores locales autorizados.",
+  fr: "PanaFera opère exclusivement en tant que service d'intermédiation touristique en ligne via le site tenerifly.io. Nous n'organisons pas de voyages combinés, de forfaits touristiques, de services d'hébergement ni de transferts. Nous nous limitons uniquement et exclusivement à la promotion et à la vente d'excursions, d'activités de loisirs et de billets individuels auprès de prestataires locaux autorisés.",
+  pl: "PanaFera działa wyłącznie jako internetowy serwis pośrednictwa turystycznego za pośrednictwem strony tenerifly.io. Nie organizujemy wycieczek objazdowych, pakietów turystycznych, usług noclegowych ani transferów. Ograniczamy się wyłącznie do promocji i sprzedaży wycieczek, zajęć rekreacyjnych oraz pojedynczych biletów u autoryzowanych lokalnych dostawców.",
+  ru: "PanaFera работает исключительно как онлайн-сервис туристического посредничества через сайт tenerifly.io. Мы не организуем комбинированные поездки, туристические пакеты, услуги размещения и трансферы. Мы ограничиваемся исключительно продвижением и продажей экскурсий, досуговых мероприятий и отдельных билетов у авторизованных местных поставщиков.",
+  uk: "PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт tenerifly.io. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.",
+  ua: "PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт tenerifly.io. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.",
+};
+
+/** Footer nav column title (was «Quick Links»). */
+const FOOTER_QUICK_LINKS = {
+  de: "Links",
+  en: "Links",
+  es: "Enlaces",
+  fr: "Liens",
+  pl: "Linki",
+  ru: "Ссылки",
+  uk: "Посилання",
+  ua: "Посилання",
+};
+
+function applyFooterLegalNoticePatches(translation) {
+  for (const [locale, notice] of Object.entries(FOOTER_LEGAL_NOTICE)) {
+    if (!translation[locale]?.footer) continue;
+    translation[locale].footer.legalNotice = notice;
+    if (FOOTER_QUICK_LINKS[locale]) {
+      translation[locale].footer.quickLinks = FOOTER_QUICK_LINKS[locale];
+    }
+  }
+  if (translation.uk?.footer && translation.ua?.footer) {
+    translation.ua.footer.legalNotice =
+      FOOTER_LEGAL_NOTICE.ua ?? FOOTER_LEGAL_NOTICE.uk;
+    translation.ua.footer.quickLinks =
+      FOOTER_QUICK_LINKS.ua ?? FOOTER_QUICK_LINKS.uk;
+  }
+  return translation;
+}
+
+/** Legal notice page — intermediary clause only (intro stays in footer.legalNotice). */
+const LEGAL_PAGE_INTERMEDIARY = {
+  de: {
+    title: "Rechtlicher Hinweis",
+    backToHome: "Zur Startseite",
+    intermediaryTitle: "Vermittlerbedingung",
+    intermediaryText:
+      "Der Nutzer akzeptiert und versteht, dass PanaFera ausschließlich als unabhängiger Vermittler zwischen dem Endkunden und den tatsächlichen Organisatoren der Aktivitäten (Ausflüge, Boote, Helikopter, Shows) tätig ist. PanaFera ist weder Eigentümer, Betreiber noch Beförderer dieser Leistungen und übernimmt daher keine unmittelbare Verantwortung für die Durchführung der Aktivitäten und organisiert keine verknüpften Leistungen über 24 Stunden hinaus. Jede Beschwerde zum Service ist an den direkten Anbieter der Aktivität zu richten.",
+  },
+  en: {
+    title: "Legal Notice",
+    backToHome: "Back to home",
+    intermediaryTitle: "Intermediary Condition",
+    intermediaryText:
+      "The user accepts and understands that PanaFera acts solely and exclusively as an independent intermediary between the end customer and the actual organisers of the activities (excursions, boats, helicopters, shows). PanaFera is neither the owner, operator nor carrier of such services, and therefore does not assume direct responsibility for the performance of the activities nor does it organise linked services exceeding 24 hours. Any claim regarding the service must be directed to the direct provider of the activity.",
+  },
+  es: {
+    title: "Aviso Legal",
+    backToHome: "Volver al inicio",
+    intermediaryTitle: "Condición de Intermediario",
+    intermediaryText:
+      "El usuario acepta y comprende que PanaFera actúa única y exclusivamente en calidad de intermediario independiente entre el cliente final y los organizadores reales de las actividades (excursiones, barcos, helicópteros, espectáculos). PanaFera no es propietaria, ni operadora, ni transportista de dichos servicios, por lo tanto, no asume la responsabilidad directa de la ejecución de las actividades ni organiza servicios vinculados superiores a 24 horas. Toda reclamación sobre el servicio deberá dirigirse al proveedor directo de la actividad.",
+  },
+  fr: {
+    title: "Mentions légales",
+    backToHome: "Retour à l'accueil",
+    intermediaryTitle: "Condition d'intermédiation",
+    intermediaryText:
+      "L'utilisateur accepte et comprend que PanaFera agit uniquement et exclusivement en qualité d'intermédiaire indépendant entre le client final et les organisateurs réels des activités (excursions, bateaux, hélicoptères, spectacles). PanaFera n'est ni propriétaire, ni exploitant, ni transporteur de ces services ; elle n'assume donc pas la responsabilité directe de l'exécution des activités et n'organise pas de services liés dépassant 24 heures. Toute réclamation concernant le service doit être adressée au prestataire direct de l'activité.",
+  },
+  pl: {
+    title: "Informacja prawna",
+    backToHome: "Powrót do strony głównej",
+    intermediaryTitle: "Warunek pośrednictwa",
+    intermediaryText:
+      "Użytkownik akceptuje i rozumie, że PanaFera działa wyłącznie jako niezależny pośrednik między klientem końcowym a rzeczywistymi organizatorami aktywności (wycieczki, łodzie, helikoptery, spektakle). PanaFera nie jest właścicielem, operatorem ani przewoźnikiem tych usług, dlatego nie ponosi bezpośredniej odpowiedzialności za realizację aktywności ani nie organizuje powiązanych usług przekraczających 24 godziny. Wszelkie reklamacje dotyczące usługi należy kierować bezpośrednio do dostawcy danej aktywności.",
+  },
+  ru: {
+    title: "Правовое уведомление",
+    backToHome: "На главную",
+    intermediaryTitle: "Условие посредничества",
+    intermediaryText:
+      "Пользователь принимает и понимает, что PanaFera действует исключительно как независимый посредник между конечным клиентом и фактическими организаторами мероприятий (экскурсии, катера, вертолёты, шоу). PanaFera не является владельцем, оператором или перевозчиком таких услуг, поэтому не несёт прямой ответственности за исполнение мероприятий и не организует связанные услуги продолжительностью более 24 часов. Все претензии по услуге следует направлять непосредственно поставщику соответствующей активности.",
+  },
+  uk: {
+    title: "Правове повідомлення",
+    backToHome: "На головну",
+    intermediaryTitle: "Умова посередництва",
+    intermediaryText:
+      "Користувач приймає та розуміє, що PanaFera діє виключно як незалежний посередник між кінцевим клієнтом і фактичними організаторами заходів (екскурсії, човни, гелікоптери, шоу). PanaFera не є власником, оператором чи перевізником таких послуг, тому не несе прямої відповідальності за виконання заходів і не організує пов’язані послуги тривалістю понад 24 години. Усі скарги щодо послуги слід надсилати безпосередньо постачальнику відповідної активності.",
+  },
+  ua: {
+    title: "Правове повідомлення",
+    backToHome: "На головну",
+    intermediaryTitle: "Умова посередництва",
+    intermediaryText:
+      "Користувач приймає та розуміє, що PanaFera діє виключно як незалежний посередник між кінцевим клієнтом і фактичними організаторами заходів (екскурсії, човни, гелікоптери, шоу). PanaFera не є власником, оператором чи перевізником таких послуг, тому не несе прямої відповідальності за виконання заходів і не організує пов’язані послуги тривалістю понад 24 години. Усі скарги щодо послуги слід надсилати безпосередньо постачальнику відповідної активності.",
+  },
+};
+
+function buildLegalPageBundle() {
+  const legalPage = {};
+  for (const [locale, patch] of Object.entries(LEGAL_PAGE_INTERMEDIARY)) {
+    if (!patch) continue;
+    legalPage[locale] = { ...patch };
+  }
+  if (legalPage.uk && !legalPage.ua) {
+    legalPage.ua = { ...legalPage.uk };
+  }
+  return legalPage;
+}
+
+function applyLegalPagePatches(translation) {
+  const legalPage = buildLegalPageBundle();
+  for (const [locale, page] of Object.entries(legalPage)) {
+    if (!translation[locale]) continue;
+    translation[locale].legalPage = page;
+  }
+  return translation;
+}
+
+function writeLegalPageJson() {
+  const filePath = path.join(I18N_DIR, "legalPage.json");
+  fs.writeFileSync(
+    filePath,
+    JSON.stringify(buildLegalPageBundle(), null, 2),
+    "utf8"
+  );
+  console.log("✅ legalPage.json обновлён (правовая страница)");
+}
+
+function applyExcursionsIntermediaryPatches(translation) {
+  for (const [locale, notice] of Object.entries(EXCURSIONS_INTERMEDIARY_NOTICE)) {
+    if (!translation[locale]) continue;
+    if (translation[locale].sections?.excursions) {
+      translation[locale].sections.excursions.intermediaryNotice = notice;
+    }
+    translation[locale].intermediaryNotice = notice;
+  }
+  if (translation.uk && translation.ua) {
+    const notice =
+      EXCURSIONS_INTERMEDIARY_NOTICE.ua ?? EXCURSIONS_INTERMEDIARY_NOTICE.uk;
+    if (translation.ua.sections?.excursions) {
+      translation.ua.sections.excursions.intermediaryNotice = notice;
+    }
+    translation.ua.intermediaryNotice = notice;
+  }
+  return translation;
+}
+
 /** Label for hero tab selector (accommodation / cars / tours). */
 const HERO_LEISURE_LABEL = {
   de: "Erholung",
@@ -315,6 +478,15 @@ async function saveAllTranslations(translationsData) {
 
       if (safeFileName === "main") {
         translation = applyMainLocalePatches(translation);
+        translation = applyFooterLegalNoticePatches(translation);
+        translation = applyLegalPagePatches(translation);
+      }
+      if (
+        safeFileName === "main" ||
+        safeFileName === "tours" ||
+        safeFileName === "tourdetail"
+      ) {
+        translation = applyExcursionsIntermediaryPatches(translation);
       }
 
       // Сохраняем только содержимое поля translation
@@ -323,6 +495,8 @@ async function saveAllTranslations(translationsData) {
       console.log(`✅ ${safeFileName}.json сохранен (Name: "${name}")`);
       savedFiles++;
     }
+
+    writeLegalPageJson();
 
     console.log(`📁 Всего сохранено файлов: ${savedFiles}`);
     console.log(`📁 Файлы сохранены в: ${I18N_DIR}`);

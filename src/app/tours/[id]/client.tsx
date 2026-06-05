@@ -14,6 +14,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
+import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
 import translations from "@/i18n/tourDetail.json";
 interface TourData {
   id: number;
@@ -110,11 +111,13 @@ export default function TourDetailPageClient({ tour }: { tour: TourData }) {
   type TourStringsWithPartners = (typeof translations)["en"] & {
     partnerOffersTitle?: string;
     partnerOffersSubtitle?: string;
+    intermediaryNotice?: string;
   };
   const tw = t as TourStringsWithPartners;
   const partnerFb = PARTNER_OFFERS_FALLBACK[locale as TourLang];
   const partnerOffersTitle = tw.partnerOffersTitle ?? partnerFb.title;
   const partnerOffersSubtitle = tw.partnerOffersSubtitle ?? partnerFb.subtitle;
+  const intermediaryNotice = tw.intermediaryNotice ?? "";
 
   const getAllImageUrls = (tour: TourData) => {
     if (tour.images && tour.images.length > 0) {
@@ -205,6 +208,14 @@ export default function TourDetailPageClient({ tour }: { tour: TourData }) {
 
         {/* Page Title */}
         <div className="mb-6">
+          {intermediaryNotice ? (
+            <ExcursionsIntermediaryNotice
+              text={intermediaryNotice}
+              as="h1"
+              variant="card"
+              className="mb-3"
+            />
+          ) : null}
           <h1 className="text-3xl font-bold text-gray-900">{tour.title}</h1>
         </div>
 
