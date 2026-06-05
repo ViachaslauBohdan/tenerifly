@@ -1,4 +1,4 @@
-# Deploy master-legacy to plan-tenerife.com
+# Deploy master-legacy to tenerife-tour.com
 
 Full Tenerife travel portal (stays, cars, tours, world-tours, transfers) on a separate domain from tenerifly.io.
 
@@ -6,75 +6,72 @@ Full Tenerife travel portal (stays, cars, tours, world-tours, transfers) on a se
 
 | Item | Value |
 |------|-------|
-| **Domain** | `plan-tenerife.com` |
+| **Domain** | `tenerife-tour.com` |
 | **Branch** | `master-legacy` |
-| **Availability** | Available (no DNS records at time of check) |
-| **Rationale** | Tier 1 pick from plan — matches trip-planning hero UX and full-portal scope |
+| **DNS** | Registered (OVH nameservers) |
+| **Rationale** | Tours-focused brand; clear Tenerife SEO keyword |
 
-### Alternatives still available (if plan-tenerife.com is taken by registration time)
+## 1. Domain DNS
 
-- `book-tenerife.com`
-- `tenerife-trip.com`
-- `all-tenerife.com`
-- `tenerife-experiences.com`
-- `tenerife-apartments.com`
+Domain appears already registered (OVH: `dns16.ovh.net`). Point it to Railway:
 
-## 1. Register the domain
-
-1. Open a registrar (Cloudflare Registrar, Porkbun, Namecheap, etc.).
-2. Search for **plan-tenerife.com** and register (~$10–15/year for .com).
-3. Keep DNS management at the registrar or move nameservers to Cloudflare.
+1. Log in to [OVH domain panel](https://www.ovh.com/manager/) → **Domains** → `tenerife-tour.com` → **DNS zone**.
+2. Add or update records after Railway gives you the CNAME target (step 3 below).
 
 ## 2. Create Railway service
 
 1. [Railway dashboard](https://railway.app) → your project → **New** → **GitHub Repo** → `tenerifly`.
 2. **Settings** → **Source** → branch: `master-legacy`.
-3. **Variables** → paste from [`deploy/plan-tenerife.com.env.example`](plan-tenerife.com.env.example).
+3. **Variables** → paste from [`deploy/tenerife-tour.com.env.example`](tenerife-tour.com.env.example).
    - Copy Strapi, Resend, and Telegram values from the existing tenerifly.io service.
    - **Must set** `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_SITE_NAME` before the first deploy.
-4. Trigger **Deploy**. Build runs `fetch-translations` and injects `plan-tenerife.com` into legal footer copy.
+4. Trigger **Deploy**. Build runs `fetch-translations` and injects `tenerife-tour.com` into legal footer copy.
 
 ### CLI (after `npx @railway/cli login`)
 
 ```bash
 railway link                    # select project
 railway service                 # create or select the new legacy service
-railway variables set NEXT_PUBLIC_SITE_URL=https://plan-tenerife.com
-railway variables set NEXT_PUBLIC_SITE_NAME=plan-tenerife.com
-# ... set remaining vars from plan-tenerife.com.env.example
+railway variables set NEXT_PUBLIC_SITE_URL=https://tenerife-tour.com
+railway variables set NEXT_PUBLIC_SITE_NAME=tenerife-tour.com
+# ... set remaining vars from tenerife-tour.com.env.example
 railway up
 ```
 
 ## 3. Custom domain and DNS
 
 1. Railway service → **Settings** → **Networking** → **Custom Domain**.
-2. Add `plan-tenerife.com` (and optionally `www.plan-tenerife.com`).
+2. Add `tenerife-tour.com` (and optionally `www.tenerife-tour.com`).
 3. Railway shows a CNAME target (e.g. `xxxx.up.railway.app`).
-4. At your DNS provider:
+4. In OVH DNS zone:
 
-| Type | Name | Value |
-|------|------|-------|
-| CNAME | `@` or `plan-tenerife.com` | Railway CNAME target |
-| CNAME | `www` | Railway CNAME target (if using www) |
+| Type | Subdomain | Target |
+|------|-----------|--------|
+| CNAME | `www` | Railway CNAME target |
+| A/CNAME | `@` | Railway instructions (CNAME flattening or A record) |
 
 5. Wait for Railway SSL (usually 5–15 minutes).
 
 ## 4. Verify deployment
 
 ```bash
-# Replace with live URL once deployed
-SITE=https://plan-tenerife.com
+SITE=https://tenerife-tour.com
+./deploy/verify-domain.sh "$SITE"
+```
 
+Or manually:
+
+```bash
 curl -s "$SITE/robots.txt" | grep -i host
 curl -s "$SITE/sitemap.xml" | head -5
-curl -s "$SITE/en/aviso-legal" | grep -i plan-tenerife
+curl -s "$SITE/en/aviso-legal" | grep -i tenerife-tour
 ```
 
 Checklist:
 
-- [ ] `robots.txt` host is `https://plan-tenerife.com`
-- [ ] `sitemap.xml` URLs use `plan-tenerife.com`
-- [ ] Footer legal text mentions `plan-tenerife.com` (not tenerifly.io)
+- [ ] `robots.txt` host is `https://tenerife-tour.com`
+- [ ] `sitemap.xml` URLs use `tenerife-tour.com`
+- [ ] Footer legal text mentions `tenerife-tour.com` (not tenerifly.io)
 - [ ] `/en/aviso-legal` loads with intermediary clause
 - [ ] Home, `/tours`, apartments, cars pages work
 
@@ -82,7 +79,7 @@ Checklist:
 
 ```
 tenerifly.io          → master branch        → excursions-focused
-plan-tenerife.com     → master-legacy branch → full travel portal
+tenerife-tour.com     → master-legacy branch → full travel portal
 tenerifly-strapi...   → shared Strapi CMS
 ```
 

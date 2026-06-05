@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Verify build-time domain injection (no live server required).
- * Usage: NEXT_PUBLIC_SITE_URL=https://plan-tenerife.com node deploy/verify-build-domain.mjs
+ * Usage: NEXT_PUBLIC_SITE_URL=https://tenerife-tour.com node deploy/verify-build-domain.mjs
  */
 import fs from "fs";
 import path from "path";
@@ -54,7 +54,7 @@ if (!siteTs.includes("NEXT_PUBLIC_SITE_URL")) {
 }
 
 if (failed) {
-  console.error("\nRun: NEXT_PUBLIC_SITE_URL=https://plan-tenerife.com node scripts/fetch-translations.js");
+  console.error("\nRun: NEXT_PUBLIC_SITE_URL=https://tenerife-tour.com node scripts/fetch-translations.js");
   process.exit(1);
 }
 
