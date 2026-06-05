@@ -1,3 +1,4 @@
+import { SITE_BRAND } from "@/lib/site";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import ToursPageClient from "./client";
@@ -24,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: seo.title,
       description: seo.description,
       url: absoluteUrlForLocale("en", "/tours"),
-      siteName: "Tenerifly.io",
+      siteName: SITE_BRAND,
       images: [
         {
           url: DEFAULT_OG_IMAGE,

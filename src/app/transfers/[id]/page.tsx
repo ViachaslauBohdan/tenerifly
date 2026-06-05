@@ -6,6 +6,7 @@ import {
 } from "@/services/ssgDataService";
 import TransferDetailPageClient from "./client";
 import { getTransferImage } from "@/lib/transfers";
+import { SITE_BRAND } from "@/lib/site";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   breadcrumbListJsonLd,
@@ -47,7 +48,7 @@ export async function generateMetadata({
     const imageUrl = getTransferImage(transfer);
 
     return {
-      title: `${title} | Tenerifly.io Transfers`,
+      title: `${title} | ${SITE_BRAND} Transfers`,
       description,
       keywords: [
         "Tenerife airport transfer",
@@ -60,7 +61,7 @@ export async function generateMetadata({
         title,
         description,
         url: absoluteUrlForLocale("en", `/transfers/${id}`),
-        siteName: "Tenerifly.io",
+        siteName: SITE_BRAND,
         images: [{ url: imageUrl, width: 1200, height: 630, alt: title }],
         locale: ogLocale("en"),
         type: "website",
@@ -78,7 +79,7 @@ export async function generateMetadata({
     };
   } catch (error) {
     return {
-      title: "Airport Transfer | Tenerifly.io",
+      title: `Airport Transfer | ${SITE_BRAND}`,
       description: "Private airport transfer in Tenerife",
     };
   }

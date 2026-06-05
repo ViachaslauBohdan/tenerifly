@@ -55,6 +55,7 @@ import {
   pickLocaleBundle,
   type Locale,
 } from "@/types/locale";
+import { SITE_BRAND } from "@/lib/site";
 import { type HeroTab, parseHeroTab, isHeroTab } from "@/lib/heroTab";
 import {
   dayjsLocale,
@@ -1389,7 +1390,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className="text-2xl font-bold text-white mb-4">
-                Tenerifly.io
+                {SITE_BRAND}
               </h3>
               <p className="text-gray-400 mb-4">{t.footer.description}</p>
               <p className="text-sm text-gray-500">

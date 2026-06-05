@@ -1,8 +1,8 @@
 import { LOCALES } from "@/types/locale";
 import type { Locale } from "@/types/locale";
+import { SITE_BRAND, SITE_HOST, SITE_URL } from "@/lib/site";
 
-/** Canonical site origin (no trailing slash). All public URLs use /{locale}/… per routing. */
-export const SITE_URL = "https://tenerifly.io";
+export { SITE_URL };
 
 export const DEFAULT_OG_IMAGE =
   "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg";
@@ -63,7 +63,7 @@ export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
       {
         "@type": "Organization",
         "@id": `${SITE_URL}/#organization`,
-        name: "Tenerifly.io",
+        name: SITE_BRAND,
         url: SITE_URL,
         sameAs: ["https://twitter.com/tenerifly"],
         logo: {
@@ -75,7 +75,7 @@ export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
         url: homeEn,
-        name: "Tenerifly.io",
+        name: SITE_BRAND,
         alternateName: ["Tenerifly"],
         description:
           "Tenerife travel: rent apartments and holiday homes, hire cars, and book tours in the Canary Islands. Plan your trip to Tenerife—flights, stays, and local experiences.",
@@ -88,9 +88,9 @@ export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
 
 export const SEO_HOME: Record<Locale, PageSeo> = {
   en: {
-    title: "Tenerifly.io — Tenerife travel: fly, stay & explore the Canary Islands",
+    title: `${SITE_BRAND} — Tenerife travel: fly, stay & explore the Canary Islands`,
     description:
-      "Flying to Tenerife? Plan your whole trip on Tenerifly.io: rent apartments and villas, hire a car, and book tours across Tenerife—Spain’s largest Canary Island. Search Tenerife holidays with local hosts.",
+      `Flying to Tenerife? Plan your whole trip on ${SITE_BRAND}: rent apartments and villas, hire a car, and book tours across Tenerife—Spain’s largest Canary Island. Search Tenerife holidays with local hosts.`,
     keywords: [
       "Tenerife",
       "fly to Tenerife",
@@ -106,7 +106,7 @@ export const SEO_HOME: Record<Locale, PageSeo> = {
     ],
   },
   pl: {
-    title: "Tenerifly.io — Lot na Teneryfę: noclegi, auto i wycieczki",
+    title: `${SITE_BRAND} — Lot na Teneryfę: noclegi, auto i wycieczki`,
     description:
       "Planujesz lot na Teneryfę? Zarezerwuj nocleg, wynajem auta i wycieczki w jednym miejscu. Teneryfa i Wyspy Kanaryjskie — oferty od lokalnych gospodarzy, bez pośredników.",
     keywords: [
@@ -121,7 +121,7 @@ export const SEO_HOME: Record<Locale, PageSeo> = {
     ],
   },
   fr: {
-    title: "Tenerifly.io — Voyage à Ténérife : vol, séjour et îles Canaries",
+    title: `${SITE_BRAND} — Voyage à Ténérife : vol, séjour et îles Canaries`,
     description:
       "Vous prévoyez un vol vers Ténérife ? Réservez hébergement, voiture et excursions au même endroit. Ténérife et les Canaries avec des prestataires locaux.",
     keywords: [
@@ -136,7 +136,7 @@ export const SEO_HOME: Record<Locale, PageSeo> = {
     ],
   },
   ru: {
-    title: "Tenerifly.io — Тенерифе: перелёт, жильё, авто и туры на Канарах",
+    title: `${SITE_BRAND} — Тенерифе: перелёт, жильё, авто и туры на Канарах`,
     description:
       "Собираетесь на Тенерифе? Забронируйте жильё, аренду авто и экскурсии в одном сервисе. Канарские острова — прямые цены от местных организаторов.",
     keywords: [
@@ -151,7 +151,7 @@ export const SEO_HOME: Record<Locale, PageSeo> = {
     ],
   },
   ua: {
-    title: "Tenerifly.io — Тенеріфе: переліт, житло, авто та тури",
+    title: `${SITE_BRAND} — Тенеріфе: переліт, житло, авто та тури`,
     description:
       "Плануєте політ на Тенеріфе? Забронюйте житло, оренду авто та тури в одному місці. Канарські острови — прямі пропозиції від локальних партнерів.",
     keywords: [
@@ -166,7 +166,7 @@ export const SEO_HOME: Record<Locale, PageSeo> = {
     ],
   },
   de: {
-    title: "Tenerifly.io — Teneriffa Urlaub: Flug, Unterkunft & Mietwagen",
+    title: `${SITE_BRAND} — Teneriffa Urlaub: Flug, Unterkunft & Mietwagen`,
     description:
       "Sie fliegen nach Teneriffa? Unterkunft, Mietwagen und Ausflüge zentral planen. Kanaren-Urlaub mit lokalen Anbietern — direkt und transparent buchen.",
     keywords: [
@@ -181,7 +181,7 @@ export const SEO_HOME: Record<Locale, PageSeo> = {
     ],
   },
   es: {
-    title: "Tenerifly.io — Viajar a Tenerife: vuelo, alojamiento y coche",
+    title: `${SITE_BRAND} — Viajar a Tenerife: vuelo, alojamiento y coche`,
     description:
       "¿Vuelo a Tenerife? Reserva apartamento o villa, coche de alquiler y excursiones en un solo sitio. Tenerife e Islas Canarias con proveedores locales.",
     keywords: [
@@ -199,7 +199,7 @@ export const SEO_HOME: Record<Locale, PageSeo> = {
 
 export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
   en: {
-    title: "Tenerife apartments for rent | holiday lets & short stays | Tenerifly.io",
+    title: `Tenerife apartments for rent | holiday lets & short stays | ${SITE_BRAND}`,
     description:
       "Rent an apartment in Tenerife for your holiday or longer stay. Browse holiday lets, flats, and villas—Tenerife apartment rental with direct booking from local hosts in the Canary Islands.",
     keywords: [
@@ -216,7 +216,7 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
     ],
   },
   pl: {
-    title: "Wynajem apartamentu na Teneryfie | noclegi i krótkie pobyty | Tenerifly.io",
+    title: `Wynajem apartamentu na Teneryfie | noclegi i krótkie pobyty | ${SITE_BRAND}`,
     description:
       "Wynajem apartamentu na Teneryfie — wakacje i dłuższe pobyty. Przeglądaj oferty: apartamenty, wille i domy. Rezerwacja u lokalnych gospodarzy na Wyspach Kanaryjskich.",
     keywords: [
@@ -230,7 +230,7 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
     ],
   },
   fr: {
-    title: "Louer un appartement à Ténérife | location saisonnière | Tenerifly.io",
+    title: `Louer un appartement à Ténérife | location saisonnière | ${SITE_BRAND}`,
     description:
       "Louer un appartement à Ténérife pour vos vacances ou un séjour prolongé. Appartements, villas et maisons d’hôtes aux Canaries — réservation directe.",
     keywords: [
@@ -244,7 +244,7 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
     ],
   },
   ru: {
-    title: "Снять квартиру на Тенерифе | аренда жилья и апартаментов | Tenerifly.io",
+    title: `Снять квартиру на Тенерифе | аренда жилья и апартаментов | ${SITE_BRAND}`,
     description:
       "Аренда квартиры на Тенерифе для отдыха или длительного проживания. Квартиры, виллы, апартаменты на Канарах — бронирование напрямую у владельцев.",
     keywords: [
@@ -258,7 +258,7 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
     ],
   },
   ua: {
-    title: "Оренда квартири на Тенеріфе | подобово та довгостроково | Tenerifly.io",
+    title: `Оренда квартири на Тенеріфе | подобово та довгостроково | ${SITE_BRAND}`,
     description:
       "Оренда квартири на Тенеріфе для відпочинку чи довшого перебування. Квартири, апартаменти, вілли на Канарах — бронювання напряму у власників.",
     keywords: [
@@ -272,7 +272,7 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
     ],
   },
   de: {
-    title: "Wohnung auf Teneriffa mieten | Ferienwohnung & Apartment | Tenerifly.io",
+    title: `Wohnung auf Teneriffa mieten | Ferienwohnung & Apartment | ${SITE_BRAND}`,
     description:
       "Apartment oder Ferienwohnung auf Teneriffa mieten — Kurzurlaub oder längerer Aufenthalt. Angebote von lokalen Gastgebern auf den Kanaren vergleichen.",
     keywords: [
@@ -286,7 +286,7 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
     ],
   },
   es: {
-    title: "Alquiler apartamento Tenerife | vacacional y larga estancia | Tenerifly.io",
+    title: `Alquiler apartamento Tenerife | vacacional y larga estancia | ${SITE_BRAND}`,
     description:
       "Alquilar apartamento en Tenerife para vacaciones o estancias largas. Pisos, apartamentos y villas en Canarias — reserva directa con anfitriones locales.",
     keywords: [
@@ -303,7 +303,7 @@ export const SEO_APARTMENTS: Record<Locale, PageSeo> = {
 
 export const SEO_TOURS: Record<Locale, PageSeo> = {
   en: {
-    title: "Tours in Tenerife | Tenerifly.io",
+    title: `Tours in Tenerife | ${SITE_BRAND}`,
     description:
       "Book Teide, whale watching, hiking, and boat trips in Tenerife. Hand-picked experiences across the Canary Islands with trusted local operators.",
     keywords: [
@@ -315,7 +315,7 @@ export const SEO_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   pl: {
-    title: "Wycieczki i atrakcje na Teneryfie | Tenerifly.io",
+    title: `Wycieczki i atrakcje na Teneryfie | ${SITE_BRAND}`,
     description:
       "Teide, obserwacja wielorybów, trekking i rejsy — wybierz wycieczki na Teneryfie. Sprawdzone atrakcje na Wyspach Kanaryjskich.",
     keywords: [
@@ -327,7 +327,7 @@ export const SEO_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   fr: {
-    title: "Excursions et visites à Ténérife | Tenerifly.io",
+    title: `Excursions et visites à Ténérife | ${SITE_BRAND}`,
     description:
       "Teide, observation de baleines, randonnées et sorties en mer à Ténérife. Activités sélectionnées aux Canaries avec des prestataires locaux.",
     keywords: [
@@ -339,7 +339,7 @@ export const SEO_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   ru: {
-    title: "Экскурсии и туры на Тенерифе | Tenerifly.io",
+    title: `Экскурсии и туры на Тенерифе | ${SITE_BRAND}`,
     description:
       "Тейде, киты, походы и морские прогулки на Тенерифе. Подбор экскурсий по Канарам с проверенными местными операторами.",
     keywords: [
@@ -351,7 +351,7 @@ export const SEO_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   ua: {
-    title: "Екскурсії та тури на Тенеріфе | Tenerifly.io",
+    title: `Екскурсії та тури на Тенеріфе | ${SITE_BRAND}`,
     description:
       "Тейде, спостереження за китами, піші маршрути та морські тури на Тенеріфе. Активності на Канарах з перевіреними партнерами.",
     keywords: [
@@ -363,7 +363,7 @@ export const SEO_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   de: {
-    title: "Ausflüge & Touren auf Teneriffa | Tenerifly.io",
+    title: `Ausflüge & Touren auf Teneriffa | ${SITE_BRAND}`,
     description:
       "Teide, Walbeobachtung, Wandern und Bootstouren auf Teneriffa. Erlebnisse auf den Kanaren mit zuverlässigen lokalen Anbietern.",
     keywords: [
@@ -375,7 +375,7 @@ export const SEO_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   es: {
-    title: "Excursiones y tours en Tenerife | Tenerifly.io",
+    title: `Excursiones y tours en Tenerife | ${SITE_BRAND}`,
     description:
       "Teide, avistamiento de ballenas, senderismo y salidas en barco en Tenerife. Experiencias en Canarias con operadores locales de confianza.",
     keywords: [
@@ -390,7 +390,7 @@ export const SEO_TOURS: Record<Locale, PageSeo> = {
 
 export const SEO_WORLD_TOURS: Record<Locale, PageSeo> = {
   en: {
-    title: "Worldwide package tour search | Tenerifly.io",
+    title: `Worldwide package tour search | ${SITE_BRAND}`,
     description:
       "Search package tours to any country, resort, or hotel worldwide. Compare departures from your city — beyond Tenerife and the Canary Islands.",
     keywords: [
@@ -402,7 +402,7 @@ export const SEO_WORLD_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   pl: {
-    title: "Wyszukiwarka tourów na całym świecie | Tenerifly.io",
+    title: `Wyszukiwarka tourów na całym świecie | ${SITE_BRAND}`,
     description:
       "Wycieczki pakietowe do dowolnego kraju, kurortu lub hotelu. Porównuj wyloty z Twojego miasta — nie tylko Teneryfa.",
     keywords: [
@@ -413,7 +413,7 @@ export const SEO_WORLD_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   fr: {
-    title: "Recherche de circuits dans le monde | Tenerifly.io",
+    title: `Recherche de circuits dans le monde | ${SITE_BRAND}`,
     description:
       "Séjours packagés vers tout pays, resort ou hôtel. Comparez les départs depuis votre ville — au-delà de Tenerife.",
     keywords: [
@@ -424,7 +424,7 @@ export const SEO_WORLD_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   ru: {
-    title: "Поиск туров по всему миру | Tenerifly.io",
+    title: `Поиск туров по всему миру | ${SITE_BRAND}`,
     description:
       "Пакетные туры в любую страну, курорт или отель. Ищите вылеты из вашего города — не только Тенерифе.",
     keywords: [
@@ -435,7 +435,7 @@ export const SEO_WORLD_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   ua: {
-    title: "Пошук туру по всьому світу | Tenerifly.io",
+    title: `Пошук туру по всьому світу | ${SITE_BRAND}`,
     description:
       "Пакетні тури в будь-яку країну, курорт чи готель. Порівнюйте вильоти з вашого міста — не лише Тенеріфе.",
     keywords: [
@@ -446,7 +446,7 @@ export const SEO_WORLD_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   de: {
-    title: "Weltweite Pauschalreise-Suche | Tenerifly.io",
+    title: `Weltweite Pauschalreise-Suche | ${SITE_BRAND}`,
     description:
       "Pauschalreisen in jedes Land, jeden Ort und jedes Hotel. Abflüge aus Ihrer Stadt vergleichen — nicht nur Teneriffa.",
     keywords: [
@@ -457,7 +457,7 @@ export const SEO_WORLD_TOURS: Record<Locale, PageSeo> = {
     ],
   },
   es: {
-    title: "Búsqueda de tours en todo el mundo | Tenerifly.io",
+    title: `Búsqueda de tours en todo el mundo | ${SITE_BRAND}`,
     description:
       "Viajes organizados a cualquier país, resort u hotel. Compara salidas desde tu ciudad — no solo Tenerife.",
     keywords: [
@@ -471,7 +471,7 @@ export const SEO_WORLD_TOURS: Record<Locale, PageSeo> = {
 
 export const SEO_CARS: Record<Locale, PageSeo> = {
   en: {
-    title: "Car rental in Tenerife | Tenerifly.io",
+    title: `Car rental in Tenerife | ${SITE_BRAND}`,
     description:
       "Compare cars for hire in Tenerife — economy to premium. Explore the Canary Islands at your own pace with transparent rental options.",
     keywords: [
@@ -482,7 +482,7 @@ export const SEO_CARS: Record<Locale, PageSeo> = {
     ],
   },
   pl: {
-    title: "Wynajem samochodu na Teneryfie | Tenerifly.io",
+    title: `Wynajem samochodu na Teneryfie | ${SITE_BRAND}`,
     description:
       "Porównaj auta na wynajem na Teneryfie — od ekonomicznych po premium. Zwiedzaj Wyspy Kanaryjskie we własnym tempie.",
     keywords: [
@@ -494,7 +494,7 @@ export const SEO_CARS: Record<Locale, PageSeo> = {
     ],
   },
   fr: {
-    title: "Location de voiture à Ténérife | Tenerifly.io",
+    title: `Location de voiture à Ténérife | ${SITE_BRAND}`,
     description:
       "Comparez les véhicules à louer à Ténérife — citadines, SUV ou premium. Roulez librement aux Canaries avec des options claires.",
     keywords: [
@@ -505,7 +505,7 @@ export const SEO_CARS: Record<Locale, PageSeo> = {
     ],
   },
   ru: {
-    title: "Аренда авто на Тенерифе | Tenerifly.io",
+    title: `Аренда авто на Тенерифе | ${SITE_BRAND}`,
     description:
       "Выбор автомобилей на Тенерифе — от эконома до премиума. Путешествуйте по Канарам самостоятельно с понятными условиями аренды.",
     keywords: [
@@ -516,7 +516,7 @@ export const SEO_CARS: Record<Locale, PageSeo> = {
     ],
   },
   ua: {
-    title: "Оренда авто на Тенеріфе | Tenerifly.io",
+    title: `Оренда авто на Тенеріфе | ${SITE_BRAND}`,
     description:
       "Підбір авто на Тенеріфе — від економу до преміуму. Подорожуйте Канарами у власному ритмі з прозорими умовами оренди.",
     keywords: [
@@ -527,7 +527,7 @@ export const SEO_CARS: Record<Locale, PageSeo> = {
     ],
   },
   de: {
-    title: "Mietwagen auf Teneriffa | Tenerifly.io",
+    title: `Mietwagen auf Teneriffa | ${SITE_BRAND}`,
     description:
       "Fahrzeuge auf Teneriffa mieten — von Kleinwagen bis Premium. Die Kanaren flexibel mit klaren Mietoptionen erkunden.",
     keywords: [
@@ -538,7 +538,7 @@ export const SEO_CARS: Record<Locale, PageSeo> = {
     ],
   },
   es: {
-    title: "Alquiler de coches en Tenerife | Tenerifly.io",
+    title: `Alquiler de coches en Tenerife | ${SITE_BRAND}`,
     description:
       "Compara coches de alquiler en Tenerife — económicos a premium. Recorre Canarias a tu ritmo con condiciones claras.",
     keywords: [
@@ -552,9 +552,9 @@ export const SEO_CARS: Record<Locale, PageSeo> = {
 
 export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
   en: {
-    title: "Legal Notice | Tenerifly.io",
+    title: `Legal Notice | ${SITE_BRAND}`,
     description:
-      "Legal notice for tenerifly.io: PanaFera acts as an online tourism intermediary. Intermediary conditions, scope of services, and claims procedure.",
+      `Legal notice for ${SITE_HOST}: PanaFera acts as an online tourism intermediary. Intermediary conditions, scope of services, and claims procedure.`,
     keywords: [
       "Tenerifly legal notice",
       "PanaFera intermediary",
@@ -562,9 +562,9 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     ],
   },
   pl: {
-    title: "Informacja prawna | Tenerifly.io",
+    title: `Informacja prawna | ${SITE_BRAND}`,
     description:
-      "Informacja prawna tenerifly.io: PanaFera jako pośrednik turystyczny online. Warunki pośrednictwa i zakres usług.",
+      `Informacja prawna ${SITE_HOST}: PanaFera jako pośrednik turystyczny online. Warunki pośrednictwa i zakres usług.`,
     keywords: [
       "informacja prawna Tenerifly",
       "PanaFera pośrednik",
@@ -572,9 +572,9 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     ],
   },
   fr: {
-    title: "Mentions légales | Tenerifly.io",
+    title: `Mentions légales | ${SITE_BRAND}`,
     description:
-      "Mentions légales de tenerifly.io : PanaFera, service d'intermédiation touristique en ligne. Conditions d'intermédiation et champ des prestations.",
+      `Mentions légales de ${SITE_HOST} : PanaFera, service d'intermédiation touristique en ligne. Conditions d'intermédiation et champ des prestations.`,
     keywords: [
       "mentions légales Tenerifly",
       "PanaFera intermédiaire",
@@ -582,9 +582,9 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     ],
   },
   ru: {
-    title: "Правовое уведомление | Tenerifly.io",
+    title: `Правовое уведомление | ${SITE_BRAND}`,
     description:
-      "Правовое уведомление tenerifly.io: PanaFera как онлайн-посредник в туризме. Условия посредничества и объём услуг.",
+      `Правовое уведомление ${SITE_HOST}: PanaFera как онлайн-посредник в туризме. Условия посредничества и объём услуг.`,
     keywords: [
       "правовое уведомление Tenerifly",
       "PanaFera посредник",
@@ -592,9 +592,9 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     ],
   },
   ua: {
-    title: "Правове повідомлення | Tenerifly.io",
+    title: `Правове повідомлення | ${SITE_BRAND}`,
     description:
-      "Правове повідомлення tenerifly.io: PanaFera як онлайн-посередник у туризмі. Умови посередництва та обсяг послуг.",
+      `Правове повідомлення ${SITE_HOST}: PanaFera як онлайн-посередник у туризмі. Умови посередництва та обсяг послуг.`,
     keywords: [
       "правове повідомлення Tenerifly",
       "PanaFera посередник",
@@ -602,9 +602,9 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     ],
   },
   de: {
-    title: "Rechtlicher Hinweis | Tenerifly.io",
+    title: `Rechtlicher Hinweis | ${SITE_BRAND}`,
     description:
-      "Rechtlicher Hinweis zu tenerifly.io: PanaFera als Online-Tourismevermittler. Vermittlerbedingungen und Leistungsumfang.",
+      `Rechtlicher Hinweis zu ${SITE_HOST}: PanaFera als Online-Tourismevermittler. Vermittlerbedingungen und Leistungsumfang.`,
     keywords: [
       "rechtlicher Hinweis Tenerifly",
       "PanaFera Vermittler",
@@ -612,9 +612,9 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     ],
   },
   es: {
-    title: "Aviso Legal | Tenerifly.io",
+    title: `Aviso Legal | ${SITE_BRAND}`,
     description:
-      "Aviso legal de tenerifly.io: PanaFera como intermediario turístico online. Condición de intermediario y alcance de los servicios.",
+      `Aviso legal de ${SITE_HOST}: PanaFera como intermediario turístico online. Condición de intermediario y alcance de los servicios.`,
     keywords: [
       "aviso legal Tenerifly",
       "PanaFera intermediario",
@@ -625,7 +625,7 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
 
 export const SEO_BLOG: Record<Locale, PageSeo> = {
   en: {
-    title: "Tenerife travel blog | tips & local guides | Tenerifly.io",
+    title: `Tenerife travel blog | tips & local guides | ${SITE_BRAND}`,
     description:
       "Practical guides, itineraries, and news about Tenerife and the Canary Islands — written for travellers planning their next trip.",
     keywords: [
@@ -636,7 +636,7 @@ export const SEO_BLOG: Record<Locale, PageSeo> = {
     ],
   },
   pl: {
-    title: "Blog o Teneryfie — porady i przewodniki | Tenerifly.io",
+    title: `Blog o Teneryfie — porady i przewodniki | ${SITE_BRAND}`,
     description:
       "Praktyczne porady, trasy i aktualności o Teneryfie i Wyspach Kanaryjskich — dla podróżników planujących wyjazd.",
     keywords: [
@@ -647,7 +647,7 @@ export const SEO_BLOG: Record<Locale, PageSeo> = {
     ],
   },
   fr: {
-    title: "Blog voyage Ténérife | conseils & idées | Tenerifly.io",
+    title: `Blog voyage Ténérife | conseils & idées | ${SITE_BRAND}`,
     description:
       "Guides pratiques, itinéraires et actualités sur Ténérife et les îles Canaries — pour préparer votre séjour.",
     keywords: [
@@ -658,7 +658,7 @@ export const SEO_BLOG: Record<Locale, PageSeo> = {
     ],
   },
   ru: {
-    title: "Блог о Тенерифе — советы и гиды | Tenerifly.io",
+    title: `Блог о Тенерифе — советы и гиды | ${SITE_BRAND}`,
     description:
       "Полезные материалы, маршруты и новости о Тенерифе и Канарах — для тех, кто планирует поездку.",
     keywords: [
@@ -669,7 +669,7 @@ export const SEO_BLOG: Record<Locale, PageSeo> = {
     ],
   },
   ua: {
-    title: "Блог про Тенеріфе — поради та гіди | Tenerifly.io",
+    title: `Блог про Тенеріфе — поради та гіди | ${SITE_BRAND}`,
     description:
       "Корисні матеріали, маршрути та новини про Тенеріфе й Канарські острови — для планування подорожі.",
     keywords: [
@@ -680,7 +680,7 @@ export const SEO_BLOG: Record<Locale, PageSeo> = {
     ],
   },
   de: {
-    title: "Teneriffa Reiseblog | Tipps & Inspiration | Tenerifly.io",
+    title: `Teneriffa Reiseblog | Tipps & Inspiration | ${SITE_BRAND}`,
     description:
       "Praktische Ratgeber, Routen und Neuigkeiten zu Teneriffa und den Kanaren — für die Reiseplanung.",
     keywords: [
@@ -691,7 +691,7 @@ export const SEO_BLOG: Record<Locale, PageSeo> = {
     ],
   },
   es: {
-    title: "Blog de viajes Tenerife | consejos y rutas | Tenerifly.io",
+    title: `Blog de viajes Tenerife | consejos y rutas | ${SITE_BRAND}`,
     description:
       "Guías prácticas, rutas y novedades sobre Tenerife y Canarias — para organizar tu escapada.",
     keywords: [

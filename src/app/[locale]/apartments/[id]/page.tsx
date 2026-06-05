@@ -1,3 +1,4 @@
+import { SITE_BRAND } from "@/lib/site";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPropertyIds, getPropertyById } from "@/services/ssgDataService";
@@ -63,7 +64,7 @@ export async function generateMetadata({
       : "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg";
 
     return {
-      title: `${title} | Tenerifly.io`,
+      title: `${title} | ${SITE_BRAND}`,
       description: description,
       keywords: [
         "Tenerife stays",
@@ -79,7 +80,7 @@ export async function generateMetadata({
         title: title,
         description: description,
         url: absoluteUrlForLocale(locale, `/apartments/${id}`),
-        siteName: "Tenerifly.io",
+        siteName: SITE_BRAND,
         images: [
           {
             url: imageUrl,
@@ -105,7 +106,7 @@ export async function generateMetadata({
   } catch (error) {
     console.error("Error generating metadata for property:", error);
     return {
-      title: "Property Details | Tenerifly.io",
+      title: `Property Details | ${SITE_BRAND}`,
       description: "Beautiful property in Tenerife",
     };
   }

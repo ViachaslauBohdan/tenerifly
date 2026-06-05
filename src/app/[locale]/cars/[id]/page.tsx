@@ -1,3 +1,4 @@
+import { SITE_BRAND } from "@/lib/site";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllCarIds, getCarById } from "@/services/ssgDataService";
@@ -65,7 +66,7 @@ export async function generateMetadata({
       : "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg";
 
     return {
-      title: `${title} | Tenerifly.io Cars`,
+      title: `${title} | ${SITE_BRAND} Cars`,
       description: description,
       keywords: [
         "Tenerife car rental",
@@ -80,7 +81,7 @@ export async function generateMetadata({
         title: title,
         description: description,
         url: absoluteUrlForLocale(locale, `/cars/${id}`),
-        siteName: "Tenerifly.io",
+        siteName: SITE_BRAND,
         images: [
           {
             url: imageUrl,
@@ -106,7 +107,7 @@ export async function generateMetadata({
   } catch (error) {
     console.error("Error generating metadata for car:", error);
     return {
-      title: "Car | Tenerifly.io",
+      title: `Car | ${SITE_BRAND}`,
       description: "Reliable car for your journey in Tenerife",
     };
   }

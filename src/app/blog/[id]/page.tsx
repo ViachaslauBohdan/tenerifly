@@ -1,3 +1,4 @@
+import { SITE_BRAND } from "@/lib/site";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllBlogIds, getBlogById } from "@/services/ssgDataService";
@@ -64,7 +65,7 @@ export async function generateMetadata({
         : String(blog.category ?? "travel");
 
     return {
-      title: `${title} | Tenerifly.io Blog`,
+      title: `${title} | ${SITE_BRAND} Blog`,
       description: description,
       keywords: [
         "Tenerife blog",
@@ -79,7 +80,7 @@ export async function generateMetadata({
         title: title,
         description: description,
         url: absoluteUrlForLocale("en", `/blog/${id}`),
-        siteName: "Tenerifly.io",
+        siteName: SITE_BRAND,
         images: [
           {
             url: imageUrl,
@@ -115,7 +116,7 @@ export async function generateMetadata({
   } catch (error) {
     console.error("Error generating metadata for blog:", error);
     return {
-      title: "Blog Post | Tenerifly.io",
+      title: `Blog Post | ${SITE_BRAND}`,
       description: "Interesting article about Tenerife",
     };
   }

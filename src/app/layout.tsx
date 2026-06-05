@@ -21,6 +21,7 @@ import {
     organizationAndWebsiteJsonLd,
     ogLocale,
 } from "@/lib/seo";
+import { SITE_BRAND, SITE_URL } from "@/lib/site";
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
@@ -39,14 +40,14 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
         title: {
             default:
-                "Tenerifly.io — Tenerife holidays: apartments, car hire & tours (Canary Islands)",
-            template: "%s | Tenerifly.io",
+                `${SITE_BRAND} — Tenerife holidays: apartments, car hire & tours (Canary Islands)`,
+            template: `%s | ${SITE_BRAND}`,
         },
         description: seo.description,
         keywords: seo.keywords,
-        authors: [{name: "Tenerifly.io"}],
-        creator: "Tenerifly.io",
-        publisher: "Tenerifly.io",
+        authors: [{name: `${SITE_BRAND}`}],
+        creator: `${SITE_BRAND}`,
+        publisher: `${SITE_BRAND}`,
         formatDetection: {
             email: false,
             address: false,
@@ -56,7 +57,7 @@ export async function generateMetadata(): Promise<Metadata> {
             title: seo.title,
             description: seo.description,
             url: absoluteUrlForLocale("en", ""),
-            siteName: "Tenerifly.io",
+            siteName: SITE_BRAND,
             images: [
                 {
                     url: DEFAULT_OG_IMAGE,
@@ -77,7 +78,7 @@ export async function generateMetadata(): Promise<Metadata> {
             creator: "@tenerifly",
             site: "@tenerifly",
         },
-        metadataBase: new URL("https://tenerifly.io"),
+        metadataBase: new URL(SITE_URL),
         alternates: {
             canonical: absoluteUrlForLocale("en", ""),
             languages: hreflangAlternates(""),

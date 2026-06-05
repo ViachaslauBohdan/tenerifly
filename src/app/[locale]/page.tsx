@@ -1,3 +1,4 @@
+import { SITE_BRAND } from "@/lib/site";
 import { getHomePageData } from "@/services/ssgDataService";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -41,7 +42,7 @@ export async function generateMetadata({
       title: seo.title,
       description: seo.description,
       url: absoluteUrlForLocale(localeCode, ""),
-      siteName: "Tenerifly.io",
+      siteName: SITE_BRAND,
       images: [
         {
           url: DEFAULT_OG_IMAGE,

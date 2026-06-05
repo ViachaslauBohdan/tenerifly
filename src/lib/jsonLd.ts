@@ -1,5 +1,6 @@
 import type { Locale } from "@/types/locale";
 import { SITE_URL, absoluteUrlForLocale } from "@/lib/seo";
+import { SITE_BRAND } from "@/lib/site";
 
 export function stripRichTextToPlain(html: string, maxLen = 5000): string {
   if (!html) return "";
@@ -177,7 +178,7 @@ export function productOfferJsonLd(input: {
     description: stripRichTextToPlain(input.description, 500),
     image: input.image,
     url: input.url,
-    brand: { "@type": "Brand", name: "Tenerifly.io" },
+    brand: { "@type": "Brand", name: SITE_BRAND },
   };
   if (
     input.price != null &&

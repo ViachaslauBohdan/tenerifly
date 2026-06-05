@@ -1,3 +1,4 @@
+import { SITE_BRAND } from "@/lib/site";
 import { getAllBlogs } from "@/services/ssgDataService";
 import { Metadata } from "next";
 import BlogPageClient from "./BlogPageClient";
@@ -24,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: seo.title,
       description: seo.description,
       url: absoluteUrlForLocale("en", "/blog"),
-      siteName: "Tenerifly.io",
+      siteName: SITE_BRAND,
       images: [
         {
           url: DEFAULT_OG_IMAGE,

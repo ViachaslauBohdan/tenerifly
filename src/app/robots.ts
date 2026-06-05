@@ -1,4 +1,5 @@
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -13,7 +14,7 @@ export default function robots(): MetadataRoute.Robots {
         "/dashboard/",
       ],
     },
-    host: "https://tenerifly.io",
-    sitemap: "https://tenerifly.io/sitemap.xml",
+    host: SITE_URL,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 } 

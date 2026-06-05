@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import { SEO_HOME } from "@/lib/seo";
+import { SITE_BRAND } from "@/lib/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   const { description } = SEO_HOME.en;
   return {
-    name: "Tenerifly.io — Tenerife travel",
+    name: `${SITE_BRAND} — Tenerife travel`,
     short_name: "Tenerifly",
     description,
     start_url: "/en/",

@@ -1,3 +1,4 @@
+import { SITE_BRAND } from "@/lib/site";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllTourIds, getTourById } from "@/services/ssgDataService";
@@ -62,7 +63,7 @@ export async function generateMetadata({
       : "https://res.cloudinary.com/dlnvckilf/image/upload/v1745023888/532825115_v6u0nl.jpg";
 
     return {
-      title: `${title} | Tenerifly.io Tours`,
+      title: `${title} | ${SITE_BRAND} Tours`,
       description: description,
       keywords: [
         "Tenerife tours",
@@ -76,7 +77,7 @@ export async function generateMetadata({
         title: title,
         description: description,
         url: absoluteUrlForLocale(locale, `/tours/${id}`),
-        siteName: "Tenerifly.io",
+        siteName: SITE_BRAND,
         images: [
           {
             url: imageUrl,
@@ -102,7 +103,7 @@ export async function generateMetadata({
   } catch (error) {
     console.error("Error generating metadata for tour:", error);
     return {
-      title: "Tour | Tenerifly.io",
+      title: `Tour | ${SITE_BRAND}`,
       description: "Amazing tour in Tenerife",
     };
   }

@@ -1,3 +1,4 @@
+import { SITE_BRAND } from "@/lib/site";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import WorldToursPageClient from "../../world-tours/client";
@@ -35,7 +36,7 @@ export async function generateMetadata({
       title: seo.title,
       description: seo.description,
       url: absoluteUrlForLocale(locale, "/world-tours"),
-      siteName: "Tenerifly.io",
+      siteName: SITE_BRAND,
       images: [
         {
           url: DEFAULT_OG_IMAGE,

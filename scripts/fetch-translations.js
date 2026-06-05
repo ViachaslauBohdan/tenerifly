@@ -83,17 +83,29 @@ const EXCURSIONS_INTERMEDIARY_NOTICE = {
   ua: "Tenerifly — посередник у продажу екскурсій на Тенеріфе",
 };
 
-/** Legal notice — PanaFera / tenerifly.io (footer, all locales). */
-const FOOTER_LEGAL_NOTICE = {
-  de: "PanaFera betreibt ausschließlich einen Online-Vermittlungsdienst für Tourismus über die Website tenerifly.io. Wir organisieren keine Pauschalreisen, Reisepakete, Unterkunftsdienste oder Transfers. Wir beschränken uns ausschließlich auf die Bewerbung und den Verkauf von Ausflügen, Freizeitaktivitäten und Einzeleintritten autorisierter lokaler Anbieter.",
-  en: "PanaFera operates exclusively as an online tourism intermediation service through the website tenerifly.io. We do not organise package tours, tourist packages, accommodation services or transfers. We are limited solely and exclusively to promoting and selling excursions, leisure activities and individual tickets from authorised local providers.",
-  es: "PanaFera opera exclusivamente como un servicio de intermediación turística online a través de la web tenerifly.io. No organizamos viajes combinados, paquetes turísticos, servicios de alojamiento ni traslados. Nos limitamos única y exclusivamente a la promoción y venta de excursiones, actividades de ocio y entradas individuales de proveedores locales autorizados.",
-  fr: "PanaFera opère exclusivement en tant que service d'intermédiation touristique en ligne via le site tenerifly.io. Nous n'organisons pas de voyages combinés, de forfaits touristiques, de services d'hébergement ni de transferts. Nous nous limitons uniquement et exclusivement à la promotion et à la vente d'excursions, d'activités de loisirs et de billets individuels auprès de prestataires locaux autorisés.",
-  pl: "PanaFera działa wyłącznie jako internetowy serwis pośrednictwa turystycznego za pośrednictwem strony tenerifly.io. Nie organizujemy wycieczek objazdowych, pakietów turystycznych, usług noclegowych ani transferów. Ograniczamy się wyłącznie do promocji i sprzedaży wycieczek, zajęć rekreacyjnych oraz pojedynczych biletów u autoryzowanych lokalnych dostawców.",
-  ru: "PanaFera работает исключительно как онлайн-сервис туристического посредничества через сайт tenerifly.io. Мы не организуем комбинированные поездки, туристические пакеты, услуги размещения и трансферы. Мы ограничиваемся исключительно продвижением и продажей экскурсий, досуговых мероприятий и отдельных билетов у авторизованных местных поставщиков.",
-  uk: "PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт tenerifly.io. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.",
-  ua: "PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт tenerifly.io. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.",
-};
+function siteHostnameForBuild() {
+  const raw = (process.env.NEXT_PUBLIC_SITE_URL || "https://tenerifly.io").trim();
+  try {
+    return new URL(raw).hostname;
+  } catch {
+    return "tenerifly.io";
+  }
+}
+
+/** Legal notice — PanaFera / site hostname (footer, all locales). */
+function buildFooterLegalNotice() {
+  const host = siteHostnameForBuild();
+  return {
+    de: `PanaFera betreibt ausschließlich einen Online-Vermittlungsdienst für Tourismus über die Website ${host}. Wir organisieren keine Pauschalreisen, Reisepakete, Unterkunftsdienste oder Transfers. Wir beschränken uns ausschließlich auf die Bewerbung und den Verkauf von Ausflügen, Freizeitaktivitäten und Einzeleintritten autorisierter lokaler Anbieter.`,
+    en: `PanaFera operates exclusively as an online tourism intermediation service through the website ${host}. We do not organise package tours, tourist packages, accommodation services or transfers. We are limited solely and exclusively to promoting and selling excursions, leisure activities and individual tickets from authorised local providers.`,
+    es: `PanaFera opera exclusivamente como un servicio de intermediación turística online a través de la web ${host}. No organizamos viajes combinados, paquetes turísticos, servicios de alojamiento ni traslados. Nos limitamos única y exclusivamente a la promoción y venta de excursiones, actividades de ocio y entradas individuales de proveedores locales autorizados.`,
+    fr: `PanaFera opère exclusivement en tant que service d'intermédiation touristique en ligne via le site ${host}. Nous n'organisons pas de voyages combinés, de forfaits touristiques, de services d'hébergement ni de transferts. Nous nous limitons uniquement et exclusivement à la promotion et à la vente d'excursions, d'activités de loisirs et de billets individuels auprès de prestataires locaux autorisés.`,
+    pl: `PanaFera działa wyłącznie jako internetowy serwis pośrednictwa turystycznego za pośrednictwem strony ${host}. Nie organizujemy wycieczek objazdowych, pakietów turystycznych, usług noclegowych ani transferów. Ograniczamy się wyłącznie do promocji i sprzedaży wycieczek, zajęć rekreacyjnych oraz pojedynczych biletów u autoryzowanych lokalnych dostawców.`,
+    ru: `PanaFera работает исключительно как онлайн-сервис туристического посредничества через сайт ${host}. Мы не организуем комбинированные поездки, туристические пакеты, услуги размещения и трансферы. Мы ограничиваемся исключительно продвижением и продажей экскурсий, досуговых мероприятий и отдельных билетов у авторизованных местных поставщиков.`,
+    uk: `PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт ${host}. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.`,
+    ua: `PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт ${host}. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.`,
+  };
+}
 
 /** Footer nav column title (was «Quick Links»). */
 const FOOTER_QUICK_LINKS = {
@@ -108,6 +120,7 @@ const FOOTER_QUICK_LINKS = {
 };
 
 function applyFooterLegalNoticePatches(translation) {
+  const FOOTER_LEGAL_NOTICE = buildFooterLegalNotice();
   for (const [locale, notice] of Object.entries(FOOTER_LEGAL_NOTICE)) {
     if (!translation[locale]?.footer) continue;
     translation[locale].footer.legalNotice = notice;
