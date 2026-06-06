@@ -180,6 +180,14 @@ export function SiteHeader({
       <a {...navLinkProps("faq")} className={linkClass}>
         {pickLocaleBundle(navShortFaqLabel, language)}
       </a>
+      <Link
+        href={createLocaleLink("/world-tours")}
+        className={worldToursLinkClass}
+        aria-current={activePage === "world-tours" ? "page" : undefined}
+        onClick={closeMobileMenu}
+      >
+        {worldToursNav.badge}
+      </Link>
       {legalPageTitle ? (
         <Link
           href={legalPageHref}
@@ -189,14 +197,6 @@ export function SiteHeader({
           {legalPageTitle}
         </Link>
       ) : null}
-      <Link
-        href={createLocaleLink("/world-tours")}
-        className={worldToursLinkClass}
-        aria-current={activePage === "world-tours" ? "page" : undefined}
-        onClick={closeMobileMenu}
-      >
-        {worldToursNav.badge}
-      </Link>
     </>
   );
 
@@ -235,6 +235,14 @@ export function SiteHeader({
       <a {...navLinkPropsMobile("faq")} className={mobileNavLinkClass}>
         {pickLocaleBundle(navShortFaqLabel, language)}
       </a>
+      <Link
+        href={createLocaleLink("/world-tours")}
+        className={mobileWorldToursClassName}
+        aria-current={activePage === "world-tours" ? "page" : undefined}
+        onClick={closeMobileMenu}
+      >
+        {worldToursNav.badge}
+      </Link>
       {legalPageTitle ? (
         <Link
           href={legalPageHref}
@@ -244,14 +252,6 @@ export function SiteHeader({
           {legalPageTitle}
         </Link>
       ) : null}
-      <Link
-        href={createLocaleLink("/world-tours")}
-        className={mobileWorldToursClassName}
-        aria-current={activePage === "world-tours" ? "page" : undefined}
-        onClick={closeMobileMenu}
-      >
-        {worldToursNav.badge}
-      </Link>
     </>
   );
 

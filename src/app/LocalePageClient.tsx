@@ -45,6 +45,10 @@ import {
   Transfer,
 } from "@/lib/transfers";
 import {
+  getCanariasRentacarAffiliateUrl,
+  getCanariasRentacarBannerImageUrl,
+} from "@/lib/canariasAffiliate";
+import {
   TileCarPrice,
   TilePriceBadge,
   formatTileAmount,
@@ -870,6 +874,21 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             <ViewAllLink href={createLocaleLink("/cars")}>
               {t.sections.cars.viewAll}
             </ViewAllLink>
+          </div>
+
+          <div className="flex justify-center mb-10">
+            <a
+              href={getCanariasRentacarAffiliateUrl(language)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <img
+                src={getCanariasRentacarBannerImageUrl(language)}
+                alt="rentacar canarias.com"
+                className="max-w-full h-auto"
+              />
+            </a>
           </div>
 
           {dataLoading ? (

@@ -14,6 +14,10 @@ import { pickLocaleBundle, localeContentKey } from "@/types/locale";
 import { CatalogBackLink } from "@/components/CatalogBackLink";
 import { CatalogDetailShell } from "@/components/CatalogDetailShell";
 import translations from "@/i18n/cars.json";
+import {
+  getCanariasRentacarAffiliateUrl,
+  getCanariasRentacarBannerImageUrl,
+} from "@/lib/canariasAffiliate";
 
 const getLoadingCarsText = (language: string) => {
   const texts: Record<string, string> = {
@@ -528,10 +532,21 @@ export default function CarsPageClient({
         <CatalogBackLink href={createLocaleLink("/")} label={t.backToHome} />
 
         {/* Page Title */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h1 className="text-3xl font-bold text-gray-900">
             {t.carsInTenerife}
           </h1>
+        </div>
+        <div className="flex justify-start items-center gap-2 py-2">
+          <span className="ps-1 text-sm text-gray-600">Rent a car</span>
+          <a
+            href={getCanariasRentacarAffiliateUrl(language)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-blue-600 hover:text-blue-800"
+          >
+            Canarias.com
+          </a>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
@@ -550,6 +565,20 @@ export default function CarsPageClient({
 
           {/* Cars Grid - показываем отфильтрованные автомобили */}
           <div className="flex-1">
+            <div className="mb-6 flex justify-center lg:justify-center">
+              <a
+                href={getCanariasRentacarAffiliateUrl(language)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <img
+                  src={getCanariasRentacarBannerImageUrl(language)}
+                  alt="rentacar canarias.com"
+                  className="max-w-full h-auto"
+                />
+              </a>
+            </div>
             {initialLoadComplete ? (
               <>
                 <CarCard
