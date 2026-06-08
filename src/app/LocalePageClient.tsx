@@ -30,6 +30,7 @@ import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
 import { SiteHeader } from "@/components/SiteHeader";
+import { AtlanticoExcursionCard } from "@/components/AtlanticoExcursionCard";
 import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
 import { ViewAllLink } from "@/components/ViewAllLink";
 import { ViewDetailsLink } from "@/components/ViewDetailsLink";
@@ -1155,69 +1156,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
             </ViewAllLink>
           </div>
 
-          <div className="max-w-3xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-blue-100 hover:shadow-2xl transition-all duration-300">
-              <div className="md:flex items-stretch min-h-[280px]">
-                <div className="md:w-2/5 bg-gradient-to-br from-blue-600 to-indigo-700 p-8 md:p-10 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
-                      <MapPin className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">
-                      Atlántico Excursiones
-                    </h3>
-                    <p className="text-blue-100 text-sm">
-                      {language === "ru"
-                        ? "Больше туров и активностей"
-                        : language === "pl"
-                          ? "Więcej wycieczek i aktywności"
-                          : language === "fr"
-                            ? "Plus de visites et d'activités"
-                            : language === "de"
-                              ? "Mehr Touren & Aktivitäten"
-                              : language === "es"
-                                ? "Más tours y actividades"
-                                : language === "ua"
-                                  ? "Більше турів та активностей"
-                                  : "More tours & activities"}
-                    </p>
-                  </div>
-                </div>
-                <div className="md:w-3/5 p-8 md:p-10 flex flex-col justify-center">
-                  <h4 className="text-xl font-semibold text-gray-900 mb-3">
-                    {language === "ru"
-                      ? "Наш партнёр Atlántico Excursiones"
-                      : language === "pl"
-                        ? "Nasz partner: Atlántico Excursiones"
-                        : language === "fr"
-                          ? "Notre partenaire Atlántico Excursiones"
-                          : language === "de"
-                            ? "Unser Partner Atlántico Excursiones"
-                            : language === "es"
-                              ? "Nuestro socio Atlántico Excursiones"
-                              : language === "ua"
-                                ? "Партнер Atlántico Excursiones"
-                                : "Our partner Atlántico Excursiones"}
-                  </h4>
-                  <p className="text-gray-600 mb-6 leading-relaxed text-sm md:text-base">
-                    {language === "ru"
-                      ? "Автобусные туры, тематические парки, морские прогулки и VIP — бронируйте с Atlántico Excursiones."
-                      : language === "pl"
-                        ? "Wycieczki autokarowe, parki rozrywki, rejsy i VIP — rezerwuj z Atlántico Excursiones."
-                        : language === "fr"
-                          ? "Circuits en bus, parcs à thème, croisières et expériences VIP — réservez avec Atlántico Excursiones."
-                          : language === "de"
-                            ? "Busreisen, Freizeitparks, Bootstouren und VIP — buchen Sie bei Atlántico Excursiones."
-                            : language === "es"
-                              ? "Excursiones en bus, parques temáticos, barcos y experiencias VIP — reserva con Atlántico Excursiones."
-                              : language === "ua"
-                                ? "Автобусні тури, парки розваг, морські прогулянки та VIP — бронюйте з Atlántico Excursiones."
-                                : "Coach tours, theme parks, boat trips and VIP experiences — book with Atlántico Excursiones."}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <AtlanticoExcursionCard locale={language} variant="home" />
         </div>
       </section>
 
