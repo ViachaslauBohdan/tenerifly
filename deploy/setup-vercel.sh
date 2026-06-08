@@ -7,16 +7,16 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-echo "=== Vercel deploy: tenerife-tour.com (master-legacy) ==="
+echo "=== Vercel deploy: tenerifejoy.com (master-legacy) ==="
 echo "Branch: $(git branch --show-current)"
 echo ""
 echo "Required env vars (set in Vercel dashboard or via vercel env add):"
-echo "  NEXT_PUBLIC_SITE_URL=https://tenerife-tour.com"
-echo "  NEXT_PUBLIC_SITE_NAME=tenerife-tour.com"
+echo "  NEXT_PUBLIC_SITE_URL=https://tenerifejoy.com"
+echo "  NEXT_PUBLIC_SITE_NAME=Tenerife Joy"
 echo "  NEXT_PUBLIC_STRAPI_API_URL, NEXT_PUBLIC_STRAPI_API_TOKEN"
 echo "  RESEND_API_KEY, RESEND_FROM_EMAIL, NEXT_DEFAULT_EMAIL_RECIPIENT"
 echo ""
-echo "See deploy/VERCEL-DEPLOY.md and deploy/tenerife-tour.com.env.example"
+echo "See deploy/VERCEL-DEPLOY.md and deploy/tenerifejoy.com.env.example"
 echo ""
 
 if ! npx vercel whoami >/dev/null 2>&1; then
@@ -33,5 +33,5 @@ echo "Deploying to production..."
 npx vercel --prod
 
 echo ""
-echo "Add tenerife-tour.com in Vercel → Settings → Domains, then update OVH DNS."
-echo "Verify: ./deploy/verify-domain.sh https://tenerife-tour.com"
+echo "Add tenerifejoy.com in Vercel → Settings → Domains, then update OVH DNS."
+echo "Verify: ./deploy/verify-domain.sh https://tenerifejoy.com"

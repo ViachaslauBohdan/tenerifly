@@ -65,7 +65,7 @@ export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
         "@id": `${SITE_URL}/#organization`,
         name: SITE_BRAND,
         url: SITE_URL,
-        sameAs: ["https://twitter.com/tenerifly"],
+        sameAs: [],
         logo: {
           "@type": "ImageObject",
           url: DEFAULT_OG_IMAGE,
@@ -76,7 +76,7 @@ export function organizationAndWebsiteJsonLd(): Record<string, unknown> {
         "@id": `${SITE_URL}/#website`,
         url: homeEn,
         name: SITE_BRAND,
-        alternateName: ["Tenerifly"],
+        alternateName: ["Tenerife Joy", "tenerifejoy.com"],
         description:
           "Tenerife travel: rent apartments and holiday homes, hire cars, and book tours in the Canary Islands. Plan your trip to Tenerife—flights, stays, and local experiences.",
         inLanguage: ["en", "pl", "fr", "ru", "ua", "de", "es"],
@@ -556,7 +556,7 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     description:
       `Legal notice for ${SITE_HOST}: PanaFera acts as an online tourism intermediary. Intermediary conditions, scope of services, and claims procedure.`,
     keywords: [
-      "Tenerifly legal notice",
+      "Tenerife Joy legal notice",
       "PanaFera intermediary",
       "tourism intermediation Tenerife",
     ],
@@ -566,7 +566,7 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     description:
       `Informacja prawna ${SITE_HOST}: PanaFera jako pośrednik turystyczny online. Warunki pośrednictwa i zakres usług.`,
     keywords: [
-      "informacja prawna Tenerifly",
+      "informacja prawna Tenerife Joy",
       "PanaFera pośrednik",
       "pośrednictwo turystyczne Teneryfa",
     ],
@@ -576,7 +576,7 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     description:
       `Mentions légales de ${SITE_HOST} : PanaFera, service d'intermédiation touristique en ligne. Conditions d'intermédiation et champ des prestations.`,
     keywords: [
-      "mentions légales Tenerifly",
+      "mentions légales Tenerife Joy",
       "PanaFera intermédiaire",
       "intermédiation touristique Ténérife",
     ],
@@ -586,7 +586,7 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     description:
       `Правовое уведомление ${SITE_HOST}: PanaFera как онлайн-посредник в туризме. Условия посредничества и объём услуг.`,
     keywords: [
-      "правовое уведомление Tenerifly",
+      "правовое уведомление Tenerife Joy",
       "PanaFera посредник",
       "туристическое посредничество Тенерифе",
     ],
@@ -596,7 +596,7 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     description:
       `Правове повідомлення ${SITE_HOST}: PanaFera як онлайн-посередник у туризмі. Умови посередництва та обсяг послуг.`,
     keywords: [
-      "правове повідомлення Tenerifly",
+      "правове повідомлення Tenerife Joy",
       "PanaFera посередник",
       "туристичне посередництво Тенеріфе",
     ],
@@ -606,7 +606,7 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     description:
       `Rechtlicher Hinweis zu ${SITE_HOST}: PanaFera als Online-Tourismevermittler. Vermittlerbedingungen und Leistungsumfang.`,
     keywords: [
-      "rechtlicher Hinweis Tenerifly",
+      "rechtlicher Hinweis Tenerife Joy",
       "PanaFera Vermittler",
       "Tourismusvermittlung Teneriffa",
     ],
@@ -616,7 +616,7 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
     description:
       `Aviso legal de ${SITE_HOST}: PanaFera como intermediario turístico online. Condición de intermediario y alcance de los servicios.`,
     keywords: [
-      "aviso legal Tenerifly",
+      "aviso legal Tenerife Joy",
       "PanaFera intermediario",
       "intermediación turística Tenerife",
     ],

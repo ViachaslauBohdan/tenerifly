@@ -10,7 +10,7 @@ export function WhatsAppButton() {
   const { locale, t } = useTranslation();
   
   const handleClick = () => {
-    openWhatsApp('general', { title: 'Tenerifly Services' }, locale);
+    openWhatsApp('general', { title: 'Tenerife Joy Services' }, locale);
   };
 
   return (

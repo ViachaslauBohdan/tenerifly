@@ -65,8 +65,6 @@ export async function generateMetadata({
       title: seo.title,
       description: seo.description,
       images: [DEFAULT_OG_IMAGE],
-      creator: "@tenerifly",
-      site: "@tenerifly",
     },
     metadataBase: new URL(SITE_URL),
     alternates: {

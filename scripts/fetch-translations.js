@@ -71,24 +71,24 @@ const HERO_SEARCH_BUTTON = {
 
 const HERO_SEARCH_GLOBAL_TOURS = { ...HERO_SEARCH_BUTTON };
 
-/** Legal copy: Tenerifly is an intermediary, not the excursion operator. */
+/** Legal copy: Tenerife Joy is an intermediary, not the excursion operator. */
 const EXCURSIONS_INTERMEDIARY_NOTICE = {
-  de: "Tenerifly — Vermittler beim Verkauf von Ausflügen auf Teneriffa",
-  en: "Tenerifly — intermediary in the sale of excursions in Tenerife",
-  es: "Tenerifly — intermediario en la venta de excursiones en Tenerife",
-  fr: "Tenerifly — intermédiaire dans la vente d'excursions à Tenerife",
-  pl: "Tenerifly — pośrednik w sprzedaży wycieczek na Teneryfie",
-  ru: "Tenerifly — посредник в продаже экскурсий на Тенерифе",
-  uk: "Tenerifly — посередник у продажу екскурсій на Тенеріфе",
-  ua: "Tenerifly — посередник у продажу екскурсій на Тенеріфе",
+  de: "Tenerife Joy — Vermittler beim Verkauf von Ausflügen auf Teneriffa",
+  en: "Tenerife Joy — intermediary in the sale of excursions in Tenerife",
+  es: "Tenerife Joy — intermediario en la venta de excursiones en Tenerife",
+  fr: "Tenerife Joy — intermédiaire dans la vente d'excursions à Tenerife",
+  pl: "Tenerife Joy — pośrednik w sprzedaży wycieczek na Teneryfie",
+  ru: "Tenerife Joy — посредник в продаже экскурсий на Тенерифе",
+  uk: "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе",
+  ua: "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе",
 };
 
 function siteHostnameForBuild() {
-  const raw = (process.env.NEXT_PUBLIC_SITE_URL || "https://tenerifly.io").trim();
+  const raw = (process.env.NEXT_PUBLIC_SITE_URL || "https://tenerifejoy.com").trim();
   try {
     return new URL(raw).hostname;
   } catch {
-    return "tenerifly.io";
+    return "tenerifejoy.com";
   }
 }
 

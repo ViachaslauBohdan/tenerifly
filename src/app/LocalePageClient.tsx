@@ -1401,7 +1401,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
               </h3>
               <p className="text-gray-400 mb-4">{t.footer.description}</p>
               <p className="text-sm text-gray-500">
-                © {new Date().getFullYear()} Tenerifly. All rights reserved.
+                © {new Date().getFullYear()} {SITE_BRAND}. All rights reserved.
               </p>
             </div>
             <div>

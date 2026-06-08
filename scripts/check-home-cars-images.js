@@ -159,7 +159,7 @@ async function main() {
       const uiSrc = getCarImageSrc(transformed);
       const uiSrcWrongHost = getCarImageSrc(
         transformed,
-        "https://tenerifly.io"
+        "https://tenerifejoy.com"
       );
 
       const missingOnTransformed =
@@ -185,7 +185,7 @@ async function main() {
       );
       if (uiSrcWrongHost && uiSrcWrongHost !== uiSrc) {
         console.log(
-          `       getCarImage (tenerifly.io host — LocalePageClient default): ${uiSrcWrongHost}`
+          `       getCarImage (tenerifejoy.com host — LocalePageClient default): ${uiSrcWrongHost}`
         );
       }
 

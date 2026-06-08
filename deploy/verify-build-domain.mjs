@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Verify build-time domain injection (no live server required).
- * Usage: NEXT_PUBLIC_SITE_URL=https://tenerife-tour.com node deploy/verify-build-domain.mjs
+ * Usage: NEXT_PUBLIC_SITE_URL=https://tenerifejoy.com node deploy/verify-build-domain.mjs
  */
 import fs from "fs";
 import path from "path";
@@ -13,7 +13,7 @@ const root = path.join(__dirname, "..");
 const expectedHost = (() => {
   try {
     return new URL(
-      process.env.NEXT_PUBLIC_SITE_URL || "https://tenerifly.io"
+      process.env.NEXT_PUBLIC_SITE_URL || "https://tenerifejoy.com"
     ).hostname;
   } catch {
     console.error("Invalid NEXT_PUBLIC_SITE_URL");
@@ -54,7 +54,7 @@ if (!siteTs.includes("NEXT_PUBLIC_SITE_URL")) {
 }
 
 if (failed) {
-  console.error("\nRun: NEXT_PUBLIC_SITE_URL=https://tenerife-tour.com node scripts/fetch-translations.js");
+  console.error("\nRun: NEXT_PUBLIC_SITE_URL=https://tenerifejoy.com node scripts/fetch-translations.js");
   process.exit(1);
 }
 

@@ -1,4 +1,5 @@
-const DEFAULT_SITE_URL = "https://tenerifly.io";
+const DEFAULT_SITE_URL = "https://tenerifejoy.com";
+const DEFAULT_SITE_NAME = "Tenerife Joy";
 
 function normalizeSiteUrl(url: string): string {
   return url.trim().replace(/\/$/, "");
@@ -13,12 +14,12 @@ export function siteHostname(): string {
   try {
     return new URL(SITE_URL).hostname;
   } catch {
-    return "tenerifly.io";
+    return "tenerifejoy.com";
   }
 }
 
-/** Display brand in titles, footer, and JSON-LD (e.g. tenerifly.io or your custom domain). */
+/** Display brand in titles, footer, and JSON-LD. */
 export const SITE_BRAND =
-  process.env.NEXT_PUBLIC_SITE_NAME?.trim() || siteHostname();
+  process.env.NEXT_PUBLIC_SITE_NAME?.trim() || DEFAULT_SITE_NAME;
 
 export const SITE_HOST = siteHostname();

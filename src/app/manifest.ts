@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   const { description } = SEO_HOME.en;
   return {
     name: `${SITE_BRAND} — Tenerife travel`,
-    short_name: "Tenerifly",
+    short_name: "Tenerife Joy",
     description,
     start_url: "/en/",
     scope: "/",

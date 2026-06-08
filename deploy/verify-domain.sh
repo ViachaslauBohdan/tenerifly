@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Smoke-test a deployed master-legacy site for correct domain configuration.
-# Usage: ./deploy/verify-domain.sh https://tenerife-tour.com
+# Usage: ./deploy/verify-domain.sh https://tenerifejoy.com
 
 set -euo pipefail
 

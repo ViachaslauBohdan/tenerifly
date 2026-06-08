@@ -25,7 +25,7 @@ export function isHeroTab(value: string): value is HeroTab {
   return (HERO_TABS as readonly string[]).includes(value);
 }
 
-const HERO_TAB_STORAGE_KEY = "tenerifly-hero-tab";
+const HERO_TAB_STORAGE_KEY = "tenerifejoy-hero-tab";
 
 export function getStoredHeroTab(): HeroTab {
   if (typeof window === "undefined") {

@@ -237,7 +237,7 @@
       "description": "Ihr Teneriffa Reiseführer",
       "privacyPolicy": "Datenschutzrichtlinie",
       "termsOfService": "Nutzungsbedingungen",
-      "legalNotice": "PanaFera betreibt ausschließlich einen Online-Vermittlungsdienst für Tourismus über die Website tenerifly.io. Wir organisieren keine Pauschalreisen, Reisepakete, Unterkunftsdienste oder Transfers. Wir beschränken uns ausschließlich auf die Bewerbung und den Verkauf von Ausflügen, Freizeitaktivitäten und Einzeleintritten autorisierter lokaler Anbieter."
+      "legalNotice": "PanaFera betreibt ausschließlich einen Online-Vermittlungsdienst für Tourismus über die Website tenerifejoy.com. Wir organisieren keine Pauschalreisen, Reisepakete, Unterkunftsdienste oder Transfers. Wir beschränken uns ausschließlich auf die Bewerbung und den Verkauf von Ausflügen, Freizeitaktivitäten und Einzeleintritten autorisierter lokaler Anbieter."
     },
     "filters": {
       "area": "Fläche (m²)",
@@ -301,7 +301,7 @@
         "language": "Sprache",
         "subtitle": "Entdecken Sie das Beste auf Teneriffa",
         "groupSize": "Gruppengröße",
-        "intermediaryNotice": "Tenerifly — Vermittler beim Verkauf von Ausflügen auf Teneriffa"
+        "intermediaryNotice": "Tenerife Joy — Vermittler beim Verkauf von Ausflügen auf Teneriffa"
       },
       "accommodation": {
         "area": "Fläche",
@@ -335,7 +335,7 @@
       "intermediaryTitle": "Vermittlerbedingung",
       "intermediaryText": "Der Nutzer akzeptiert und versteht, dass PanaFera ausschließlich als unabhängiger Vermittler zwischen dem Endkunden und den tatsächlichen Organisatoren der Aktivitäten (Ausflüge, Boote, Helikopter, Shows) tätig ist. PanaFera ist weder Eigentümer, Betreiber noch Beförderer dieser Leistungen und übernimmt daher keine unmittelbare Verantwortung für die Durchführung der Aktivitäten und organisiert keine verknüpften Leistungen über 24 Stunden hinaus. Jede Beschwerde zum Service ist an den direkten Anbieter der Aktivität zu richten."
     },
-    "intermediaryNotice": "Tenerifly — Vermittler beim Verkauf von Ausflügen auf Teneriffa"
+    "intermediaryNotice": "Tenerife Joy — Vermittler beim Verkauf von Ausflügen auf Teneriffa"
   },
   "en": {
     "cta": {
@@ -575,7 +575,7 @@
       "description": "Your guide to Tenerife",
       "privacyPolicy": "Privacy Policy",
       "termsOfService": "Terms of Service",
-      "legalNotice": "PanaFera operates exclusively as an online tourism intermediation service through the website tenerifly.io. We do not organise package tours, tourist packages, accommodation services or transfers. We are limited solely and exclusively to promoting and selling excursions, leisure activities and individual tickets from authorised local providers."
+      "legalNotice": "PanaFera operates exclusively as an online tourism intermediation service through the website tenerifejoy.com. We do not organise package tours, tourist packages, accommodation services or transfers. We are limited solely and exclusively to promoting and selling excursions, leisure activities and individual tickets from authorised local providers."
     },
     "filters": {
       "area": "Area (m²)",
@@ -639,7 +639,7 @@
         "language": "Language",
         "subtitle": "Discover the best of Tenerife",
         "groupSize": "Group Size",
-        "intermediaryNotice": "Tenerifly — intermediary in the sale of excursions in Tenerife"
+        "intermediaryNotice": "Tenerife Joy — intermediary in the sale of excursions in Tenerife"
       },
       "accommodation": {
         "area": "Area",
@@ -673,7 +673,7 @@
       "intermediaryTitle": "Intermediary Condition",
       "intermediaryText": "The user accepts and understands that PanaFera acts solely and exclusively as an independent intermediary between the end customer and the actual organisers of the activities (excursions, boats, helicopters, shows). PanaFera is neither the owner, operator nor carrier of such services, and therefore does not assume direct responsibility for the performance of the activities nor does it organise linked services exceeding 24 hours. Any claim regarding the service must be directed to the direct provider of the activity."
     },
-    "intermediaryNotice": "Tenerifly — intermediary in the sale of excursions in Tenerife"
+    "intermediaryNotice": "Tenerife Joy — intermediary in the sale of excursions in Tenerife"
   },
   "es": {
     "cta": {
@@ -913,7 +913,7 @@
       "description": "Tu guía de Tenerife",
       "privacyPolicy": "Política de privacidad",
       "termsOfService": "Términos de servicio",
-      "legalNotice": "PanaFera opera exclusivamente como un servicio de intermediación turística online a través de la web tenerifly.io. No organizamos viajes combinados, paquetes turísticos, servicios de alojamiento ni traslados. Nos limitamos única y exclusivamente a la promoción y venta de excursiones, actividades de ocio y entradas individuales de proveedores locales autorizados."
+      "legalNotice": "PanaFera opera exclusivamente como un servicio de intermediación turística online a través de la web tenerifejoy.com. No organizamos viajes combinados, paquetes turísticos, servicios de alojamiento ni traslados. Nos limitamos única y exclusivamente a la promoción y venta de excursiones, actividades de ocio y entradas individuales de proveedores locales autorizados."
     },
     "filters": {
       "area": "Área (m²)",
@@ -977,7 +977,7 @@
         "language": "Idioma",
         "subtitle": "Descubre lo mejor de Tenerife",
         "groupSize": "Tamaño del grupo",
-        "intermediaryNotice": "Tenerifly — intermediario en la venta de excursiones en Tenerife"
+        "intermediaryNotice": "Tenerife Joy — intermediario en la venta de excursiones en Tenerife"
       },
       "accommodation": {
         "area": "Área",
@@ -1011,7 +1011,7 @@
       "intermediaryTitle": "Condición de Intermediario",
       "intermediaryText": "El usuario acepta y comprende que PanaFera actúa única y exclusivamente en calidad de intermediario independiente entre el cliente final y los organizadores reales de las actividades (excursiones, barcos, helicópteros, espectáculos). PanaFera no es propietaria, ni operadora, ni transportista de dichos servicios, por lo tanto, no asume la responsabilidad directa de la ejecución de las actividades ni organiza servicios vinculados superiores a 24 horas. Toda reclamación sobre el servicio deberá dirigirse al proveedor directo de la actividad."
     },
-    "intermediaryNotice": "Tenerifly — intermediario en la venta de excursiones en Tenerife"
+    "intermediaryNotice": "Tenerife Joy — intermediario en la venta de excursiones en Tenerife"
   },
   "fr": {
     "cta": {
@@ -1251,7 +1251,7 @@
       "description": "Votre guide de Tenerife",
       "privacyPolicy": "Politique de confidentialité",
       "termsOfService": "Conditions d'utilisation",
-      "legalNotice": "PanaFera opère exclusivement en tant que service d'intermédiation touristique en ligne via le site tenerifly.io. Nous n'organisons pas de voyages combinés, de forfaits touristiques, de services d'hébergement ni de transferts. Nous nous limitons uniquement et exclusivement à la promotion et à la vente d'excursions, d'activités de loisirs et de billets individuels auprès de prestataires locaux autorisés."
+      "legalNotice": "PanaFera opère exclusivement en tant que service d'intermédiation touristique en ligne via le site tenerifejoy.com. Nous n'organisons pas de voyages combinés, de forfaits touristiques, de services d'hébergement ni de transferts. Nous nous limitons uniquement et exclusivement à la promotion et à la vente d'excursions, d'activités de loisirs et de billets individuels auprès de prestataires locaux autorisés."
     },
     "filters": {
       "area": "Superficie (m²)",
@@ -1315,7 +1315,7 @@
         "language": "Langue",
         "subtitle": "Découvrez le meilleur de Tenerife",
         "groupSize": "Taille du groupe",
-        "intermediaryNotice": "Tenerifly — intermédiaire dans la vente d'excursions à Tenerife"
+        "intermediaryNotice": "Tenerife Joy — intermédiaire dans la vente d'excursions à Tenerife"
       },
       "accommodation": {
         "area": "Superficie",
@@ -1349,7 +1349,7 @@
       "intermediaryTitle": "Condition d'intermédiation",
       "intermediaryText": "L'utilisateur accepte et comprend que PanaFera agit uniquement et exclusivement en qualité d'intermédiaire indépendant entre le client final et les organisateurs réels des activités (excursions, bateaux, hélicoptères, spectacles). PanaFera n'est ni propriétaire, ni exploitant, ni transporteur de ces services ; elle n'assume donc pas la responsabilité directe de l'exécution des activités et n'organise pas de services liés dépassant 24 heures. Toute réclamation concernant le service doit être adressée au prestataire direct de l'activité."
     },
-    "intermediaryNotice": "Tenerifly — intermédiaire dans la vente d'excursions à Tenerife"
+    "intermediaryNotice": "Tenerife Joy — intermédiaire dans la vente d'excursions à Tenerife"
   },
   "pl": {
     "cta": {
@@ -1589,7 +1589,7 @@
       "description": "Twój przewodnik po Teneryfie",
       "privacyPolicy": "Polityka prywatności",
       "termsOfService": "Regulamin",
-      "legalNotice": "PanaFera działa wyłącznie jako internetowy serwis pośrednictwa turystycznego za pośrednictwem strony tenerifly.io. Nie organizujemy wycieczek objazdowych, pakietów turystycznych, usług noclegowych ani transferów. Ograniczamy się wyłącznie do promocji i sprzedaży wycieczek, zajęć rekreacyjnych oraz pojedynczych biletów u autoryzowanych lokalnych dostawców."
+      "legalNotice": "PanaFera działa wyłącznie jako internetowy serwis pośrednictwa turystycznego za pośrednictwem strony tenerifejoy.com. Nie organizujemy wycieczek objazdowych, pakietów turystycznych, usług noclegowych ani transferów. Ograniczamy się wyłącznie do promocji i sprzedaży wycieczek, zajęć rekreacyjnych oraz pojedynczych biletów u autoryzowanych lokalnych dostawców."
     },
     "filters": {
       "area": "Powierzchnia (m²)",
@@ -1653,7 +1653,7 @@
         "language": "Język",
         "subtitle": "Odkryj najlepsze miejsca na Teneryfie",
         "groupSize": "Rozmiar grupy",
-        "intermediaryNotice": "Tenerifly — pośrednik w sprzedaży wycieczek na Teneryfie"
+        "intermediaryNotice": "Tenerife Joy — pośrednik w sprzedaży wycieczek na Teneryfie"
       },
       "accommodation": {
         "area": "Powierzchnia",
@@ -1687,7 +1687,7 @@
       "intermediaryTitle": "Warunek pośrednictwa",
       "intermediaryText": "Użytkownik akceptuje i rozumie, że PanaFera działa wyłącznie jako niezależny pośrednik między klientem końcowym a rzeczywistymi organizatorami aktywności (wycieczki, łodzie, helikoptery, spektakle). PanaFera nie jest właścicielem, operatorem ani przewoźnikiem tych usług, dlatego nie ponosi bezpośredniej odpowiedzialności za realizację aktywności ani nie organizuje powiązanych usług przekraczających 24 godziny. Wszelkie reklamacje dotyczące usługi należy kierować bezpośrednio do dostawcy danej aktywności."
     },
-    "intermediaryNotice": "Tenerifly — pośrednik w sprzedaży wycieczek na Teneryfie"
+    "intermediaryNotice": "Tenerife Joy — pośrednik w sprzedaży wycieczek na Teneryfie"
   },
   "ru": {
     "cta": {
@@ -1927,7 +1927,7 @@
       "description": "Ваш гид по Тенерифе",
       "privacyPolicy": "Политика конфиденциальности",
       "termsOfService": "Условия использования",
-      "legalNotice": "PanaFera работает исключительно как онлайн-сервис туристического посредничества через сайт tenerifly.io. Мы не организуем комбинированные поездки, туристические пакеты, услуги размещения и трансферы. Мы ограничиваемся исключительно продвижением и продажей экскурсий, досуговых мероприятий и отдельных билетов у авторизованных местных поставщиков."
+      "legalNotice": "PanaFera работает исключительно как онлайн-сервис туристического посредничества через сайт tenerifejoy.com. Мы не организуем комбинированные поездки, туристические пакеты, услуги размещения и трансферы. Мы ограничиваемся исключительно продвижением и продажей экскурсий, досуговых мероприятий и отдельных билетов у авторизованных местных поставщиков."
     },
     "filters": {
       "area": "Площадь (м²)",
@@ -1991,7 +1991,7 @@
         "language": "Язык",
         "subtitle": "Откройте для себя лучшее на Тенерифе",
         "groupSize": "Размер группы",
-        "intermediaryNotice": "Tenerifly — посредник в продаже экскурсий на Тенерифе"
+        "intermediaryNotice": "Tenerife Joy — посредник в продаже экскурсий на Тенерифе"
       },
       "accommodation": {
         "area": "Площадь",
@@ -2025,7 +2025,7 @@
       "intermediaryTitle": "Условие посредничества",
       "intermediaryText": "Пользователь принимает и понимает, что PanaFera действует исключительно как независимый посредник между конечным клиентом и фактическими организаторами мероприятий (экскурсии, катера, вертолёты, шоу). PanaFera не является владельцем, оператором или перевозчиком таких услуг, поэтому не несёт прямой ответственности за исполнение мероприятий и не организует связанные услуги продолжительностью более 24 часов. Все претензии по услуге следует направлять непосредственно поставщику соответствующей активности."
     },
-    "intermediaryNotice": "Tenerifly — посредник в продаже экскурсий на Тенерифе"
+    "intermediaryNotice": "Tenerife Joy — посредник в продаже экскурсий на Тенерифе"
   },
   "uk": {
     "cta": {
@@ -2265,7 +2265,7 @@
       "description": "Ваш гід по Тенеріфе",
       "privacyPolicy": "Політика конфіденційності",
       "termsOfService": "Умови використання",
-      "legalNotice": "PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт tenerifly.io. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників."
+      "legalNotice": "PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт tenerifejoy.com. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників."
     },
     "filters": {
       "area": "Площа (м²)",
@@ -2329,7 +2329,7 @@
         "language": "Мова",
         "subtitle": "Відкрийте для себе найкраще на Тенеріфе",
         "groupSize": "Розмір групи",
-        "intermediaryNotice": "Tenerifly — посередник у продажу екскурсій на Тенеріфе"
+        "intermediaryNotice": "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе"
       },
       "accommodation": {
         "area": "Площа",
@@ -2363,7 +2363,7 @@
       "intermediaryTitle": "Умова посередництва",
       "intermediaryText": "Користувач приймає та розуміє, що PanaFera діє виключно як незалежний посередник між кінцевим клієнтом і фактичними організаторами заходів (екскурсії, човни, гелікоптери, шоу). PanaFera не є власником, оператором чи перевізником таких послуг, тому не несе прямої відповідальності за виконання заходів і не організує пов’язані послуги тривалістю понад 24 години. Усі скарги щодо послуги слід надсилати безпосередньо постачальнику відповідної активності."
     },
-    "intermediaryNotice": "Tenerifly — посередник у продажу екскурсій на Тенеріфе"
+    "intermediaryNotice": "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе"
   },
   "ua": {
     "cta": {
@@ -2603,7 +2603,7 @@
       "description": "Ваш гід по Тенеріфе",
       "privacyPolicy": "Політика конфіденційності",
       "termsOfService": "Умови використання",
-      "legalNotice": "PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт tenerifly.io. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників."
+      "legalNotice": "PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт tenerifejoy.com. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників."
     },
     "filters": {
       "area": "Площа (м²)",
@@ -2667,7 +2667,7 @@
         "language": "Мова",
         "subtitle": "Відкрийте для себе найкраще на Тенеріфе",
         "groupSize": "Розмір групи",
-        "intermediaryNotice": "Tenerifly — посередник у продажу екскурсій на Тенеріфе"
+        "intermediaryNotice": "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе"
       },
       "accommodation": {
         "area": "Площа",
@@ -2701,6 +2701,6 @@
       "intermediaryTitle": "Умова посередництва",
       "intermediaryText": "Користувач приймає та розуміє, що PanaFera діє виключно як незалежний посередник між кінцевим клієнтом і фактичними організаторами заходів (екскурсії, човни, гелікоптери, шоу). PanaFera не є власником, оператором чи перевізником таких послуг, тому не несе прямої відповідальності за виконання заходів і не організує пов’язані послуги тривалістю понад 24 години. Усі скарги щодо послуги слід надсилати безпосередньо постачальнику відповідної активності."
     },
-    "intermediaryNotice": "Tenerifly — посередник у продажу екскурсій на Тенеріфе"
+    "intermediaryNotice": "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе"
   }
 }

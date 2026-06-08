@@ -87,7 +87,7 @@ export function SimpleBookingPopup({
       close: "Close",
       send: "Send",
       success:
-        "Thanks for your contact request. Our Tenerifly team will analyze it and respond soon",
+        "Thanks for your contact request. Our Tenerife Joy team will analyze it and respond soon",
       emailError: "Please enter a valid email address",
       phoneError: "Please select a country and enter a valid phone number",
       premium: "Premium Service",
@@ -113,7 +113,7 @@ export function SimpleBookingPopup({
       close: "Закрыть",
       send: "Отправить",
       success:
-        "Спасибо за ваш запрос на связь. Наша команда Tenerifly проанализирует его и ответит в ближайшее время",
+        "Спасибо за ваш запрос на связь. Наша команда Tenerife Joy проанализирует его и ответит в ближайшее время",
       emailError: "Пожалуйста, введите корректный email адрес",
       phoneError:
         "Пожалуйста, введите корректный номер телефона (минимум 10 цифр)",
@@ -139,7 +139,7 @@ export function SimpleBookingPopup({
       close: "Zamknij",
       send: "Wyślij",
       success:
-        "Dziękujemy za Twoją prośbę o kontakt. Nasz zespół Tenerifly przeanalizuje ją i odpowie wkrótce",
+        "Dziękujemy za Twoją prośbę o kontakt. Nasz zespół Tenerife Joy przeanalizuje ją i odpowie wkrótce",
       emailError: "Proszę wprowadzić poprawny adres email",
       phoneError:
         "Proszę wprowadzić poprawny numer telefonu (co najmniej 10 cyfr)",
@@ -166,7 +166,7 @@ export function SimpleBookingPopup({
       close: "Fermer",
       send: "Envoyer",
       success:
-        "Merci pour votre demande de contact. Notre équipe Tenerifly l'analysera et répondra bientôt",
+        "Merci pour votre demande de contact. Notre équipe Tenerife Joy l'analysera et répondra bientôt",
       emailError: "Veuillez saisir une adresse email valide",
       phoneError:
         "Veuillez saisir un numéro de téléphone valide (au moins 10 chiffres)",
@@ -192,7 +192,7 @@ export function SimpleBookingPopup({
       close: "Закрити",
       send: "Надіслати",
       success:
-        "Дякуємо за ваш запит на зв'язок. Наша команда Tenerifly проаналізує його і відповість найближчим часом",
+        "Дякуємо за ваш запит на зв'язок. Наша команда Tenerife Joy проаналізує його і відповість найближчим часом",
       emailError: "Будь ласка, введіть коректну email адресу",
       phoneError:
         "Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)",
@@ -219,7 +219,7 @@ export function SimpleBookingPopup({
       close: "Schließen",
       send: "Senden",
       success:
-        "Vielen Dank für Ihre Kontaktanfrage. Unser Tenerifly-Team wird sie analysieren und bald antworten",
+        "Vielen Dank für Ihre Kontaktanfrage. Unser Tenerife Joy-Team wird sie analysieren und bald antworten",
       emailError: "Bitte geben Sie eine gültige E-Mail-Adresse ein",
       phoneError:
         "Bitte geben Sie eine gültige Telefonnummer ein (mindestens 10 Ziffern)",
@@ -245,7 +245,7 @@ export function SimpleBookingPopup({
       close: "Cerrar",
       send: "Enviar",
       success:
-        "Gracias por su solicitud de contacto. Nuestro equipo Tenerifly la analizará y responderá pronto",
+        "Gracias por su solicitud de contacto. Nuestro equipo Tenerife Joy la analizará y responderá pronto",
       emailError: "Por favor, introduzca una dirección de email válida",
       phoneError:
         "Por favor, introduzca un número de teléfono válido (mínimo 10 dígitos)",
@@ -273,7 +273,7 @@ export function SimpleBookingPopup({
       close: "Close",
       send: "Pre-book",
       success:
-        "Thanks for your pre-booking request. Our Tenerifly team will analyze it and respond soon",
+        "Thanks for your pre-booking request. Our Tenerife Joy team will analyze it and respond soon",
       emailError: "Please enter a valid email address",
       phoneError: "Please select a country and enter a valid phone number",
       premium: "Premium Service",
@@ -299,7 +299,7 @@ export function SimpleBookingPopup({
       close: "Закрыть",
       send: "Забронировать",
       success:
-        "Спасибо за ваш запрос на предварительное бронирование. Наша команда Tenerifly проанализирует его и ответит в ближайшее время",
+        "Спасибо за ваш запрос на предварительное бронирование. Наша команда Tenerife Joy проанализирует его и ответит в ближайшее время",
       emailError: "Пожалуйста, введите корректный email адрес",
       phoneError:
         "Пожалуйста, введите корректный номер телефона (минимум 10 цифр)",
@@ -325,7 +325,7 @@ export function SimpleBookingPopup({
       close: "Zamknij",
       send: "Rezerwuj",
       success:
-        "Dziękujemy za Twoją prośbę o przedwstępną rezerwację. Nasz zespół Tenerifly przeanalizuje ją i odpowie wkrótce",
+        "Dziękujemy za Twoją prośbę o przedwstępną rezerwację. Nasz zespół Tenerife Joy przeanalizuje ją i odpowie wkrótce",
       emailError: "Proszę wprowadzić poprawny adres email",
       phoneError:
         "Proszę wprowadzić poprawny numer telefonu (co najmniej 10 cyfr)",
@@ -352,7 +352,7 @@ export function SimpleBookingPopup({
       close: "Fermer",
       send: "Réserver",
       success:
-        "Merci pour votre demande de pré-réservation. Notre équipe Tenerifly l'analysera et répondra bientôt",
+        "Merci pour votre demande de pré-réservation. Notre équipe Tenerife Joy l'analysera et répondra bientôt",
       emailError: "Veuillez saisir une adresse email valide",
       phoneError:
         "Veuillez saisir un numéro de téléphone valide (au moins 10 chiffres)",
@@ -378,7 +378,7 @@ export function SimpleBookingPopup({
       close: "Закрити",
       send: "Забронювати",
       success:
-        "Дякуємо за ваш запит на попереднє бронювання. Наша команда Tenerifly проаналізує його і відповість найближчим часом",
+        "Дякуємо за ваш запит на попереднє бронювання. Наша команда Tenerife Joy проаналізує його і відповість найближчим часом",
       emailError: "Будь ласка, введіть коректну email адресу",
       phoneError:
         "Будь ласка, введіть коректний номер телефону (мінімум 10 цифр)",
@@ -405,7 +405,7 @@ export function SimpleBookingPopup({
       close: "Schließen",
       send: "Buchen",
       success:
-        "Vielen Dank für Ihre Vorab-Buchungsanfrage. Unser Tenerifly-Team wird sie analysieren und bald antworten",
+        "Vielen Dank für Ihre Vorab-Buchungsanfrage. Unser Tenerife Joy-Team wird sie analysieren und bald antworten",
       emailError: "Bitte geben Sie eine gültige E-Mail-Adresse ein",
       phoneError:
         "Bitte geben Sie eine gültige Telefonnummer ein (mindestens 10 Ziffern)",
@@ -431,7 +431,7 @@ export function SimpleBookingPopup({
       close: "Cerrar",
       send: "Reservar",
       success:
-        "Gracias por su solicitud de reserva anticipada. Nuestro equipo Tenerifly la analizará y responderá pronto",
+        "Gracias por su solicitud de reserva anticipada. Nuestro equipo Tenerife Joy la analizará y responderá pronto",
       emailError: "Por favor, introduzca una dirección de email válida",
       phoneError:
         "Por favor, introduzca un número de teléfono válido (mínimo 10 dígitos)",
@@ -475,7 +475,7 @@ ${endDate ? `Дата окончания: ${endDate.toLocaleDateString()}` : ""}
 ${comments ? `Дополнительная информация: ${comments}` : ""}
 
 ---
-Отправлено с сайта: ${process.env.NEXT_PUBLIC_DOMAIN || "tenerifly.info.com"}
+Отправлено с сайта: ${process.env.NEXT_PUBLIC_DOMAIN || "tenerifejoy.com"}
         `.trim();
 
     try {

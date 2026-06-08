@@ -55,7 +55,7 @@ async function createProperty(data) {
 
 async function main() {
     console.clear();
-    console.log(`${BOLD}${GREEN}--- ИМПОРТ ПАРСИНГА В TENERIFLY ---${RESET}\n`);
+    console.log(`${BOLD}${GREEN}--- ИМПОРТ ПАРСИНГА В TENERIFE JOY ---${RESET}\n`);
 
     const {folderPath} = await inquirer.prompt([{
         type: 'input',

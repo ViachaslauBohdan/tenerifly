@@ -31,7 +31,7 @@
     "selectLanguage": "Sprache auswählen",
     "freeCancellation": "Kostenlose Stornierung bis zu 24 Stunden vor der Tour",
     "cancellationPolicy": "Stornierungsbedingungen",
-    "intermediaryNotice": "Tenerifly — Vermittler beim Verkauf von Ausflügen auf Teneriffa"
+    "intermediaryNotice": "Tenerife Joy — Vermittler beim Verkauf von Ausflügen auf Teneriffa"
   },
   "en": {
     "days": "days",
@@ -65,7 +65,7 @@
     "selectLanguage": "Select Language",
     "freeCancellation": "Free cancellation up to 24 hours before the tour",
     "cancellationPolicy": "Cancellation Policy",
-    "intermediaryNotice": "Tenerifly — intermediary in the sale of excursions in Tenerife"
+    "intermediaryNotice": "Tenerife Joy — intermediary in the sale of excursions in Tenerife"
   },
   "es": {
     "days": "días",
@@ -99,7 +99,7 @@
     "selectLanguage": "Seleccionar idioma",
     "freeCancellation": "Cancelación gratuita hasta 24 horas antes de la excursión",
     "cancellationPolicy": "Política de cancelación",
-    "intermediaryNotice": "Tenerifly — intermediario en la venta de excursiones en Tenerife"
+    "intermediaryNotice": "Tenerife Joy — intermediario en la venta de excursiones en Tenerife"
   },
   "fr": {
     "days": "jours",
@@ -133,7 +133,7 @@
     "selectLanguage": "Choisir la langue",
     "freeCancellation": "Annulation gratuite jusqu'à 24 heures avant l'excursion",
     "cancellationPolicy": "Politique d'annulation",
-    "intermediaryNotice": "Tenerifly — intermédiaire dans la vente d'excursions à Tenerife"
+    "intermediaryNotice": "Tenerife Joy — intermédiaire dans la vente d'excursions à Tenerife"
   },
   "pl": {
     "days": "dni",
@@ -167,7 +167,7 @@
     "selectLanguage": "Wybierz język",
     "freeCancellation": "Bezpłatne anulowanie do 24 godzin przed wycieczką",
     "cancellationPolicy": "Zasady anulowania",
-    "intermediaryNotice": "Tenerifly — pośrednik w sprzedaży wycieczek na Teneryfie"
+    "intermediaryNotice": "Tenerife Joy — pośrednik w sprzedaży wycieczek na Teneryfie"
   },
   "ru": {
     "days": "дней",
@@ -201,7 +201,7 @@
     "selectLanguage": "Выбрать язык",
     "freeCancellation": "Бесплатная отмена за 24 часа до экскурсии",
     "cancellationPolicy": "Условия отмены",
-    "intermediaryNotice": "Tenerifly — посредник в продаже экскурсий на Тенерифе"
+    "intermediaryNotice": "Tenerife Joy — посредник в продаже экскурсий на Тенерифе"
   },
   "uk": {
     "days": "днів",
@@ -235,6 +235,6 @@
     "selectLanguage": "Обрати мову",
     "freeCancellation": "Безкоштовне скасування за 24 години до екскурсії",
     "cancellationPolicy": "Умови скасування",
-    "intermediaryNotice": "Tenerifly — посередник у продажу екскурсій на Тенеріфе"
+    "intermediaryNotice": "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе"
   }
 }

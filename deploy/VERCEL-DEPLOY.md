@@ -1,4 +1,4 @@
-# Deploy master-legacy to Vercel (tenerife-tour.com)
+# Deploy master-legacy to Vercel (tenerifejoy.com)
 
 ## 1. Login and link (one-time)
 
@@ -9,7 +9,7 @@ npx vercel link
 
 When linking:
 - **Scope:** your Vercel account/team
-- **Project:** create new (e.g. `tenerife-tour`)
+- **Project:** create new (e.g. `tenerifejoy`)
 - **Directory:** `./`
 
 ## 2. Environment variables
@@ -18,10 +18,10 @@ In [Vercel dashboard](https://vercel.com) → Project → **Settings** → **Env
 
 | Variable | Value |
 |----------|-------|
-| `NEXT_PUBLIC_SITE_URL` | `https://tenerife-tour.com` |
-| `NEXT_PUBLIC_SITE_NAME` | `tenerife-tour.com` |
+| `NEXT_PUBLIC_SITE_URL` | `https://tenerifejoy.com` |
+| `NEXT_PUBLIC_SITE_NAME` | `Tenerife Joy` |
 | `NEXT_PUBLIC_STRAPI_API_URL` | `https://tenerifly-strapi-production.up.railway.app` |
-| `NEXT_PUBLIC_STRAPI_API_TOKEN` | *(from tenerifly.io / .env.local)* |
+| `NEXT_PUBLIC_STRAPI_API_TOKEN` | *(from .env.local)* |
 | `RESEND_API_KEY` | *(copy from existing deploy)* |
 | `RESEND_FROM_EMAIL` | *(copy)* |
 | `NEXT_DEFAULT_EMAIL_RECIPIENT` | *(copy)* |
@@ -32,10 +32,10 @@ Or via CLI:
 
 ```bash
 npx vercel env add NEXT_PUBLIC_SITE_URL production
-# paste https://tenerife-tour.com
+# paste https://tenerifejoy.com
 ```
 
-Template: [`tenerife-tour.com.env.example`](tenerife-tour.com.env.example)
+Template: [`tenerifejoy.com.env.example`](tenerifejoy.com.env.example)
 
 ## 3. Git deploy (recommended)
 
@@ -54,9 +54,9 @@ git checkout master-legacy
 npx vercel --prod
 ```
 
-## 5. Custom domain (tenerife-tour.com)
+## 5. Custom domain (tenerifejoy.com)
 
-1. Vercel project → **Settings** → **Domains** → Add `tenerife-tour.com` and `www.tenerife-tour.com`.
+1. Vercel project → **Settings** → **Domains** → Add `tenerifejoy.com` and `www.tenerifejoy.com`.
 2. Vercel shows DNS records.
 3. In OVH DNS zone, update:
 
@@ -70,7 +70,7 @@ npx vercel --prod
 ## 6. Verify
 
 ```bash
-./deploy/verify-domain.sh https://tenerife-tour.com
+./deploy/verify-domain.sh https://tenerifejoy.com
 ```
 
 ## Notes
