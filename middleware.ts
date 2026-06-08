@@ -10,7 +10,20 @@ const locales = LOCALES.map(locale => locale.code) as Locale[];
 const defaultLocale: Locale = 'en';
 
 // Пути, которые не требуют локализации
-const publicPaths = ['/api', '/_next', '/static', '/favicon.ico', '/robots.txt', '/sitemap.xml'];
+const publicPaths = [
+  '/api',
+  '/_next',
+  '/static',
+  '/favicon.ico',
+  '/icon',
+  '/icon.png',
+  '/favicon-32.png',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/apple-icon',
+  '/robots.txt',
+  '/sitemap.xml',
+];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -103,7 +116,7 @@ export const config = {
      * - favicon.ico (favicon file)
      * - robots.txt, sitemap.xml (SEO files)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|icon|icon.png|favicon-32.png|icon-192.png|icon-512.png|apple-icon|robots.txt|sitemap.xml).*)',
   ],
 };
 
