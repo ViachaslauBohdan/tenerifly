@@ -1,6 +1,6 @@
 /** Canarias.com rent-a-car affiliate: URL path + banner asset per app locale. */
 
-export const CANARIAS_AFFILIATE_ID = "VA20022026";
+export const CANARIAS_AFFILIATE_ID = "VA22062026";
 
 const BASE = "https://rentacar.canarias.com";
 
