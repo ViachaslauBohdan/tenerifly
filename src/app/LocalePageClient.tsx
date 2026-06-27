@@ -9,6 +9,7 @@ import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediar
 // import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
 import translationsJson from "../i18n/main.json";
 import { SiteHeader } from "@/components/SiteHeader";
+import payJson from "@/i18n/pay.json";
 import { ViewAllLink } from "@/components/ViewAllLink";
 import { pickLocaleBundle } from "@/types/locale";
 import {
@@ -33,6 +34,7 @@ export function LocalePageClient() {
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
 
   const t = pickLocaleBundle(translations, language);
+  const payLabels = pickLocaleBundle(payJson, language);
   const excursionsIntermediaryNotice =
     (t.sections.excursions as { intermediaryNotice?: string })
       .intermediaryNotice ?? "";
@@ -82,6 +84,7 @@ export function LocalePageClient() {
         selectLanguageLabel={t.selectLanguage}
         excursionsLabel={t.hero.tabs.excursions}
         variant="home"
+        payByCardLabel={payLabels.navLabel}
         createLocaleLink={createLocaleLink}
         onScrollToSection={scrollToSection}
       />

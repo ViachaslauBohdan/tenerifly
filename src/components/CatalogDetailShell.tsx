@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { SiteHeader, type SiteHeaderLanguage } from "@/components/SiteHeader";
 import { useTranslation } from "@/hooks/useTranslation";
+import payJson from "@/i18n/pay.json";
+import { pickLocaleBundle } from "@/types/locale";
 
 type CatalogDetailShellProps = {
   children: React.ReactNode;
@@ -10,6 +12,7 @@ type CatalogDetailShellProps = {
 
 export function CatalogDetailShell({ children }: CatalogDetailShellProps) {
   const { locale, switchLocale, createLocaleLink, t } = useTranslation();
+  const payLabels = pickLocaleBundle(payJson, locale);
   const [language, setLanguage] = useState<SiteHeaderLanguage>(
     locale as SiteHeaderLanguage
   );
@@ -26,6 +29,7 @@ export function CatalogDetailShell({ children }: CatalogDetailShellProps) {
         selectLanguageLabel={t.selectLanguage}
         excursionsLabel={t.hero.tabs.excursions}
         variant="standalone"
+        payByCardLabel={payLabels.navLabel}
         createLocaleLink={createLocaleLink}
       />
       <div className="pt-[6.25rem] min-[400px]:pt-[6.5rem] sm:pt-[6.25rem] md:pt-16">

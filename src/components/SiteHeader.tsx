@@ -2,11 +2,10 @@
 
 import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
-import { ChevronDown, Languages, Menu, X } from "lucide-react";
+import { ChevronDown, CreditCard, Languages, Menu, X } from "lucide-react";
 import { localeDisplayCode, pickLocaleBundle } from "@/types/locale";
 import mainJson from "@/i18n/main.json";
 import { navShortFaqLabel } from "@/lib/navShortLabels";
-// import worldToursJson from "@/i18n/worldTours.json";
 
 type MainHeaderBundle = {
   legalPage?: { title?: string };
@@ -38,8 +37,11 @@ const headerNavHome: Record<string, string> = {
 const headerAnchorClass =
   "touch-manipulation whitespace-nowrap rounded-lg px-2 py-1.5 text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white lg:px-2.5";
 
-// const headerAnchorActiveClass =
-//   "touch-manipulation whitespace-nowrap rounded-lg bg-white/15 px-2 py-1.5 text-sm font-medium text-white lg:px-2.5";
+const headerPayClass =
+  "touch-manipulation inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full border border-emerald-400/40 bg-emerald-500/15 px-3 text-sm font-semibold text-emerald-100 transition-colors hover:bg-emerald-500/25 hover:text-white";
+
+const headerPayActiveClass =
+  "touch-manipulation inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full border border-emerald-300/50 bg-emerald-500/30 px-3 text-sm font-semibold text-white";
 
 const mobileNavLinkClass =
   "touch-manipulation block w-full rounded-lg px-3 py-3 text-left text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15";
@@ -50,7 +52,8 @@ type SiteHeaderProps = {
   selectLanguageLabel: string;
   excursionsLabel: string;
   variant?: "home" | "standalone";
-  // activePage?: "world-tours";
+  activePage?: "pay";
+  payByCardLabel?: string;
   createLocaleLink: (path: string) => string;
   onScrollToSection?: (
     sectionId: string
@@ -63,7 +66,8 @@ export function SiteHeader({
   selectLanguageLabel,
   excursionsLabel,
   variant = "standalone",
-  // activePage,
+  activePage,
+  payByCardLabel,
   createLocaleLink,
   onScrollToSection,
 }: SiteHeaderProps) {
@@ -92,17 +96,6 @@ export function SiteHeader({
     language
   ).legalPage?.title?.trim();
   const legalPageHref = createLocaleLink("/aviso-legal");
-  // const worldToursNav = pickLocaleBundle(
-  //   worldToursJson as Record<string, { badge: string }>,
-  //   language
-  // );
-  // const worldToursHref = createLocaleLink("/world-tours");
-  // const worldToursLinkClass =
-  //   activePage === "world-tours" ? headerAnchorActiveClass : headerAnchorClass;
-  // const worldToursMobileLinkClass =
-  //   activePage === "world-tours"
-  //     ? `${mobileNavLinkClass} bg-white/15 text-white`
-  //     : mobileNavLinkClass;
 
   const sectionHref = (sectionId: string) =>
     variant === "home" ? `#${sectionId}` : `${homeHref}#${sectionId}`;
@@ -159,83 +152,19 @@ export function SiteHeader({
       </Link>
     );
 
-  const renderNavLinks = () => (
-    <>
-      {variant === "home" ? (
-        <a {...navLinkProps("home")} className={headerAnchorClass}>
-          {pickLocaleBundle(headerNavHome, language)}
-        </a>
-      ) : (
-        <Link href={homeHref} className={headerAnchorClass} onClick={closeMobileMenu}>
-          {pickLocaleBundle(headerNavHome, language)}
-        </Link>
-      )}
-      {excursionsLink}
-      <a {...navLinkProps("faq")} className={headerAnchorClass}>
-        {pickLocaleBundle(navShortFaqLabel, language)}
-      </a>
-      {legalPageTitle ? (
-        <Link
-          href={legalPageHref}
-          className={headerAnchorClass}
-          onClick={closeMobileMenu}
-        >
-          {legalPageTitle}
-        </Link>
-      ) : null}
-      {/* World tours nav — disabled
-      <Link
-        href={worldToursHref}
-        className={worldToursLinkClass}
-        aria-current={activePage === "world-tours" ? "page" : undefined}
-        onClick={closeMobileMenu}
-      >
-        {worldToursNav.badge}
-      </Link>
-      */}
-    </>
-  );
+  const payClassName =
+    activePage === "pay" ? headerPayActiveClass : headerPayClass;
 
-  const renderMobileNavLinks = () => (
-    <>
-      {variant === "home" ? (
-        <a {...navLinkPropsMobile("home")} className={mobileNavLinkClass}>
-          {pickLocaleBundle(headerNavHome, language)}
-        </a>
-      ) : (
-        <Link
-          href={homeHref}
-          className={mobileNavLinkClass}
-          onClick={closeMobileMenu}
-        >
-          {pickLocaleBundle(headerNavHome, language)}
-        </Link>
-      )}
-      {excursionsLinkMobile}
-      <a {...navLinkPropsMobile("faq")} className={mobileNavLinkClass}>
-        {pickLocaleBundle(navShortFaqLabel, language)}
-      </a>
-      {legalPageTitle ? (
-        <Link
-          href={legalPageHref}
-          className={mobileNavLinkClass}
-          onClick={closeMobileMenu}
-        >
-          {legalPageTitle}
-        </Link>
-      ) : null}
-      {/* World tours nav — disabled
-      <Link
-        href={worldToursHref}
-        className={worldToursMobileLinkClass}
-        aria-current={activePage === "world-tours" ? "page" : undefined}
-        onClick={closeMobileMenu}
-      >
-        {worldToursNav.badge}
-      </Link>
-      */}
-    </>
-  );
+  const payButton = payByCardLabel ? (
+    <Link
+      href={createLocaleLink("/pay")}
+      className={payClassName}
+      aria-current={activePage === "pay" ? "page" : undefined}
+    >
+      <CreditCard className="h-4 w-4 shrink-0" aria-hidden />
+      <span>{payByCardLabel}</span>
+    </Link>
+  ) : null;
 
   const languageSelector = (
     <div
@@ -277,6 +206,71 @@ export function SiteHeader({
     </div>
   );
 
+  const headerControls = (
+    <div className="flex shrink-0 items-center gap-2">
+      {payButton}
+      {languageSelector}
+    </div>
+  );
+
+  const renderNavLinks = () => (
+    <>
+      {variant === "home" ? (
+        <a {...navLinkProps("home")} className={headerAnchorClass}>
+          {pickLocaleBundle(headerNavHome, language)}
+        </a>
+      ) : (
+        <Link href={homeHref} className={headerAnchorClass} onClick={closeMobileMenu}>
+          {pickLocaleBundle(headerNavHome, language)}
+        </Link>
+      )}
+      {excursionsLink}
+      <a {...navLinkProps("faq")} className={headerAnchorClass}>
+        {pickLocaleBundle(navShortFaqLabel, language)}
+      </a>
+      {legalPageTitle ? (
+        <Link
+          href={legalPageHref}
+          className={headerAnchorClass}
+          onClick={closeMobileMenu}
+        >
+          {legalPageTitle}
+        </Link>
+      ) : null}
+    </>
+  );
+
+  const renderMobileNavLinks = () => (
+    <>
+      {variant === "home" ? (
+        <a {...navLinkPropsMobile("home")} className={mobileNavLinkClass}>
+          {pickLocaleBundle(headerNavHome, language)}
+        </a>
+      ) : (
+        <Link
+          href={homeHref}
+          className={mobileNavLinkClass}
+          onClick={closeMobileMenu}
+        >
+          {pickLocaleBundle(headerNavHome, language)}
+        </Link>
+      )}
+      {excursionsLinkMobile}
+      <a {...navLinkPropsMobile("faq")} className={mobileNavLinkClass}>
+        {pickLocaleBundle(navShortFaqLabel, language)}
+      </a>
+      {legalPageTitle ? (
+        <Link
+          href={legalPageHref}
+          className={mobileNavLinkClass}
+          onClick={closeMobileMenu}
+        >
+          {legalPageTitle}
+        </Link>
+      ) : null}
+    </>
+  );
+
   const menuButton = (
     <button
       type="button"
@@ -298,7 +292,7 @@ export function SiteHeader({
     <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 pt-[env(safe-area-inset-top,0px)] backdrop-blur-md">
       <div className="mx-auto w-full max-w-7xl px-4 min-[400px]:px-5 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-3 py-2 md:hidden">
-          {languageSelector}
+          {headerControls}
           {menuButton}
         </div>
 
@@ -309,7 +303,7 @@ export function SiteHeader({
           >
             {renderNavLinks()}
           </nav>
-          {languageSelector}
+          {headerControls}
         </div>
 
         {mobileMenuOpen ? (
