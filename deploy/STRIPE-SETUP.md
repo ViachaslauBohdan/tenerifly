@@ -8,7 +8,7 @@
 
 ## 2. Environment variables
 
-Add to `.env.local` (local) and Vercel **Production** (see `deploy/tenerifejoy.com.env.example`):
+Add to `.env.local` (local) or your host's environment variables (Railway, Vercel):
 
 | Variable | Description |
 |----------|-------------|
@@ -17,6 +17,16 @@ Add to `.env.local` (local) and Vercel **Production** (see `deploy/tenerifejoy.c
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Publishable key (`pk_test_…` or `pk_live_…`) |
 | `STRAPI_API_URL` | Strapi base URL (no `/api` suffix) |
 | `STRAPI_API_TOKEN` | Server-only token with create permission on `payment-transaction` |
+
+### Railway (Next.js frontend)
+
+1. Open your **frontend** service in [Railway](https://railway.app) (not the Strapi service).
+2. **Variables** → add:
+   - `STRIPE_SECRET_KEY` = `sk_test_…` or `sk_live_…`
+   - (optional for webhook) `STRIPE_WEBHOOK_SECRET`, `STRAPI_API_TOKEN`
+3. **Redeploy** the service after saving variables.
+
+Railway does not read `.env.local` from git — variables must be set in the dashboard.
 
 ## 3. Webhook endpoint
 

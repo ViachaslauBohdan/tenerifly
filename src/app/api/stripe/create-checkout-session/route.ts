@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          'Stripe is not configured. Add STRIPE_SECRET_KEY to .env.local (see deploy/STRIPE-SETUP.md).',
+          'Stripe is not configured. Set STRIPE_SECRET_KEY in your deployment environment (Railway/Vercel variables or .env.local locally). See deploy/STRIPE-SETUP.md.',
       },
       { status: 503 }
     );
@@ -127,7 +127,7 @@ export async function POST(req: Request) {
 
     const message =
       error instanceof Error && error.message.includes('Invalid API Key')
-        ? 'Invalid STRIPE_SECRET_KEY. Check your Stripe test/live key in .env.local.'
+        ? 'Invalid STRIPE_SECRET_KEY. Check your Stripe test/live key in deployment environment variables.'
         : error instanceof Error
           ? error.message
           : 'Could not start checkout';
