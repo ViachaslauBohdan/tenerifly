@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
-import { ChevronDown, Languages, Menu, X } from "lucide-react";
+import { ChevronDown, CreditCard, Languages, Menu, X } from "lucide-react";
 import { localeDisplayCode } from "@/types/locale";
 import worldToursJson from "@/i18n/worldTours.json";
 import mainJson from "@/i18n/main.json";
@@ -53,6 +53,12 @@ const headerAnchorClass =
 const headerAnchorActiveClass =
   "touch-manipulation whitespace-nowrap rounded-lg bg-white/15 px-2 py-1.5 text-sm font-medium text-white lg:px-2.5";
 
+const headerPayClass =
+  "touch-manipulation inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full border border-emerald-400/40 bg-emerald-500/15 px-3 text-sm font-semibold text-emerald-100 transition-colors hover:bg-emerald-500/25 hover:text-white";
+
+const headerPayActiveClass =
+  "touch-manipulation inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full border border-emerald-300/50 bg-emerald-500/30 px-3 text-sm font-semibold text-white";
+
 const mobileNavLinkClass =
   "touch-manipulation block w-full rounded-lg px-3 py-3 text-left text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15";
 
@@ -68,7 +74,8 @@ type SiteHeaderProps = {
   };
   variant?: "home" | "standalone";
   showTransfers?: boolean;
-  activePage?: "world-tours";
+  activePage?: "world-tours" | "pay";
+  payByCardLabel?: string;
   createLocaleLink: (path: string) => string;
   onScrollToSection?: (
     sectionId: string
@@ -83,6 +90,7 @@ export function SiteHeader({
   variant = "standalone",
   showTransfers = false,
   activePage,
+  payByCardLabel,
   createLocaleLink,
   onScrollToSection,
 }: SiteHeaderProps) {
@@ -148,6 +156,67 @@ export function SiteHeader({
     activePage === "world-tours"
       ? `${mobileNavLinkClass} bg-white/15 text-white`
       : mobileNavLinkClass;
+
+  const payClassName =
+    activePage === "pay" ? headerPayActiveClass : headerPayClass;
+
+  const payButton = payByCardLabel ? (
+    <Link
+      href={createLocaleLink("/pay")}
+      className={payClassName}
+      aria-current={activePage === "pay" ? "page" : undefined}
+    >
+      <CreditCard className="h-4 w-4 shrink-0" aria-hidden />
+      <span>{payByCardLabel}</span>
+    </Link>
+  ) : null;
+
+  const languageSelector = (
+    <div
+      className="relative shrink-0 [color-scheme:dark]"
+      title={languages.find((l) => l.code === language)?.name}
+    >
+      <div className="flex h-9 items-stretch overflow-hidden rounded-full border border-white/20 bg-black/25 shadow-sm backdrop-blur-md">
+        <span
+          className="flex items-center border-r border-white/10 bg-white/[0.06] px-2 text-white/70"
+          aria-hidden
+        >
+          <Languages className="h-4 w-4" />
+        </span>
+        <div className="relative min-w-[3.15rem]">
+          <select
+            value={language}
+            onChange={(e) =>
+              onLanguageChange(e.target.value as SiteHeaderLanguage)
+            }
+            aria-label={selectLanguageLabel}
+            className="h-full w-full min-w-[3.15rem] cursor-pointer appearance-none bg-transparent py-0 pl-2 pr-7 text-sm font-semibold uppercase tracking-wide text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/25"
+          >
+            {languages.map((lang) => (
+              <option
+                key={lang.code}
+                value={lang.code}
+                className="bg-slate-900 text-white"
+              >
+                {`${lang.flag} ${localeDisplayCode(lang.code)}`}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            aria-hidden
+            className="pointer-events-none absolute right-1.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  const headerControls = (
+    <div className="flex shrink-0 items-center gap-2">
+      {payButton}
+      {languageSelector}
+    </div>
+  );
 
   const renderNavLinks = (linkClass: string, worldToursLinkClass: string) => (
     <>
@@ -255,46 +324,6 @@ export function SiteHeader({
     </>
   );
 
-  const languageSelector = (
-    <div
-      className="relative shrink-0 [color-scheme:dark]"
-      title={languages.find((l) => l.code === language)?.name}
-    >
-      <div className="flex h-9 items-stretch overflow-hidden rounded-full border border-white/20 bg-black/25 shadow-sm backdrop-blur-md">
-        <span
-          className="flex items-center border-r border-white/10 bg-white/[0.06] px-2 text-white/70"
-          aria-hidden
-        >
-          <Languages className="h-4 w-4" />
-        </span>
-        <div className="relative min-w-[3.15rem]">
-          <select
-            value={language}
-            onChange={(e) =>
-              onLanguageChange(e.target.value as SiteHeaderLanguage)
-            }
-            aria-label={selectLanguageLabel}
-            className="h-full w-full min-w-[3.15rem] cursor-pointer appearance-none bg-transparent py-0 pl-2 pr-7 text-sm font-semibold uppercase tracking-wide text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/25"
-          >
-            {languages.map((lang) => (
-              <option
-                key={lang.code}
-                value={lang.code}
-                className="bg-slate-900 text-white"
-              >
-                {`${lang.flag} ${localeDisplayCode(lang.code)}`}
-              </option>
-            ))}
-          </select>
-          <ChevronDown
-            aria-hidden
-            className="pointer-events-none absolute right-1.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45"
-          />
-        </div>
-      </div>
-    </div>
-  );
-
   const menuButton = (
     <button
       type="button"
@@ -315,13 +344,13 @@ export function SiteHeader({
   return (
     <header className="fixed top-0 left-0 right-0 z-50 overflow-x-hidden border-b border-white/10 bg-slate-950/55 backdrop-blur-md pt-[env(safe-area-inset-top,0px)]">
       <div className="mx-auto w-full max-w-7xl px-4 min-[400px]:px-5 sm:px-6 lg:px-8">
-        {/* Mobile: language + menu only */}
+        {/* Mobile: pay + language + menu */}
         <div className="flex items-center justify-between gap-3 py-2 md:hidden">
-          {languageSelector}
+          {headerControls}
           {menuButton}
         </div>
 
-        {/* Desktop: nav + language */}
+        {/* Desktop: nav + pay + language */}
         <div className="hidden min-h-0 items-center gap-3 py-2 md:flex">
           <nav
             className="site-header-desktop-nav flex min-h-0 min-w-0 flex-1 flex-wrap items-center gap-0.5 lg:gap-1"
@@ -329,7 +358,7 @@ export function SiteHeader({
           >
             {renderNavLinks(headerAnchorClass, worldToursClassName)}
           </nav>
-          {languageSelector}
+          {headerControls}
         </div>
 
         {/* Mobile menu panel */}

@@ -27,6 +27,12 @@ In [Vercel dashboard](https://vercel.com) → Project → **Settings** → **Env
 | `NEXT_DEFAULT_EMAIL_RECIPIENT` | *(copy)* |
 | `TELEGRAM_BOT_TOKEN` | *(optional)* |
 | `TELEGRAM_CHAT_ID` | *(optional)* |
+| `STRIPE_SECRET_KEY` | *(Stripe test/live secret key)* |
+| `STRIPE_WEBHOOK_SECRET` | *(from Stripe webhook endpoint)* |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | *(Stripe publishable key)* |
+| `STRAPI_API_TOKEN` | *(server-only token for payment webhook writes)* |
+
+See [`deploy/STRIPE-SETUP.md`](STRIPE-SETUP.md) for Stripe + Strapi payment setup.
 
 Or via CLI:
 

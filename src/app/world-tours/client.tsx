@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
+import payJson from "@/i18n/pay.json";
+import { pickLocaleBundle } from "@/types/locale";
 import { OtpuskTourSearchSection } from "@/components/OtpuskTourSearchSection";
 import {
   SiteHeader,
@@ -11,6 +13,7 @@ import { TourTaglinesHeader } from "@/components/TourTaglinesHeader";
 
 export default function WorldToursPageClient() {
   const { locale, switchLocale, createLocaleLink, t } = useTranslation();
+  const payLabels = pickLocaleBundle(payJson, locale);
   const [language, setLanguage] = useState<SiteHeaderLanguage>(
     locale as SiteHeaderLanguage
   );
@@ -36,6 +39,7 @@ export default function WorldToursPageClient() {
         }}
         variant="standalone"
         activePage="world-tours"
+        payByCardLabel={payLabels.navLabel}
         createLocaleLink={createLocaleLink}
       />
 

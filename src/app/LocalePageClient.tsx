@@ -30,6 +30,7 @@ import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import translationsJson from "../i18n/main.json";
 import { SiteHeader } from "@/components/SiteHeader";
+import payJson from "@/i18n/pay.json";
 import { AtlanticoExcursionCard } from "@/components/AtlanticoExcursionCard";
 import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
 import { ViewAllLink } from "@/components/ViewAllLink";
@@ -196,6 +197,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
 
   const t = pickLocaleBundle(translations, language);
+  const payLabels = pickLocaleBundle(payJson, language);
   const excursionsIntermediaryNotice =
     (t.sections.excursions as { intermediaryNotice?: string })
       .intermediaryNotice ?? "";
@@ -510,6 +512,7 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         }}
         variant="home"
         showTransfers={transfers.length > 0}
+        payByCardLabel={payLabels.navLabel}
         createLocaleLink={createLocaleLink}
         onScrollToSection={scrollToSection}
       />

@@ -378,6 +378,26 @@ export interface Property {
 }
 
 // Интерфейс для блога
+export type PaymentCategory = 'tour' | 'car' | 'apartment';
+export type PaymentTransactionStatus = 'completed' | 'refunded';
+
+export interface PaymentTransaction {
+  id?: number;
+  documentId?: string;
+  amount: number;
+  currency: string;
+  categories: PaymentCategory[];
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string | null;
+  customerNote?: string | null;
+  locale: string;
+  stripeSessionId: string;
+  stripePaymentIntentId?: string | null;
+  status: PaymentTransactionStatus;
+  paidAt: string;
+}
+
 export interface BlogPost {
   id: number;
   documentId: string;
