@@ -106,11 +106,13 @@ export function CompactGuestSelect({
                       type="button"
                       role="option"
                       aria-selected={selected}
+                      tabIndex={-1}
                       className={`flex min-h-11 w-full items-center px-4 text-left text-base font-semibold text-gray-900 sm:min-h-10 sm:px-3 sm:text-sm ${
                         selected
                           ? "bg-sky-50 text-sky-800"
                           : "hover:bg-gray-50 active:bg-gray-100"
                       }`}
+                      onMouseDown={(event) => event.preventDefault()}
                       onClick={() => handleSelect(count)}
                     >
                       {count}

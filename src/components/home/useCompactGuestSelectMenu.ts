@@ -59,6 +59,22 @@ function getMenuStyle(trigger: HTMLElement): CSSProperties {
   };
 }
 
+/** Scroll only inside the listbox — never call scrollIntoView (portaled nodes live at body end). */
+function scrollOptionIntoList(list: HTMLElement, option: HTMLElement) {
+  const listRect = list.getBoundingClientRect();
+  const optionRect = option.getBoundingClientRect();
+
+  if (optionRect.top < listRect.top) {
+    list.scrollTop += optionRect.top - listRect.top;
+  } else if (optionRect.bottom > listRect.bottom) {
+    list.scrollTop += optionRect.bottom - listRect.bottom;
+  }
+}
+
+function focusWithoutScroll(element: HTMLElement | null) {
+  element?.focus({ preventScroll: true });
+}
+
 /** Syncs dropdown open state with viewport geometry and dismiss gestures. */
 export function useCompactGuestSelectMenu(): UseCompactGuestSelectMenuResult {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -85,12 +101,12 @@ export function useCompactGuestSelectMenu(): UseCompactGuestSelectMenuResult {
     window.addEventListener("resize", updatePosition);
     window.addEventListener("scroll", updatePosition, true);
 
-    const selected = listRef.current?.querySelector('[aria-selected="true"]');
-    if (
-      selected instanceof HTMLElement &&
-      typeof selected.scrollIntoView === "function"
-    ) {
-      selected.scrollIntoView({ block: "nearest" });
+    const list = listRef.current;
+    const selected = list?.querySelector('[aria-selected="true"]');
+    if (list && selected instanceof HTMLElement) {
+      // offsetTop on the option button is relative to the li; use the li for list scroll.
+      const row = selected.closest("li") ?? selected;
+      scrollOptionIntoList(list, row instanceof HTMLElement ? row : selected);
     }
 
     const onPointerDown = (event: PointerEvent) => {
@@ -104,7 +120,7 @@ export function useCompactGuestSelectMenu(): UseCompactGuestSelectMenuResult {
       if (event.key === "Escape") {
         event.preventDefault();
         setOpen(false);
-        triggerRef.current?.focus();
+        focusWithoutScroll(triggerRef.current);
       }
     };
 
@@ -120,7 +136,14 @@ export function useCompactGuestSelectMenu(): UseCompactGuestSelectMenuResult {
   }, [open]);
 
   const handleToggle = () => {
+    const scrollY = window.scrollY;
     setOpen((current) => !current);
+    // Label/focus + portaled menu can nudge window scroll; pin it back.
+    requestAnimationFrame(() => {
+      if (window.scrollY !== scrollY) {
+        window.scrollTo(0, scrollY);
+      }
+    });
   };
 
   const handleClose = () => {
@@ -129,7 +152,7 @@ export function useCompactGuestSelectMenu(): UseCompactGuestSelectMenuResult {
 
   const closeAndFocusTrigger = () => {
     setOpen(false);
-    triggerRef.current?.focus();
+    focusWithoutScroll(triggerRef.current);
   };
 
   const handleTriggerKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {

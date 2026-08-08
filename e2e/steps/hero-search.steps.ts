@@ -145,3 +145,55 @@ Then(
     assert.notEqual(current, this.previousSelectValue);
   }
 );
+
+When("I remember the page scroll position", async function (this: CustomWorld) {
+  // Wait a frame so layout is settled, then store scrollY.
+  await this.page.waitForTimeout(100);
+  this.rememberedScrollY = await this.page.evaluate(() => window.scrollY);
+});
+
+Then(
+  "the guest count listbox should be visible",
+  async function (this: CustomWorld) {
+    const listbox = this.page.getByRole("listbox");
+    await listbox.waitFor({ state: "visible", timeout: 5_000 });
+    const maxHeight = await listbox.evaluate((el) => getComputedStyle(el).maxHeight);
+    assert.notEqual(maxHeight, "none");
+    assert.notEqual(maxHeight, "0px");
+    const overflowY = await listbox.evaluate((el) => getComputedStyle(el).overflowY);
+    assert.ok(
+      overflowY === "auto" || overflowY === "scroll",
+      `Expected scrollable listbox, got overflow-y=${overflowY}`
+    );
+  }
+);
+
+Then(
+  "the page should not have scrolled to the bottom",
+  async function (this: CustomWorld) {
+    // Allow the open/select rAF scroll restore to settle.
+    await this.page.waitForTimeout(150);
+    const metrics = await this.page.evaluate(() => {
+      const scrollY = window.scrollY;
+      const maxScroll = Math.max(
+        0,
+        document.documentElement.scrollHeight - window.innerHeight
+      );
+      return { scrollY, maxScroll, innerHeight: window.innerHeight };
+    });
+
+    const remembered = this.rememberedScrollY ?? 0;
+    assert.ok(
+      Math.abs(metrics.scrollY - remembered) <= 80,
+      `Page scroll jumped from ${remembered} to ${metrics.scrollY}`
+    );
+
+    if (metrics.maxScroll > 200) {
+      const distanceFromBottom = metrics.maxScroll - metrics.scrollY;
+      assert.ok(
+        distanceFromBottom > 100,
+        `Page scrolled near the bottom (scrollY=${metrics.scrollY}, max=${metrics.maxScroll})`
+      );
+    }
+  }
+);

@@ -20,6 +20,7 @@ export type HeroWorld = {
   page: Page;
   baseUrl: string;
   previousSelectValue?: string;
+  rememberedScrollY?: number;
 };
 
 export class CustomWorld extends World implements HeroWorld {
@@ -28,6 +29,7 @@ export class CustomWorld extends World implements HeroWorld {
   page!: Page;
   baseUrl = process.env.BROWSER_BASE_URL ?? "http://127.0.0.1:3000";
   previousSelectValue?: string;
+  rememberedScrollY?: number;
 
   constructor(options: IWorldOptions) {
     super(options);
