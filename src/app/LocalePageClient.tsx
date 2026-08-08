@@ -133,6 +133,50 @@ function CompactSearchField({
   );
 }
 
+const GUEST_COUNT_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
+
+function CompactGuestSelect({
+  value,
+  onChange,
+  max = 10,
+  ariaLabel,
+  controlClassName,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+  max?: number;
+  ariaLabel: string;
+  controlClassName: string;
+}) {
+  const options = max === 10 ? GUEST_COUNT_OPTIONS : Array.from({ length: max }, (_, i) => i + 1);
+  const safeValue = Number.isFinite(value) && value >= 1 ? Math.min(value, max) : 1;
+
+  return (
+    <div className="relative flex min-w-0 items-center">
+      <Users
+        className="pointer-events-none absolute left-0 h-4 w-4 text-gray-400"
+        aria-hidden
+      />
+      <select
+        aria-label={ariaLabel}
+        className={`${controlClassName} w-full cursor-pointer appearance-none pl-6 pr-7`}
+        value={safeValue}
+        onChange={(e) => onChange(Number(e.target.value))}
+      >
+        {options.map((count) => (
+          <option key={count} value={count}>
+            {count}
+          </option>
+        ))}
+      </select>
+      <ChevronDown
+        className="pointer-events-none absolute right-0 h-4 w-4 text-gray-400"
+        aria-hidden
+      />
+    </div>
+  );
+}
+
 export function LocalePageClient({ initialData }: LocalePageClientProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -609,17 +653,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.accommodation.guests}>
-                        <div className="relative flex items-center">
-                          <Users className="absolute left-0 h-4 w-4 text-gray-400" />
-                          <input
-                            type="number"
-                            min="1"
-                            max="10"
-                            className={`${compactControlClass} pl-6`}
-                            value={guests}
-                            onChange={(e) => setGuests(Number(e.target.value))}
-                          />
-                        </div>
+                        <CompactGuestSelect
+                          value={guests}
+                          onChange={setGuests}
+                          max={10}
+                          ariaLabel={t.hero.accommodation.guests}
+                          controlClassName={compactControlClass}
+                        />
                       </CompactSearchField>
                     </>
                   )}
@@ -670,17 +710,13 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
                         />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.excursions.people}>
-                        <div className="relative flex items-center">
-                          <Users className="absolute left-0 h-4 w-4 text-gray-400" />
-                          <input
-                            type="number"
-                            min="1"
-                            max="20"
-                            className={`${compactControlClass} pl-6`}
-                            value={guests}
-                            onChange={(e) => setGuests(Number(e.target.value))}
-                          />
-                        </div>
+                        <CompactGuestSelect
+                          value={guests}
+                          onChange={setGuests}
+                          max={20}
+                          ariaLabel={t.hero.excursions.people}
+                          controlClassName={compactControlClass}
+                        />
                       </CompactSearchField>
                       <CompactSearchField label={t.hero.excursions.language}>
                         <select
