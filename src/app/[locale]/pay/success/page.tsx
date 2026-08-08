@@ -1,7 +1,8 @@
 import { SITE_BRAND } from "@/lib/site";
 import { Metadata } from "next";
-import { Suspense } from "react";
-import PaySuccessPageClient from "@/app/pay/success-client";
+import { notFound } from "next/navigation";
+// import { Suspense } from "react";
+// import PaySuccessPageClient from "@/app/pay/success-client";
 import { LOCALES, type Locale } from "@/types/locale";
 import payJson from "@/i18n/pay.json";
 import {
@@ -59,9 +60,11 @@ export async function generateMetadata({
 }
 
 export default async function PaySuccessPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
-      <PaySuccessPageClient />
-    </Suspense>
-  );
+  // Temporarily hide card payment success page.
+  notFound();
+  // return (
+  //   <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
+  //     <PaySuccessPageClient />
+  //   </Suspense>
+  // );
 }
