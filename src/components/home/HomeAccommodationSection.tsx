@@ -6,7 +6,7 @@ import { HomeCardImage } from "@/components/HomeCardImage";
 import { HomeEmptyState } from "@/components/home/HomeEmptyState";
 import { TilePriceBadge } from "@/components/TilePriceBadge";
 import { ViewAllLink } from "@/components/ViewAllLink";
-import type { BookingItem, HomeProperty } from "@/types/homeListings";
+import type { BookingItem, HomeProperty } from "@/components/home/types";
 import translationsJson from "@/i18n/main.json";
 
 type AccommodationCopy = (typeof translationsJson)["en"]["sections"]["accommodation"];

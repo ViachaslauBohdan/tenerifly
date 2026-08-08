@@ -3,8 +3,8 @@ import {
   getHomeCarCurrency,
   getHomeCarFeatures,
   getHomeCarPrice,
-} from "@/lib/homeCars";
-import type { HomeCar } from "@/types/homeListings";
+} from "@/components/home/homeCars";
+import type { HomeCar } from "@/components/home/types";
 
 const baseCar: HomeCar = {
   title: "Test Car",

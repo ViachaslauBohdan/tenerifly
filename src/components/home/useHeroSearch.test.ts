@@ -11,7 +11,7 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => searchParams,
 }));
 
-import { useHeroSearch } from "@/hooks/useHeroSearch";
+import { useHeroSearch } from "@/components/home/useHeroSearch";
 
 describe("useHeroSearch", () => {
   beforeEach(() => {

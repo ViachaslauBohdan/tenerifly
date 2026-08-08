@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { BookingItem } from "@/types/homeListings";
+import type { BookingItem } from "@/components/home/types";
 
 export type BookingItemType =
   | "excursion"

@@ -3,7 +3,7 @@
 import { AtlanticoExcursionCard } from "@/components/AtlanticoExcursionCard";
 import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
 import { ViewAllLink } from "@/components/ViewAllLink";
-import type { LanguageCode } from "@/types/homeListings";
+import type { LanguageCode } from "@/components/home/types";
 import translationsJson from "@/i18n/main.json";
 
 type ExcursionsCopy = (typeof translationsJson)["en"]["sections"]["excursions"];

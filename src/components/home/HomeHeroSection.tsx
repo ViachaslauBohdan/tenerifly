@@ -19,7 +19,7 @@ import {
   heroSectionClass,
   heroTitleClass,
 } from "@/lib/heroSearchLayout";
-import type { LanguageCode } from "@/types/homeListings";
+import type { LanguageCode } from "@/components/home/types";
 import translationsJson from "@/i18n/main.json";
 import { pickLocaleBundle } from "@/types/locale";
 

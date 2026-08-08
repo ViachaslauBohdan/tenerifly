@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { useBookingModal } from "@/hooks/useBookingModal";
+import { useBookingModal } from "@/components/home/useBookingModal";
 
 describe("useBookingModal", () => {
   it("opens with the selected booking item", () => {

@@ -1,0 +1,52 @@
+---
+description: Component-centric folder structure for React/Next.js
+globs: "src/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Component-centric folders
+
+Prefer colocation: put a component with its tests, hooks, types, and small helpers in one folder. Route files stay thin.
+
+## Layout
+
+```text
+src/
+  app/                         # Next.js routes only (page, layout, loading)
+  components/
+    home/                      # feature/domain folder
+      HomeHeroSection.tsx      # public component (matches filename)
+      HomeHeroSection.test.tsx
+      CompactGuestSelect.tsx
+      CompactGuestSelect.test.tsx
+      useHeroSearch.ts         # local hook (home-only)
+      useBookingModal.ts       # local hook (home-only)
+      homeCars.ts              # local helpers
+      types.ts                 # local types
+    SiteHeader.tsx             # shared, used in 2+ features → keep flat or shared/
+  hooks/                       # shared hooks only (2+ features)
+  lib/                         # shared pure utilities
+  types/                       # shared domain types
+```
+
+## Rules
+
+- **One main component per file**; filename = export name (`HomeFaqSection.tsx` → `HomeFaqSection`).
+- **Feature folder** when a UI area has 2+ related files (`components/home/`, `components/booking/`).
+- **Colocate tests** next to the unit: `Foo.tsx` + `Foo.test.tsx`.
+- **Local first:** hook/helper used by one feature stays in that folder. Move to `src/hooks/` or `src/lib/` only when reused by 2+ features.
+- **No deep barrels** (`index.ts` re-exporting everything) unless the folder is a stable public API.
+- **App Router:** `src/app/**/page.tsx` composes feature components; avoid large client logic in route files.
+- **`"use client"`** only on components that need browser APIs, state, or events — keep leaves client, parents server when possible.
+- **Do not** create `components/common/`, `components/ui/` dumps for feature-specific widgets. Shared primitives only when truly generic.
+
+## Examples
+
+```text
+✅ components/home/HomeCarsSection.tsx
+✅ components/home/homeCars.ts
+✅ components/home/useHeroSearch.ts
+
+❌ components/HomeCarsSection.tsx + hooks/useHomeCarsOnly.ts scattered
+❌ app/LocalePageClient.tsx with 1000+ lines of section JSX
+```

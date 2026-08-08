@@ -14,9 +14,9 @@ import {
   getHomeCarCurrency,
   getHomeCarFeatures,
   getHomeCarPrice,
-} from "@/lib/homeCars";
+} from "@/components/home/homeCars";
 import { getHomeCarImageUrl, HOME_DISPLAY_LIMIT } from "@/lib/homeListing";
-import type { BookingItem, HomeCar, LanguageCode } from "@/types/homeListings";
+import type { BookingItem, HomeCar, LanguageCode } from "@/components/home/types";
 import type { Locale } from "@/types/locale";
 import translationsJson from "@/i18n/main.json";
 

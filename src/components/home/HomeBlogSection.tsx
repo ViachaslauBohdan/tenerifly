@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { HomeCardImage } from "@/components/HomeCardImage";
 import { HomeEmptyState } from "@/components/home/HomeEmptyState";
 import { ViewAllLink } from "@/components/ViewAllLink";
-import type { HomeBlogPost } from "@/types/homeListings";
+import type { HomeBlogPost } from "@/components/home/types";
 import translationsJson from "@/i18n/main.json";
 
 type BlogCopy = (typeof translationsJson)["en"]["sections"]["blog"];

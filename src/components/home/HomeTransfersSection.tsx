@@ -10,7 +10,7 @@ import {
   getTransferLocaleText,
   type Transfer,
 } from "@/lib/transfers";
-import type { BookingItem, LanguageCode } from "@/types/homeListings";
+import type { BookingItem, LanguageCode } from "@/components/home/types";
 
 type HomeTransfersSectionProps = {
   transfers: Transfer[];

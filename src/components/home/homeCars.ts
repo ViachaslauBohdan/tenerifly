@@ -1,4 +1,4 @@
-import type { HomeCar } from "@/types/homeListings";
+import type { HomeCar } from "@/components/home/types";
 
 type CarsCurrencyMap = Record<string, string>;
 

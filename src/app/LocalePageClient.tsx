@@ -2,8 +2,6 @@
 
 import type { MouseEvent } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useBookingModal } from "@/hooks/useBookingModal";
-import { useHeroSearch } from "@/hooks/useHeroSearch";
 import { useDataLoader } from "./useDataLoader";
 import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -15,16 +13,18 @@ import { HomeExcursionsSection } from "@/components/home/HomeExcursionsSection";
 import { HomeBlogSection } from "@/components/home/HomeBlogSection";
 import { HomeFaqSection } from "@/components/home/HomeFaqSection";
 import { HomeFooter } from "@/components/home/HomeFooter";
-import translationsJson from "@/i18n/main.json";
-import payJson from "@/i18n/pay.json";
-import { pickLocaleBundle, type Locale } from "@/types/locale";
+import { useBookingModal } from "@/components/home/useBookingModal";
+import { useHeroSearch } from "@/components/home/useHeroSearch";
 import type {
   HomeBlogPost,
   HomeCar,
   HomeProperty,
   LanguageCode,
   LocalePageInitialData,
-} from "@/types/homeListings";
+} from "@/components/home/types";
+import translationsJson from "@/i18n/main.json";
+import payJson from "@/i18n/pay.json";
+import { pickLocaleBundle, type Locale } from "@/types/locale";
 
 type LocalePageClientProps = {
   initialData?: LocalePageInitialData;
