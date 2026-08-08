@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CompactGuestSelect } from "@/components/home/CompactGuestSelect";
@@ -27,27 +27,28 @@ function getGuestSelect() {
 }
 
 describe("CompactGuestSelect", () => {
-  it("renders a select with guest options instead of a number input", () => {
+  it("renders a combobox instead of a number input", () => {
     renderGuests();
 
     const select = getGuestSelect();
-    expect(select.tagName).toBe("SELECT");
-    expect(select).toHaveValue("2");
+    expect(select.tagName).toBe("BUTTON");
+    expect(select).toHaveAttribute("data-value", "2");
+    expect(select).toHaveTextContent("2");
     expect(screen.queryByRole("spinbutton")).not.toBeInTheDocument();
-    expect(select.querySelectorAll("option")).toHaveLength(10);
   });
 
   it("clamps invalid values down to 1", () => {
     renderGuests({ value: 0 });
-    expect(getGuestSelect()).toHaveValue("1");
+    expect(getGuestSelect()).toHaveAttribute("data-value", "1");
   });
 
   it("clamps values above max down to max", () => {
     renderGuests({ value: 99, max: 10 });
-    expect(getGuestSelect()).toHaveValue("10");
+    expect(getGuestSelect()).toHaveAttribute("data-value", "10");
   });
 
-  it("supports a custom max for tour people counts", () => {
+  it("supports a custom max for tour people counts with a scrollable list", async () => {
+    const user = userEvent.setup();
     render(
       <CompactGuestSelect
         value={6}
@@ -58,9 +59,11 @@ describe("CompactGuestSelect", () => {
       />
     );
 
-    expect(
-      screen.getByRole("combobox", { name: "People" }).querySelectorAll("option")
-    ).toHaveLength(20);
+    await user.click(screen.getByRole("combobox", { name: "People" }));
+    const listbox = screen.getByRole("listbox", { name: "People" });
+    expect(within(listbox).getAllByRole("option")).toHaveLength(20);
+    expect(listbox.className).toMatch(/overflow-y-auto/);
+    expect(listbox.style.maxHeight).toBeTruthy();
   });
 
   it("calls onChange with a number when a guest count is selected", async () => {
@@ -68,7 +71,8 @@ describe("CompactGuestSelect", () => {
     const onChange = vi.fn();
     renderGuests({ onChange });
 
-    await user.selectOptions(getGuestSelect(), "4");
+    await user.click(getGuestSelect());
+    await user.click(screen.getByRole("option", { name: "4" }));
     expect(onChange).toHaveBeenCalledWith(4);
   });
 
@@ -79,5 +83,13 @@ describe("CompactGuestSelect", () => {
     expect(select.className).toMatch(/w-full/);
     expect(select.className).toMatch(/min-h-8/);
   });
-});
 
+  it("opens the listbox with the keyboard", async () => {
+    const user = userEvent.setup();
+    renderGuests();
+
+    getGuestSelect().focus();
+    await user.keyboard("{ArrowDown}");
+    expect(screen.getByRole("listbox", { name: "Guests" })).toBeInTheDocument();
+  });
+});

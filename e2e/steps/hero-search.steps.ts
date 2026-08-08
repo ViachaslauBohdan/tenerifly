@@ -41,7 +41,10 @@ Then(
   async function (this: CustomWorld, controlId: string) {
     const info = await fieldInfo(this.page, controlId);
     assert.ok(info, `Missing label/control for #${controlId}`);
-    assert.equal(info.tag, "SELECT");
+    assert.ok(
+      info.tag === "SELECT" || info.tag === "BUTTON",
+      `Expected SELECT or BUTTON for #${controlId}, got ${info.tag}`
+    );
     assert.equal(info.containsControl, true);
     assert.ok(info.labelHeight > 40, `Expected tall label hit area for #${controlId}`);
     assert.ok(
@@ -70,14 +73,32 @@ When(
 When(
   "I choose {string} in the {string} select",
   async function (this: CustomWorld, value: string, controlId: string) {
-    await this.page.selectOption(`#${controlId}`, value);
+    const control = this.page.locator(`#${controlId}`);
+    const tag = await control.evaluate((el) => el.tagName);
+    if (tag === "SELECT") {
+      await control.selectOption(value);
+      return;
+    }
+
+    const expanded = await control.getAttribute("aria-expanded");
+    if (expanded !== "true") {
+      await control.click();
+    }
+    await this.page
+      .locator(`[role="listbox"] [role="option"]`, { hasText: new RegExp(`^${value}$`) })
+      .click();
   }
 );
 
 Then(
   "the {string} select value should be {string}",
   async function (this: CustomWorld, controlId: string, value: string) {
-    const current = await this.page.locator(`#${controlId}`).inputValue();
+    const control = this.page.locator(`#${controlId}`);
+    const tag = await control.evaluate((el) => el.tagName);
+    const current =
+      tag === "SELECT"
+        ? await control.inputValue()
+        : ((await control.getAttribute("data-value")) ?? "");
     assert.equal(current, value);
   }
 );

@@ -106,7 +106,9 @@ describe("HomeHeroSection full input fields", () => {
     const label = document.querySelector('label[for="hero-guests"]');
     expect(label).not.toBeNull();
     await user.click(within(label as HTMLElement).getByText(hero.accommodation.guests));
-    expect(screen.getByLabelText(hero.accommodation.guests)).toHaveFocus();
+    expect(
+      screen.getByRole("combobox", { name: hero.accommodation.guests })
+    ).toHaveFocus();
   });
 
   it("focuses leisure select when the Leisure field label is clicked", async () => {
