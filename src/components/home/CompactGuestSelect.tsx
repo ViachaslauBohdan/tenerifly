@@ -1,8 +1,9 @@
-import { ChevronDown, Users } from "lucide-react";
+import { Users } from "lucide-react";
 
 const GUEST_COUNT_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
 
 type CompactGuestSelectProps = {
+  id?: string;
   value: number;
   onChange: (value: number) => void;
   max?: number;
@@ -11,6 +12,7 @@ type CompactGuestSelectProps = {
 };
 
 export function CompactGuestSelect({
+  id,
   value,
   onChange,
   max = 10,
@@ -25,14 +27,15 @@ export function CompactGuestSelect({
     Number.isFinite(value) && value >= 1 ? Math.min(value, max) : 1;
 
   return (
-    <div className="relative flex min-w-0 items-center">
+    <div className="relative flex w-full min-w-0 items-center self-stretch">
       <Users
-        className="pointer-events-none absolute left-0 h-4 w-4 text-gray-400"
+        className="pointer-events-none absolute left-0 z-10 h-4 w-4 text-gray-400"
         aria-hidden
       />
       <select
+        id={id}
         aria-label={ariaLabel}
-        className={`${controlClassName} w-full cursor-pointer appearance-none pl-6 pr-7`}
+        className={`${controlClassName} min-h-8 w-full cursor-pointer appearance-none py-0.5 pl-6`}
         value={safeValue}
         onChange={(e) => onChange(Number(e.target.value))}
       >
@@ -42,10 +45,6 @@ export function CompactGuestSelect({
           </option>
         ))}
       </select>
-      <ChevronDown
-        className="pointer-events-none absolute right-0 h-4 w-4 text-gray-400"
-        aria-hidden
-      />
     </div>
   );
 }

@@ -71,4 +71,13 @@ describe("CompactGuestSelect", () => {
     await user.selectOptions(getGuestSelect(), "4");
     expect(onChange).toHaveBeenCalledWith(4);
   });
+
+  it("uses a full-width select hit target linked by id", () => {
+    renderGuests({ id: "hero-guests" });
+    const select = getGuestSelect();
+    expect(select).toHaveAttribute("id", "hero-guests");
+    expect(select.className).toMatch(/w-full/);
+    expect(select.className).toMatch(/min-h-8/);
+  });
 });
+

@@ -54,6 +54,9 @@ export function HeroCompactDateInput({
           height: "auto",
           cursor: "pointer",
           textAlign: "left",
+          border: "none",
+          boxShadow: "none",
+          backgroundColor: "transparent",
         },
         section: { pointerEvents: "none" },
       }}

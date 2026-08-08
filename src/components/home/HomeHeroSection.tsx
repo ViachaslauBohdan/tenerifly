@@ -1,6 +1,6 @@
 "use client";
 
-import { Car, ChevronDown, Home, MapPin, type LucideIcon } from "lucide-react";
+import { Car, Home, MapPin, type LucideIcon } from "lucide-react";
 import { DatesProvider } from "@mantine/dates";
 import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
 import { HeroSearchCtaButton } from "@/components/HeroSearchCta";
@@ -132,18 +132,20 @@ export function HomeHeroSection({
                 <div className={heroSearchFieldsClass}>
                   <CompactSearchField
                     label={leisureLabel}
+                    htmlFor="hero-leisure"
                     className="shrink-0 sm:min-w-[9.5rem] sm:max-w-[12.5rem] sm:flex-none"
                   >
-                    <div className="relative flex min-w-0 items-center gap-2">
+                    <div className="relative flex w-full min-w-0 items-center gap-2 self-stretch">
                       <ActiveHeroTabIcon
-                        className="h-4 w-4 shrink-0 text-gray-500"
+                        className="pointer-events-none h-4 w-4 shrink-0 text-gray-500"
                         aria-hidden
                       />
                       <select
+                        id="hero-leisure"
                         value={activeTab}
                         aria-label={leisureLabel}
                         onChange={(e) => onHeroTabChange(e.target.value)}
-                        className={`${compactControlClass} w-full cursor-pointer appearance-none pr-7`}
+                        className={`${compactControlClass} min-h-8 w-full cursor-pointer appearance-none py-0.5`}
                       >
                         {heroTabOptions.map(({ key, label }) => (
                           <option key={key} value={key}>
@@ -151,10 +153,6 @@ export function HomeHeroSection({
                           </option>
                         ))}
                       </select>
-                      <ChevronDown
-                        className="pointer-events-none absolute right-0 h-4 w-4 text-gray-400"
-                        aria-hidden
-                      />
                     </div>
                   </CompactSearchField>
 
@@ -177,8 +175,12 @@ export function HomeHeroSection({
                           onChange={onCheckOutChange}
                         />
                       </CompactSearchField>
-                      <CompactSearchField label={hero.accommodation.guests}>
+                      <CompactSearchField
+                        label={hero.accommodation.guests}
+                        htmlFor="hero-guests"
+                      >
                         <CompactGuestSelect
+                          id="hero-guests"
                           value={guests}
                           onChange={onGuestsChange}
                           max={10}
@@ -191,9 +193,14 @@ export function HomeHeroSection({
 
                   {activeTab === "cars" && (
                     <>
-                      <CompactSearchField label={hero.cars.bodyType}>
+                      <CompactSearchField
+                        label={hero.cars.bodyType}
+                        htmlFor="hero-car-body-type"
+                      >
                         <select
-                          className={compactControlClass}
+                          id="hero-car-body-type"
+                          aria-label={hero.cars.bodyType}
+                          className={`${compactControlClass} min-h-8 w-full cursor-pointer appearance-none py-0.5`}
                           value={carType}
                           onChange={(e) => onCarTypeChange(e.target.value)}
                         >
@@ -234,8 +241,12 @@ export function HomeHeroSection({
                           onChange={onCheckInChange}
                         />
                       </CompactSearchField>
-                      <CompactSearchField label={hero.excursions.people}>
+                      <CompactSearchField
+                        label={hero.excursions.people}
+                        htmlFor="hero-people"
+                      >
                         <CompactGuestSelect
+                          id="hero-people"
                           value={guests}
                           onChange={onGuestsChange}
                           max={20}
@@ -243,9 +254,14 @@ export function HomeHeroSection({
                           controlClassName={compactControlClass}
                         />
                       </CompactSearchField>
-                      <CompactSearchField label={hero.excursions.language}>
+                      <CompactSearchField
+                        label={hero.excursions.language}
+                        htmlFor="hero-tour-language"
+                      >
                         <select
-                          className={compactControlClass}
+                          id="hero-tour-language"
+                          aria-label={hero.excursions.language}
+                          className={`${compactControlClass} min-h-8 w-full cursor-pointer appearance-none py-0.5`}
                           value={tourLanguage}
                           onChange={(e) =>
                             onTourLanguageChange(e.target.value)

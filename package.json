@@ -12,6 +12,9 @@
     "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:browser": "cucumber-js",
+    "test:browser:ci": "node scripts/run-browser-tests.js",
+    "test:all": "npm test && npm run test:browser:ci",
     "fetch-translations": "node scripts/fetch-translations.js",
     "prepare": "husky"
   },
@@ -48,11 +51,12 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^12.9.0",
     "@eslint/eslintrc": "^3",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.3",
-    "@types/node": "^20",
+    "@types/node": "^20.19.43",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^4.3.4",
@@ -61,8 +65,10 @@
     "eslint-config-next": "15.4.10",
     "husky": "^9.1.7",
     "jsdom": "^25.0.1",
+    "playwright": "^1.62.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.11",
     "typescript": "^5",
     "vite": "^5.4.11",
     "vitest": "^2.1.9"

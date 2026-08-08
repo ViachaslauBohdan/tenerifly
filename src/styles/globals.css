@@ -1119,12 +1119,19 @@ html {
 input.compact-date-input {
   cursor: pointer;
   text-align: left;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
 #home .mantine-DatePickerInput-input.compact-date-input {
   text-align: left;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
 #home .mantine-DatePickerInput-wrapper {
   justify-content: flex-start;
+  border: none;
 }
