@@ -1,0 +1,63 @@
+---
+description: React/Next.js coding standards (official React rules + App Router)
+globs: "**/*.{tsx,jsx}"
+alwaysApply: false
+---
+
+# React standards
+
+Based on react.dev Rules of React and Next.js App Router conventions.
+
+## Components
+- Functional components only; no class components.
+- Keep components pure: same props/state → same UI; no side effects during render.
+- One main component per file; name matches filename (`HeroSearchCta.tsx`).
+- Prefer composition over prop drilling and giant prop bags.
+- Colocate small helpers next to the component; extract shared UI into `src/components/`.
+
+## Hooks & state
+- Follow Rules of Hooks (top level only, stable dependency arrays).
+- Don't put derived values in state — compute during render.
+- Don't sync state with Effects when you can derive or handle in the event.
+- Extract reusable logic into custom hooks (`useXxx`) when used twice or the component is hard to read.
+- Avoid `useMemo` / `useCallback` by default; add only for measured cost or required referential stability.
+
+## Effects & data
+- Effects are for syncing with an external system, not for "reacting to state changes".
+- Prefer Server Components / route `page.tsx` data loading when possible; mark client islands with `"use client"` only when needed (events, browser APIs, local state).
+- Don't fetch in Effects if a Server Component, route handler, or existing loader already covers it.
+
+## TypeScript & props
+- Type props explicitly; avoid `any`. Prefer narrow unions over stringly types.
+- Use `type` for props/unions unless extending an interface is clearer.
+- Event handlers: name `handle*` inside components, `on*` in props.
+
+## JSX & a11y
+- Use semantic HTML; interactive elements must be keyboard-accessible.
+- Images: prefer `next/image` with meaningful `alt` (empty alt only for decorative).
+- Lists need stable `key`s (id, not array index unless static/order-fixed).
+
+## Project fit (tenerifly)
+- Match existing patterns: Tailwind utility classes, Mantine where already used, locale via `useTranslation` / `createLocaleLink`.
+- Don't introduce new UI libraries or state managers without an explicit ask.
+- Keep changes focused; no drive-by refactors of unrelated files.
+
+## Examples
+
+```tsx
+// ❌ BAD — derived state + Effect
+const [fullName, setFullName] = useState("");
+useEffect(() => setFullName(`${first} ${last}`), [first, last]);
+
+// ✅ GOOD — derive during render
+const fullName = `${first} ${last}`;
+```
+
+```tsx
+// ❌ BAD — client fetch when server can load
+"use client";
+useEffect(() => { fetch("/api/items").then(...) }, []);
+
+// ✅ GOOD — Server Component loads; client only for interaction
+// page.tsx (server) fetches; ClientWidget receives props
+```
