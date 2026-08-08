@@ -87,7 +87,7 @@ export function CompactGuestSelect({
           <>
             <div
               aria-hidden
-              className="fixed inset-0 z-[80] bg-black/25 sm:bg-transparent"
+              className="fixed inset-0 z-[1090] bg-black/40 sm:bg-transparent"
               onClick={handleClose}
             />
             <ul
@@ -96,7 +96,7 @@ export function CompactGuestSelect({
               role="listbox"
               aria-label={ariaLabel}
               style={menuStyle}
-              className="z-[90] overflow-y-auto overscroll-contain rounded-2xl border border-gray-200 bg-white py-1 shadow-xl sm:rounded-xl"
+              className="z-[1100] overflow-y-auto overscroll-contain rounded-xl border border-gray-200 bg-white py-1 shadow-2xl ring-1 ring-black/5"
             >
               {options.map((count) => {
                 const selected = count === safeValue;
@@ -107,7 +107,7 @@ export function CompactGuestSelect({
                       role="option"
                       aria-selected={selected}
                       tabIndex={-1}
-                      className={`flex min-h-11 w-full items-center px-4 text-left text-base font-semibold text-gray-900 sm:min-h-10 sm:px-3 sm:text-sm ${
+                      className={`flex min-h-12 w-full items-center px-4 text-left text-base font-semibold text-gray-900 sm:min-h-10 sm:px-3 sm:text-sm ${
                         selected
                           ? "bg-sky-50 text-sky-800"
                           : "hover:bg-gray-50 active:bg-gray-100"

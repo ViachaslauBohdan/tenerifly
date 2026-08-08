@@ -31,7 +31,7 @@ Feature: Hero search full input section
   Scenario: Opening guests picker does not scroll the page to the bottom
     When I remember the page scroll position
     And I tap the label of the "hero-guests" field
-    Then the guest count listbox should be visible
+    Then the guest count listbox should be visible near the "hero-guests" field
     And the page should not have scrolled to the bottom
     When I choose "8" in the "hero-guests" select
     Then the "hero-guests" select value should be "8"
@@ -41,7 +41,7 @@ Feature: Hero search full input section
     When I choose "tours" in the "hero-leisure" select
     And I remember the page scroll position
     And I tap the label of the "hero-people" field
-    Then the guest count listbox should be visible
+    Then the guest count listbox should be visible near the "hero-people" field
     And the page should not have scrolled to the bottom
     When I choose "15" in the "hero-people" select
     Then the "hero-people" select value should be "15"

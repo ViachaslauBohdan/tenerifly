@@ -29,33 +29,42 @@ function isMobileViewport() {
   return window.innerWidth < 640;
 }
 
+function getAnchorRect(trigger: HTMLElement) {
+  const field = trigger.closest("label");
+  return (field ?? trigger).getBoundingClientRect();
+}
+
+/** Anchor the menu to the guests field (not a detached bottom sheet). */
 function getMenuStyle(trigger: HTMLElement): CSSProperties {
-  const rect = trigger.getBoundingClientRect();
+  const mobile = isMobileViewport();
+  const rect = getAnchorRect(trigger);
+  const gutter = 10;
+  const gap = 4;
+  const preferredMax = mobile ? 288 : 224;
+  const spaceBelow = window.innerHeight - rect.bottom - gutter;
+  const spaceAbove = rect.top - gutter;
+  const openUp =
+    spaceBelow < Math.min(preferredMax, mobile ? 180 : 160) &&
+    spaceAbove > spaceBelow;
+  const available = openUp ? spaceAbove - gap : spaceBelow - gap;
+  const maxHeight = Math.max(mobile ? 176 : 140, Math.min(preferredMax, available));
 
-  if (isMobileViewport()) {
-    return {
-      position: "fixed",
-      left: 12,
-      right: 12,
-      bottom: 12,
-      top: "auto",
-      width: "auto",
-      maxHeight: "min(50vh, 20rem)",
-    };
-  }
-
-  const maxHeight = 224;
-  const spaceBelow = window.innerHeight - rect.bottom - 8;
-  const openUp = spaceBelow < maxHeight && rect.top > spaceBelow;
+  const left = Math.max(gutter, Math.round(rect.left));
+  const maxRight = window.innerWidth - gutter;
+  const width = Math.max(
+    mobile ? Math.round(rect.width) : 112,
+    Math.min(Math.round(rect.width), maxRight - left)
+  );
 
   return {
     position: "fixed",
-    left: Math.max(8, rect.left),
-    width: Math.max(rect.width, 112),
+    left,
+    width,
     maxHeight,
+    zIndex: 1100,
     ...(openUp
-      ? { bottom: window.innerHeight - rect.top + 6, top: "auto" }
-      : { top: rect.bottom + 6, bottom: "auto" }),
+      ? { bottom: window.innerHeight - rect.top + gap, top: "auto" }
+      : { top: rect.bottom + gap, bottom: "auto" }),
   };
 }
 
@@ -104,7 +113,6 @@ export function useCompactGuestSelectMenu(): UseCompactGuestSelectMenuResult {
     const list = listRef.current;
     const selected = list?.querySelector('[aria-selected="true"]');
     if (list && selected instanceof HTMLElement) {
-      // offsetTop on the option button is relative to the li; use the li for list scroll.
       const row = selected.closest("li") ?? selected;
       scrollOptionIntoList(list, row instanceof HTMLElement ? row : selected);
     }
@@ -138,7 +146,6 @@ export function useCompactGuestSelectMenu(): UseCompactGuestSelectMenuResult {
   const handleToggle = () => {
     const scrollY = window.scrollY;
     setOpen((current) => !current);
-    // Label/focus + portaled menu can nudge window scroll; pin it back.
     requestAnimationFrame(() => {
       if (window.scrollY !== scrollY) {
         window.scrollTo(0, scrollY);
@@ -156,7 +163,11 @@ export function useCompactGuestSelectMenu(): UseCompactGuestSelectMenuResult {
   };
 
   const handleTriggerKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+    if (
+      event.key === "ArrowDown" ||
+      event.key === "Enter" ||
+      event.key === " "
+    ) {
       if (!open) {
         event.preventDefault();
         setOpen(true);

@@ -153,17 +153,51 @@ When("I remember the page scroll position", async function (this: CustomWorld) {
 });
 
 Then(
-  "the guest count listbox should be visible",
-  async function (this: CustomWorld) {
+  "the guest count listbox should be visible near the {string} field",
+  async function (this: CustomWorld, controlId: string) {
     const listbox = this.page.getByRole("listbox");
     await listbox.waitFor({ state: "visible", timeout: 5_000 });
-    const maxHeight = await listbox.evaluate((el) => getComputedStyle(el).maxHeight);
-    assert.notEqual(maxHeight, "none");
-    assert.notEqual(maxHeight, "0px");
-    const overflowY = await listbox.evaluate((el) => getComputedStyle(el).overflowY);
+
+    const layout = await this.page.evaluate((id) => {
+      const control = document.querySelector(`#${id}`);
+      const field = control?.closest("label") ?? control;
+      const list = document.querySelector('[role="listbox"]');
+      if (!field || !list) return null;
+      const fieldRect = field.getBoundingClientRect();
+      const listRect = list.getBoundingClientRect();
+      return {
+        belowGap: listRect.top - fieldRect.bottom,
+        aboveGap: fieldRect.top - listRect.bottom,
+        listLeft: listRect.left,
+        fieldLeft: fieldRect.left,
+        listWidth: listRect.width,
+        fieldWidth: fieldRect.width,
+        maxHeight: getComputedStyle(list).maxHeight,
+        overflowY: getComputedStyle(list).overflowY,
+      };
+    }, controlId);
+
+    assert.ok(layout, `Missing field/listbox for #${controlId}`);
+    assert.notEqual(layout.maxHeight, "none");
+    assert.notEqual(layout.maxHeight, "0px");
     assert.ok(
-      overflowY === "auto" || overflowY === "scroll",
-      `Expected scrollable listbox, got overflow-y=${overflowY}`
+      layout.overflowY === "auto" || layout.overflowY === "scroll",
+      `Expected scrollable listbox, got overflow-y=${layout.overflowY}`
+    );
+
+    const anchoredBelow = layout.belowGap >= -2 && layout.belowGap <= 24;
+    const anchoredAbove = layout.aboveGap >= -2 && layout.aboveGap <= 24;
+    assert.ok(
+      anchoredBelow || anchoredAbove,
+      `Listbox not anchored to #${controlId} (belowGap=${layout.belowGap}, aboveGap=${layout.aboveGap})`
+    );
+    assert.ok(
+      Math.abs(layout.listLeft - layout.fieldLeft) <= 12,
+      `Listbox left ${layout.listLeft} should align with field left ${layout.fieldLeft}`
+    );
+    assert.ok(
+      Math.abs(layout.listWidth - layout.fieldWidth) <= 16,
+      `Listbox width ${layout.listWidth} should match field width ${layout.fieldWidth}`
     );
   }
 );
