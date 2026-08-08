@@ -3,7 +3,7 @@
 import type { MouseEvent } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useDataLoader } from "./useDataLoader";
-import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
+import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 import { SiteHeader } from "@/components/SiteHeader";
 import { HomeHeroSection } from "@/components/home/HomeHeroSection";
 import { HomeAccommodationSection } from "@/components/home/HomeAccommodationSection";
@@ -182,8 +182,8 @@ export function LocalePageClient({ initialData }: LocalePageClientProps) {
         createLocaleLink={createLocaleLink}
       />
 
-      {bookingItem && (
-        <SimpleBookingPopup
+      {bookingItem && isOpen && (
+        <DeferredSimpleBookingPopup
           opened={isOpen}
           onClose={closeBookingModal}
           item={{

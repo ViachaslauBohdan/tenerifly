@@ -13,7 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
+import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
 import translations from "@/i18n/tourDetail.json";
 interface TourData {
@@ -460,8 +460,8 @@ export default function TourDetailPageClient({ tour }: { tour: TourData }) {
           </div>
         </div>
 
-        {tour && (
-          <SimpleBookingPopup
+        {tour && isBookingModalOpen && (
+          <DeferredSimpleBookingPopup
             opened={isBookingModalOpen}
             onClose={handleCloseBookingModal}
             item={{

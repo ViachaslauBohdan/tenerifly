@@ -13,7 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
+import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 import translations from "@/i18n/carsDetail.json";
 
 interface CarData {
@@ -611,8 +611,8 @@ export default function CarDetailPageClient({ car }: { car: CarData }) {
           </div>
         </div>
 
-        {car && (
-          <SimpleBookingPopup
+        {car && isBookingModalOpen && (
+          <DeferredSimpleBookingPopup
             opened={isBookingModalOpen}
             onClose={handleCloseBookingModal}
             item={{

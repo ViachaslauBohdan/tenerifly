@@ -13,7 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
+import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 import translations from "@/i18n/apartmentDetail.json";
 import {
   formatPropertyPriceWithCurrency,
@@ -862,8 +862,8 @@ export default function PropertyDetailPage({
           </div>
         </div>
 
-        {property && (
-          <SimpleBookingPopup
+        {property && isBookingModalOpen && (
+          <DeferredSimpleBookingPopup
             opened={isBookingModalOpen}
             onClose={handleCloseBookingModal}
             item={{

@@ -8,8 +8,10 @@ import {ColorSchemeScript} from "@mantine/core";
 import {MantineProvider} from "@/components/providers/MantineProvider";
 
 import {OtpuskBodyClassGuard} from "@/components/OtpuskBodyClassGuard";
-import {ReferralCodeClient} from "@/components/ReferralCodeClient";
-import {WhatsAppFloatingButton} from "@/components/WhatsAppFloatingButton";
+import {
+    DeferredReferral,
+    DeferredWhatsApp,
+} from "@/components/DeferredLayoutWidgets";
 import {OTPUSK_BODY_CLASS_GUARD_INLINE} from "@/lib/otpuskBodyClassGuard";
 import Script from 'next/script'
 import {
@@ -135,9 +137,9 @@ export default async function RootLayout({
         />
         <OtpuskBodyClassGuard/>
         <MantineProvider>
-            <ReferralCodeClient/>
+            <DeferredReferral/>
             {children}
-            <WhatsAppFloatingButton/>
+            <DeferredWhatsApp/>
         </MantineProvider>
         <Script
             src="https://www.googletagmanager.com/gtag/js?id=AW-679583815"

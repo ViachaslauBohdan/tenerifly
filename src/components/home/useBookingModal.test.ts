@@ -1,10 +1,23 @@
 import { act, renderHook } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const preloadSimpleBookingPopup = vi.fn();
+
+vi.mock("@/components/DeferredSimpleBookingPopup", () => ({
+  preloadSimpleBookingPopup: () => preloadSimpleBookingPopup(),
+}));
+
 import { useBookingModal } from "@/components/home/useBookingModal";
 
 describe("useBookingModal", () => {
-  it("opens with the selected booking item", () => {
+  beforeEach(() => {
+    preloadSimpleBookingPopup.mockClear();
+  });
+
+  it("preloads the booking popup on mount and when opening", () => {
     const { result } = renderHook(() => useBookingModal());
+
+    expect(preloadSimpleBookingPopup).toHaveBeenCalledTimes(1);
 
     act(() => {
       result.current.openBookingModal("accommodation", {
@@ -13,6 +26,7 @@ describe("useBookingModal", () => {
       });
     });
 
+    expect(preloadSimpleBookingPopup).toHaveBeenCalledTimes(2);
     expect(result.current.isOpen).toBe(true);
     expect(result.current.bookingItem).toEqual({
       title: "Villa Azul",

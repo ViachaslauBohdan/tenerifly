@@ -49,7 +49,14 @@ const nextConfig = {
   },
 
   experimental: {
-    optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
+    optimizePackageImports: [
+      "@mantine/core",
+      "@mantine/hooks",
+      "@mantine/dates",
+      "@mantine/carousel",
+      "@tabler/icons-react",
+      "lucide-react",
+    ],
     // Avoid intermittent pages-manifest ENOENT during production builds
     webpackBuildWorker: false,
   },

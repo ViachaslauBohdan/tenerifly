@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
-import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
+import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 
 interface CarData {
   id: number;
@@ -680,9 +680,9 @@ const CarCard = ({
         ))}
       </div>
 
-      {/* Booking Modal */}
-      {selectedCar && (
-        <SimpleBookingPopup
+      {/* Booking Modal — lazy-loaded when opened */}
+      {selectedCar && isBookingModalOpen && (
+        <DeferredSimpleBookingPopup
           opened={isBookingModalOpen}
           onClose={handleCloseBookingModal}
           item={{

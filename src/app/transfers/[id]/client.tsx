@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Plane, Users, CheckCircle, Phone } from "lucide-react";
-import { SimpleBookingPopup } from "@/components/SimpleBookingPopup";
+import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 import { useTranslation } from "@/hooks/useTranslation";
 import { localeDisplayCode } from "@/types/locale";
 import {
@@ -190,18 +190,20 @@ export default function TransferDetailPageClient({
         />
       )}
 
-      <SimpleBookingPopup
-        opened={isBookingModalOpen}
-        onClose={() => setIsBookingModalOpen(false)}
-        item={{
-          name: transfer.title,
-          price: bookingPrice,
-          currency: transfer.currency,
-          contactEmail: transfer.contact?.email,
-        }}
-        mode="contact"
-        currentLocale={locale}
-      />
+      {isBookingModalOpen && (
+        <DeferredSimpleBookingPopup
+          opened={isBookingModalOpen}
+          onClose={() => setIsBookingModalOpen(false)}
+          item={{
+            name: transfer.title,
+            price: bookingPrice,
+            currency: transfer.currency,
+            contactEmail: transfer.contact?.email,
+          }}
+          mode="contact"
+          currentLocale={locale}
+        />
+      )}
     </div>
   );
 }
