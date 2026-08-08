@@ -1,14 +1,29 @@
 #!/usr/bin/env node
 /**
- * Starts Next.js on a dedicated port, runs Cucumber, then stops the server.
+ * Starts Next.js on a free port, runs Cucumber, then stops the server.
  * Used by pre-commit so browser tests do not depend on an existing `next dev`.
  */
 const { spawn } = require("child_process");
 const http = require("http");
+const net = require("net");
 
 const HOST = "127.0.0.1";
-const PORT = process.env.BROWSER_PORT || "3100";
-const BASE_URL = `http://${HOST}:${PORT}`;
+
+function getFreePort() {
+  return new Promise((resolve, reject) => {
+    const server = net.createServer();
+    server.listen(0, HOST, () => {
+      const address = server.address();
+      const port = typeof address === "object" && address ? address.port : null;
+      server.close((error) => {
+        if (error) reject(error);
+        else if (!port) reject(new Error("Could not allocate a free port"));
+        else resolve(String(port));
+      });
+    });
+    server.on("error", reject);
+  });
+}
 
 function waitForServer(url, timeoutMs = 90_000) {
   const started = Date.now();
@@ -50,13 +65,16 @@ function run(command, args, env = {}) {
 }
 
 async function main() {
+  const port = process.env.BROWSER_PORT || (await getFreePort());
+  const baseUrl = `http://${HOST}:${port}`;
+
   const server = spawn(
     "npx",
-    ["next", "start", "--hostname", HOST, "--port", PORT],
+    ["next", "start", "--hostname", HOST, "--port", port],
     {
       stdio: "inherit",
-      env: { ...process.env, PORT },
-    },
+      env: { ...process.env, PORT: port },
+    }
   );
 
   let serverClosed = false;
@@ -67,6 +85,17 @@ async function main() {
       server.kill("SIGTERM");
     }
   };
+
+  const serverExit = new Promise((_, reject) => {
+    server.on("exit", (code, signal) => {
+      if (serverClosed) return;
+      reject(
+        new Error(
+          `next start exited early (code=${code ?? "null"}, signal=${signal ?? "null"})`
+        )
+      );
+    });
+  });
 
   process.on("exit", stopServer);
   process.on("SIGINT", () => {
@@ -79,9 +108,9 @@ async function main() {
   });
 
   try {
-    await waitForServer(BASE_URL);
+    await Promise.race([waitForServer(baseUrl), serverExit]);
     const { code } = await run("npx", ["cucumber-js"], {
-      BROWSER_BASE_URL: BASE_URL,
+      BROWSER_BASE_URL: baseUrl,
     });
     stopServer();
     process.exit(code);

@@ -8,6 +8,7 @@ import { HeroCompactDateInput } from "@/components/HeroCompactDateInput";
 import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
 import { CompactSearchField } from "@/components/home/CompactSearchField";
 import { CompactGuestSelect } from "@/components/home/CompactGuestSelect";
+import { CompactSelect } from "@/components/home/CompactSelect";
 import { dayjsLocale } from "@/lib/dateLocale";
 import type { HeroTab } from "@/lib/heroTab";
 import {
@@ -135,25 +136,23 @@ export function HomeHeroSection({
                     htmlFor="hero-leisure"
                     className="shrink-0 sm:min-w-[9.5rem] sm:max-w-[12.5rem] sm:flex-none"
                   >
-                    <div className="relative flex w-full min-w-0 items-center gap-2 self-stretch">
-                      <ActiveHeroTabIcon
-                        className="pointer-events-none h-4 w-4 shrink-0 text-gray-500"
-                        aria-hidden
-                      />
-                      <select
-                        id="hero-leisure"
-                        value={activeTab}
-                        aria-label={leisureLabel}
-                        onChange={(e) => onHeroTabChange(e.target.value)}
-                        className={`${compactControlClass} min-h-8 w-full cursor-pointer appearance-none py-0.5`}
-                      >
-                        {heroTabOptions.map(({ key, label }) => (
-                          <option key={key} value={key}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <CompactSelect
+                      id="hero-leisure"
+                      value={activeTab}
+                      onChange={onHeroTabChange}
+                      ariaLabel={leisureLabel}
+                      controlClassName={compactControlClass}
+                      leadingIcon={
+                        <ActiveHeroTabIcon
+                          className="h-4 w-4 text-gray-500"
+                          aria-hidden
+                        />
+                      }
+                      options={heroTabOptions.map(({ key, label }) => ({
+                        value: key,
+                        label,
+                      }))}
+                    />
                   </CompactSearchField>
 
                   {activeTab === "accommodation" && (
@@ -197,19 +196,14 @@ export function HomeHeroSection({
                         label={hero.cars.bodyType}
                         htmlFor="hero-car-body-type"
                       >
-                        <select
+                        <CompactSelect
                           id="hero-car-body-type"
-                          aria-label={hero.cars.bodyType}
-                          className={`${compactControlClass} min-h-8 w-full cursor-pointer appearance-none py-0.5`}
                           value={carType}
-                          onChange={(e) => onCarTypeChange(e.target.value)}
-                        >
-                          {hero.cars.bodyTypeOptions.map((type) => (
-                            <option key={type.value} value={type.value}>
-                              {type.label}
-                            </option>
-                          ))}
-                        </select>
+                          onChange={onCarTypeChange}
+                          ariaLabel={hero.cars.bodyType}
+                          controlClassName={compactControlClass}
+                          options={hero.cars.bodyTypeOptions}
+                        />
                       </CompactSearchField>
                       <CompactSearchField label={hero.cars.pickup}>
                         <HeroCompactDateInput
@@ -258,21 +252,14 @@ export function HomeHeroSection({
                         label={hero.excursions.language}
                         htmlFor="hero-tour-language"
                       >
-                        <select
+                        <CompactSelect
                           id="hero-tour-language"
-                          aria-label={hero.excursions.language}
-                          className={`${compactControlClass} min-h-8 w-full cursor-pointer appearance-none py-0.5`}
                           value={tourLanguage}
-                          onChange={(e) =>
-                            onTourLanguageChange(e.target.value)
-                          }
-                        >
-                          {hero.excursions.languageOptions.map((opt) => (
-                            <option key={opt.value} value={opt.value}>
-                              {opt.label}
-                            </option>
-                          ))}
-                        </select>
+                          onChange={onTourLanguageChange}
+                          ariaLabel={hero.excursions.language}
+                          controlClassName={compactControlClass}
+                          options={hero.excursions.languageOptions}
+                        />
                       </CompactSearchField>
                     </>
                   )}

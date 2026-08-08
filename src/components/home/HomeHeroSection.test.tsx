@@ -119,6 +119,8 @@ describe("HomeHeroSection full input fields", () => {
     const label = document.querySelector('label[for="hero-leisure"]');
     expect(label).not.toBeNull();
     await user.click(within(label as HTMLElement).getByText(leisureLabel));
-    expect(screen.getByLabelText(leisureLabel)).toHaveFocus();
+    expect(
+      screen.getByRole("combobox", { name: leisureLabel })
+    ).toHaveFocus();
   });
 });

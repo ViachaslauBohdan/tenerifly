@@ -9,7 +9,7 @@ import {
   type RefObject,
 } from "react";
 
-type UseCompactGuestSelectMenuResult = {
+type UseCompactSelectMenuResult = {
   open: boolean;
   mounted: boolean;
   menuStyle: CSSProperties;
@@ -34,7 +34,7 @@ function getAnchorRect(trigger: HTMLElement) {
   return (field ?? trigger).getBoundingClientRect();
 }
 
-/** Anchor the menu to the guests field (not a detached bottom sheet). */
+/** Anchor the menu to the search field (not a detached bottom sheet). */
 function getMenuStyle(trigger: HTMLElement): CSSProperties {
   const mobile = isMobileViewport();
   const rect = getAnchorRect(trigger);
@@ -47,7 +47,10 @@ function getMenuStyle(trigger: HTMLElement): CSSProperties {
     spaceBelow < Math.min(preferredMax, mobile ? 180 : 160) &&
     spaceAbove > spaceBelow;
   const available = openUp ? spaceAbove - gap : spaceBelow - gap;
-  const maxHeight = Math.max(mobile ? 176 : 140, Math.min(preferredMax, available));
+  const maxHeight = Math.max(
+    mobile ? 176 : 140,
+    Math.min(preferredMax, available)
+  );
 
   const left = Math.max(gutter, Math.round(rect.left));
   const maxRight = window.innerWidth - gutter;
@@ -85,7 +88,7 @@ function focusWithoutScroll(element: HTMLElement | null) {
 }
 
 /** Syncs dropdown open state with viewport geometry and dismiss gestures. */
-export function useCompactGuestSelectMenu(): UseCompactGuestSelectMenuResult {
+export function useCompactSelectMenu(): UseCompactSelectMenuResult {
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);

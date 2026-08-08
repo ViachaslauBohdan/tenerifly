@@ -84,8 +84,19 @@ When(
     if (expanded !== "true") {
       await control.click();
     }
+
+    const byValue = this.page.locator(
+      `[role="listbox"] [role="option"][data-value="${value}"]`
+    );
+    if ((await byValue.count()) > 0) {
+      await byValue.first().click();
+      return;
+    }
+
     await this.page
-      .locator(`[role="listbox"] [role="option"]`, { hasText: new RegExp(`^${value}$`) })
+      .locator(`[role="listbox"] [role="option"]`, {
+        hasText: new RegExp(`^${value}$`),
+      })
       .click();
   }
 );
@@ -127,20 +138,52 @@ Then(
 When(
   "I choose another option in the {string} select",
   async function (this: CustomWorld, controlId: string) {
-    const select = this.page.locator(`#${controlId}`);
-    this.previousSelectValue = await select.inputValue();
-    const nextValue = await select.evaluate((el: HTMLSelectElement) => {
-      const options = [...el.options];
-      return options.find((opt) => opt.value !== el.value)?.value ?? el.value;
-    });
-    await select.selectOption(nextValue);
+    const control = this.page.locator(`#${controlId}`);
+    const tag = await control.evaluate((el) => el.tagName);
+
+    if (tag === "SELECT") {
+      this.previousSelectValue = await control.inputValue();
+      const nextValue = await control.evaluate((el: HTMLSelectElement) => {
+        const options = [...el.options];
+        return options.find((opt) => opt.value !== el.value)?.value ?? el.value;
+      });
+      await control.selectOption(nextValue);
+      return;
+    }
+
+    this.previousSelectValue = (await control.getAttribute("data-value")) ?? "";
+    const expanded = await control.getAttribute("aria-expanded");
+    if (expanded !== "true") {
+      await control.click();
+    }
+
+    const nextValue = await this.page.evaluate((previous) => {
+      const options = [
+        ...document.querySelectorAll<HTMLElement>(
+          '[role="listbox"] [role="option"]'
+        ),
+      ];
+      return (
+        options.find((option) => option.dataset.value !== previous)?.dataset
+          .value ?? previous
+      );
+    }, this.previousSelectValue);
+
+    await this.page
+      .locator(`[role="listbox"] [role="option"][data-value="${nextValue}"]`)
+      .click();
   }
 );
 
 Then(
   "the {string} select value should have changed",
   async function (this: CustomWorld, controlId: string) {
-    const current = await this.page.locator(`#${controlId}`).inputValue();
+    const control = this.page.locator(`#${controlId}`);
+    const tag = await control.evaluate((el) => el.tagName);
+    const current =
+      tag === "SELECT"
+        ? await control.inputValue()
+        : ((await control.getAttribute("data-value")) ?? "");
     assert.ok(this.previousSelectValue, "Previous select value was not stored");
     assert.notEqual(current, this.previousSelectValue);
   }

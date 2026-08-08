@@ -1,7 +1,7 @@
 ---
 description: Component-centric folder structure for React/Next.js
 globs: "src/**/*.{ts,tsx}"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Component-centric folders

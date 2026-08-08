@@ -1,7 +1,7 @@
 ---
 description: React/Next.js coding standards (official React rules + App Router)
 globs: "**/*.{tsx,jsx}"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # React standards
