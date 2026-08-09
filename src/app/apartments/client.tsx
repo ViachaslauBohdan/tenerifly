@@ -430,7 +430,9 @@ export default function ApartmentsPageClient({
               />
             </svg>
             <span className="font-medium">
-              {showMobileFilters ? t.hideFilters : t.showFilters}
+              {showMobileFilters 
+                ? ((t as any).hideFilters || "Hide filters") 
+                : ((t as any).showFilters || "Show filters")}
             </span>
           </button>
         </div>
