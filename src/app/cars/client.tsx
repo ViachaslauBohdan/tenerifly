@@ -11,6 +11,7 @@ import {
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
 import { pickLocaleBundle, localeContentKey } from "@/types/locale";
+import { hybridLocalizedRow } from "@/lib/cmsLocalizedContent";
 import { CatalogBackLink } from "@/components/CatalogBackLink";
 import { CatalogDetailShell } from "@/components/CatalogDetailShell";
 import translations from "@/i18n/cars.json";
@@ -398,15 +399,22 @@ export default function CarsPageClient({
                 }
               );
               if (!existingCar) {
-                // Создаем гибридный объект: локализованные title и description + остальное из оригинала
-                const originalCar = car as Record<string, unknown>;
-                const hybridCar = {
-                  ...originalCar, // Берем все из оригинального объекта
-                  title: localization.title, // Перезаписываем title локализованной версией
-                  description: localization.description, // Перезаписываем description локализованной версией
-                  locale: localization.locale, // Устанавливаем правильную локаль
-                  documentId: localization.documentId, // Используем documentId из локализации
-                };
+                const hybridCar = hybridLocalizedRow(
+                  car as {
+                    title?: string | null;
+                    description?: string | null;
+                    short_description?: string | null;
+                    locale?: string | null;
+                    documentId?: string;
+                    [key: string]: unknown;
+                  },
+                  {
+                    title: localization.title,
+                    description: localization.description,
+                    locale: localization.locale,
+                    documentId: localization.documentId,
+                  }
+                );
                 carsByLocale[localization.locale].push(hybridCar);
               }
             }

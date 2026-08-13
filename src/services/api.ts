@@ -9,6 +9,7 @@ import {
   StrapiResponseLegacy 
 } from '@/types/strapi-legacy';
 import { formatPropertyPriceLabel } from '@/utils/propertyPrice';
+import { cmsLocale } from '@/types/locale';
 
 // Получаем URL и TOKEN из environment переменных
 const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337/api';
@@ -43,8 +44,8 @@ function buildFilterParams(params: FilterParams = {}): string {
     searchParams.append('populate', 'images,rental_prices,specifications,features,rental_terms,sale_terms,location,contact');
   }
   
-  // Локализация
-  if (params.locale) searchParams.append('locale', params.locale);
+  // Локализация (URL `ua` → Strapi `uk`)
+  if (params.locale) searchParams.append('locale', cmsLocale(params.locale));
   
   // Фильтры (адаптированные под новую структуру)
   if (params.filters) {

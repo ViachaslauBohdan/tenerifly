@@ -63,13 +63,15 @@ export default async function ApartmentsPage({
   params: Promise<{ locale: Locale }>;
 }) {
   try {
-    // Получаем все данные апартаментов на сервере для SSG с кэшированием
-    const properties = await getAllProperties();
+    const { locale } = await params;
+    // Locale-aware CMS fetch (`ua` → `uk`), EN fallback when empty
+    const properties = await getAllProperties(locale);
 
     console.log(
       "🏠 SSG: Page loaded with",
       properties?.length || 0,
-      "properties"
+      "properties for",
+      locale
     );
 
     return (

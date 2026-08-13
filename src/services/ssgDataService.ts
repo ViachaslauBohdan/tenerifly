@@ -1,4 +1,4 @@
-import { localeContentKey, type Locale } from "@/types/locale";
+import { cmsLocale, localeContentKey, type Locale } from "@/types/locale";
 // Сервис для получения данных на сервере для SSG
 
 import { Transfer } from "@/lib/transfers";
@@ -8,6 +8,13 @@ import {
   CMS_MEMORY_CACHE_MS,
   type CmsCacheTag,
 } from "@/config/cmsCache";
+import {
+  hybridLocalizedRow,
+  mergeLocalizedCatalog,
+  needsCmsEnTextFallback,
+  resolveCmsDocument,
+  type CmsLocalizedRow,
+} from "@/lib/cmsLocalizedContent";
 import {
   HOME_CARS_FETCH_LIMIT,
   HOME_PREVIEW_LIMIT,
@@ -21,6 +28,8 @@ import {
   normalizeExcursionDocumentToTourCard,
   type NormalizedExcursionTour,
 } from "@/lib/strapiExcursionTours";
+
+type CmsDocument = CmsLocalizedRow;
 
 const API_URL =
   process.env.NEXT_PUBLIC_STRAPI_API_URL ||
@@ -271,20 +280,97 @@ async function fetchTransfersQuiet(endpoint: string) {
   return data.data || data;
 }
 
-// Получение всех апартаментов с оптимизированным SSG
-export async function getAllProperties() {
+/** Fetch a CMS document by id for a locale, falling back to EN text fields. */
+async function getCmsDocumentById(
+  collection: "cars" | "properties",
+  id: string,
+  locale: Locale | string | undefined,
+  tags: CmsCacheTag[]
+): Promise<CmsDocument | null> {
+  const key = cmsLocale(locale);
+  const populate = "populate=*";
+  const localized = (await fetchWithCacheMaybe(
+    `/${collection}/${id}?${populate}&locale=${key}`,
+    `${collection}-${id}-${key}`,
+    tags
+  )) as CmsDocument | null;
+
+  if (key === "en" || !needsCmsEnTextFallback(localized)) {
+    return resolveCmsDocument(localized, null, key);
+  }
+
+  const en = (await fetchWithCacheMaybe(
+    `/${collection}/${id}?${populate}&locale=en`,
+    `${collection}-${id}-en`,
+    tags
+  )) as CmsDocument | null;
+
+  return resolveCmsDocument(localized, en, key);
+}
+
+async function fetchPropertiesForCmsLocale(cmsKey: string) {
+  return fetchWithCache(
+    `/properties?populate=*&pagination[pageSize]=1000&locale=${cmsKey}`,
+    `all-properties-${cmsKey}`,
+    [CMS_CACHE_TAGS.properties, CMS_CACHE_TAGS.apartments]
+  );
+}
+
+// Получение всех апартаментов с оптимизированным SSG (locale → Strapi `uk` for `ua`)
+export async function getAllProperties(
+  locale?: Locale | string
+  // Loose Strapi payloads — catalog client expects PropertyData[].
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any[]> {
   try {
-    console.log("🔧 SSG: Fetching properties from API...");
-    const result = await fetchWithCache(
-      "/properties?populate=*&pagination[pageSize]=1000",
-      "all-properties"
-    );
-    return result;
+    const key = cmsLocale(locale);
+    console.log("🔧 SSG: Fetching properties from API...", key);
+    const enRows = (await fetchPropertiesForCmsLocale("en")) as CmsDocument[];
+    const enList = Array.isArray(enRows) ? enRows : [];
+    if (key === "en") return enList;
+
+    let localized: CmsDocument[] = [];
+    try {
+      const rows = await fetchPropertiesForCmsLocale(key);
+      localized = Array.isArray(rows) ? (rows as CmsDocument[]) : [];
+    } catch {
+      localized = [];
+    }
+
+    // Keep full EN catalog; overlay localized title/description when present
+    // (avoids RU stub locales shrinking the list to 1 item).
+    return mergeLocalizedCatalog(enList, localized);
   } catch (error) {
     console.error("❌ SSG: Error fetching properties:", error);
     // Return empty array as fallback to prevent build failures
     return [];
   }
+}
+
+/** Properties bucketed by CMS locale key (`uk` for Ukrainian), EN catalog + overlays. */
+export async function getAllPropertiesAllLocales() {
+  const cmsKeys = ["en", "ru", "pl", "fr", "uk", "de", "es"] as const;
+  const byLocale: Record<string, unknown[]> = {};
+  const enRows = (await fetchPropertiesForCmsLocale("en")) as CmsDocument[];
+  const enList = Array.isArray(enRows) ? enRows : [];
+
+  byLocale.en = enList;
+
+  await Promise.all(
+    cmsKeys
+      .filter((k) => k !== "en")
+      .map(async (key) => {
+        try {
+          const rows = await fetchPropertiesForCmsLocale(key);
+          const localized = Array.isArray(rows) ? (rows as CmsDocument[]) : [];
+          byLocale[key] = mergeLocalizedCatalog(enList, localized);
+        } catch {
+          byLocale[key] = enList;
+        }
+      })
+  );
+
+  return byLocale;
 }
 
 /** Bust Next.js data cache after a CMS publish (call from /api/revalidate). */
@@ -443,15 +529,12 @@ export async function getAllCarsAllLocales() {
             }
           );
           if (!existingCar) {
-            // Создаем гибридный объект: локализованные title и description + остальное из оригинала
-            const originalCar = car as Record<string, unknown>;
-            const hybridCar = {
-              ...originalCar, // Берем все из оригинального объекта
-              title: localization.title, // Перезаписываем title локализованной версией
-              description: localization.description, // Перезаписываем description локализованной версией
-              locale: localization.locale, // Устанавливаем правильную локаль
-              documentId: localization.documentId, // Используем documentId из локализации
-            };
+            const hybridCar = hybridLocalizedRow(car as CmsDocument, {
+              title: localization.title,
+              description: localization.description,
+              locale: localization.locale,
+              documentId: localization.documentId,
+            });
             carsByLocale[localization.locale].push(hybridCar);
           }
         }
@@ -534,16 +617,17 @@ export async function getAllPropertyIds() {
   );
 }
 
-// Получение апартамента по ID
-export async function getPropertyById(id: string) {
-  const property = await fetchWithCache(
-    `/properties/${id}?populate=*`,
-    `property-${id}`
-  );
-
-  // Изображения загружаются динамически, без предзагрузки в SSG
-
-  return property;
+// Получение апартамента по ID (locale → Strapi; EN text fallback)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getPropertyById(
+  id: string,
+  locale?: Locale | string
+  // Strapi documents are loosely shaped; callers expect the previous any payload.
+): Promise<any> {
+  return getCmsDocumentById("properties", id, locale, [
+    CMS_CACHE_TAGS.properties,
+    CMS_CACHE_TAGS.apartments,
+  ]);
 }
 
 // Получение блога по ID
@@ -585,13 +669,16 @@ export async function getTransferById(id: string) {
   throw new Error(`Transfer not found: ${id}`);
 }
 
-// Получение машины по ID через Documents API
-export async function getCarById(id: string) {
-  const car = await fetchWithCache(`/cars/${id}?populate=*`, `car-${id}`);
-
-  // Изображения загружаются динамически, без предзагрузки в SSG
-
-  return car;
+// Получение машины по ID через Documents API (locale → Strapi; EN text fallback)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getCarById(
+  id: string,
+  locale?: Locale | string
+): Promise<any> {
+  return getCmsDocumentById("cars", id, locale, [
+    CMS_CACHE_TAGS.cars,
+    CMS_CACHE_TAGS.carsAll,
+  ]);
 }
 
 // Получение всех ID автомобилей для генерации статических путей через Documents API
@@ -679,26 +766,62 @@ function toHomeCar(car: HomeCarStrapiRow) {
 }
 
 async function getHomeCars(language: string) {
-  const endpoint = `/cars?${homePopulateQuery()}&${homeListQuery(HOME_CARS_FETCH_LIMIT)}&sort=title:ASC`;
-  const rows = await fetchWithCache(endpoint, "home-cars-list", [
+  const key = cmsLocale(language);
+  const listQuery = `${homePopulateQuery()}&${homeListQuery(HOME_CARS_FETCH_LIMIT)}&sort=title:ASC`;
+  const tags = [
     CMS_CACHE_TAGS.home,
     CMS_CACHE_TAGS.cars,
     CMS_CACHE_TAGS.carsAll,
-  ]);
+  ] as CmsCacheTag[];
+
+  let rows = await fetchWithCache(
+    `/cars?${listQuery}&locale=${key}`,
+    `home-cars-list-${key}`,
+    tags
+  );
+  if (key !== "en" && (!Array.isArray(rows) || rows.length === 0)) {
+    rows = await fetchWithCache(
+      `/cars?${listQuery}&locale=en`,
+      "home-cars-list-en",
+      tags
+    );
+  }
   if (!Array.isArray(rows)) return [];
   return pickHomeCarsByLocale(rows as HomeCarStrapiRow[], language).map(
     (car) => toHomeCar(car)
   );
 }
 
-async function getHomeProperties(): Promise<unknown[]> {
-  const endpoint = `/properties?${homePopulateQuery()}&${homeListQuery(HOME_PREVIEW_LIMIT)}&sort=updatedAt:DESC`;
-  const rows = await fetchWithCache(endpoint, "home-properties", [
+async function getHomeProperties(language: string = "en"): Promise<unknown[]> {
+  const key = cmsLocale(language);
+  const listQuery = `${homePopulateQuery()}&${homeListQuery(HOME_PREVIEW_LIMIT)}&sort=updatedAt:DESC`;
+  const tags = [
     CMS_CACHE_TAGS.home,
     CMS_CACHE_TAGS.properties,
     CMS_CACHE_TAGS.apartments,
-  ]);
-  return Array.isArray(rows) ? rows : [];
+  ] as CmsCacheTag[];
+
+  const enRows = await fetchWithCache(
+    `/properties?${listQuery}&locale=en`,
+    "home-properties-en",
+    tags
+  );
+  const enList = Array.isArray(enRows) ? (enRows as CmsDocument[]) : [];
+  if (key === "en") return enList;
+
+  let localized: CmsDocument[] = [];
+  try {
+    const rows = await fetchWithCache(
+      `/properties?${listQuery}&locale=${key}`,
+      `home-properties-${key}`,
+      tags
+    );
+    localized = Array.isArray(rows) ? (rows as CmsDocument[]) : [];
+  } catch {
+    localized = [];
+  }
+
+  return mergeLocalizedCatalog(enList, localized);
 }
 
 async function getHomeBlogs(language: string): Promise<unknown[]> {
@@ -727,7 +850,7 @@ export async function getHomePageData(language: string = "en") {
     const [carsResult, propertiesResult, blogsResult, transfersResult] =
       await Promise.allSettled([
         getHomeCars(language),
-        getHomeProperties(),
+        getHomeProperties(language),
         getHomeBlogs(language),
         getHomeTransfers(),
       ]);

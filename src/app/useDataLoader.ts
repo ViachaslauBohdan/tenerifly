@@ -9,7 +9,8 @@ import {
   homePopulateQuery,
   pickHomeCarsByLocale,
 } from "@/lib/homeListing";
-import { localeContentKey } from "@/types/locale";
+import { mergeLocalizedCatalog } from "@/lib/cmsLocalizedContent";
+import { cmsLocale, localeContentKey } from "@/types/locale";
 import { formatPropertyPriceLabel } from "@/utils/propertyPrice";
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
@@ -161,14 +162,47 @@ export function useDataLoader(
 
         const list = homeListQuery(HOME_PREVIEW_LIMIT);
         const populate = homePopulateQuery();
+        const key = cmsLocale(language);
+        const carsBase = `/cars?${populate}&${homeListQuery(HOME_CARS_FETCH_LIMIT)}&sort=title:ASC`;
+        const propertiesBase = `/properties?${populate}&${list}&sort=updatedAt:DESC`;
+
+        const fetchWithLocaleFallback = async (basePath: string) => {
+          try {
+            const primary = await fetchFromStrapi(`${basePath}&locale=${key}`);
+            if (primary?.data?.length || key === "en") return primary;
+            return await fetchFromStrapi(`${basePath}&locale=en`);
+          } catch (error) {
+            if (key === "en") throw error;
+            return await fetchFromStrapi(`${basePath}&locale=en`);
+          }
+        };
+
+        const fetchPropertiesMerged = async () => {
+          const en = await fetchFromStrapi(`${propertiesBase}&locale=en`);
+          if (key === "en") return en;
+          let localized: { data?: Array<Record<string, unknown>> } = {
+            data: [],
+          };
+          try {
+            localized = await fetchFromStrapi(
+              `${propertiesBase}&locale=${key}`
+            );
+          } catch {
+            localized = { data: [] };
+          }
+          const enRows = (en?.data || []) as Array<
+            Record<string, unknown> & { documentId?: string }
+          >;
+          const locRows = (localized?.data || []) as Array<
+            Record<string, unknown> & { documentId?: string }
+          >;
+          return { data: mergeLocalizedCatalog(enRows, locRows) };
+        };
+
         const [carsResult, propertiesResult, blogsResult, transfersResult] =
           await Promise.allSettled([
-            fetchFromStrapi(
-              `/cars?${populate}&${homeListQuery(HOME_CARS_FETCH_LIMIT)}&sort=title:ASC`
-            ),
-            fetchFromStrapi(
-              `/properties?${populate}&${list}&sort=updatedAt:DESC`
-            ),
+            fetchWithLocaleFallback(carsBase),
+            fetchPropertiesMerged(),
             fetchFromStrapi(
               `/blog-posts?${populate}&${list}&sort=publishedAt:DESC`
             ),

@@ -39,7 +39,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   try {
     const { id } = await params;
-    const car = await getCarById(id);
+    const car = await getCarById(id, "en");
 
     if (!car) {
       return {
@@ -115,7 +115,7 @@ export default async function CarDetailPage({
 }) {
   try {
     const { id } = await params;
-    const car = await getCarById(id);
+    const car = await getCarById(id, "en");
 
     if (!car) {
       notFound();

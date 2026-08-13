@@ -43,7 +43,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   try {
     const { id } = await params;
-    const property = await getPropertyById(id);
+    const property = await getPropertyById(id, "en");
 
     if (!property) {
       return {
@@ -118,7 +118,7 @@ export default async function PropertyDetailPage({
 }) {
   try {
     const { id } = await params;
-    const property = await getPropertyById(id);
+    const property = await getPropertyById(id, "en");
 
     if (!property) {
       notFound();

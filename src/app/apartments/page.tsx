@@ -47,8 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ApartmentsPage() {
   try {
-    // Получаем все данные апартаментов на сервере для SSG с кэшированием
-    const properties = await getAllProperties();
+    const properties = await getAllProperties("en");
 
     console.log(
       "🏠 SSG: Page loaded with",
