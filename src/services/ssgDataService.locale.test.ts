@@ -1,5 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("next/cache", () => ({
+  revalidateTag: vi.fn(),
+  revalidatePath: vi.fn(),
+}));
+
 function jsonResponse(data: unknown, status = 200) {
   return new Response(JSON.stringify({ data }), {
     status,
@@ -244,5 +249,126 @@ describe("ssgDataService locale fetch", () => {
       "Apartament z widokiem Los Gigantes"
     );
     expect(data.properties[0].description).toBe("Polski opis");
+    expect(
+      fetchMock.mock.calls.some(
+        ([u]) =>
+          String(u).includes("/properties?") &&
+          String(u).includes("locale=pl") &&
+          String(u).includes("pageSize]=1000")
+      )
+    ).toBe(true);
+  });
+
+  it("getAllProperties overlays PL copy onto the full EN catalog", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/properties?") && url.includes("locale=en")) {
+        return jsonResponse([
+          {
+            documentId: "feat",
+            title: "Fantastic View Los Gigantes Apartment",
+            description: "English preview",
+            locale: "en",
+          },
+          {
+            documentId: "other",
+            title: "Other EN",
+            description: "EN other",
+            locale: "en",
+          },
+        ]);
+      }
+      if (url.includes("/properties?") && url.includes("locale=pl")) {
+        return jsonResponse([
+          {
+            documentId: "feat",
+            title: "Apartament z widokiem Los Gigantes",
+            description: "Polski opis",
+            locale: "pl",
+          },
+        ]);
+      }
+      return jsonResponse([]);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { getAllProperties } = await import("./ssgDataService");
+    const properties = await getAllProperties("pl");
+
+    expect(properties).toHaveLength(2);
+    expect(properties[0]).toMatchObject({
+      documentId: "feat",
+      title: "Apartament z widokiem Los Gigantes",
+      description: "Polski opis",
+      locale: "pl",
+    });
+    expect(properties[1]).toMatchObject({
+      documentId: "other",
+      title: "Other EN",
+    });
+    expect(
+      fetchMock.mock.calls.every(
+        ([u]) =>
+          !String(u).includes("/properties?") ||
+          String(u).includes("pageSize]=1000")
+      )
+    ).toBe(true);
+  });
+
+  it("getAllProperties requests Strapi uk for URL locale ua", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/properties?") && url.includes("locale=en")) {
+        return jsonResponse([
+          {
+            documentId: "a",
+            title: "Apt A EN",
+            description: "EN A",
+            locale: "en",
+          },
+        ]);
+      }
+      if (url.includes("/properties?") && url.includes("locale=uk")) {
+        return jsonResponse([
+          {
+            documentId: "a",
+            title: "Квартира A",
+            description: "UA A",
+            locale: "uk",
+          },
+        ]);
+      }
+      return jsonResponse([]);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { getAllProperties } = await import("./ssgDataService");
+    const properties = await getAllProperties("ua");
+
+    expect(properties[0].title).toBe("Квартира A");
+    expect(
+      fetchMock.mock.calls.some(([u]) => String(u).includes("locale=uk"))
+    ).toBe(true);
+    expect(
+      fetchMock.mock.calls.some(
+        ([u]) =>
+          String(u).includes("/properties?") && String(u).includes("locale=ua")
+      )
+    ).toBe(false);
+  });
+
+  it("revalidateCmsCache busts localized apartment catalog paths", async () => {
+    const { revalidateTag, revalidatePath } = await import("next/cache");
+    vi.mocked(revalidateTag).mockClear();
+    vi.mocked(revalidatePath).mockClear();
+
+    const { revalidateCmsCache } = await import("./ssgDataService");
+    await revalidateCmsCache("apartments");
+
+    expect(revalidateTag).toHaveBeenCalledWith("apartments");
+    expect(revalidatePath).toHaveBeenCalledWith("/apartments", "page");
+    expect(revalidatePath).toHaveBeenCalledWith("/pl/apartments", "page");
+    expect(revalidatePath).toHaveBeenCalledWith("/ua/apartments", "page");
   });
 });
+

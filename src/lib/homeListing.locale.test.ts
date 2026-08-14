@@ -1,5 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { pickHomeCarsByLocale } from "./homeListing";
+import {
+  HOME_LOCALE_OVERLAY_PAGE_SIZE,
+  HOME_PREVIEW_LIMIT,
+  pickHomeCarsByLocale,
+} from "./homeListing";
+
+describe("home listing locale overlay size", () => {
+  it("overlays the full catalog, not the latest preview page", () => {
+    expect(HOME_LOCALE_OVERLAY_PAGE_SIZE).toBe(1000);
+    expect(HOME_LOCALE_OVERLAY_PAGE_SIZE).toBeGreaterThan(HOME_PREVIEW_LIMIT);
+  });
+});
+
 
 describe("pickHomeCarsByLocale", () => {
   const rows = [
