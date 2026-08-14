@@ -271,6 +271,50 @@ const HERO_TENERIFE_TITLE = {
   ua: "Бронюйте відпочинок на Тенеріфі",
 };
 
+/** Catalog filter toggle — not always present in the Strapi translation docs. */
+const CATALOG_FILTER_MORE = {
+  de: {
+    showMoreFilters: "Mehr Filter anzeigen",
+    showLessFilters: "Weniger Filter anzeigen",
+  },
+  en: {
+    showMoreFilters: "Show more filters",
+    showLessFilters: "Show less filters",
+  },
+  es: {
+    showMoreFilters: "Mostrar más filtros",
+    showLessFilters: "Mostrar menos filtros",
+  },
+  fr: {
+    showMoreFilters: "Afficher plus de filtres",
+    showLessFilters: "Afficher moins de filtres",
+  },
+  pl: {
+    showMoreFilters: "Pokaż więcej filtrów",
+    showLessFilters: "Pokaż mniej filtrów",
+  },
+  ru: {
+    showMoreFilters: "Показать больше фильтров",
+    showLessFilters: "Показать меньше фильтров",
+  },
+  uk: {
+    showMoreFilters: "Показати більше фільтрів",
+    showLessFilters: "Показати менше фільтрів",
+  },
+};
+
+function applyCatalogFilterMorePatches(translation) {
+  if (!translation || typeof translation !== "object") return translation;
+  for (const [locale, labels] of Object.entries(CATALOG_FILTER_MORE)) {
+    if (!translation[locale] || typeof translation[locale] !== "object") {
+      continue;
+    }
+    translation[locale].showMoreFilters = labels.showMoreFilters;
+    translation[locale].showLessFilters = labels.showLessFilters;
+  }
+  return translation;
+}
+
 /** Homepage world-tours CTA (redirects to /world-tours). */
 const HERO_WORLD_TOURS_HINT = {
   de: "Um zur Seite aller Touren zu gelangen, klicken Sie auf «Finden»",
@@ -500,6 +544,13 @@ async function saveAllTranslations(translationsData) {
         safeFileName === "tourdetail"
       ) {
         translation = applyExcursionsIntermediaryPatches(translation);
+      }
+      if (
+        safeFileName === "apartments" ||
+        safeFileName === "cars" ||
+        safeFileName === "tours"
+      ) {
+        translation = applyCatalogFilterMorePatches(translation);
       }
 
       // Сохраняем только содержимое поля translation

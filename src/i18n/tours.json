@@ -73,7 +73,9 @@
     "dolphinWatching": "Delfin-Beobachtung",
     "toursInTenerife": "Touren auf Teneriffa",
     "excitingDescription": "Spannende und unvergessliche Tour-Erfahrung auf Teneriffa!",
-    "intermediaryNotice": "Tenerife Joy — Vermittler beim Verkauf von Ausflügen auf Teneriffa"
+    "intermediaryNotice": "Tenerife Joy — Vermittler beim Verkauf von Ausflügen auf Teneriffa",
+    "showMoreFilters": "Mehr Filter anzeigen",
+    "showLessFilters": "Weniger Filter anzeigen"
   },
   "en": {
     "to": "To",
@@ -149,7 +151,9 @@
     "dolphinWatching": "Dolphin watching",
     "toursInTenerife": "Tours in Tenerife",
     "excitingDescription": "Exciting and unforgettable tour experience in Tenerife!",
-    "intermediaryNotice": "Tenerife Joy — intermediary in the sale of excursions in Tenerife"
+    "intermediaryNotice": "Tenerife Joy — intermediary in the sale of excursions in Tenerife",
+    "showMoreFilters": "Show more filters",
+    "showLessFilters": "Show less filters"
   },
   "es": {
     "to": "Hasta",
@@ -225,7 +229,9 @@
     "dolphinWatching": "Avistamiento de delfines",
     "toursInTenerife": "Excursiones en Tenerife",
     "excitingDescription": "¡Experiencia de excursión emocionante e inolvidable en Tenerife!",
-    "intermediaryNotice": "Tenerife Joy — intermediario en la venta de excursiones en Tenerife"
+    "intermediaryNotice": "Tenerife Joy — intermediario en la venta de excursiones en Tenerife",
+    "showMoreFilters": "Mostrar más filtros",
+    "showLessFilters": "Mostrar menos filtros"
   },
   "fr": {
     "to": "À",
@@ -301,7 +307,9 @@
     "dolphinWatching": "Observation des dauphins",
     "toursInTenerife": "Excursions à Tenerife",
     "excitingDescription": "Excursion passionnante et inoubliable à Tenerife!",
-    "intermediaryNotice": "Tenerife Joy — intermédiaire dans la vente d'excursions à Tenerife"
+    "intermediaryNotice": "Tenerife Joy — intermédiaire dans la vente d'excursions à Tenerife",
+    "showMoreFilters": "Afficher plus de filtres",
+    "showLessFilters": "Afficher moins de filtres"
   },
   "pl": {
     "to": "Do",
@@ -377,7 +385,9 @@
     "dolphinWatching": "Obserwacja delfinów",
     "toursInTenerife": "Wycieczki na Teneryfie",
     "excitingDescription": "Ekscytująca i niezapomniana wycieczka na Teneryfie!",
-    "intermediaryNotice": "Tenerife Joy — pośrednik w sprzedaży wycieczek na Teneryfie"
+    "intermediaryNotice": "Tenerife Joy — pośrednik w sprzedaży wycieczek na Teneryfie",
+    "showMoreFilters": "Pokaż więcej filtrów",
+    "showLessFilters": "Pokaż mniej filtrów"
   },
   "ru": {
     "to": "До",
@@ -453,7 +463,9 @@
     "dolphinWatching": "Наблюдение за дельфинами",
     "toursInTenerife": "Экскурсии в Тенерифе",
     "excitingDescription": "Захватывающая и незабываемая экскурсия в Тенерифе!",
-    "intermediaryNotice": "Tenerife Joy — посредник в продаже экскурсий на Тенерифе"
+    "intermediaryNotice": "Tenerife Joy — посредник в продаже экскурсий на Тенерифе",
+    "showMoreFilters": "Показать больше фильтров",
+    "showLessFilters": "Показать меньше фильтров"
   },
   "uk": {
     "to": "До",
@@ -529,6 +541,8 @@
     "dolphinWatching": "Спостереження за дельфінами",
     "toursInTenerife": "Екскурсії на Тенеріфе",
     "excitingDescription": "Захоплююча та незабутня екскурсія на Тенеріфе!",
-    "intermediaryNotice": "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе"
+    "intermediaryNotice": "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе",
+    "showMoreFilters": "Показати більше фільтрів",
+    "showLessFilters": "Показати менше фільтрів"
   }
 }

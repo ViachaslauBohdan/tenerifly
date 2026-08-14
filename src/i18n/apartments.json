@@ -60,7 +60,9 @@
     "selectLanguage": "Sprache auswählen",
     "washingMachine": "Waschmaschine",
     "apartmentDescription": "Moderne und komfortable Immobilie in großartiger Lage.",
-    "apartmentsInTenerife": "Immobilien auf Teneriffa"
+    "apartmentsInTenerife": "Immobilien auf Teneriffa",
+    "showMoreFilters": "Mehr Filter anzeigen",
+    "showLessFilters": "Weniger Filter anzeigen"
   },
   "en": {
     "to": "To",
@@ -123,7 +125,9 @@
     "selectLanguage": "Select Language",
     "washingMachine": "Washing Machine",
     "apartmentDescription": "Modern and comfortable apartment in a great location.",
-    "apartmentsInTenerife": "Apartments in Tenerife"
+    "apartmentsInTenerife": "Apartments in Tenerife",
+    "showMoreFilters": "Show more filters",
+    "showLessFilters": "Show less filters"
   },
   "es": {
     "to": "Hasta",
@@ -186,7 +190,9 @@
     "selectLanguage": "Seleccionar idioma",
     "washingMachine": "Lavadora",
     "apartmentDescription": "Inmueble moderno y cómodo en una excelente ubicación.",
-    "apartmentsInTenerife": "Inmuebles en Tenerife"
+    "apartmentsInTenerife": "Inmuebles en Tenerife",
+    "showMoreFilters": "Mostrar más filtros",
+    "showLessFilters": "Mostrar menos filtros"
   },
   "fr": {
     "to": "À",
@@ -249,7 +255,9 @@
     "selectLanguage": "Choisir la langue",
     "washingMachine": "Lave-linge",
     "apartmentDescription": "Immobilier moderne et confortable dans un excellent emplacement.",
-    "apartmentsInTenerife": "Immobilier à Tenerife"
+    "apartmentsInTenerife": "Immobilier à Tenerife",
+    "showMoreFilters": "Afficher plus de filtres",
+    "showLessFilters": "Afficher moins de filtres"
   },
   "pl": {
     "to": "Do",
@@ -312,7 +320,9 @@
     "selectLanguage": "Wybierz język",
     "washingMachine": "Pralka",
     "apartmentDescription": "Nowoczesna i komfortowa nieruchomość w doskonałej lokalizacji.",
-    "apartmentsInTenerife": "Nieruchomości na Teneryfie"
+    "apartmentsInTenerife": "Nieruchomości na Teneryfie",
+    "showMoreFilters": "Pokaż więcej filtrów",
+    "showLessFilters": "Pokaż mniej filtrów"
   },
   "ru": {
     "to": "До",
@@ -375,7 +385,9 @@
     "selectLanguage": "Выбрать язык",
     "washingMachine": "Стиральная машина",
     "apartmentDescription": "Современная и комфортная недвижимость в отличном месте.",
-    "apartmentsInTenerife": "Недвижимость в Тенерифе"
+    "apartmentsInTenerife": "Недвижимость в Тенерифе",
+    "showMoreFilters": "Показать больше фильтров",
+    "showLessFilters": "Показать меньше фильтров"
   },
   "uk": {
     "to": "До",
@@ -438,6 +450,8 @@
     "selectLanguage": "Обрати мову",
     "washingMachine": "Пральна машина",
     "apartmentDescription": "Сучасна та комфортна нерухомість у відмінному місці.",
-    "apartmentsInTenerife": "Нерухомість на Тенеріфе"
+    "apartmentsInTenerife": "Нерухомість на Тенеріфе",
+    "showMoreFilters": "Показати більше фільтрів",
+    "showLessFilters": "Показати менше фільтрів"
   }
 }
