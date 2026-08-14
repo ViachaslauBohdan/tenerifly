@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
+import { carTransmissionLabel } from "@/lib/carSpecLabels";
 
 interface CarData {
   id: number;
@@ -223,16 +224,8 @@ const CarCard = ({
     return "—";
   };
 
-  const getTransmission = (car: CarData) => {
-    if (car.specifications && car.specifications.transmission) {
-      return car.specifications.transmission === "automatic"
-        ? translations.automatic
-        : car.specifications.transmission === "manual"
-          ? translations.manual
-          : car.specifications.transmission;
-    }
-    return "—";
-  };
+  const getTransmission = (car: CarData) =>
+    carTransmissionLabel(car.specifications?.transmission, language);
 
   const getFuelType = (car: CarData) => {
     if (car.specifications && car.specifications.fuel) {

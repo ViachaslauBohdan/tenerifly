@@ -100,5 +100,7 @@ describe("CarDetailPageClient description localization", () => {
         "Найновіший кабріолет BMW 2024 року з автоматичною коробкою передач."
       )
     ).toBeInTheDocument();
+    expect(screen.getByText("Автомат", { exact: true })).toBeInTheDocument();
+    expect(screen.queryByText(/^automatic$/i)).not.toBeInTheDocument();
   });
 });

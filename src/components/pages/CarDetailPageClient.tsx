@@ -7,8 +7,9 @@ import { IconAlertCircle, IconCar, IconUsers, IconGasStation, IconSettings, Icon
 import { BackToHome } from '@/components/BackToHome';
 import { useTranslation } from '@/hooks/useTranslation';
 import { carsAPI } from '@/services/api';
-import { Car } from '@/types/strapi'; 
+import { Car } from '@/types/strapi';
 import { Locale } from '@/types/locale';
+import { carTransmissionLabel } from '@/lib/carSpecLabels';
 
 interface CarDetailPageClientProps {
   params: Promise<{ locale: Locale; id: string }>;
@@ -202,7 +203,7 @@ export function CarDetailPageClient({ params }: CarDetailPageClientProps) {
                     <Group gap="xs">
                       <IconSettings size={16} />
                       <Text size="sm">
-                        <strong>КПП:</strong> {car.specifications.transmission}
+                        <strong>КПП:</strong> {carTransmissionLabel(car.specifications.transmission, currentLocale)}
                       </Text>
                     </Group>
                   </Grid.Col>

@@ -3,6 +3,7 @@ import { IconCar, IconUsers, IconGasStation, IconSettings, IconPhone, IconEye } 
 import { Locale } from '@/types/locale';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
+import { carTransmissionLabel } from '@/lib/carSpecLabels';
 
 interface CarTileProps {
   id: string;
@@ -134,7 +135,7 @@ export function CarTile({
             <Group gap={4}>
               <IconSettings size={16} />
               <Text size="xs" c="dimmed">
-                {specifications.transmission}
+                {carTransmissionLabel(specifications.transmission, currentLocale)}
               </Text>
             </Group>
           </Group>

@@ -1,4 +1,5 @@
 import type { HomeCar } from "@/components/home/types";
+import { carTransmissionLabel } from "@/lib/carSpecLabels";
 
 type CarsCurrencyMap = Record<string, string>;
 
@@ -15,13 +16,15 @@ export function getHomeCarCurrency(
   return currencyMap[currency] || currency;
 }
 
-export function getHomeCarFeatures(car: HomeCar): string {
+export function getHomeCarFeatures(car: HomeCar, locale = "en"): string {
   const parts = [
     car.specifications?.make,
     car.specifications?.model,
     car.type,
     car.specifications?.fuel,
-    car.specifications?.transmission,
+    car.specifications?.transmission
+      ? carTransmissionLabel(car.specifications.transmission, locale)
+      : undefined,
   ].filter(Boolean);
   return parts.join(" • ") || "—";
 }

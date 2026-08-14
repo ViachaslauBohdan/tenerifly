@@ -16,6 +16,7 @@ import {
   getHomeCarPrice,
 } from "@/components/home/homeCars";
 import { getHomeCarImageUrl, HOME_DISPLAY_LIMIT } from "@/lib/homeListing";
+import { carTransmissionLabel } from "@/lib/carSpecLabels";
 import type { BookingItem, HomeCar, LanguageCode } from "@/components/home/types";
 import type { Locale } from "@/types/locale";
 import translationsJson from "@/i18n/main.json";
@@ -158,13 +159,16 @@ export function HomeCarsSection({
                         <Car className="w-4 h-4" />
                         <span>
                           {copy.transmission}:{" "}
-                          {car.specifications?.transmission || "—"}
+                          {carTransmissionLabel(
+                            car.specifications?.transmission,
+                            language
+                          )}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <Home className="w-4 h-4" />
                         <span>
-                          {copy.features}: {getHomeCarFeatures(car)}
+                          {copy.features}: {getHomeCarFeatures(car, language)}
                         </span>
                       </div>
                       <div className="flex flex-wrap items-center gap-2 text-sm">

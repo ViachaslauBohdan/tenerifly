@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/carousel";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 import translations from "@/i18n/carsDetail.json";
+import { carTransmissionLabel } from "@/lib/carSpecLabels";
 
 interface CarData {
   id: number;
@@ -114,9 +115,8 @@ export default function CarDetailPageClient({ car }: { car: CarData }) {
     }
   };
 
-  const getTransmissionText = (transmission: string) => {
-    return transmission === "automatic" ? t.automatic : t.manual;
-  };
+  const getTransmissionText = (transmission: string) =>
+    carTransmissionLabel(transmission, locale);
 
   const getStatusText = (status: string) => {
     switch (status) {

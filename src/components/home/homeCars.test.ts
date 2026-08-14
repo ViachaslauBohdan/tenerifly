@@ -42,10 +42,22 @@ describe("homeCars helpers", () => {
     expect(getHomeCarCurrency({ title: "X" })).toBe("€");
   });
 
-  it("joins car features and falls back to an em dash", () => {
-    expect(getHomeCarFeatures(baseCar)).toBe(
-      "KIA • Picanto • rent • petrol • manual"
+  it("joins car features and localizes transmission", () => {
+    expect(getHomeCarFeatures(baseCar, "en")).toBe(
+      "KIA • Picanto • rent • petrol • Manual"
     );
+    expect(getHomeCarFeatures(baseCar, "pl")).toBe(
+      "KIA • Picanto • rent • petrol • Manualna"
+    );
+    expect(
+      getHomeCarFeatures(
+        {
+          ...baseCar,
+          specifications: { ...baseCar.specifications, transmission: "automatic" },
+        },
+        "pl"
+      )
+    ).toBe("KIA • Picanto • rent • petrol • Automatyczna");
     expect(getHomeCarFeatures({ title: "Empty" })).toBe("—");
   });
 });
