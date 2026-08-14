@@ -6,6 +6,9 @@ export const HOME_PREVIEW_LIMIT = 6;
 /** Extra rows when filtering cars by locale client-side. */
 export const HOME_CARS_FETCH_LIMIT = 24;
 
+/** Full locale catalog to overlay onto the EN home preview (same IDs, not “latest 6”). */
+export const HOME_LOCALE_OVERLAY_PAGE_SIZE = 1000;
+
 export const HOME_DISPLAY_LIMIT = 3;
 
 export function homeListQuery(limit = HOME_PREVIEW_LIMIT): string {

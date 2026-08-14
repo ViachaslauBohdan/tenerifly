@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
+import { cmsLocale } from "@/types/locale";
+import { apartmentListingTypeLabel } from "./apartmentCardCopy";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 
 interface PropertyData {
@@ -103,6 +105,7 @@ interface ApartmentCardProps {
     heating: string;
     internet: string;
     security: string;
+    from: string;
   };
   language: string;
   apartments?: PropertyData[];
@@ -179,7 +182,7 @@ const ApartmentCard = ({
         console.log("ApartmentCard API URL:", apiUrl); // Для отладки
 
         const response = await fetch(
-          `${apiUrl}/api/properties?populate=*&pagination[pageSize]=1000`,
+          `${apiUrl}/api/properties?populate=*&pagination[pageSize]=1000&locale=${cmsLocale(language)}`,
           {
             headers: getAuthHeaders(),
           }
@@ -201,7 +204,7 @@ const ApartmentCard = ({
     };
 
     fetchApartments();
-  }, [providedApartments]);
+  }, [providedApartments, language]);
 
   // Обновляем апартаменты при изменении отфильтрованного списка
   useEffect(() => {
@@ -529,7 +532,7 @@ const ApartmentCard = ({
                   {property.title}
                 </h3>
                 <p className="text-sm text-gray-500 mb-2">
-                  {property.type === "rent" ? "For Rent" : "For Sale"}
+                  {apartmentListingTypeLabel(property.type, language)}
                 </p>
                 <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                   {property.description}
@@ -656,7 +659,7 @@ const ApartmentCard = ({
                 <div className="text-right">
                   {property.type === "rent" ? (
                     <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      FROM {getCurrency(property)} {getPrice(property)}
+                      {translations.from} {getCurrency(property)} {getPrice(property)}
                     </span>
                   ) : (
                     <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">

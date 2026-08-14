@@ -5,6 +5,7 @@ import { Transfer } from "@/lib/transfers";
 import {
   HOME_CARS_FETCH_LIMIT,
   HOME_PREVIEW_LIMIT,
+  HOME_LOCALE_OVERLAY_PAGE_SIZE,
   homeListQuery,
   homePopulateQuery,
   pickHomeCarsByLocale,
@@ -185,7 +186,7 @@ export function useDataLoader(
           };
           try {
             localized = await fetchFromStrapi(
-              `${propertiesBase}&locale=${key}`
+              `/properties?${populate}&pagination[pageSize]=${HOME_LOCALE_OVERLAY_PAGE_SIZE}&publicationState=live&locale=${key}`
             );
           } catch {
             localized = { data: [] };

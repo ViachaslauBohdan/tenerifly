@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import inquirer from "inquirer";
+import { localizeProperty } from "./lib/propertyLocales.mjs";
 
 /* ================= КОНФИГУРАЦИЯ ================= */
 const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://tenerifly-strapi-production.up.railway.app";
@@ -363,6 +364,25 @@ async function main() {
             const result = await createProperty(payload);
             stopFinal();
             console.log(`\n\x1b[30m\x1b[42m УСПЕХ \x1b[0m УСПЕШНО СОЗДАНО! ID: ${result.data.id}\n`);
+            const documentId = result.data?.documentId;
+            if (documentId) {
+                const locStop = startLoading("Создание локалей title/description...");
+                try {
+                    const loc = await localizeProperty({
+                        apiUrl: API_URL,
+                        token: API_TOKEN,
+                        documentId,
+                        dryRun: false,
+                    });
+                    locStop();
+                    const written = loc.results.filter((row) => row.status === "written").length;
+                    const failed = loc.results.filter((row) => row.status === "error").length;
+                    console.log(`${GREEN}Локали записаны: ${written}, ошибок: ${failed}${RESET}\n`);
+                } catch (locErr) {
+                    locStop();
+                    console.log(`${RED}Объект создан, локали не записались: ${locErr.message}${RESET}\n`);
+                }
+            }
 
             const {confirmAgain} = await inquirer.prompt([
                 {

@@ -29,6 +29,9 @@ yarn-error.log*
 .env*.local
 .env
 
+# CMS locale script backups (English snapshots)
+scripts/.property-locale-backups/
+
 # vercel
 .vercel
 

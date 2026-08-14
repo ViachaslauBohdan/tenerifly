@@ -10,7 +10,7 @@ import {
 } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
 import { useTranslation } from "@/hooks/useTranslation";
-import { pickLocaleBundle } from "@/types/locale";
+import { pickLocaleBundle, cmsLocale } from "@/types/locale";
 import { CatalogBackLink } from "@/components/CatalogBackLink";
 import { CatalogDetailShell } from "@/components/CatalogDetailShell";
 import translations from "@/i18n/apartments.json";
@@ -221,7 +221,7 @@ export default function ApartmentsPageClient({
             "https://tenerifly-strapi-production.up.railway.app";
 
           const response = await fetch(
-            `${apiUrl}/api/properties?populate=*&pagination[pageSize]=1000`,
+            `${apiUrl}/api/properties?populate=*&pagination[pageSize]=1000&locale=${cmsLocale(locale)}`,
             { headers: getAuthHeaders() }
           );
 
@@ -244,7 +244,7 @@ export default function ApartmentsPageClient({
 
       loadAllApartments();
     }
-  }, [initialProperties]);
+  }, [initialProperties, locale]);
 
   const t = pickLocaleBundle(translations, locale);
 

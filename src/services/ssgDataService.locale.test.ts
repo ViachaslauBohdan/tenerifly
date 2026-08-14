@@ -180,4 +180,69 @@ describe("ssgDataService locale fetch", () => {
       description: "EN B",
     });
   });
+
+  it("getHomePageData overlays PL title from full catalog onto EN home preview", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/cars?")) return jsonResponse([]);
+      if (url.includes("/blog-posts?")) return jsonResponse([]);
+      if (url.includes("/transfers?")) return jsonResponse([]);
+      if (
+        url.includes("/properties?") &&
+        url.includes("locale=en") &&
+        url.includes("pageSize]=6")
+      ) {
+        return jsonResponse([
+          {
+            documentId: "feat",
+            title: "Fantastic View Los Gigantes Apartment",
+            description: "English preview",
+            locale: "en",
+            price: { amount: 70, currency: "EUR", period: "day" },
+            location: { city: "Los Gigantes" },
+          },
+        ]);
+      }
+      if (
+        url.includes("/properties?") &&
+        url.includes("locale=pl") &&
+        url.includes("pageSize]=6")
+      ) {
+        return jsonResponse([
+          {
+            documentId: "other",
+            title: "Inny apartament",
+            description: "PL other",
+            locale: "pl",
+          },
+        ]);
+      }
+      if (url.includes("/properties?") && url.includes("locale=pl")) {
+        return jsonResponse([
+          {
+            documentId: "other",
+            title: "Inny apartament",
+            description: "PL other",
+            locale: "pl",
+          },
+          {
+            documentId: "feat",
+            title: "Apartament z widokiem Los Gigantes",
+            description: "Polski opis",
+            locale: "pl",
+          },
+        ]);
+      }
+      return jsonResponse([]);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { getHomePageData } = await import("./ssgDataService");
+    const data = await getHomePageData("pl");
+
+    expect(data.properties[0].title).toBe(
+      "Apartament z widokiem Los Gigantes"
+    );
+    expect(data.properties[0].description).toBe("Polski opis");
+  });
 });

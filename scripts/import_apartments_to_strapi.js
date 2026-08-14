@@ -4,6 +4,7 @@ import axios from "axios";
 import FormData from "form-data";
 import fetch from "node-fetch";
 import inquirer from "inquirer";
+import { localizeProperty } from "./lib/propertyLocales.mjs";
 
 const API_URL = "https://tenerifly-strapi-production.up.railway.app";
 const API_TOKEN = "1f096171636a9e46b82d7c8ac34dcbc324143a8add19966e3ecffc2149cf563249efee0d2c47ef478fa643dd2fdd1d2964b0a3ff2f865086f8038e86a54d188ffbf8b5f7545d2778dcfc164ff41e5c62d399b5f1b2ba472fd4f4696fe273a526d87580ec3663d6ea9b86ac567d96645982668cc62e5efcda2b8f5636762f8d1d";
@@ -156,7 +157,28 @@ async function main() {
         try {
             const res = await createProperty(payload);
             stop();
-            console.log(`${GREEN}УСПЕХ! ID: ${res.data.id}${RESET}\n`);
+            console.log(`${GREEN}УСПЕХ! ID: ${res.data.id}${RESET}`);
+            const documentId = res.data?.documentId;
+            if (documentId) {
+                const locStop = startLoading("Локали title/description...");
+                try {
+                    const loc = await localizeProperty({
+                        apiUrl: API_URL,
+                        token: API_TOKEN,
+                        documentId,
+                        dryRun: false,
+                    });
+                    locStop();
+                    const written = loc.results.filter((row) => row.status === "written").length;
+                    const failed = loc.results.filter((row) => row.status === "error").length;
+                    console.log(`${GREEN}Локали записаны: ${written}, ошибок: ${failed}${RESET}\n`);
+                } catch (locErr) {
+                    locStop();
+                    console.log(`${RED}EN создан, локали не записались: ${locErr.message}${RESET}\n`);
+                }
+            } else {
+                console.log("");
+            }
         } catch (e) {
             stop();
             console.log(`${RED}ОШИБКА: ${e.message}${RESET}\n`);

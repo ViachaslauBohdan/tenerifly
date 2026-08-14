@@ -140,6 +140,43 @@ describe("mergeLocalizedCatalog", () => {
     });
   });
 
+  it("overlays home-preview EN cards from a larger locale catalog", () => {
+    const enPreview = [
+      {
+        documentId: "feat",
+        title: "Fantastic View Los Gigantes Apartment",
+        description: "English preview",
+        locale: "en",
+      },
+    ];
+    const latestLocalizedPage = [
+      {
+        documentId: "other",
+        title: "Inny apartament",
+        description: "PL other",
+        locale: "pl",
+      },
+    ];
+    expect(mergeLocalizedCatalog(enPreview, latestLocalizedPage)[0].title).toBe(
+      "Fantastic View Los Gigantes Apartment"
+    );
+
+    const fullLocalized = [
+      ...latestLocalizedPage,
+      {
+        documentId: "feat",
+        title: "Apartament z widokiem Los Gigantes",
+        description: "Polski opis",
+        locale: "pl",
+      },
+    ];
+    expect(mergeLocalizedCatalog(enPreview, fullLocalized)[0]).toMatchObject({
+      title: "Apartament z widokiem Los Gigantes",
+      description: "Polski opis",
+      locale: "pl",
+    });
+  });
+
   it("appends localized-only extras not present in EN", () => {
     const localized = [
       {

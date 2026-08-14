@@ -393,6 +393,19 @@ export async function revalidateCmsCache(tag?: CmsCacheTag | "all") {
     }
   }
 
+  if (
+    !tag ||
+    tag === "all" ||
+    tag === CMS_CACHE_TAGS.properties ||
+    tag === CMS_CACHE_TAGS.apartments
+  ) {
+    const { LOCALES } = await import("@/types/locale");
+    revalidatePath("/apartments", "page");
+    for (const { code } of LOCALES) {
+      revalidatePath(`/${code}/apartments`, "page");
+    }
+  }
+
   console.log("🔄 CMS cache revalidated:", tags.join(", "));
 }
 
@@ -809,13 +822,11 @@ async function getHomeProperties(language: string = "en"): Promise<unknown[]> {
   const enList = Array.isArray(enRows) ? (enRows as CmsDocument[]) : [];
   if (key === "en") return enList;
 
+  // Overlay from the full locale catalog. Fetching only the latest N localized
+  // rows misses the EN preview IDs (those “latest” rows are a different set).
   let localized: CmsDocument[] = [];
   try {
-    const rows = await fetchWithCache(
-      `/properties?${listQuery}&locale=${key}`,
-      `home-properties-${key}`,
-      tags
-    );
+    const rows = await fetchPropertiesForCmsLocale(key);
     localized = Array.isArray(rows) ? (rows as CmsDocument[]) : [];
   } catch {
     localized = [];
