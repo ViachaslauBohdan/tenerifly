@@ -357,6 +357,141 @@ describe("ssgDataService locale fetch", () => {
     ).toBe(false);
   });
 
+  it("getTransferById requests Strapi uk for URL locale ua", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/transfers/sprinter-8?") && url.includes("locale=uk")) {
+        return jsonResponse({
+          documentId: "sprinter-8",
+          title: "Mercedes Sprinter 8 місць",
+          description: "Приватний трансфер з аеропорту",
+          locale: "uk",
+          seats: 8,
+          price_south_airport: 50,
+          price_north_airport: 100,
+        });
+      }
+      return jsonResponse(null, 404);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { getTransferById } = await import("./ssgDataService");
+    const transfer = await getTransferById("sprinter-8", "ua");
+
+    expect(transfer.title).toBe("Mercedes Sprinter 8 місць");
+    expect(transfer.description).toBe("Приватний трансфер з аеропорту");
+    expect(
+      fetchMock.mock.calls.some(([u]) => String(u).includes("locale=uk"))
+    ).toBe(true);
+    expect(
+      fetchMock.mock.calls.some(([u]) => String(u).includes("locale=ua"))
+    ).toBe(false);
+  });
+
+  it("getTransferById falls back to EN when uk localization is missing", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (
+        url.includes("/transfers/sprinter-8?") &&
+        url.includes("locale=uk")
+      ) {
+        return jsonResponse(null, 404);
+      }
+      if (
+        url.includes("/transfers/sprinter-8?") &&
+        url.includes("locale=en")
+      ) {
+        return jsonResponse({
+          documentId: "sprinter-8",
+          title: "Mercedes Sprinter 8 seats airport transfer",
+          description: "Private airport transfer in Tenerife",
+          locale: "en",
+        });
+      }
+      return jsonResponse(null, 404);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { getTransferById } = await import("./ssgDataService");
+    const transfer = await getTransferById("sprinter-8", "ua");
+
+    expect(transfer.title).toBe(
+      "Mercedes Sprinter 8 seats airport transfer"
+    );
+    expect(transfer.description).toBe(
+      "Private airport transfer in Tenerife"
+    );
+  });
+
+  it("getHomePageData overlays PL transfer copy onto the EN catalog", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/cars?")) return jsonResponse([]);
+      if (url.includes("/blog-posts?")) return jsonResponse([]);
+      if (url.includes("/properties?")) return jsonResponse([]);
+      if (url.includes("/transfers?") && url.includes("locale=en")) {
+        return jsonResponse([
+          {
+            documentId: "sprinter-8",
+            title: "Mercedes Sprinter 8 seats airport transfer",
+            description: "Private airport transfer in Tenerife",
+            locale: "en",
+            seats: 8,
+            price_south_airport: 50,
+            price_north_airport: 100,
+            currency: "EUR",
+          },
+          {
+            documentId: "sprinter-13",
+            title: "Mercedes Sprinter 13 seats airport transfer",
+            description: "English 13-seat description",
+            locale: "en",
+            seats: 13,
+            price_south_airport: 50,
+            price_north_airport: 100,
+            currency: "EUR",
+          },
+        ]);
+      }
+      if (url.includes("/transfers?") && url.includes("locale=pl")) {
+        return jsonResponse([
+          {
+            documentId: "sprinter-8",
+            title: "Mercedes Sprinter 8 miejsc",
+            description: "Prywatny transfer z lotniska",
+            locale: "pl",
+            seats: 8,
+            price_south_airport: 50,
+            price_north_airport: 100,
+            currency: "EUR",
+          },
+        ]);
+      }
+      return jsonResponse([]);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { getHomePageData } = await import("./ssgDataService");
+    const data = await getHomePageData("pl");
+
+    expect(data.transfers).toHaveLength(2);
+    expect(data.transfers[0]).toMatchObject({
+      documentId: "sprinter-8",
+      title: "Mercedes Sprinter 8 miejsc",
+      description: "Prywatny transfer z lotniska",
+    });
+    expect(data.transfers[1]).toMatchObject({
+      documentId: "sprinter-13",
+      title: "Mercedes Sprinter 13 seats airport transfer",
+    });
+    expect(
+      fetchMock.mock.calls.some(
+        ([u]) =>
+          String(u).includes("/transfers?") && String(u).includes("locale=pl")
+      )
+    ).toBe(true);
+  });
+
   it("revalidateCmsCache busts localized apartment catalog paths", async () => {
     const { revalidateTag, revalidatePath } = await import("next/cache");
     vi.mocked(revalidateTag).mockClear();

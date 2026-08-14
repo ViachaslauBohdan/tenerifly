@@ -2,24 +2,20 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { Locale, LOCALES, localeContentKey } from "@/types/locale";
-import { useState, useEffect } from "react";
 import mainTranslations from "@/i18n/main.json";
 
 export function useTranslation() {
   const router = useRouter();
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const pathSegments = pathname.split("/");
   const localeFromPath = pathSegments[1] as Locale;
   const currentLocale: Locale =
     LOCALES.find((l) => l.code === localeFromPath)?.code || "en";
 
-  const contentKey = localeContentKey(currentLocale) as keyof typeof mainTranslations;
+  const contentKey = localeContentKey(
+    currentLocale
+  ) as keyof typeof mainTranslations;
   const t = mainTranslations[contentKey] || mainTranslations.en;
 
   const switchLocale = (newLocale: Locale) => {
@@ -35,32 +31,15 @@ export function useTranslation() {
     router.push(newPath);
   };
 
-  // Helper function to create locale-aware links
   const createLocaleLink = (path: string): string => {
-    // Remove leading slash if present
-    const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-    
-    // If path already starts with a locale, return as is
-    if (LOCALES.find((l) => l.code === cleanPath.split('/')[0])) {
+    const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+
+    if (LOCALES.find((l) => l.code === cleanPath.split("/")[0])) {
       return `/${cleanPath}`;
     }
-    
-    // Use current locale if mounted, otherwise default to "en"
-    const locale = mounted ? currentLocale : "en";
-    
-    // Otherwise, prepend current locale
-    return `/${locale}/${cleanPath}`;
-  };
 
-  if (!mounted) {
-    return {
-      t: mainTranslations.en,
-      locale: "en" as Locale,
-      locales: LOCALES,
-      switchLocale: () => {},
-      createLocaleLink,
-    };
-  }
+    return `/${currentLocale}/${cleanPath}`;
+  };
 
   return {
     t,

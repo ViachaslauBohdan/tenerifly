@@ -41,7 +41,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   try {
     const { id } = await params;
-    const transfer = await getTransferById(id);
+    const transfer = await getTransferById(id, "en");
     const title = transfer.title || "Airport transfer";
     const description =
       transfer.description || "Private airport transfer in Tenerife";
@@ -92,7 +92,7 @@ export default async function TransferDetailPage({
 }) {
   try {
     const { id } = await params;
-    const transfer = await getTransferById(id);
+    const transfer = await getTransferById(id, "en");
 
     if (!transfer) {
       notFound();

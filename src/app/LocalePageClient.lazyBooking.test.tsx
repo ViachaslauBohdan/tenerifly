@@ -99,6 +99,7 @@ describe("LocalePageClient lazy booking popup", () => {
 
     render(
       <LocalePageClient
+        locale="en"
         initialData={{
           cars: [],
           properties: [],

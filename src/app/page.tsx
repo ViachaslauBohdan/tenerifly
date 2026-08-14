@@ -53,7 +53,7 @@ export default async function RootPage() {
 
   return (
     <Suspense fallback={<HomePageFallback />}>
-      <LocalePageClient initialData={homeData} />
+      <LocalePageClient initialData={homeData} locale="en" />
     </Suspense>
   );
 }

@@ -1,3 +1,5 @@
+import { localeContentKey } from "@/types/locale";
+
 export type Transfer = {
   id: number | string;
   documentId: string;
@@ -187,8 +189,10 @@ export const transferText = {
   },
 };
 
-export const getTransferLocaleText = (locale: string) =>
-  transferText[locale as keyof typeof transferText] || transferText.en;
+export const getTransferLocaleText = (locale: string) => {
+  const key = localeContentKey(locale) as keyof typeof transferText;
+  return transferText[key] || transferText.en;
+};
 
 export const getTransferImage = (transfer: Transfer) => {
   const firstImage = transfer.images?.[0]?.url;

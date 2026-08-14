@@ -207,7 +207,7 @@ export function useDataLoader(
             fetchFromStrapi(
               `/blog-posts?${populate}&${list}&sort=publishedAt:DESC`
             ),
-            fetchFromStrapi(`/transfers?${populate}&${list}`),
+            fetchWithLocaleFallback(`/transfers?${populate}&${list}`),
           ]);
 
         if (

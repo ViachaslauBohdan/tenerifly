@@ -282,7 +282,7 @@ async function fetchTransfersQuiet(endpoint: string) {
 
 /** Fetch a CMS document by id for a locale, falling back to EN text fields. */
 async function getCmsDocumentById(
-  collection: "cars" | "properties",
+  collection: "cars" | "properties" | "transfers",
   id: string,
   locale: Locale | string | undefined,
   tags: CmsCacheTag[]
@@ -671,15 +671,18 @@ export async function getTourById(id: string): Promise<NormalizedExcursionTour> 
   return normalizeExcursionDocumentToTourCard(raw);
 }
 
-export async function getTransferById(id: string) {
-  try {
-    const transfer = await fetchTransfersQuiet(`/transfers/${id}?populate=*`);
-    if (transfer) return transfer;
-  } catch (error) {
-    // Ignore and return not found below.
+export async function getTransferById(
+  id: string,
+  locale?: Locale | string
+): Promise<Transfer> {
+  const transfer = await getCmsDocumentById("transfers", id, locale, [
+    CMS_CACHE_TAGS.transfers,
+    CMS_CACHE_TAGS.home,
+  ]);
+  if (!transfer) {
+    throw new Error(`Transfer not found: ${id}`);
   }
-
-  throw new Error(`Transfer not found: ${id}`);
+  return transfer as Transfer;
 }
 
 // Получение машины по ID через Documents API (locale → Strapi; EN text fallback)
@@ -844,12 +847,27 @@ async function getHomeBlogs(language: string): Promise<unknown[]> {
   return Array.isArray(rows) ? rows : [];
 }
 
-async function getHomeTransfers(): Promise<unknown[]> {
+async function getHomeTransfers(language: string = "en"): Promise<unknown[]> {
+  const key = cmsLocale(language);
+  const listQuery = `${homePopulateQuery()}&${homeListQuery(HOME_PREVIEW_LIMIT)}`;
   try {
-    const transfers = await fetchTransfersQuiet(
-      `/transfers?${homePopulateQuery()}&${homeListQuery(HOME_PREVIEW_LIMIT)}`
+    const enRows = await fetchTransfersQuiet(
+      `/transfers?${listQuery}&locale=en`
     );
-    return Array.isArray(transfers) ? transfers : [];
+    const enList = Array.isArray(enRows) ? (enRows as CmsDocument[]) : [];
+    if (key === "en") return enList;
+
+    let localized: CmsDocument[] = [];
+    try {
+      const rows = await fetchTransfersQuiet(
+        `/transfers?${homePopulateQuery()}&pagination[pageSize]=100&publicationState=live&locale=${key}`
+      );
+      localized = Array.isArray(rows) ? (rows as CmsDocument[]) : [];
+    } catch {
+      localized = [];
+    }
+
+    return mergeLocalizedCatalog(enList, localized);
   } catch {
     return [];
   }
@@ -863,7 +881,7 @@ export async function getHomePageData(language: string = "en") {
         getHomeCars(language),
         getHomeProperties(language),
         getHomeBlogs(language),
-        getHomeTransfers(),
+        getHomeTransfers(language),
       ]);
 
     const cars =

@@ -28,11 +28,15 @@ import { pickLocaleBundle, type Locale } from "@/types/locale";
 
 type LocalePageClientProps = {
   initialData?: LocalePageInitialData;
+  locale?: Locale;
 };
 
-export function LocalePageClient({ initialData }: LocalePageClientProps) {
+export function LocalePageClient({
+  initialData,
+  locale: localeFromServer,
+}: LocalePageClientProps) {
   const { locale, switchLocale, createLocaleLink } = useTranslation();
-  const language = (locale || "en") as LanguageCode;
+  const language = (localeFromServer || locale || "en") as LanguageCode;
 
   const {
     mounted,

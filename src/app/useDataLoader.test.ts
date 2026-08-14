@@ -134,6 +134,90 @@ describe("useDataLoader property locale overlay", () => {
     ).toBe(false);
   });
 
+  it("requests Strapi uk for transfers when the URL locale is ua", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/cars?")) return jsonOk([]);
+      if (url.includes("/blog-posts?")) return jsonOk([]);
+      if (url.includes("/properties?")) return jsonOk([]);
+      if (url.includes("/transfers?") && url.includes("locale=uk")) {
+        return jsonOk([
+          {
+            documentId: "sprinter-8",
+            title: "Mercedes Sprinter 8 місць",
+            description: "Приватний трансфер з аеропорту",
+            locale: "uk",
+            seats: 8,
+            price_south_airport: 50,
+            price_north_airport: 100,
+            currency: "EUR",
+          },
+        ]);
+      }
+      return jsonOk([]);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { result } = renderHook(() => useDataLoader(true, "ua"));
+
+    await waitFor(() => {
+      expect(result.current.dataLoading).toBe(false);
+    });
+
+    expect(result.current.transfers[0].title).toBe(
+      "Mercedes Sprinter 8 місць"
+    );
+    expect(
+      fetchMock.mock.calls.some(
+        ([u]) =>
+          String(u).includes("/transfers?") && String(u).includes("locale=uk")
+      )
+    ).toBe(true);
+    expect(
+      fetchMock.mock.calls.some(
+        ([u]) =>
+          String(u).includes("/transfers?") && String(u).includes("locale=ua")
+      )
+    ).toBe(false);
+  });
+
+  it("loads Polish transfer titles when Strapi has a pl locale", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/cars?")) return jsonOk([]);
+      if (url.includes("/blog-posts?")) return jsonOk([]);
+      if (url.includes("/properties?")) return jsonOk([]);
+      if (url.includes("/transfers?") && url.includes("locale=pl")) {
+        return jsonOk([
+          {
+            documentId: "sprinter-8",
+            title: "Mercedes Sprinter 8 miejsc",
+            description: "Prywatny transfer z lotniska",
+            locale: "pl",
+            seats: 8,
+            price_south_airport: 50,
+            price_north_airport: 100,
+            currency: "EUR",
+          },
+        ]);
+      }
+      return jsonOk([]);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { result } = renderHook(() => useDataLoader(true, "pl"));
+
+    await waitFor(() => {
+      expect(result.current.dataLoading).toBe(false);
+    });
+
+    expect(result.current.transfers[0]).toMatchObject({
+      documentId: "sprinter-8",
+      title: "Mercedes Sprinter 8 miejsc",
+      description: "Prywatny transfer z lotniska",
+    });
+  });
+
   it("does not fetch when disabled", async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);

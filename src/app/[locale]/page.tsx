@@ -75,7 +75,7 @@ export default async function LocaleRootPage({
 
   return (
     <Suspense fallback={<HomePageFallback />}>
-      <LocalePageClient initialData={homeData} />
+      <LocalePageClient initialData={homeData} locale={localeCode} />
     </Suspense>
   );
 }

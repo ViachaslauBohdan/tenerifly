@@ -45,7 +45,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   try {
     const { locale, id } = await params;
-    const transfer = await getTransferById(id);
+    const transfer = await getTransferById(id, locale);
     const title = transfer.title || "Airport transfer";
     const description =
       transfer.description || "Private airport transfer in Tenerife";
@@ -96,7 +96,7 @@ export default async function TransferDetailPage({
 }) {
   try {
     const { id, locale } = await params;
-    const transfer = await getTransferById(id);
+    const transfer = await getTransferById(id, locale);
 
     if (!transfer) {
       notFound();
