@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Transfer } from "@/lib/transfers";
+import { Transfer, localizeTransfer } from "@/lib/transfers";
 import {
   HOME_CARS_FETCH_LIMIT,
   HOME_PREVIEW_LIMIT,
@@ -306,24 +306,34 @@ export function useDataLoader(
             ? transfersResult.value.data
             : [];
           setTransfers(
-            transfersData.map((transfer: Record<string, unknown>) => ({
-              id: transfer.id as number,
-              documentId: transfer.documentId as string,
-              title: (transfer.title as string) || "Airport transfer",
-              description:
-                (transfer.description as string) ||
-                "Private airport transfer in Tenerife",
-              seats: Number(transfer.seats || 0),
-              price_south_airport: Number(transfer.price_south_airport || 50),
-              price_north_airport: Number(transfer.price_north_airport || 100),
-              currency: (transfer.currency as string) || "EUR",
-              image:
-                typeof transfer.image === "string" && transfer.image.length > 0
-                  ? transfer.image
-                  : undefined,
-              images: transfer.images as Transfer["images"],
-              contact: transfer.contact as Transfer["contact"],
-            }))
+            transfersData.map((transfer: Record<string, unknown>) =>
+              localizeTransfer(
+                {
+                  id: transfer.id as number,
+                  documentId: transfer.documentId as string,
+                  title: (transfer.title as string) || "Airport transfer",
+                  description:
+                    (transfer.description as string) ||
+                    "Private airport transfer in Tenerife",
+                  seats: Number(transfer.seats || 0),
+                  price_south_airport: Number(
+                    transfer.price_south_airport || 50
+                  ),
+                  price_north_airport: Number(
+                    transfer.price_north_airport || 100
+                  ),
+                  currency: (transfer.currency as string) || "EUR",
+                  image:
+                    typeof transfer.image === "string" &&
+                    transfer.image.length > 0
+                      ? transfer.image
+                      : undefined,
+                  images: transfer.images as Transfer["images"],
+                  contact: transfer.contact as Transfer["contact"],
+                },
+                language
+              )
+            )
           );
         } else {
           setTransfers([]);

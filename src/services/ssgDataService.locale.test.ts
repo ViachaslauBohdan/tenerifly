@@ -416,11 +416,9 @@ describe("ssgDataService locale fetch", () => {
     const transfer = await getTransferById("sprinter-8", "ua");
 
     expect(transfer.title).toBe(
-      "Mercedes Sprinter 8 seats airport transfer"
+      "Mercedes Sprinter 8 місць — трансфер з аеропорту"
     );
-    expect(transfer.description).toBe(
-      "Private airport transfer in Tenerife"
-    );
+    expect(transfer.description).toMatch(/до 8 пасажирів/);
   });
 
   it("getHomePageData overlays PL transfer copy onto the EN catalog", async () => {
@@ -482,7 +480,7 @@ describe("ssgDataService locale fetch", () => {
     });
     expect(data.transfers[1]).toMatchObject({
       documentId: "sprinter-13",
-      title: "Mercedes Sprinter 13 seats airport transfer",
+      title: "Mercedes Sprinter 13 miejsc — transfer z lotniska",
     });
     expect(
       fetchMock.mock.calls.some(

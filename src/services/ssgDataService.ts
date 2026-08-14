@@ -1,7 +1,7 @@
 import { cmsLocale, localeContentKey, type Locale } from "@/types/locale";
 // Сервис для получения данных на сервере для SSG
 
-import { Transfer } from "@/lib/transfers";
+import { Transfer, localizeTransfer } from "@/lib/transfers";
 import {
   CMS_CACHE_TAGS,
   CMS_FETCH_REVALIDATE,
@@ -682,7 +682,7 @@ export async function getTransferById(
   if (!transfer) {
     throw new Error(`Transfer not found: ${id}`);
   }
-  return transfer as Transfer;
+  return localizeTransfer(transfer as Transfer, locale || "en");
 }
 
 // Получение машины по ID через Documents API (locale → Strapi; EN text fallback)
@@ -986,7 +986,9 @@ export async function getHomePageData(language: string = "en") {
     const transfers =
       transfersResult.status === "fulfilled" &&
       Array.isArray(transfersResult.value)
-        ? (transfersResult.value as Transfer[]).map(normalizeTransfer)
+        ? (transfersResult.value as Transfer[])
+            .map(normalizeTransfer)
+            .map((transfer) => localizeTransfer(transfer, language))
         : [];
 
     return {

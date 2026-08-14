@@ -8,6 +8,7 @@ import {
   formatTransferPrice,
   getTransferImage,
   getTransferLocaleText,
+  localizeTransfer,
   type Transfer,
 } from "@/lib/transfers";
 import type { BookingItem, LanguageCode } from "@/components/home/types";
@@ -45,7 +46,8 @@ export function HomeTransfersSection({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {transfers.slice(0, 2).map((transfer) => {
+          {transfers.slice(0, 2).map((rawTransfer) => {
+            const transfer = localizeTransfer(rawTransfer, language);
             const transferDetailHref = createLocaleLink(
               `/transfers/${transfer.documentId}`
             );

@@ -10,6 +10,7 @@ import {
   formatTransferPrice,
   getTransferImage,
   getTransferLocaleText,
+  localizeTransfer,
   Transfer,
 } from "@/lib/transfers";
 
@@ -33,6 +34,7 @@ export default function TransferDetailPageClient({
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const copy = getTransferLocaleText(language);
+  const localizedTransfer = localizeTransfer(transfer, language);
   const currentLanguage = languages.find((lang) => lang.code === language);
 
   useEffect(() => {
@@ -113,7 +115,7 @@ export default function TransferDetailPageClient({
             <div className="aspect-video bg-gray-100">
               <img
                 src={getTransferImage(transfer)}
-                alt={transfer.title}
+                alt={localizedTransfer.title}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -126,10 +128,10 @@ export default function TransferDetailPageClient({
             </div>
 
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {transfer.title}
+              {localizedTransfer.title}
             </h1>
             <p className="text-gray-600 leading-relaxed mb-6">
-              {transfer.description}
+              {localizedTransfer.description}
             </p>
 
             <div className="flex items-center gap-2 text-gray-700 mb-6">
@@ -195,7 +197,7 @@ export default function TransferDetailPageClient({
           opened={isBookingModalOpen}
           onClose={() => setIsBookingModalOpen(false)}
           item={{
-            name: transfer.title,
+            name: localizedTransfer.title,
             price: bookingPrice,
             currency: transfer.currency,
             contactEmail: transfer.contact?.email,

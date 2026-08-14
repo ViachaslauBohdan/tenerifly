@@ -54,12 +54,10 @@ describe("HomeTransfersSection locale copy", () => {
     expect(
       screen.getByText("Prywatne transfery na Teneryfie dla rodzin i grup")
     ).toBeInTheDocument();
-    expect(screen.queryByText("Airport Transfers")).not.toBeInTheDocument();
     expect(
-      screen.queryByText(
-        "Private Tenerife airport transfers for families and groups"
-      )
-    ).not.toBeInTheDocument();
+      screen.getByRole("heading", { name: "Mercedes Sprinter 8 miejsc — transfer z lotniska" })
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Airport Transfers")).not.toBeInTheDocument();
   });
 
   it("shows Ukrainian section copy for ua", () => {
@@ -75,6 +73,14 @@ describe("HomeTransfersSection locale copy", () => {
     expect(
       screen.getByRole("heading", { name: "Трансфери з аеропорту" })
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Mercedes Sprinter 8 місць — трансфер з аеропорту",
+      })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Mercedes Sprinter 8 seats airport transfer")
+    ).not.toBeInTheDocument();
     expect(screen.queryByText("Airport Transfers")).not.toBeInTheDocument();
   });
 });

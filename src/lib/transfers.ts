@@ -194,6 +194,130 @@ export const getTransferLocaleText = (locale: string) => {
   return transferText[key] || transferText.en;
 };
 
+type TransferCardCopy = {
+  title: string;
+  description: string;
+};
+
+export const transferCardCopy: Record<
+  "8" | "13",
+  Record<string, TransferCardCopy>
+> = {
+  "8": {
+    en: {
+      title: "Mercedes Sprinter 8 seats airport transfer",
+      description:
+        "Private airport transfer in Tenerife for groups up to 8 passengers. Ideal for families and small groups travelling with luggage.",
+    },
+    uk: {
+      title: "Mercedes Sprinter 8 місць — трансфер з аеропорту",
+      description:
+        "Приватний трансфер з аеропорту на Тенерифе для груп до 8 пасажирів. Ідеально для сімей і невеликих груп із багажем.",
+    },
+    ru: {
+      title: "Mercedes Sprinter 8 мест — трансфер из аэропорта",
+      description:
+        "Индивидуальный трансфер из аэропорта на Тенерифе для групп до 8 пассажиров. Идеально для семей и небольших групп с багажом.",
+    },
+    pl: {
+      title: "Mercedes Sprinter 8 miejsc — transfer z lotniska",
+      description:
+        "Prywatny transfer z lotniska na Teneryfie dla grup do 8 pasażerów. Idealny dla rodzin i małych grup z bagażem.",
+    },
+    de: {
+      title: "Mercedes Sprinter 8 Sitze — Flughafentransfer",
+      description:
+        "Privater Flughafentransfer auf Teneriffa für Gruppen bis 8 Personen. Ideal für Familien und kleine Gruppen mit Gepäck.",
+    },
+    es: {
+      title: "Mercedes Sprinter 8 plazas — traslado al aeropuerto",
+      description:
+        "Traslado privado al aeropuerto en Tenerife para grupos de hasta 8 pasajeros. Ideal para familias y grupos pequeños con equipaje.",
+    },
+    fr: {
+      title: "Mercedes Sprinter 8 places — transfert aéroport",
+      description:
+        "Transfert privé aéroport à Tenerife pour les groupes jusqu'à 8 passagers. Idéal pour les familles et les petits groupes avec bagages.",
+    },
+  },
+  "13": {
+    en: {
+      title: "Mercedes Sprinter 13 seats airport transfer",
+      description:
+        "Private airport transfer in Tenerife for groups up to 13 passengers. Comfortable Mercedes Sprinter minibus with space for luggage.",
+    },
+    uk: {
+      title: "Mercedes Sprinter 13 місць — трансфер з аеропорту",
+      description:
+        "Приватний трансфер з аеропорту на Тенерифе для груп до 13 пасажирів. Комфортабельний мікроавтобус Mercedes Sprinter із місцем для багажу.",
+    },
+    ru: {
+      title: "Mercedes Sprinter 13 мест — трансфер из аэропорта",
+      description:
+        "Индивидуальный трансфер из аэропорта на Тенерифе для групп до 13 пассажиров. Комфортабельный микроавтобус Mercedes Sprinter с местом для багажа.",
+    },
+    pl: {
+      title: "Mercedes Sprinter 13 miejsc — transfer z lotniska",
+      description:
+        "Prywatny transfer z lotniska na Teneryfie dla grup do 13 pasażerów. Wygodny minibus Mercedes Sprinter z miejscem na bagaż.",
+    },
+    de: {
+      title: "Mercedes Sprinter 13 Sitze — Flughafentransfer",
+      description:
+        "Privater Flughafentransfer auf Teneriffa für Gruppen bis 13 Personen. Komfortabler Mercedes-Sprinter-Minibus mit Platz für Gepäck.",
+    },
+    es: {
+      title: "Mercedes Sprinter 13 plazas — traslado al aeropuerto",
+      description:
+        "Traslado privado al aeropuerto en Tenerife para grupos de hasta 13 pasajeros. Cómodo minibús Mercedes Sprinter con espacio para el equipaje.",
+    },
+    fr: {
+      title: "Mercedes Sprinter 13 places — transfert aéroport",
+      description:
+        "Transfert privé aéroport à Tenerife pour les groupes jusqu'à 13 passagers. Minibus Mercedes Sprinter confortable avec espace bagages.",
+    },
+  },
+};
+
+const englishTransferTitles = new Set(
+  Object.values(transferCardCopy)
+    .map((byLocale) => byLocale.en?.title)
+    .filter(Boolean)
+);
+
+export function getTransferVehicleKey(
+  transfer: Pick<Transfer, "seats" | "documentId" | "slug" | "title">
+): "8" | "13" | null {
+  const seats = Number(transfer.seats);
+  if (seats === 8) return "8";
+  if (seats === 13) return "13";
+
+  const haystack = `${transfer.documentId} ${transfer.slug ?? ""} ${transfer.title}`;
+  if (/8[- ]seats/i.test(haystack)) return "8";
+  if (/13[- ]seats/i.test(haystack)) return "13";
+  return null;
+}
+
+export function localizeTransfer(transfer: Transfer, locale: string): Transfer {
+  const key = localeContentKey(locale);
+  const vehicle = getTransferVehicleKey(transfer);
+  if (!vehicle) return transfer;
+
+  const copy = transferCardCopy[vehicle][key];
+  if (!copy || key === "en") return transfer;
+
+  const stillEnglish =
+    englishTransferTitles.has(transfer.title) ||
+    /^Private airport transfer/i.test(transfer.description || "");
+  if (!stillEnglish) return transfer;
+
+  return {
+    ...transfer,
+    title: copy.title,
+    description: copy.description,
+  };
+}
+
 export const getTransferImage = (transfer: Transfer) => {
   const firstImage = transfer.images?.[0]?.url;
   if (firstImage) {
