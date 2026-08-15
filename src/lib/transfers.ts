@@ -318,31 +318,40 @@ export function localizeTransfer(transfer: Transfer, locale: string): Transfer {
   };
 }
 
+const STRAPI_API_URL =
+  process.env.NEXT_PUBLIC_STRAPI_API_URL ||
+  "https://tenerifly-strapi-production.up.railway.app";
+
+export function resolveTransferMediaUrl(url: string): string {
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  if (url.startsWith("/uploads")) {
+    return `${STRAPI_API_URL}${url}`;
+  }
+  return url.startsWith("/") ? url : `${STRAPI_API_URL}/${url}`;
+}
+
+export function getTransferFallbackImage(
+  transfer: Pick<Transfer, "seats" | "documentId" | "slug" | "title">
+): string {
+  const vehicle = getTransferVehicleKey(transfer);
+  if (vehicle === "8") return "/transfers/mercedes-sprinter-8.jpg";
+  if (vehicle === "13") return "/transfers/mercedes-sprinter-13.jpg";
+  return "/placeholder.svg?height=400&width=600";
+}
+
 export const getTransferImage = (transfer: Transfer) => {
   const firstImage = transfer.images?.[0]?.url;
   if (firstImage) {
-    if (firstImage.startsWith("http") || firstImage.startsWith("/")) {
-      return firstImage;
-    }
-
-    const apiUrl =
-      process.env.NEXT_PUBLIC_STRAPI_API_URL ||
-      "https://tenerifly-strapi-production.up.railway.app";
-    return `${apiUrl}${firstImage}`;
+    return resolveTransferMediaUrl(firstImage);
   }
 
   if (transfer.image) {
-    if (transfer.image.startsWith("http") || transfer.image.startsWith("/")) {
-      return transfer.image;
-    }
-
-    const apiUrl =
-      process.env.NEXT_PUBLIC_STRAPI_API_URL ||
-      "https://tenerifly-strapi-production.up.railway.app";
-    return `${apiUrl}${transfer.image}`;
+    return resolveTransferMediaUrl(transfer.image);
   }
 
-  return "/placeholder.svg?height=400&width=600";
+  return getTransferFallbackImage(transfer);
 };
 
 export const getTransferPrice = (transfer: Transfer, airport: "south" | "north") =>

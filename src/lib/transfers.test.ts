@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  getTransferFallbackImage,
+  getTransferImage,
   getTransferLocaleText,
   localizeTransfer,
+  resolveTransferMediaUrl,
   type Transfer,
 } from "./transfers";
 
@@ -73,5 +76,47 @@ describe("localizeTransfer", () => {
       description: "CMS український опис",
     };
     expect(localizeTransfer(cmsUk, "ua").title).toBe("CMS українська назва");
+  });
+});
+
+describe("getTransferImage", () => {
+  it("keeps Cloudinary URLs", () => {
+    expect(
+      resolveTransferMediaUrl(
+        "https://res.cloudinary.com/dlnvckilf/image/upload/v1/van.jpg"
+      )
+    ).toBe("https://res.cloudinary.com/dlnvckilf/image/upload/v1/van.jpg");
+  });
+
+  it("prefixes Strapi /uploads paths instead of serving them from the website", () => {
+    expect(resolveTransferMediaUrl("/uploads/sprinter.jpg")).toBe(
+      "https://tenerifly-strapi-production.up.railway.app/uploads/sprinter.jpg"
+    );
+  });
+
+  it("uses the CMS image when present", () => {
+    expect(
+      getTransferImage({
+        ...englishEightSeater,
+        images: [
+          {
+            url: "https://res.cloudinary.com/dlnvckilf/image/upload/v1/8.jpg",
+          },
+        ],
+      })
+    ).toBe("https://res.cloudinary.com/dlnvckilf/image/upload/v1/8.jpg");
+  });
+
+  it("falls back to the local Sprinter photo when CMS media is missing", () => {
+    expect(getTransferImage(englishEightSeater)).toBe(
+      "/transfers/mercedes-sprinter-8.jpg"
+    );
+    expect(
+      getTransferFallbackImage({
+        ...englishEightSeater,
+        seats: 13,
+        title: "Mercedes Sprinter 13 seats airport transfer",
+      })
+    ).toBe("/transfers/mercedes-sprinter-13.jpg");
   });
 });
