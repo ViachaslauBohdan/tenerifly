@@ -43,6 +43,14 @@ export class CustomWorld extends World implements HeroWorld {
     this.page = await this.context.newPage();
   }
 
+  async openIPhoneSafari() {
+    this.browser = await chromium.launch({ headless: true });
+    this.context = await this.browser.newContext({
+      ...devices["iPhone 13"],
+    });
+    this.page = await this.context.newPage();
+  }
+
   async closeBrowser() {
     await this.context?.close();
     await this.browser?.close();

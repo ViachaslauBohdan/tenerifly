@@ -1019,57 +1019,37 @@ html {
   overflow: visible;
 }
 
+/* Otpusk desktop CSS sets .new_f-form > .clearfix { width: 890px }. On iPhone
+   the widget often keeps that row, so Country/From/date overlap. Stack fields
+   even if Otpusk never adds new_mobile-form. */
 @media (max-width: 639px) {
-  body:not(.new_m-mobile-form):not(.new_mobile-form)
-    #otpusk-search-container
-    .new_os
-    .new_f-form
-    > .clearfix,
-  body:not(.new_m-mobile-form):not(.new_mobile-form)
-    #otpusk-world-search-container
-    .new_os
-    .new_f-form
-    > .clearfix {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    padding: 0 9px !important;
-    box-sizing: border-box !important;
+  #otpusk-search-container .new_f-form > .clearfix,
+  #otpusk-world-search-container .new_f-form > .clearfix,
+  #otpusk-search-container .new_f-wrapper > .new_f-title,
+  #otpusk-world-search-container .new_f-wrapper > .new_f-title,
+  #otpusk-search-container .new_f-ext-btn-container,
+  #otpusk-world-search-container .new_f-ext-btn-container,
+  #otpusk-search-container .new_f-ext-body,
+  #otpusk-world-search-container .new_f-ext-body {
+    width: auto !important;
+    max-width: 100% !important;
   }
 
-  body:not(.new_m-mobile-form):not(.new_mobile-form)
-    #otpusk-search-container
-    .new_os
-    .new_f-form-field,
-  body:not(.new_m-mobile-form):not(.new_mobile-form)
-    #otpusk-search-container
-    .new_os
-    .new_f-form
-    .new_f-form-submit,
-  body:not(.new_m-mobile-form):not(.new_mobile-form)
-    #otpusk-world-search-container
-    .new_os
-    .new_f-form-field,
-  body:not(.new_m-mobile-form):not(.new_mobile-form)
-    #otpusk-world-search-container
-    .new_os
-    .new_f-form
-    .new_f-form-submit {
+  #otpusk-search-container .new_f-form-field,
+  #otpusk-world-search-container .new_f-form-field,
+  #otpusk-search-container .new_f-form .new_f-form-submit,
+  #otpusk-world-search-container .new_f-form .new_f-form-submit {
     float: none !important;
-    width: calc(50% - 18px) !important;
-    max-width: calc(50% - 9px) !important;
-    margin: 0 9px 14px !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 12px !important;
     box-sizing: border-box !important;
     border-radius: 3px !important;
   }
 
-  body:not(.new_m-mobile-form):not(.new_mobile-form)
-    #otpusk-search-container
-    .new_os
-    .new_f-form-field::before,
-  body:not(.new_m-mobile-form):not(.new_mobile-form)
-    #otpusk-world-search-container
-    .new_os
-    .new_f-form-field::before {
+  #otpusk-search-container .new_f-form-field::before,
+  #otpusk-world-search-container .new_f-form-field::before {
     display: none !important;
   }
 }

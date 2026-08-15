@@ -1,8 +1,12 @@
 import { After, Before } from "@cucumber/cucumber";
 import type { CustomWorld } from "./world";
 
-Before(async function (this: CustomWorld) {
+Before({ tags: "not @iphone" }, async function (this: CustomWorld) {
   await this.openAndroidChrome();
+});
+
+Before({ tags: "@iphone" }, async function (this: CustomWorld) {
+  await this.openIPhoneSafari();
 });
 
 After(async function (this: CustomWorld) {

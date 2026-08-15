@@ -2,20 +2,16 @@
 
 import { useEffect, useState } from "react";
 import "@/types/otpusk-window";
-
-type OtpuskLanguage = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
+import {
+  syncOtpuskMobileFormClass,
+  toOtpuskLang,
+  waitForOtpuskLayout,
+  type OtpuskLanguage,
+} from "@/lib/otpuskMobileForm";
 
 export type OtpuskSearchStatus = "loading" | "ready" | "error";
 
 const OTPUSK_FORM_CSS = "https://export.otpusk.com/os/onsite/form.css";
-
-function toOtpuskLang(language: OtpuskLanguage): string {
-  if (language === "ua") return "ua";
-  if (language === "en" || language === "ru" || language === "pl") {
-    return language;
-  }
-  return "en";
-}
 
 export type UseOtpuskSearchOptions = {
   language: OtpuskLanguage;
@@ -64,77 +60,6 @@ function ensureOtpuskFormCss(): Promise<void> {
   });
 }
 
-function getOtpuskRoot(container: Element): Element | null {
-  if (container.classList.contains("new_os")) {
-    return container;
-  }
-  return container.querySelector(".new_os");
-}
-
-function isOtpuskLayoutSettled(container: Element): boolean {
-  if (!container.querySelector(".new_f-form")) {
-    return false;
-  }
-
-  if (!window.matchMedia("(max-width: 639px)").matches) {
-    return true;
-  }
-
-  const bodyHasMobile =
-    document.body.classList.contains("new_m-mobile-form") ||
-    document.body.classList.contains("new_mobile-form");
-
-  const root = getOtpuskRoot(container);
-  const rootHasMobile =
-    root != null &&
-    (root.classList.contains("new_m-mobile-form") ||
-      root.classList.contains("new_mobile-form"));
-
-  return bodyHasMobile || rootHasMobile;
-}
-
-function waitForOtpuskLayout(
-  selector: string,
-  timeoutMs = 8000
-): Promise<void> {
-  return new Promise((resolve) => {
-    const container = document.querySelector(selector);
-    if (!container) {
-      resolve();
-      return;
-    }
-
-    let finished = false;
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      observer.disconnect();
-      window.clearTimeout(timer);
-      resolve();
-    };
-
-    const observer = new MutationObserver(() => {
-      if (isOtpuskLayoutSettled(container)) {
-        finish();
-      }
-    });
-
-    observer.observe(container, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    if (isOtpuskLayoutSettled(container)) {
-      finish();
-      return;
-    }
-
-    const timer = window.setTimeout(finish, timeoutMs);
-  });
-}
-
 export function useOtpuskSearch({
   language,
   searchContainer,
@@ -168,6 +93,8 @@ export function useOtpuskSearch({
     const tourCont = document.querySelector(tourContainer);
     if (searchCont) searchCont.innerHTML = "";
     if (tourCont) tourCont.innerHTML = "";
+    syncOtpuskMobileFormClass(document.body);
+    if (searchCont) syncOtpuskMobileFormClass(searchCont);
 
     const scriptSuffix = searchContainer.replace(/[^a-z0-9]/gi, "-");
     const ts = Date.now();
@@ -191,6 +118,10 @@ export function useOtpuskSearch({
 
         await waitForOtpuskLayout(searchContainer);
         if (cancelled) return;
+
+        syncOtpuskMobileFormClass(document.body);
+        const host = document.querySelector(searchContainer);
+        if (host) syncOtpuskMobileFormClass(host);
 
         setStatus("ready");
 
