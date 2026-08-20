@@ -3,6 +3,12 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllTourIds, getTourById } from "@/services/ssgDataService";
 import TourDetailPageClient from "./client";
+import { AtlanticoTourDetail } from "@/components/atlantico/AtlanticoTourDetail";
+import {
+  atlanticoTourSeo,
+  listAtlanticoTourCodes,
+  tryLoadAtlanticoTour,
+} from "@/lib/atlantico/resolveTour";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
   breadcrumbListJsonLd,
@@ -15,23 +21,26 @@ import {
   ogLocale,
 } from "@/lib/seo";
 
-// 7 days — keep in sync with CMS_PAGE_REVALIDATE in src/config/cmsCache.ts
-export const revalidate = 604800;
+export const revalidate = 1800;
 
-// Генерация статических путей для всех туров
 export async function generateStaticParams() {
   try {
-    const tours = await getAllTourIds();
-    return tours.map((tour: { documentId: string }) => ({
-      id: tour.documentId,
-    }));
+    const [strapiTours, atlanticoCodes] = await Promise.all([
+      getAllTourIds().catch(() => []),
+      listAtlanticoTourCodes(),
+    ]);
+    return [
+      ...atlanticoCodes.map((id) => ({ id })),
+      ...strapiTours.map((tour: { documentId: string }) => ({
+        id: tour.documentId,
+      })),
+    ];
   } catch (error) {
     console.error("Error generating static params for tours:", error);
     return [];
   }
 }
 
-// Генерация метаданных для каждой страницы
 export async function generateMetadata({
   params,
 }: {
@@ -39,6 +48,30 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   try {
     const { id } = await params;
+    const atlantico = await tryLoadAtlanticoTour(id, "en");
+    if (atlantico) {
+      const seo = atlanticoTourSeo(atlantico.tour);
+      return {
+        title: `${seo.title} | ${SITE_BRAND} Tours`,
+        description: seo.description,
+        openGraph: {
+          title: seo.title,
+          description: seo.description,
+          url: absoluteUrlForLocale("en", `/tours/${id}`),
+          siteName: SITE_BRAND,
+          images: [
+            { url: seo.imageUrl, width: 1200, height: 630, alt: seo.title },
+          ],
+          locale: ogLocale("en"),
+          type: "website",
+        },
+        alternates: {
+          canonical: absoluteUrlForLocale("en", `/tours/${id}`),
+          languages: hreflangAlternates(`/tours/${id}`),
+        },
+      };
+    }
+
     const tour = await getTourById(id);
 
     if (!tour) {
@@ -60,7 +93,6 @@ export async function generateMetadata({
       title: `${title} | ${SITE_BRAND} Tours`,
       description: description,
       keywords: [
-        "Tenerife tours",
         "Tenerife tours",
         "Tenerife activities",
         "Tenerife travel",
@@ -103,7 +135,6 @@ export async function generateMetadata({
   }
 }
 
-// Основная страница с SSG
 export default async function TourDetailPage({
   params,
 }: {
@@ -111,6 +142,36 @@ export default async function TourDetailPage({
 }) {
   try {
     const { id } = await params;
+    const atlantico = await tryLoadAtlanticoTour(id, "en");
+    if (atlantico) {
+      const seo = atlanticoTourSeo(atlantico.tour);
+      const pageUrl = absoluteUrlForLocale("en", `/tours/${id}`);
+      const structuredData = detailJsonLdGraph([
+        breadcrumbListJsonLd("en", [
+          { kind: "home" },
+          { kind: "tours" },
+          { kind: "named", name: seo.title, path: `/tours/${id}` },
+        ]),
+        productOfferJsonLd({
+          url: pageUrl,
+          name: seo.title,
+          description: seo.description,
+          image: seo.imageUrl,
+          price: seo.price,
+          priceCurrency: "EUR",
+        }),
+      ]);
+      return (
+        <>
+          <JsonLd data={structuredData} />
+          <AtlanticoTourDetail
+            tour={atlantico.tour}
+            events={atlantico.events}
+          />
+        </>
+      );
+    }
+
     const tour = await getTourById(id);
 
     if (!tour) {

@@ -1,6 +1,6 @@
+import { ATLANTICO_AFFILIATE_ID } from "@/lib/atlantico/affiliate";
 import type { Locale } from "@/types/locale";
 
-const ATLANTICO_AFFILIATE_ID = "3726";
 const ATLANTICO_PATH = `/index.php?afId=${ATLANTICO_AFFILIATE_ID}`;
 
 /**

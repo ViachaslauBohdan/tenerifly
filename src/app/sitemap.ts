@@ -6,6 +6,7 @@ import {
   getAllBlogIds,
   getAllTransferIds,
 } from "@/services/ssgDataService";
+import { listAtlanticoTourCodes } from "@/lib/atlantico/resolveTour";
 import { LOCALES } from "@/types/locale";
 import { absoluteUrlForLocale } from "@/lib/seo";
 import { BLOG_ENABLED } from "@/lib/siteFeatures";
@@ -15,12 +16,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     propertyIds,
     carIds,
     tourIds,
+    atlanticoTourCodes,
     blogIds,
     transferIds,
   ] = await Promise.all([
     getAllPropertyIds().catch(() => []),
     getAllCarIds().catch(() => []),
     getAllTourIds().catch(() => []),
+    listAtlanticoTourCodes().catch(() => []),
     BLOG_ENABLED ? getAllBlogIds().catch(() => []) : Promise.resolve([]),
     getAllTransferIds().catch(() => []),
   ]);
@@ -74,7 +77,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }))
   );
 
-  const tourPages: MetadataRoute.Sitemap = tourIds.flatMap(
+  const strapiTourPages: MetadataRoute.Sitemap = tourIds.flatMap(
     (tour: { documentId: string }) =>
       LOCALES.map((locale) => ({
         url: absoluteUrlForLocale(locale.code, `/tours/${tour.documentId}`),
@@ -83,6 +86,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
       }))
   );
+
+  const atlanticoTourPages: MetadataRoute.Sitemap = atlanticoTourCodes.flatMap(
+    (code) =>
+      LOCALES.map((locale) => ({
+        url: absoluteUrlForLocale(locale.code, `/tours/${code}`),
+        lastModified: now,
+        changeFrequency: "daily" as const,
+        priority: 0.7,
+      }))
+  );
+
+  const tourPages = [...atlanticoTourPages, ...strapiTourPages];
 
   const blogPages: MetadataRoute.Sitemap = blogIds.flatMap(
     (blog: { documentId: string }) =>
