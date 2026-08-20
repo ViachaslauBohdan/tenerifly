@@ -1,3 +1,4 @@
+import { SITE_WHATSAPP_DIGITS } from "@/lib/siteContact";
 import { Locale } from "@/types/locale";
 
 interface WhatsAppDetails {
@@ -33,7 +34,7 @@ export const openWhatsApp = (
     return;
   }
 
-  const phoneNumber = "+34656641433";
+  const phoneNumber = SITE_WHATSAPP_DIGITS;
 
   const messages = {
     en: {
@@ -105,7 +106,7 @@ export const openBookingWhatsApp = (
     return;
   }
 
-  const phoneNumber = "+34656641433";
+  const phoneNumber = SITE_WHATSAPP_DIGITS;
 
   const bookingMessages = {
     en: {

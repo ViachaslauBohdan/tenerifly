@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { IconCalendar, IconMessage, IconSend } from "@tabler/icons-react";
+import { SITE_WHATSAPP_DIGITS } from "@/lib/siteContact";
 import { openWhatsApp } from "@/utils/whatsapp";
 import { Locale } from "@/types/locale";
 
@@ -142,7 +143,7 @@ export function BookingModal({
     const message = createBookingMessage(bookingDetails, currentLocale);
 
     // Send to WhatsApp
-    const phoneNumber = "+34656641433";
+    const phoneNumber = SITE_WHATSAPP_DIGITS;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 

@@ -445,8 +445,8 @@ async function scrapeDetails(url) {
                 postal_code: locationData.zip
             },
             contact: {
-                phone: "+34613211069",
-                whatsapp: "+34613211069",
+                phone: "+34604972372",
+                whatsapp: "+34604972372",
                 telegram: "@adamsvts",
                 email: 'adamsavitskiy@gmail.com'
             },

@@ -19,8 +19,8 @@ import {
 const CONTACT = {
   name: "Adam Savytskyi",
   email: "adamsavitskiy@gmail.com",
-  phone: "+34613211069",
-  whatsapp: "+34613211069",
+  phone: "+34604972372",
+  whatsapp: "+34604972372",
   telegram: "@adamsvts",
   preferred_contact: "telegram",
 };

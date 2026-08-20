@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { SITE_BRAND } from "@/lib/site";
+import { SITE_PHONE_E164 } from "@/lib/siteContact";
 import translationsJson from "@/i18n/main.json";
 
 type FooterCopy = (typeof translationsJson)["en"]["footer"];
@@ -65,11 +66,11 @@ export function HomeFooter({
             </h4>
             <div className="space-y-3">
               <a
-                href="tel:+34613211069"
+                href={`tel:${SITE_PHONE_E164}`}
                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                +34613211069
+                {SITE_PHONE_E164}
               </a>
             </div>
           </div>

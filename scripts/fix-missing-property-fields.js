@@ -59,8 +59,8 @@ function cleanData(field, data) {
     if (field === 'contact') {
         return {
             name:'Adam Savytskyi',
-            phone:"+34613211069",
-            whatsapp:"+34613211069",
+            phone:"+34604972372",
+            whatsapp:"+34604972372",
             email:"adamsavitskiy@gmail.com",
             telegram:"@adamsvts",
             preferred_contact:"telegram",

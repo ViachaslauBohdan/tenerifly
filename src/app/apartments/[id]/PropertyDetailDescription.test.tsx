@@ -101,4 +101,47 @@ describe("PropertyDetailPageClient description localization", () => {
       screen.getByText(/Sunny Duplex in Playa de San Juan Dream Homes/)
     ).toBeInTheDocument();
   });
+
+  it("rewrites a retired listing WhatsApp number to the work number", async () => {
+    const PropertyDetailPageClient = (
+      await import("./PropertyDetailPageClient")
+    ).default;
+
+    render(
+      <PropertyDetailPageClient
+        property={{
+          id: 1,
+          documentId: "duplex-test",
+          title: "Sunny Duplex in Playa de San Juan",
+          slug: null,
+          description: "Bright apartment.",
+          type: "rent",
+          property_status: "available",
+          featured: false,
+          category: "apartment",
+          createdAt: "",
+          updatedAt: "",
+          publishedAt: "",
+          images: [],
+          price: { amount: 70, currency: "EUR", period: "day" },
+          location: null,
+          features: null,
+          specifications: null,
+          rental_terms: null,
+          contact: {
+            name: "Adam",
+            email: "adam@example.com",
+            phone: "+34613211069",
+            whatsapp: "+34613211069",
+            preferred_contact: "whatsapp",
+          },
+        }}
+      />
+    );
+
+    expect(screen.getByRole("link", { name: /WhatsApp/ })).toHaveAttribute(
+      "href",
+      "https://wa.me/34604972372"
+    );
+  });
 });

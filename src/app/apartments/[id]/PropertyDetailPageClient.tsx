@@ -19,6 +19,7 @@ import {
   formatPropertyPriceWithCurrency,
   getPropertyPeriodLabel,
 } from "@/utils/propertyPrice";
+import { whatsappHref } from "@/lib/siteContact";
 
 interface PropertyData {
   id: number;
@@ -814,7 +815,7 @@ export default function PropertyDetailPage({
               {/* WhatsApp Contact Button */}
               {property.contact?.whatsapp && (
                 <a
-                  href={`https://wa.me/${property.contact.whatsapp.replace(/\D/g, "")}`}
+                  href={whatsappHref(property.contact.whatsapp)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center mb-3"

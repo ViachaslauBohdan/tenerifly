@@ -2,20 +2,20 @@
 
 import { usePathname } from "next/navigation";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
+import { SITE_WHATSAPP_DIGITS, whatsappHref } from "@/lib/siteContact";
 
-const DEFAULT_WHATSAPP_NUMBER = "34613211069";
 /** World-tours page contact. */
 const WORLD_TOURS_WHATSAPP_NUMBER = "380959390292";
 
 export function WhatsAppFloatingButton() {
   const pathname = usePathname();
-  const whatsappNumber = pathname?.includes("/world-tours")
-    ? WORLD_TOURS_WHATSAPP_NUMBER
-    : DEFAULT_WHATSAPP_NUMBER;
+  const href = pathname?.includes("/world-tours")
+    ? whatsappHref(WORLD_TOURS_WHATSAPP_NUMBER)
+    : whatsappHref(SITE_WHATSAPP_DIGITS);
 
   return (
     <a
-      href={`https://wa.me/${whatsappNumber}`}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contact us on WhatsApp"

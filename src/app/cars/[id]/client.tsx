@@ -16,6 +16,7 @@ import {
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 import translations from "@/i18n/carsDetail.json";
 import { carTransmissionLabel } from "@/lib/carSpecLabels";
+import { whatsappHref } from "@/lib/siteContact";
 
 interface CarData {
   id: number;
@@ -495,7 +496,7 @@ export default function CarDetailPageClient({ car }: { car: CarData }) {
         {/* WhatsApp Contact Button */}
         {car.contact?.whatsapp && (
           <a
-            href={`https://wa.me/${car.contact.whatsapp.replace(/\D/g, "")}`}
+            href={whatsappHref(car.contact.whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center"

@@ -103,4 +103,59 @@ describe("CarDetailPageClient description localization", () => {
     expect(screen.getByText("Автомат", { exact: true })).toBeInTheDocument();
     expect(screen.queryByText(/^automatic$/i)).not.toBeInTheDocument();
   });
+
+  it("rewrites a retired listing WhatsApp number to the work number", async () => {
+    const CarDetailPageClient = (await import("./client")).default;
+
+    render(
+      <CarDetailPageClient
+        car={{
+          id: 1,
+          documentId: "bmw-test",
+          title: "BMW 420 Cabrio Aut. 2024",
+          slug: null,
+          description: "Cabrio.",
+          type: "rent",
+          car_status: "available",
+          featured: false,
+          createdAt: "",
+          updatedAt: "",
+          publishedAt: "",
+          images: [],
+          rental_prices: {
+            day_1: 120,
+            month: 2000,
+            currency: "EUR",
+          },
+          specifications: {
+            make: "BMW",
+            model: "420",
+            year: 2024,
+            fuel: "petrol",
+            transmission: "automatic",
+            power: 180,
+            seats: 4,
+            doors: 2,
+            color: "grey",
+            body_type: "convertible",
+            drive_type: "rwd",
+          },
+          features: null,
+          location: null,
+          contact: {
+            name: "Office",
+            email: "office@example.com",
+            phone: "+34656641433",
+            whatsapp: "+34656641433",
+            preferred_contact: "whatsapp",
+          },
+        }}
+      />
+    );
+
+    expect(screen.getByRole("link", { name: /WhatsApp/ })).toHaveAttribute(
+      "href",
+      "https://wa.me/34604972372"
+    );
+  });
 });

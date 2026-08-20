@@ -16,6 +16,7 @@ import {
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
 import translations from "@/i18n/tourDetail.json";
+import { whatsappHref } from "@/lib/siteContact";
 interface TourData {
   id: number;
   documentId: string;
@@ -414,7 +415,7 @@ export default function TourDetailPageClient({ tour }: { tour: TourData }) {
               {/* WhatsApp Contact Button */}
               {tour.contact?.whatsapp && (
                 <a
-                  href={`https://wa.me/${tour.contact.whatsapp.replace(/\D/g, "")}`}
+                  href={whatsappHref(tour.contact.whatsapp)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-green-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center mb-3"
