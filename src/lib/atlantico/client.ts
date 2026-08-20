@@ -86,14 +86,41 @@ async function atlanticoFetch(
   }
 
   if (!rawText.trim()) return null;
-  if (contentType.includes("application/json") || rawText.trim().startsWith("{") || rawText.trim().startsWith("[")) {
+
+  const trimmed = rawText.trim();
+  const looksLikeJson =
+    contentType.includes("application/json") ||
+    trimmed.startsWith("{") ||
+    trimmed.startsWith("[");
+
+  if (looksLikeJson) {
     try {
       return JSON.parse(rawText);
     } catch {
-      return rawText;
+      throw new AtlanticoApiError(
+        "Atlantico API returned incomplete JSON. The full tour list is likely truncated.",
+        502,
+        "invalid_json"
+      );
     }
   }
+
   return rawText;
+}
+
+function isInvalidJsonError(error: unknown): boolean {
+  return error instanceof AtlanticoApiError && error.code === "invalid_json";
+}
+
+function uniqueTours(tours: AtlanticoTourSummary[]): AtlanticoTourSummary[] {
+  const byId = new Map<string, AtlanticoTourSummary>();
+  for (const tour of tours) {
+    const key = String(tour.id || tour.code || "").trim();
+    if (key && !byId.has(key)) {
+      byId.set(key, tour);
+    }
+  }
+  return [...byId.values()];
 }
 
 export async function listAtlanticoClassifications(
@@ -126,16 +153,55 @@ export async function listAtlanticoClassificationsWithCounts(
   );
 }
 
+async function fetchAtlanticoToursForClassification(
+  locale: string,
+  classificationCode: string
+): Promise<AtlanticoTourSummary[]> {
+  const language = toAtlanticoLanguage(locale);
+  const data = await atlanticoFetch(
+    `/groupsList/${language}/-1/${encodeURIComponent(classificationCode)}`,
+    { revalidateSeconds: 1800 }
+  );
+  return asArray<AtlanticoTourSummary>(data);
+}
+
+async function listAtlanticoToursByClassification(
+  locale: string
+): Promise<AtlanticoTourSummary[]> {
+  const classifications = await listAtlanticoClassifications(locale);
+  const lists = await Promise.all(
+    classifications.map((classification) => {
+      const code = classification.id || classification.code;
+      if (!code) return Promise.resolve([] as AtlanticoTourSummary[]);
+      return fetchAtlanticoToursForClassification(locale, code);
+    })
+  );
+  return uniqueTours(lists.flat());
+}
+
 export async function listAtlanticoTours(
   locale: string,
   classificationCode?: string
 ): Promise<AtlanticoTourSummary[]> {
+  if (classificationCode) {
+    return fetchAtlanticoToursForClassification(locale, classificationCode);
+  }
+
   const language = toAtlanticoLanguage(locale);
-  const path = classificationCode
-    ? `/groupsList/${language}/-1/${encodeURIComponent(classificationCode)}`
-    : `/groupsList/${language}/-1`;
-  const data = await atlanticoFetch(path, { revalidateSeconds: 1800 });
-  return asArray<AtlanticoTourSummary>(data);
+
+  try {
+    const data = await atlanticoFetch(`/groupsList/${language}/-1`, {
+      revalidateSeconds: 1800,
+    });
+    const tours = asArray<AtlanticoTourSummary>(data);
+    if (tours.length > 0) return tours;
+  } catch (error) {
+    if (!isInvalidJsonError(error)) throw error;
+  }
+
+  // Production `/groupsList/{lang}/-1` is truncated (~200KB) and invalid JSON.
+  // Per-category lists are smaller and complete.
+  return listAtlanticoToursByClassification(locale);
 }
 
 export async function getAtlanticoTourDetails(

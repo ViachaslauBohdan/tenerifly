@@ -111,4 +111,41 @@ describe("Atlantico client (mocked network)", () => {
       false
     );
   });
+
+  it("falls back to per-category tour lists when the full groupsList JSON is truncated", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo) => {
+      const url = String(input);
+      expect(url).not.toMatch(REAL_SUPPLIER_HOST);
+      if (url.endsWith("/groupsList/ENG/-1")) {
+        return {
+          ok: true,
+          status: 200,
+          headers: { get: () => "text/html; charset=UTF-8" },
+          text: async () => '[{"id":"12","code":"12","name":"Forestal Park","category":"cat1","duration":"',
+        };
+      }
+      if (url.includes("/clasificationList/")) {
+        return jsonResponse([{ id: "cat1", code: "22", name: "Theme parks" }]);
+      }
+      if (url.endsWith("/groupsList/ENG/-1/cat1")) {
+        return jsonResponse([
+          {
+            id: "12",
+            code: "12",
+            name: "Forestal Park",
+            category: "cat1",
+          },
+        ]);
+      }
+      throw new Error(`Unexpected URL: ${url}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { listAtlanticoClassificationsWithCounts } = await import("./client");
+    const classifications = await listAtlanticoClassificationsWithCounts("en");
+
+    expect(classifications).toEqual([
+      { id: "cat1", code: "22", name: "Theme parks", count: 1 },
+    ]);
+  });
 });
