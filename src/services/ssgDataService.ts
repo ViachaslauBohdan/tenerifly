@@ -24,6 +24,7 @@ import {
   type HomeCarRow,
 } from "@/lib/homeListing";
 import { formatPropertyPriceLabel } from "@/utils/propertyPrice";
+import { BLOG_ENABLED } from "@/lib/siteFeatures";
 import {
   normalizeExcursionDocumentToTourCard,
   type NormalizedExcursionTour,
@@ -880,7 +881,7 @@ export async function getHomePageData(language: string = "en") {
       await Promise.allSettled([
         getHomeCars(language),
         getHomeProperties(language),
-        getHomeBlogs(language),
+        BLOG_ENABLED ? getHomeBlogs(language) : Promise.resolve([]),
         getHomeTransfers(language),
       ]);
 

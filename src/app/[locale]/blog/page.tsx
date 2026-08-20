@@ -3,6 +3,8 @@ import { getAllBlogs } from "@/services/ssgDataService";
 import { Metadata } from "next";
 import BlogPageClient from "../../blog/BlogPageClient";
 import { LOCALES, type Locale } from "@/types/locale";
+import { assertBlogPublic } from "@/lib/assertBlogPublic";
+import { BLOG_ENABLED } from "@/lib/siteFeatures";
 import {
   DEFAULT_OG_IMAGE,
   SEO_BLOG,
@@ -15,6 +17,7 @@ import {
 export const revalidate = 604800;
 
 export function generateStaticParams() {
+  if (!BLOG_ENABLED) return [];
   return LOCALES.map((locale) => ({
     locale: locale.code,
   }));
@@ -26,6 +29,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
+  assertBlogPublic();
   const { locale } = await params;
   const seo = SEO_BLOG[locale];
 
@@ -61,6 +65,7 @@ export default async function BlogPage({
 }: {
   params: Promise<{ locale: Locale }>;
 }) {
+  assertBlogPublic();
   // Получаем все данные блогов на сервере для SSG с кэшированием
   const blogs = await getAllBlogs();
 

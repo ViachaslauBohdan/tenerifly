@@ -11,6 +11,7 @@ import { HomeCarsSection } from "@/components/home/HomeCarsSection";
 import { HomeTransfersSection } from "@/components/home/HomeTransfersSection";
 import { HomeExcursionsSection } from "@/components/home/HomeExcursionsSection";
 import { HomeBlogSection } from "@/components/home/HomeBlogSection";
+import { BLOG_ENABLED } from "@/lib/siteFeatures";
 import { HomeFaqSection } from "@/components/home/HomeFaqSection";
 import { HomeFooter } from "@/components/home/HomeFooter";
 import { useBookingModal } from "@/components/home/useBookingModal";
@@ -168,14 +169,16 @@ export function LocalePageClient({
         toursHref={createLocaleLink("/tours")}
       />
 
-      <HomeBlogSection
-        items={blogPosts}
-        dataLoading={dataLoading}
-        copy={t.sections.blog}
-        common={t.common}
-        blogHref={createLocaleLink("/blog")}
-        createLocaleLink={createLocaleLink}
-      />
+      {BLOG_ENABLED ? (
+        <HomeBlogSection
+          items={blogPosts}
+          dataLoading={dataLoading}
+          copy={t.sections.blog}
+          common={t.common}
+          blogHref={createLocaleLink("/blog")}
+          createLocaleLink={createLocaleLink}
+        />
+      ) : null}
 
       <HomeFaqSection copy={t.faq} />
 

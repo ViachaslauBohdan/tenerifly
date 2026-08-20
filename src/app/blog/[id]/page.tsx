@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getAllBlogIds, getBlogById } from "@/services/ssgDataService";
 import BlogDetailPageClient from "./BlogDetailPageClient";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { assertBlogPublic } from "@/lib/assertBlogPublic";
+import { BLOG_ENABLED } from "@/lib/siteFeatures";
 import {
   blogPostingJsonLd,
   breadcrumbListJsonLd,
@@ -20,6 +22,7 @@ export const revalidate = 604800;
 
 // Генерация статических путей для всех блогов
 export async function generateStaticParams() {
+  if (!BLOG_ENABLED) return [];
   try {
     const blogs = await getAllBlogIds();
     return blogs.map((blog: { documentId: string }) => ({
@@ -37,6 +40,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
+  assertBlogPublic();
   try {
     const { id } = await params;
     const blog = await getBlogById(id);
@@ -128,6 +132,7 @@ export default async function BlogDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  assertBlogPublic();
   try {
     const { id } = await params;
     const blog = await getBlogById(id);

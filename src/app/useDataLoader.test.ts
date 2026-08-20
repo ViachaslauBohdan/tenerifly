@@ -216,6 +216,11 @@ describe("useDataLoader property locale overlay", () => {
       title: "Mercedes Sprinter 8 miejsc",
       description: "Prywatny transfer z lotniska",
     });
+    expect(
+      fetchMock.mock.calls.every(
+        ([u]) => !String(u).includes("/blog-posts?")
+      )
+    ).toBe(true);
   });
 
   it("does not fetch when disabled", async () => {

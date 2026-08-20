@@ -2,6 +2,7 @@ import { SITE_BRAND } from "@/lib/site";
 import { getAllBlogs } from "@/services/ssgDataService";
 import { Metadata } from "next";
 import BlogPageClient from "./BlogPageClient";
+import { assertBlogPublic } from "@/lib/assertBlogPublic";
 import {
   DEFAULT_OG_IMAGE,
   SEO_BLOG,
@@ -15,6 +16,7 @@ export const revalidate = 604800;
 
 // Генерация метаданных для страницы
 export async function generateMetadata(): Promise<Metadata> {
+  assertBlogPublic();
   const seo = SEO_BLOG.en;
 
   return {
@@ -45,6 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BlogPage() {
+  assertBlogPublic();
   // Получаем все данные блогов на сервере для SSG с кэшированием
   const blogs = await getAllBlogs();
 

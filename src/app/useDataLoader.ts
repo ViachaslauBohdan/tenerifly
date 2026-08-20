@@ -13,6 +13,7 @@ import {
 import { mergeLocalizedCatalog } from "@/lib/cmsLocalizedContent";
 import { cmsLocale, localeContentKey } from "@/types/locale";
 import { formatPropertyPriceLabel } from "@/utils/propertyPrice";
+import { BLOG_ENABLED } from "@/lib/siteFeatures";
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
 
@@ -204,9 +205,11 @@ export function useDataLoader(
           await Promise.allSettled([
             fetchWithLocaleFallback(carsBase),
             fetchPropertiesMerged(),
-            fetchFromStrapi(
-              `/blog-posts?${populate}&${list}&sort=publishedAt:DESC`
-            ),
+            BLOG_ENABLED
+              ? fetchFromStrapi(
+                  `/blog-posts?${populate}&${list}&sort=publishedAt:DESC`
+                )
+              : Promise.resolve({ data: [] }),
             fetchWithLocaleFallback(`/transfers?${populate}&${list}`),
           ]);
 

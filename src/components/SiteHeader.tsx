@@ -9,6 +9,7 @@ import worldToursJson from "@/i18n/worldTours.json";
 import mainJson from "@/i18n/main.json";
 import { pickLocaleBundle } from "@/types/locale";
 import { navShortFaqLabel } from "@/lib/navShortLabels";
+import { BLOG_ENABLED } from "@/lib/siteFeatures";
 
 type MainHeaderBundle = {
   legalPage?: { title?: string };
@@ -245,9 +246,11 @@ export function SiteHeader({
       <a {...navLinkProps("excursions")} className={linkClass}>
         {tabLabels.excursions}
       </a>
-      <a {...navLinkProps("blog")} className={linkClass}>
-        {tabLabels.blog}
-      </a>
+      {BLOG_ENABLED ? (
+        <a {...navLinkProps("blog")} className={linkClass}>
+          {tabLabels.blog}
+        </a>
+      ) : null}
       <a {...navLinkProps("faq")} className={linkClass}>
         {pickLocaleBundle(navShortFaqLabel, language)}
       </a>
@@ -300,9 +303,11 @@ export function SiteHeader({
       <a {...navLinkPropsMobile("excursions")} className={mobileNavLinkClass}>
         {tabLabels.excursions}
       </a>
-      <a {...navLinkPropsMobile("blog")} className={mobileNavLinkClass}>
-        {tabLabels.blog}
-      </a>
+      {BLOG_ENABLED ? (
+        <a {...navLinkPropsMobile("blog")} className={mobileNavLinkClass}>
+          {tabLabels.blog}
+        </a>
+      ) : null}
       <a {...navLinkPropsMobile("faq")} className={mobileNavLinkClass}>
         {pickLocaleBundle(navShortFaqLabel, language)}
       </a>

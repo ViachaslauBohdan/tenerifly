@@ -5,6 +5,8 @@ import { getAllBlogIds, getBlogById } from "@/services/ssgDataService";
 import BlogDetailPageClient from "../../../blog/[id]/BlogDetailPageClient";
 import { LOCALES, type Locale } from "@/types/locale";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { assertBlogPublic } from "@/lib/assertBlogPublic";
+import { BLOG_ENABLED } from "@/lib/siteFeatures";
 import {
   blogPostingJsonLd,
   breadcrumbListJsonLd,
@@ -21,6 +23,7 @@ export const revalidate = 604800;
 
 // Генерация статических путей для всех блогов
 export async function generateStaticParams() {
+  if (!BLOG_ENABLED) return [];
   try {
     const blogs = await getAllBlogIds();
     const locales = LOCALES.map((l) => l.code);
@@ -43,6 +46,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: Locale; id: string }>;
 }): Promise<Metadata> {
+  assertBlogPublic();
   try {
     const { locale, id } = await params;
     const blog = await getBlogById(id);
@@ -134,6 +138,7 @@ export default async function BlogDetailPage({
 }: {
   params: Promise<{ locale: Locale; id: string }>;
 }) {
+  assertBlogPublic();
   try {
     const { id, locale } = await params;
     const blog = await getBlogById(id);

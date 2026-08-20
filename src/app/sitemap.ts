@@ -8,6 +8,7 @@ import {
 } from "@/services/ssgDataService";
 import { LOCALES } from "@/types/locale";
 import { absoluteUrlForLocale } from "@/lib/seo";
+import { BLOG_ENABLED } from "@/lib/siteFeatures";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [
@@ -20,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getAllPropertyIds().catch(() => []),
     getAllCarIds().catch(() => []),
     getAllTourIds().catch(() => []),
-    getAllBlogIds().catch(() => []),
+    BLOG_ENABLED ? getAllBlogIds().catch(() => []) : Promise.resolve([]),
     getAllTransferIds().catch(() => []),
   ]);
 
@@ -32,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/tours",
     "/world-tours",
     "/cars",
-    "/blog",
+    ...(BLOG_ENABLED ? ["/blog"] : []),
     "/aviso-legal",
   ];
 
