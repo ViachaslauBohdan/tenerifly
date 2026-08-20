@@ -386,6 +386,7 @@ export function AtlanticoBookingPanel({
 
       <PhoneNumberInput
         label={copy.phone}
+        required
         country={phoneCountry}
         value={phone}
         onCountryChange={setPhoneCountry}

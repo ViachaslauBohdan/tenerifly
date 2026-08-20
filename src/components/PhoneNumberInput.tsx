@@ -1,18 +1,21 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Box, Group, Input, Select, Text, TextInput } from "@mantine/core";
+import { Box, Input, Select, Text, TextInput } from "@mantine/core";
 import { IconWorld } from "@tabler/icons-react";
 import type { CountryCode, E164Number } from "libphonenumber-js";
-import {
-  getCountries,
-  getCountryCallingCode,
-  isValidPhoneNumber,
-} from "libphonenumber-js";
+import { getCountries, getCountryCallingCode } from "libphonenumber-js";
 import flags from "react-phone-number-input/flags";
 import styles from "./PhoneNumberInput.module.css";
+import {
+  isPhoneNumberValid,
+  nationalFromE164,
+  parsePastedPhone,
+  toE164,
+} from "./PhoneNumberInput.parse";
 
 export type Country = CountryCode;
+export { isPhoneNumberValid, toE164 };
 
 type InputStyles = {
   input?: React.CSSProperties;
@@ -41,23 +44,6 @@ function CountryFlag({ country }: { country: Country }) {
   );
 }
 
-function toE164(country: Country, national: string): E164Number | undefined {
-  const digits = national.replace(/\D/g, "");
-  if (!digits) return undefined;
-  return `+${getCountryCallingCode(country)}${digits}` as E164Number;
-}
-
-function nationalFromE164(
-  country: Country,
-  value: E164Number | undefined
-): string {
-  if (!value) return "";
-  const dial = getCountryCallingCode(country).replace(/\D/g, "");
-  const all = value.replace(/\D/g, "");
-  if (all.startsWith(dial)) return all.slice(dial.length);
-  return all;
-}
-
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 
 type CountrySelectMeta = {
@@ -84,13 +70,6 @@ const countryMetaByCode = new Map(
   countrySelectData.map((item) => [item.value, item])
 );
 
-export function isPhoneNumberValid(
-  country: Country | undefined,
-  value: E164Number | undefined
-): boolean {
-  return Boolean(country && value && isValidPhoneNumber(value));
-}
-
 export function PhoneNumberInput({
   label,
   required,
@@ -105,17 +84,21 @@ export function PhoneNumberInput({
   const [national, setNational] = useState("");
 
   useEffect(() => {
-    if (country && value) {
-      setNational(nationalFromE164(country, value));
-    } else if (!value) {
-      setNational("");
-    }
+    if (!country) return;
+    setNational((current) => {
+      if (!value) {
+        return toE164(country, current) ? current : "";
+      }
+      if (toE164(country, current) === value) return current;
+      return nationalFromE164(country, value);
+    });
   }, [country, value]);
 
   const selectedDial = useMemo(
     () => (country ? `+${getCountryCallingCode(country)}` : ""),
     [country]
   );
+  const dialWidth = selectedDial ? Math.max(48, 14 + selectedDial.length * 10) : undefined;
 
   const handleCountryChange = (code: string | null) => {
     const next = (code as Country) || undefined;
@@ -128,6 +111,13 @@ export function PhoneNumberInput({
   };
 
   const handleNationalChange = (raw: string) => {
+    const pasted = parsePastedPhone(raw);
+    if (pasted) {
+      if (pasted.country !== country) onCountryChange(pasted.country);
+      setNational(pasted.national);
+      onChange(pasted.value);
+      return;
+    }
     const cleaned = raw.replace(/[^\d\s-]/g, "");
     setNational(cleaned);
     if (!country) {
@@ -144,7 +134,7 @@ export function PhoneNumberInput({
       error={error}
       styles={labelStyles}
     >
-      <Group gap="xs" wrap="nowrap" align="flex-start" mt={4}>
+      <div className={styles.row}>
         <Select
           className={styles.countrySelect}
           aria-label="Country"
@@ -162,12 +152,11 @@ export function PhoneNumberInput({
             )
           }
           leftSectionWidth={36}
-          w={168}
           comboboxProps={{ withinPortal: true, zIndex: 400 }}
           renderOption={({ option }) => {
             const meta = countryMetaByCode.get(option.value as Country);
             return (
-              <Group gap="xs" wrap="nowrap">
+              <div className={styles.option}>
                 <CountryFlag country={option.value as Country} />
                 <Text size="sm" style={{ flex: 1 }}>
                   {meta?.name ?? option.label}
@@ -175,7 +164,7 @@ export function PhoneNumberInput({
                 <Text size="sm" c="dimmed">
                   +{meta?.dial ?? ""}
                 </Text>
-              </Group>
+              </div>
             );
           }}
           filter={({ options, search }) => {
@@ -199,9 +188,9 @@ export function PhoneNumberInput({
         />
         <TextInput
           className={styles.numberInput}
-          flex={1}
           type="tel"
           inputMode="tel"
+          autoComplete="tel-national"
           placeholder={
             country ? placeholder ?? "612 345 678" : "Select country first"
           }
@@ -215,12 +204,12 @@ export function PhoneNumberInput({
               </Text>
             ) : undefined
           }
-          leftSectionWidth={selectedDial ? 52 : undefined}
+          leftSectionWidth={dialWidth}
           styles={{
             input: labelStyles?.input,
           }}
         />
-      </Group>
+      </div>
     </Input.Wrapper>
   );
 }
