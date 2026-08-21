@@ -85,8 +85,13 @@ describe("Atlantico client (mocked network)", () => {
     const fetchMock = vi.fn(async (input: RequestInfo) => {
       const url = String(input);
       expect(url).not.toMatch(REAL_SUPPLIER_HOST);
+      if (url.includes("/clasificationList/")) {
+        return jsonResponse([{ id: "cat1", code: "22", name: "Theme parks" }]);
+      }
       if (url.includes("/groupsList/")) {
-        return jsonResponse([{ id: "12", code: "12", name: "Forestal Park" }]);
+        return jsonResponse([
+          { id: "12", code: "12", name: "Forestal Park", category: "cat1" },
+        ]);
       }
       if (url.includes("/loadLimits/")) {
         return jsonResponse({
@@ -104,7 +109,7 @@ describe("Atlantico client (mocked network)", () => {
     const limits = await getAtlanticoLimits("184", "en");
 
     expect(tours).toEqual([
-      { id: "12", code: "12", name: "Forestal Park" },
+      { id: "12", code: "12", name: "Forestal Park", category: "cat1" },
     ]);
     expect(limits?.id).toBe("184");
     expect(fetchMock.mock.calls.every(([input]) => String(input).includes("/confirm"))).toBe(
@@ -112,20 +117,23 @@ describe("Atlantico client (mocked network)", () => {
     );
   });
 
-  it("falls back to per-category tour lists when the full groupsList JSON is truncated", async () => {
+  it("keeps the catalog when one category list is truncated", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo) => {
       const url = String(input);
       expect(url).not.toMatch(REAL_SUPPLIER_HOST);
-      if (url.endsWith("/groupsList/ENG/-1")) {
+      if (url.includes("/clasificationList/")) {
+        return jsonResponse([
+          { id: "cat1", code: "22", name: "Theme parks" },
+          { id: "water", code: "23", name: "Water Sports" },
+        ]);
+      }
+      if (url.endsWith("/groupsList/ENG/-1/water")) {
         return {
           ok: true,
           status: 200,
           headers: { get: () => "text/html; charset=UTF-8" },
-          text: async () => '[{"id":"12","code":"12","name":"Forestal Park","category":"cat1","duration":"',
+          text: async () => '[{"id":"99","name":"Broken","duration":"',
         };
-      }
-      if (url.includes("/clasificationList/")) {
-        return jsonResponse([{ id: "cat1", code: "22", name: "Theme parks" }]);
       }
       if (url.endsWith("/groupsList/ENG/-1/cat1")) {
         return jsonResponse([

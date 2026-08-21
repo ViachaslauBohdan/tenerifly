@@ -1,6 +1,6 @@
 import { getAtlanticoConfig } from "./config";
 import { toAtlanticoLanguage } from "./language";
-import { classificationTourCount, countToursByCategory, withPositiveTourCounts } from "./parse";
+import { withPositiveTourCounts } from "./parse";
 import type {
   AtlanticoClassification,
   AtlanticoConfirmRequest,
@@ -109,7 +109,8 @@ async function atlanticoFetch(
 }
 
 function isInvalidJsonError(error: unknown): boolean {
-  return error instanceof AtlanticoApiError && error.code === "invalid_json";
+  if (!error || typeof error !== "object") return false;
+  return (error as { code?: string }).code === "invalid_json";
 }
 
 function uniqueTours(tours: AtlanticoTourSummary[]): AtlanticoTourSummary[] {
@@ -137,37 +138,30 @@ export async function listAtlanticoClassifications(
   return asArray<AtlanticoClassification>(data);
 }
 
-export async function listAtlanticoClassificationsWithCounts(
-  locale: string
-): Promise<AtlanticoClassification[]> {
-  const [classifications, tours] = await Promise.all([
-    listAtlanticoClassifications(locale),
-    listAtlanticoTours(locale),
-  ]);
-  const counts = countToursByCategory(tours);
-  return withPositiveTourCounts(
-    classifications.map((classification) => ({
-      ...classification,
-      count: classificationTourCount(classification, counts),
-    }))
-  );
-}
-
 async function fetchAtlanticoToursForClassification(
   locale: string,
   classificationCode: string
 ): Promise<AtlanticoTourSummary[]> {
   const language = toAtlanticoLanguage(locale);
-  const data = await atlanticoFetch(
-    `/groupsList/${language}/-1/${encodeURIComponent(classificationCode)}`,
-    { revalidateSeconds: 1800 }
-  );
-  return asArray<AtlanticoTourSummary>(data);
+  try {
+    const data = await atlanticoFetch(
+      `/groupsList/${language}/-1/${encodeURIComponent(classificationCode)}`,
+      { revalidateSeconds: 1800 }
+    );
+    return asArray<AtlanticoTourSummary>(data);
+  } catch (error) {
+    // Production JSON is truncated for some categories (e.g. Water Sports).
+    if (isInvalidJsonError(error)) return [];
+    throw error;
+  }
 }
 
 async function listAtlanticoToursByClassification(
   locale: string
-): Promise<AtlanticoTourSummary[]> {
+): Promise<{
+  classifications: AtlanticoClassification[];
+  tours: AtlanticoTourSummary[];
+}> {
   const classifications = await listAtlanticoClassifications(locale);
   const lists = await Promise.all(
     classifications.map((classification) => {
@@ -176,7 +170,20 @@ async function listAtlanticoToursByClassification(
       return fetchAtlanticoToursForClassification(locale, code);
     })
   );
-  return uniqueTours(lists.flat());
+  return {
+    classifications: classifications.map((classification, index) => ({
+      ...classification,
+      count: lists[index]?.length ?? 0,
+    })),
+    tours: uniqueTours(lists.flat()),
+  };
+}
+
+export async function listAtlanticoClassificationsWithCounts(
+  locale: string
+): Promise<AtlanticoClassification[]> {
+  const { classifications } = await listAtlanticoToursByClassification(locale);
+  return withPositiveTourCounts(classifications);
 }
 
 export async function listAtlanticoTours(
@@ -187,21 +194,9 @@ export async function listAtlanticoTours(
     return fetchAtlanticoToursForClassification(locale, classificationCode);
   }
 
-  const language = toAtlanticoLanguage(locale);
-
-  try {
-    const data = await atlanticoFetch(`/groupsList/${language}/-1`, {
-      revalidateSeconds: 1800,
-    });
-    const tours = asArray<AtlanticoTourSummary>(data);
-    if (tours.length > 0) return tours;
-  } catch (error) {
-    if (!isInvalidJsonError(error)) throw error;
-  }
-
-  // Production `/groupsList/{lang}/-1` is truncated (~200KB) and invalid JSON.
-  // Per-category lists are smaller and complete.
-  return listAtlanticoToursByClassification(locale);
+  // Never call `/groupsList/{lang}/-1` without a category: production truncates it.
+  const { tours } = await listAtlanticoToursByClassification(locale);
+  return tours;
 }
 
 export async function getAtlanticoTourDetails(
