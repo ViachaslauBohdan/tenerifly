@@ -1,19 +1,244 @@
-# Tenerifly.io
+1. Бронирование экскурсий
 
-**Your guide to Tenerife** — apartments and villas, car hire, tours and excursions, and travel tips for the Canary Islands.
+На данный момент для экскурсий используется только интеграция с API Atlántico.
 
-<p align="center">
-  <a href="https://tenerifly.io" title="Open Tenerifly.io">
-    <img src="docs/assets/readme-hero.png" alt="Tenerifly — Tenerife holidays: apartments, car hire and tours" width="920" />
-  </a>
-</p>
+Сейчас API-интеграция заблокирована со стороны Atlántico — для её активации необходимо предоставить IP-адрес, с которого будут выполняться API-запросы.
 
-<p align="center">
-  <strong>Plan your trip in one place.</strong>
-</p>
+Текущий flow
+Tenerife Joy
+     ↓
+Atlántico API
+     ↓
+Availability
+     ↓
+Prices
+     ↓
+Booking
+     ↓
+bookingCode
 
----
+После активации API можно будет получать:
 
-## Get Tenerifly
+доступные экскурсии;
+доступные даты/сессии;
+цены;
+выполнять бронирование;
+получать bookingCode.
+Временные / альтернативные варианты
 
-[**Visit tenerifly.io**](https://tenerifly.io) — browse apartments, cars, tours & blog in your language.
+По информации от Atlántico, доступны ещё два варианта интеграции:
+
+1. Affiliate / White Label через iframe
+
+Можно разместить на сайте iframe со всеми экскурсиями Atlántico:
+
+Tenerife Joy
+     ↓
+iframe
+     ↓
+Atlántico
+     ↓
+Экскурсии + бронирование
+
+Atlántico предоставляет готовую страницу со всеми активностями.
+
+2. iframe для конкретной экскурсии
+
+Можно интегрировать только booking form конкретной активности.
+
+Страница экскурсии Tenerife Joy
+          ↓
+       iframe
+          ↓
+Booking form Atlántico
+
+Таким образом, пока ожидается разблокировка JSON/API-интеграции по IP, можно временно использовать affiliate/iframe решение, чтобы запустить бронирование экскурсий без ожидания API.
+
+Источник: Atlántico предоставляет три варианта интеграции — общий iframe/white label, iframe для конкретной активности и JSON API; для JSON API они требуют IP-адрес сервера, с которого будут выполняться запросы.
+
+дай финальный документ
+Tenerife Joy — Бронирование и заказы
+1. Бронирование экскурсий
+
+На данный момент для экскурсий используется только интеграция с API Atlántico.
+
+API-интеграция сейчас заблокирована со стороны Atlántico. Для её активации необходимо предоставить IP-адрес, с которого будут выполняться API-запросы.
+
+Текущий flow
+Tenerife Joy
+     ↓
+Atlántico API
+     ↓
+Availability
+     ↓
+Prices
+     ↓
+Booking
+     ↓
+bookingCode
+
+Через API можно получать:
+
+список экскурсий;
+доступность;
+доступные даты/сессии;
+цены;
+выполнять бронирование;
+получать bookingCode.
+Альтернативы на время ожидания API
+
+Atlántico предлагает три варианта интеграции:
+
+1. White Label / общий iframe
+
+Можно разместить на сайте iframe со всеми экскурсиями и активностями Atlántico.
+
+Tenerife Joy
+     ↓
+iframe
+     ↓
+Atlántico
+     ↓
+Экскурсии + бронирование
+
+2. iframe для конкретной экскурсии
+
+Можно разместить booking form конкретной активности непосредственно на странице экскурсии Tenerife Joy.
+
+Страница экскурсии
+        ↓
+      iframe
+        ↓
+Booking form Atlántico
+
+3. JSON API
+
+Текущий основной вариант интеграции, который ожидает активации со стороны Atlántico после предоставления IP.
+
+Таким образом, пока ожидается разблокировка API по IP, бронирование можно временно реализовать через affiliate/iframe, не дожидаясь API.
+
+2. Бронирование машин
+
+Машины хранятся в Strapi.
+
+На странице автомобиля доступны два варианта работы:
+
+Affiliate booking
+
+Пользователь выбирает автомобиль и переходит на внешний booking flow через Canarias.com.
+
+Tenerife Joy
+     ↓
+Выбор автомобиля
+     ↓
+Affiliate link
+     ↓
+Canarias.com
+     ↓
+Бронирование автомобиля
+
+Само бронирование в этом случае происходит на стороне Canarias.com.
+
+Pre-booking через Tenerife Joy
+
+Также на сайте есть собственная форма заявки.
+
+Пользователь указывает:
+
+имя;
+телефон;
+email;
+дату начала аренды;
+дату окончания;
+комментарий.
+
+Заявка отправляется через:
+
+/api/send-email
+
+После отправки уведомления поступают:
+
+Email;
+Telegram.
+3. Бронирование апартаментов
+
+Апартаменты хранятся в Strapi.
+
+Пользователь выбирает апартамент и открывает форму бронирования.
+
+Указываются:
+
+имя;
+телефон;
+email;
+дата заезда;
+дата выезда;
+комментарий.
+
+Заявка отправляется через:
+
+/api/send-email
+
+После отправки:
+
+отправляется Email;
+отправляется уведомление в Telegram.
+Текущий flow
+Tenerife Joy
+     ↓
+Выбор апартамента
+     ↓
+Booking form
+     ↓
+/api/send-email
+     ↓
+Email + Telegram
+
+На данный момент отдельной системы real-time availability / автоматического reservation flow для апартаментов в текущей реализации не обнаружено.
+
+4. Общая архитектура бронирования
+                         TENERIFE JOY
+                              |
+                           Next.js
+                              |
+          +-------------------+-------------------+
+          |                   |                   |
+          ↓                   ↓                   ↓
+     Экскурсии              Машины           Апартаменты
+          |                   |                   |
+          ↓                   ↓                   ↓
+   Atlántico API        Canarias.com       Booking Form
+          |               Affiliate              |
+          |                   |                  ↓
+          |                   |           /api/send-email
+          |                   |              /        \
+          |                   |             ↓          ↓
+          |                   |          Email      Telegram
+          |
+          ↓
+ Availability
+ Prices
+ Booking
+ bookingCode
+5. Текущее состояние
+Категория	Текущий способ бронирования
+Экскурсии	Atlántico API
+Экскурсии — временная альтернатива	Affiliate / iframe Atlántico
+Машины	Affiliate Canarias.com + собственный pre-booking
+Апартаменты	Собственный pre-booking
+CMS / каталог	Strapi
+Уведомления	Email + Telegram
+Единый Orders API	Пока отсутствует
+Bitrix24 / CRM интеграция	Пока не обнаружена
+Основной текущий блокер
+
+Для экскурсий основной API Atlántico пока не активирован из-за ограничения по IP.
+
+Поэтому есть два пути:
+
+Дождаться активации JSON API и продолжить текущую интеграцию.
+Временно использовать affiliate/iframe Atlántico, чтобы запустить бронирование уже сейчас.
+
+Для машин уже существует affiliate-интеграция через Canarias.com.
+
+Для апартаментов сейчас используется собственная форма заявки через сайт.
