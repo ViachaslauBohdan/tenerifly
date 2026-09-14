@@ -81,6 +81,93 @@ describe("Atlantico client (mocked network)", () => {
     });
   });
 
+  it("unwraps JSON-encoded loadPrices strings and skips empty office responses", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo) => {
+      const url = String(input);
+      expect(url).not.toMatch(REAL_SUPPLIER_HOST);
+      if (url.endsWith("/loadPrices/20/2026-10-15")) {
+        return {
+          ok: true,
+          status: 200,
+          headers: { get: () => "text/html; charset=UTF-8" },
+          text: async () => '"42.00|30.00|0.00|6.30|4.50|0.00"',
+        };
+      }
+      if (url.includes("/loadPrices/20/2026-10-15/3726")) {
+        return jsonResponse([]);
+      }
+      throw new Error(`Unexpected URL: ${url}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubEnv("ATLANTICO_COLLABORATOR", "3726");
+
+    const { getAtlanticoPrices } = await import("./client");
+    await expect(getAtlanticoPrices("20", "2026-10-15")).resolves.toBe(
+      "42.00|30.00|0.00|6.30|4.50|0.00"
+    );
+  });
+
+  it("maps production loadPrices objects when the pipe format is unavailable", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo) => {
+      const url = String(input);
+      if (url.endsWith("/loadPrices/20/2026-10-15")) {
+        return jsonResponse({
+          PVPA: "44.00",
+          PVPC: "32.00",
+          PVPOS: "0.00",
+          COMA: "6.60",
+          COMC: "4.80",
+          COMOS: "0.00",
+        });
+      }
+      throw new Error(`Unexpected URL: ${url}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubEnv("ATLANTICO_COLLABORATOR", "");
+
+    const { getAtlanticoPrices } = await import("./client");
+    await expect(getAtlanticoPrices("20", "2026-10-15")).resolves.toBe(
+      "44.00|32.00|0.00|6.60|4.80|0.00"
+    );
+  });
+
+  it("falls back from empty office [] to production PVPA body (live bug)", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo) => {
+      const url = String(input);
+      // Generic (no office) — production shape
+      if (url.endsWith("/loadPrices/20/2026-09-11")) {
+        return jsonResponse({
+          PVPA: "44.00",
+          PVPC: "32.00",
+          PVPOS: "0.00",
+          COMA: "6.60",
+          COMC: "4.80",
+          COMOS: "0.00",
+        });
+      }
+      // Office variant — what production returned before the fix
+      if (url.endsWith("/loadPrices/20/2026-09-11/3726")) {
+        return jsonResponse([]);
+      }
+      throw new Error(`Unexpected URL: ${url}`);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubEnv("ATLANTICO_COLLABORATOR", "3726");
+
+    const { getAtlanticoPrices } = await import("./client");
+    const { parseAtlanticoPrices, estimateBookingTotal } = await import("./prices");
+
+    const raw = await getAtlanticoPrices("20", "2026-09-11");
+    expect(raw).toBe("44.00|32.00|0.00|6.60|4.80|0.00");
+    // Generic endpoint is tried first — office [] must not win
+    expect(String(fetchMock.mock.calls[0][0])).toBe(
+      "https://atlantico.test.invalid/loadPrices/20/2026-09-11"
+    );
+
+    const prices = parseAtlanticoPrices(raw, "0");
+    expect(estimateBookingTotal(prices, 0, 1, 0)).toBe(32);
+  });
+
   it("loads catalog data through mocked GET requests", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo) => {
       const url = String(input);

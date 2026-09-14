@@ -18,12 +18,15 @@ describe("Atlantico affiliate attribution", () => {
   it("defaults API userId and collaborator to 3726", async () => {
     vi.stubEnv("ATLANTICO_USER_ID", "");
     vi.stubEnv("ATLANTICO_COLLABORATOR", "");
+    vi.stubEnv("ATLANTICO_API_BASE_URL", "");
+    vi.resetModules();
     const { getAtlanticoConfig, isAtlanticoCatalogConfigured } = await import(
       "./config"
     );
     const config = getAtlanticoConfig();
     expect(config.userId).toBe("3726");
     expect(config.collaborator).toBe("3726");
+    expect(config.baseUrl).toBe("https://api.atlanticoexcursiones.com");
     expect(isAtlanticoCatalogConfigured()).toBe(true);
   });
 });

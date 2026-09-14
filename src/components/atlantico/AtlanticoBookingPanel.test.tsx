@@ -150,4 +150,26 @@ describe("AtlanticoBookingPanel", () => {
       true
     );
   });
+
+  it("shows a non-zero total for a child-only booking", async () => {
+    const user = userEvent.setup();
+    render(
+      <AtlanticoBookingPanel
+        tourCode="14"
+        tourName="Siam Park"
+        events={[{ id: "20", code: "20", name: "Ticket", pProd: "0" }]}
+        locale="en"
+      />
+    );
+
+    expect(await screen.findByText(/Total:\s*€72/i)).toBeInTheDocument();
+
+    // Default adults=2 → drop to 0, raise children to 1
+    await user.click(screen.getByRole("button", { name: /Adults -/i }));
+    await user.click(screen.getByRole("button", { name: /Adults -/i }));
+    await user.click(screen.getByRole("button", { name: /Children \+/i }));
+
+    expect(await screen.findByText(/Total:\s*€19/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Total:\s*€0\b/i)).not.toBeInTheDocument();
+  });
 });

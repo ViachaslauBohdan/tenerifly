@@ -97,6 +97,10 @@ const nextConfig = {
   poweredByHeader: false,
   generateEtags: true,
 
+  // Properties populate=* is ~6MB and not Data-Cacheable (>2MB). Under full SSG
+  // Strapi slows down and apartments pages exceed the default 60s worker timeout.
+  staticPageGenerationTimeout: 300,
+
   // SSG оптимизации
   output: "standalone",
 

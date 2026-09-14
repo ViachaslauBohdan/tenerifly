@@ -1,6 +1,7 @@
 import { getAtlanticoConfig } from "./config";
 import { toAtlanticoLanguage } from "./language";
 import { withPositiveTourCounts } from "./parse";
+import { normalizeAtlanticoPriceRaw } from "./prices";
 import type {
   AtlanticoClassification,
   AtlanticoConfirmRequest,
@@ -88,10 +89,13 @@ async function atlanticoFetch(
   if (!rawText.trim()) return null;
 
   const trimmed = rawText.trim();
+  // loadPrices is often a JSON-encoded string (`"42.00|30.00|..."`) with a
+  // text/html Content-Type — still parse it as JSON when the body looks like it.
   const looksLikeJson =
     contentType.includes("application/json") ||
     trimmed.startsWith("{") ||
-    trimmed.startsWith("[");
+    trimmed.startsWith("[") ||
+    (trimmed.startsWith('"') && trimmed.endsWith('"'));
 
   if (looksLikeJson) {
     try {
@@ -223,13 +227,11 @@ export async function getAtlanticoEventDetails(
   return asObject<AtlanticoEventDetails>(data);
 }
 
-export async function getAtlanticoPrices(
+async function fetchAtlanticoPriceRaw(
   eventCode: string,
   date: string,
-  office?: string
+  officeCode?: string
 ): Promise<string> {
-  const { collaborator } = getAtlanticoConfig();
-  const officeCode = office || collaborator;
   const path = officeCode
     ? `/loadPrices/${encodeURIComponent(eventCode)}/${date}/${encodeURIComponent(officeCode)}`
     : `/loadPrices/${encodeURIComponent(eventCode)}/${date}`;
@@ -239,7 +241,27 @@ export async function getAtlanticoPrices(
     revalidateSeconds: 0,
     headers: { Accept: "text/plain, application/json" },
   });
-  return typeof data === "string" ? data : JSON.stringify(data);
+  return normalizeAtlanticoPriceRaw(data);
+}
+
+export async function getAtlanticoPrices(
+  eventCode: string,
+  date: string,
+  office?: string
+): Promise<string> {
+  const { collaborator } = getAtlanticoConfig();
+  const officeCode = (office ?? collaborator)?.trim() || undefined;
+
+  // Generic endpoint first — some hosts return an empty `[]` body for the
+  // collaborator/office variant when the caller IP is not fully entitled.
+  const generic = await fetchAtlanticoPriceRaw(eventCode, date);
+  if (generic) return generic;
+
+  if (officeCode) {
+    return fetchAtlanticoPriceRaw(eventCode, date, officeCode);
+  }
+
+  return "";
 }
 
 export async function getAtlanticoLimits(

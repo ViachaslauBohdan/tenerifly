@@ -1,6 +1,6 @@
 import { ATLANTICO_AFFILIATE_ID } from "./affiliate";
 
-const DEFAULT_BASE_URL = "https://testapi.atlanticoexcursiones.com";
+const DEFAULT_BASE_URL = "https://api.atlanticoexcursiones.com";
 
 export type AtlanticoConfig = {
   baseUrl: string;
