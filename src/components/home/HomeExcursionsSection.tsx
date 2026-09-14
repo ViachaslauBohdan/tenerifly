@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AtlanticoExcursionCard } from "@/components/AtlanticoExcursionCard";
 import { AtlanticoCategoriesHeading } from "@/components/atlantico/AtlanticoCategoriesHeading";
 import { AtlanticoCategoryCard } from "@/components/atlantico/AtlanticoCategoryCard";
+import { AtlanticoExcursionsByChannel } from "@/components/atlantico/AtlanticoExcursionsByChannel";
 import { ViewAllLink } from "@/components/ViewAllLink";
 import { useTranslation } from "@/hooks/useTranslation";
 import type { AtlanticoClassification } from "@/lib/atlantico/types";
@@ -21,12 +22,11 @@ type HomeExcursionsSectionProps = {
 
 const HOME_CATEGORY_LIMIT = 6;
 
-export function HomeExcursionsSection({
+function HomeExcursionsApiTiles({
   language,
   copy,
-  intermediaryNotice,
   toursHref,
-}: HomeExcursionsSectionProps) {
+}: Omit<HomeExcursionsSectionProps, "intermediaryNotice">) {
   const { createLocaleLink } = useTranslation();
   const [categories, setCategories] = useState<AtlanticoClassification[]>([]);
   const [ready, setReady] = useState(false);
@@ -63,6 +63,49 @@ export function HomeExcursionsSection({
     };
   }, [language]);
 
+  if (!ready) {
+    return (
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {[1, 2, 3, 4, 5, 6].map((index) => (
+          <div
+            key={index}
+            className="aspect-[4/3] animate-pulse rounded-lg bg-gray-200"
+          />
+        ))}
+      </div>
+    );
+  }
+
+  if (categories.length === 0) {
+    return <AtlanticoExcursionCard locale={language} variant="home" />;
+  }
+
+  return (
+    <>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {categories.map((classification) => (
+          <AtlanticoCategoryCard
+            key={classification.id || classification.code}
+            classification={classification}
+            href={`${createLocaleLink("/tours")}?category=${encodeURIComponent(classification.id || classification.code)}`}
+          />
+        ))}
+      </div>
+      <div className="mt-10 flex justify-center">
+        <ViewAllLink href={toursHref} className="sm:ml-0">
+          {copy.viewAll}
+        </ViewAllLink>
+      </div>
+    </>
+  );
+}
+
+export function HomeExcursionsSection({
+  language,
+  copy,
+  intermediaryNotice,
+  toursHref,
+}: HomeExcursionsSectionProps) {
   return (
     <section
       id="excursions"
@@ -77,35 +120,17 @@ export function HomeExcursionsSection({
 
         <AtlanticoCategoriesHeading locale={language} as="h2" />
 
-        {!ready ? (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map((index) => (
-              <div
-                key={index}
-                className="aspect-[4/3] animate-pulse rounded-lg bg-gray-200"
-              />
-            ))}
-          </div>
-        ) : categories.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {categories.map((classification) => (
-                <AtlanticoCategoryCard
-                  key={classification.id || classification.code}
-                  classification={classification}
-                  href={`${createLocaleLink("/tours")}?category=${encodeURIComponent(classification.id || classification.code)}`}
-                />
-              ))}
-            </div>
-            <div className="mt-10 flex justify-center">
-              <ViewAllLink href={toursHref} className="sm:ml-0">
-                {copy.viewAll}
-              </ViewAllLink>
-            </div>
-          </>
-        ) : (
-          <AtlanticoExcursionCard locale={language} variant="home" />
-        )}
+        <AtlanticoExcursionsByChannel
+          locale={language}
+          iframeClassName="mt-2"
+          api={
+            <HomeExcursionsApiTiles
+              language={language}
+              copy={copy}
+              toursHref={toursHref}
+            />
+          }
+        />
       </div>
     </section>
   );

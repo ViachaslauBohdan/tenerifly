@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { AtlanticoExcursionCard } from "@/components/AtlanticoExcursionCard";
 import { AtlanticoCategoriesHeading } from "./AtlanticoCategoriesHeading";
 import { AtlanticoCategoryCard } from "./AtlanticoCategoryCard";
+import { AtlanticoExcursionsByChannel } from "./AtlanticoExcursionsByChannel";
+import { AtlanticoIframeBooking } from "./AtlanticoIframeBooking";
 import { AtlanticoTourCard } from "./AtlanticoTourCard";
 import { getAtlanticoUiCopy } from "./atlanticoCopy";
 import { CatalogBackLink } from "@/components/CatalogBackLink";
@@ -17,7 +19,7 @@ type AtlanticoTourCatalogProps = {
   locale: Locale | string;
 };
 
-export function AtlanticoTourCatalog({ locale }: AtlanticoTourCatalogProps) {
+function AtlanticoTourCatalogApi({ locale }: AtlanticoTourCatalogProps) {
   const { createLocaleLink } = useTranslation();
   const searchParams = useSearchParams();
   const copy = getAtlanticoUiCopy(locale);
@@ -132,12 +134,12 @@ export function AtlanticoTourCatalog({ locale }: AtlanticoTourCatalogProps) {
             {classifications
               .filter((classification) => (classification.count ?? 0) > 0)
               .map((classification) => (
-              <AtlanticoCategoryCard
-                key={classification.id || classification.code}
-                classification={classification}
-                href={toursHref(classification.id || classification.code)}
-              />
-            ))}
+                <AtlanticoCategoryCard
+                  key={classification.id || classification.code}
+                  classification={classification}
+                  href={toursHref(classification.id || classification.code)}
+                />
+              ))}
           </div>
         )}
       </div>
@@ -170,5 +172,20 @@ export function AtlanticoTourCatalog({ locale }: AtlanticoTourCatalogProps) {
         </div>
       )}
     </div>
+  );
+}
+
+export function AtlanticoTourCatalog({ locale }: AtlanticoTourCatalogProps) {
+  return (
+    <AtlanticoExcursionsByChannel
+      locale={locale}
+      iframe={
+        <div>
+          <AtlanticoCategoriesHeading locale={String(locale)} as="h1" />
+          <AtlanticoIframeBooking locale={locale} />
+        </div>
+      }
+      api={<AtlanticoTourCatalogApi locale={locale} />}
+    />
   );
 }

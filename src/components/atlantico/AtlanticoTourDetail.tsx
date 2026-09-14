@@ -3,9 +3,10 @@
 import { CatalogBackLink } from "@/components/CatalogBackLink";
 import { CatalogDetailShell } from "@/components/CatalogDetailShell";
 import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
-import { AtlanticoBookingPanel } from "./AtlanticoBookingPanel";
+import { AtlanticoBookingSection } from "./AtlanticoBookingSection";
 import { AtlanticoImage } from "./AtlanticoImage";
 import { getAtlanticoUiCopy } from "./atlanticoCopy";
+import { isAtlanticoIframeBooking } from "@/lib/atlantico/bookingMode";
 import { atlanticoTourImageCandidates } from "@/lib/atlantico/images";
 import { htmlToPlainText } from "@/lib/atlantico/parse";
 import { parseFromPrice } from "@/lib/atlantico/prices";
@@ -35,6 +36,7 @@ export function AtlanticoTourDetail({
   const description = htmlToPlainText(tour.desc);
   const amount = parseFromPrice(tour.price);
   const hours = Number.parseInt(tour.duration || "", 10);
+  const iframeMode = isAtlanticoIframeBooking();
 
   return (
     <CatalogDetailShell>
@@ -97,8 +99,20 @@ export function AtlanticoTourDetail({
           </div>
         </div>
 
-        <aside className="order-1 xl:order-2 xl:col-span-1">
-          <div className="rounded-lg border bg-white p-6 shadow-sm xl:sticky xl:top-6">
+        <aside
+          className={
+            iframeMode
+              ? "order-1 xl:order-2 xl:col-span-4"
+              : "order-1 xl:order-2 xl:col-span-1"
+          }
+        >
+          <div
+            className={
+              iframeMode
+                ? "rounded-lg border bg-white p-6 shadow-sm"
+                : "rounded-lg border bg-white p-6 shadow-sm xl:sticky xl:top-6"
+            }
+          >
             {amount != null ? (
               <div className="mb-6 rounded-lg bg-blue-50 p-4 text-center">
                 <div className="text-3xl font-bold text-blue-600">
@@ -107,7 +121,7 @@ export function AtlanticoTourDetail({
                 <div className="text-sm text-gray-600">{copy.perPerson}</div>
               </div>
             ) : null}
-            <AtlanticoBookingPanel
+            <AtlanticoBookingSection
               tourCode={tourCode}
               tourName={tour.name}
               events={events}

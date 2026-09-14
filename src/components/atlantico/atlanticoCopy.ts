@@ -47,6 +47,9 @@ export type AtlanticoUiCopy = {
   partnerPowered: string;
   notConfigured: string;
   noSession: string;
+  iframeTitle: string;
+  iframeHint: string;
+  iframeOpenExternal: string;
 };
 
 const COPY: Record<string, AtlanticoUiCopy> = {
@@ -99,6 +102,10 @@ const COPY: Record<string, AtlanticoUiCopy> = {
     partnerPowered: "Buchung über Atlántico Excursiones",
     notConfigured: "Die Atlántico-API ist noch nicht konfiguriert.",
     noSession: "Kein Zeitslot — Standard 00:00",
+    iframeTitle: "Atlántico Excursiones Katalog",
+    iframeHint:
+      "Buchen Sie über den offiziellen Atlántico-Katalog (Affiliate 3726).",
+    iframeOpenExternal: "Im neuen Tab öffnen",
   },
   en: {
     from: "From",
@@ -149,6 +156,10 @@ const COPY: Record<string, AtlanticoUiCopy> = {
     partnerPowered: "Booked with Atlántico Excursiones",
     notConfigured: "The Atlántico API is not configured yet.",
     noSession: "No time slot — default 00:00",
+    iframeTitle: "Atlántico Excursiones catalog",
+    iframeHint:
+      "Book through the official Atlántico white-label catalog (affiliate 3726).",
+    iframeOpenExternal: "Open in a new tab",
   },
   es: {
     from: "Desde",
@@ -199,6 +210,10 @@ const COPY: Record<string, AtlanticoUiCopy> = {
     partnerPowered: "Reserva con Atlántico Excursiones",
     notConfigured: "La API de Atlántico aún no está configurada.",
     noSession: "Sin horario — se usa 00:00",
+    iframeTitle: "Catálogo Atlántico Excursiones",
+    iframeHint:
+      "Reserve a través del catálogo white-label oficial de Atlántico (afiliado 3726).",
+    iframeOpenExternal: "Abrir en una pestaña nueva",
   },
   fr: {
     from: "À partir de",
@@ -249,6 +264,10 @@ const COPY: Record<string, AtlanticoUiCopy> = {
     partnerPowered: "Réservation via Atlántico Excursiones",
     notConfigured: "L'API Atlántico n'est pas encore configurée.",
     noSession: "Pas de créneau — 00:00 par défaut",
+    iframeTitle: "Catalogue Atlántico Excursiones",
+    iframeHint:
+      "Réservez via le catalogue white-label officiel Atlántico (affilié 3726).",
+    iframeOpenExternal: "Ouvrir dans un nouvel onglet",
   },
   pl: {
     from: "Od",
@@ -299,6 +318,10 @@ const COPY: Record<string, AtlanticoUiCopy> = {
     partnerPowered: "Rezerwacja przez Atlántico Excursiones",
     notConfigured: "API Atlántico nie jest jeszcze skonfigurowane.",
     noSession: "Brak godziny — domyślnie 00:00",
+    iframeTitle: "Katalog Atlántico Excursiones",
+    iframeHint:
+      "Zarezerwuj przez oficjalny katalog white-label Atlántico (afiliant 3726).",
+    iframeOpenExternal: "Otwórz w nowej karcie",
   },
   ru: {
     from: "От",
@@ -349,6 +372,10 @@ const COPY: Record<string, AtlanticoUiCopy> = {
     partnerPowered: "Бронирование через Atlántico Excursiones",
     notConfigured: "API Atlántico ещё не настроено.",
     noSession: "Нет слота — по умолчанию 00:00",
+    iframeTitle: "Каталог Atlántico Excursiones",
+    iframeHint:
+      "Бронируйте через официальный white-label каталог Atlántico (affiliate 3726).",
+    iframeOpenExternal: "Открыть в новой вкладке",
   },
   uk: {
     from: "Від",
@@ -399,6 +426,10 @@ const COPY: Record<string, AtlanticoUiCopy> = {
     partnerPowered: "Бронювання через Atlántico Excursiones",
     notConfigured: "API Atlántico ще не налаштовано.",
     noSession: "Немає слота — за замовчуванням 00:00",
+    iframeTitle: "Каталог Atlántico Excursiones",
+    iframeHint:
+      "Бронюйте через офіційний white-label каталог Atlántico (affiliate 3726).",
+    iframeOpenExternal: "Відкрити в новій вкладці",
   },
 };
 
