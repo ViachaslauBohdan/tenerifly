@@ -16,8 +16,19 @@ describe("useTranslation locale from URL", () => {
 
     expect(result.current.locale).toBe("pl");
     expect(result.current.createLocaleLink("/cars")).toBe("/pl/cars");
+    expect(result.current.createLocaleLink("/tours")).toBe("/pl/tours");
     expect(result.current.createLocaleLink("/#transfers")).toBe(
       "/pl/#transfers"
     );
+    expect(result.current.createLocaleLink("/#excursions")).toBe(
+      "/pl/#excursions"
+    );
+  });
+
+  it("rewrites the locale segment when switching language", () => {
+    push.mockClear();
+    const { result } = renderHook(() => useTranslation());
+    result.current.switchLocale("es");
+    expect(push).toHaveBeenCalledWith("/es");
   });
 });

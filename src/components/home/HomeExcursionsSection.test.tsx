@@ -4,7 +4,7 @@ import { HomeExcursionsSection } from "./HomeExcursionsSection";
 
 vi.mock("@/hooks/useTranslation", () => ({
   useTranslation: () => ({
-    createLocaleLink: (path: string) => path,
+    createLocaleLink: (path: string) => `/en${path}`,
   }),
 }));
 
@@ -21,9 +21,23 @@ vi.mock("@/components/atlantico/AtlanticoExcursionsByChannel", () => ({
 }));
 
 vi.mock("@/components/atlantico/AtlanticoCategoryCard", () => ({
-  AtlanticoCategoryCard: ({ classification }: { classification: { name: string } }) => (
-    <div>tile:{classification.name}</div>
-  ),
+  AtlanticoCategoryCard: ({
+    classification,
+    href,
+  }: {
+    classification: { name: string };
+    href: string;
+  }) => <a href={href}>tile:{classification.name}</a>,
+}));
+
+vi.mock("@/components/ViewAllLink", () => ({
+  ViewAllLink: ({
+    href,
+    children,
+  }: {
+    href: string;
+    children: React.ReactNode;
+  }) => <a href={href}>{children}</a>,
 }));
 
 const copy = {
@@ -31,20 +45,20 @@ const copy = {
   viewAll: "View all",
 } as never;
 
-describe("HomeExcursionsSection", () => {
+describe("HomeExcursionsSection navigation", () => {
   afterEach(() => {
     cleanup();
     vi.unstubAllGlobals();
   });
 
-  it("delegates catalog switching and mounts API tiles as the api branch", async () => {
+  it("links category tiles and View all into the locale tours catalog", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => ({
         ok: true,
         json: async () => ({
           classifications: [
-            { id: "1", code: "20", name: "Coach Tours", count: 3 },
+            { id: "20", code: "20", name: "Coach Tours", count: 3 },
           ],
         }),
       }))
@@ -55,11 +69,16 @@ describe("HomeExcursionsSection", () => {
         language="en"
         copy={copy}
         intermediaryNotice=""
-        toursHref="/tours"
+        toursHref="/en/tours"
       />
     );
 
     expect(screen.getByTestId("catalog-switch")).toBeInTheDocument();
-    expect(await screen.findByText(/tile:Coach Tours/i)).toBeInTheDocument();
+    const tile = await screen.findByRole("link", { name: /tile:Coach Tours/i });
+    expect(tile).toHaveAttribute("href", "/en/tours?category=20");
+    expect(screen.getByRole("link", { name: /View all/i })).toHaveAttribute(
+      "href",
+      "/en/tours"
+    );
   });
 });
