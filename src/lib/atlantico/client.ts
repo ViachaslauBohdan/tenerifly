@@ -1,5 +1,6 @@
 import { getAtlanticoConfig } from "./config";
 import { toAtlanticoLanguage } from "./language";
+import { ATLANTICO_PATHS } from "./paths";
 import { withPositiveTourCounts } from "./parse";
 import { normalizeAtlanticoPriceRaw } from "./prices";
 import type {
@@ -8,6 +9,7 @@ import type {
   AtlanticoConfirmResponse,
   AtlanticoEventDetails,
   AtlanticoLoadLimitsResponse,
+  AtlanticoPaymentResponse,
   AtlanticoTourDetails,
   AtlanticoTourSummary,
 } from "./types";
@@ -312,11 +314,72 @@ export function parseConfirmResponse(data: unknown): AtlanticoConfirmResponse {
 export async function confirmAtlanticoBooking(
   body: AtlanticoConfirmRequest
 ): Promise<AtlanticoConfirmResponse> {
-  const data = await atlanticoFetch("/confirm", {
+  // Affiliate / account booking — no payment gateway. Trailing slash required.
+  const data = await atlanticoFetch(ATLANTICO_PATHS.confirm, {
     method: "POST",
     cache: "no-store",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
   return parseConfirmResponse(data);
+}
+
+/**
+ * Same ConfirmRequest body as confirm, but redirects to Atlántico's payment gateway.
+ * Use only when the customer should pay online via their PSP (not the default
+ * affiliate confirm flow). Trailing slash required on `/payment/`.
+ */
+export async function startAtlanticoPayment(
+  body: AtlanticoConfirmRequest
+): Promise<AtlanticoPaymentResponse> {
+  const { baseUrl, token } = getAtlanticoConfig();
+  const url = `${baseUrl}${ATLANTICO_PATHS.payment}`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    redirect: "manual",
+    cache: "no-store",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (response.status >= 300 && response.status < 400) {
+    const location = response.headers.get("location");
+    if (location) {
+      return {
+        paymentUrl: new URL(location, `${baseUrl}/`).toString(),
+      };
+    }
+  }
+
+  const rawText = await response.text();
+  if (response.ok) {
+    const trimmed = rawText.trim();
+    try {
+      const parsed = JSON.parse(trimmed) as Record<string, unknown>;
+      const paymentUrl =
+        parsed.paymentUrl ?? parsed.url ?? parsed.redirect ?? parsed.location;
+      if (typeof paymentUrl === "string" && paymentUrl.trim()) {
+        return {
+          paymentUrl: new URL(paymentUrl.trim(), `${baseUrl}/`).toString(),
+        };
+      }
+    } catch {
+      if (/^https?:\/\//i.test(trimmed)) {
+        return { paymentUrl: trimmed };
+      }
+    }
+  }
+
+  let message = `Atlantico payment API error (${response.status})`;
+  if (rawText.trim()) message = rawText.trim().slice(0, 300);
+  throw new AtlanticoApiError(
+    message,
+    response.status >= 400 ? response.status : 502,
+    "payment_redirect_missing"
+  );
 }

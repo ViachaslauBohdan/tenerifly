@@ -102,6 +102,11 @@ export type AtlanticoConfirmResponse = {
   message?: string;
 };
 
+/** Result of POST /payment/ — customer should be sent to paymentUrl. */
+export type AtlanticoPaymentResponse = {
+  paymentUrl: string;
+};
+
 export type PerPersonPrices = {
   kind: "perPerson";
   adult: number;

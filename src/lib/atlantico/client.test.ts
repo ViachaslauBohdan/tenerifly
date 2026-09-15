@@ -55,11 +55,11 @@ describe("Atlantico client (mocked network)", () => {
     expect(() => parseConfirmResponse("1")).toThrow(/booking code/i);
   });
 
-  it("posts /confirm only to the mocked fetch, never a live supplier host", async () => {
+  it("posts /confirm/ only to the mocked fetch, never a live supplier host", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo) => {
       const url = String(input);
       expect(url).not.toMatch(REAL_SUPPLIER_HOST);
-      expect(url).toBe("https://atlantico.test.invalid/confirm");
+      expect(url).toBe("https://atlantico.test.invalid/confirm/");
       return jsonResponse({ bookingCode: "TEST-NO-LIVE-BOOKING" });
     });
     vi.stubGlobal("fetch", fetchMock);
@@ -79,6 +79,33 @@ describe("Atlantico client (mocked network)", () => {
       t_id: "184",
       email: "ada@example.com",
     });
+  });
+
+  it("posts /payment/ with redirect:manual and returns the gateway Location", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo, init?: RequestInit) => {
+      const url = String(input);
+      expect(url).not.toMatch(REAL_SUPPLIER_HOST);
+      expect(url).toBe("https://atlantico.test.invalid/payment/");
+      expect(init?.redirect).toBe("manual");
+      return {
+        ok: false,
+        status: 302,
+        headers: {
+          get: (name: string) =>
+            name.toLowerCase() === "location"
+              ? "https://pay.example/checkout/abc"
+              : null,
+        },
+        text: async () => "",
+      };
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { startAtlanticoPayment } = await import("./client");
+    const result = await startAtlanticoPayment(confirmPayload);
+
+    expect(result).toEqual({ paymentUrl: "https://pay.example/checkout/abc" });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it("unwraps JSON-encoded loadPrices strings and skips empty office responses", async () => {
