@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Home, MapPin, Star } from "lucide-react";
+import { IconBrandTelegram, IconBrandWhatsapp } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import { HomeCardImage } from "@/components/HomeCardImage";
 import { HomeEmptyState } from "@/components/home/HomeEmptyState";
 import { TilePriceBadge } from "@/components/TilePriceBadge";
@@ -9,7 +12,6 @@ import { ViewAllLink } from "@/components/ViewAllLink";
 import type { BookingItem, HomeProperty, LanguageCode } from "@/components/home/types";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import type { Locale } from "@/types/locale";
-import { whatsAppInterestHref } from "@/utils/whatsapp";
 import translationsJson from "@/i18n/main.json";
 
 type AccommodationCopy = (typeof translationsJson)["en"]["sections"]["accommodation"];
@@ -39,6 +41,8 @@ export function HomeAccommodationSection({
   const router = useRouter();
   const previewItems = items.slice(0, 3);
   const apartmentBooking = getApartmentBookingCopy(language);
+  const [managerOpen, setManagerOpen] = useState(false);
+  const [managerTitle, setManagerTitle] = useState("");
 
   return (
     <section
@@ -154,7 +158,7 @@ export function HomeAccommodationSection({
                         </p>
                       ) : null}
                     </div>
-                    <div className="flex flex-col gap-2 sm:flex-row">
+                    <div className="flex flex-col gap-2">
                       <button
                         type="button"
                         onClick={() =>
@@ -173,21 +177,18 @@ export function HomeAccommodationSection({
                       >
                         {apartmentBooking.checkPrice}
                       </button>
-                      <a
-                        href={whatsAppInterestHref(
-                          "accommodation",
-                          {
-                            title: place.title,
-                            price: place.price,
-                          },
-                          language as Locale
-                        )}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full px-4 py-2 bg-[#25D366] text-white rounded-lg hover:bg-[#1ebe57] transition-colors text-center"
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setManagerTitle(place.title);
+                          setManagerOpen(true);
+                        }}
+                        className="w-full px-4 py-2 bg-[#25D366] text-white rounded-lg hover:bg-[#1ebe57] transition-colors inline-flex items-center justify-center gap-2"
                       >
+                        <IconBrandWhatsapp className="h-4 w-4 shrink-0" stroke={2} />
+                        <IconBrandTelegram className="h-4 w-4 shrink-0" stroke={2} />
                         {apartmentBooking.contactManager}
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -196,6 +197,15 @@ export function HomeAccommodationSection({
           </div>
         )}
       </div>
+
+      {managerOpen && (
+        <ApartmentManagerContactPopup
+          opened={managerOpen}
+          onClose={() => setManagerOpen(false)}
+          propertyTitle={managerTitle}
+          locale={language as Locale}
+        />
+      )}
     </section>
   );
 }

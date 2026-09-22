@@ -90,16 +90,9 @@ describe("ApartmentCard localized copy", () => {
     expect(screen.getByText(/Od ≈ €70\/dzień/)).toBeInTheDocument();
     expect(screen.queryByText(/FROM/)).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Poznaj dokładną cenę/i })).toBeInTheDocument();
-    const manager = screen.getByRole("link", {
-      name: /Skontaktuj się z managerem/i,
-    });
-    expect(manager).toHaveAttribute(
-      "href",
-      expect.stringMatching(/^https:\/\/wa\.me\/34604972372\?text=/)
-    );
-    expect(decodeURIComponent(manager.getAttribute("href")!)).toContain(
-      "Odnowiony apartament Chayofa"
-    );
+    expect(
+      screen.getByRole("button", { name: /Napisz do managera/i })
+    ).toBeInTheDocument();
     expect(screen.getByText(/Cena orientacyjna/i)).toBeInTheDocument();
   });
 

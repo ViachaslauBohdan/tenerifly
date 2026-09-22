@@ -6,6 +6,9 @@ export const APARTMENT_PRICE_RESPONSE_MINUTES = 30;
 type ApartmentBookingCopy = {
   checkPrice: string;
   contactManager: string;
+  chooseChannel: string;
+  whatsapp: string;
+  telegram: string;
   requestTitle: string;
   steps: string;
   priceDisclaimer: string;
@@ -15,7 +18,10 @@ type ApartmentBookingCopy = {
 const COPY: Record<string, ApartmentBookingCopy> = {
   en: {
     checkPrice: "Get exact price",
-    contactManager: "Contact manager",
+    contactManager: "Message manager",
+    chooseChannel: "Choose how to write",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
     requestTitle: "Booking request",
     steps:
       "1. You send a request → 2. Manager confirms the exact price → 3. Prepayment locks the dates",
@@ -25,7 +31,10 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   ru: {
     checkPrice: "Узнать точную цену",
-    contactManager: "Связаться с менеджером",
+    contactManager: "Написать менеджеру",
+    chooseChannel: "Как написать",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
     requestTitle: "Запрос на бронирование",
     steps:
       "1. Вы отправляете запрос → 2. Менеджер подтверждает точную цену → 3. Предоплата закрывает даты",
@@ -35,7 +44,10 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   uk: {
     checkPrice: "Дізнатися точну ціну",
-    contactManager: "Зв'язатися з менеджером",
+    contactManager: "Написати менеджеру",
+    chooseChannel: "Як написати",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
     requestTitle: "Запит на бронювання",
     steps:
       "1. Ви надсилаєте запит → 2. Менеджер підтверджує точну ціну → 3. Передоплата фіксує дати",
@@ -45,7 +57,10 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   pl: {
     checkPrice: "Poznaj dokładną cenę",
-    contactManager: "Skontaktuj się z managerem",
+    contactManager: "Napisz do managera",
+    chooseChannel: "Jak napisać",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
     requestTitle: "Zapytanie o rezerwację",
     steps:
       "1. Wysyłasz zapytanie → 2. Manager potwierdza dokładną cenę → 3. Przedpłata rezerwuje terminy",
@@ -55,7 +70,10 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   fr: {
     checkPrice: "Connaître le prix exact",
-    contactManager: "Contacter le manager",
+    contactManager: "Écrire au manager",
+    chooseChannel: "Comment écrire",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
     requestTitle: "Demande de réservation",
     steps:
       "1. Vous envoyez une demande → 2. Le manager confirme le prix exact → 3. L'acompte bloque les dates",
@@ -65,7 +83,10 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   de: {
     checkPrice: "Genauen Preis erfahren",
-    contactManager: "Manager kontaktieren",
+    contactManager: "Manager schreiben",
+    chooseChannel: "Wie schreiben",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
     requestTitle: "Buchungsanfrage",
     steps:
       "1. Sie senden eine Anfrage → 2. Manager bestätigt den genauen Preis → 3. Anzahlung sichert die Daten",
@@ -75,7 +96,10 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   es: {
     checkPrice: "Saber el precio exacto",
-    contactManager: "Contactar al manager",
+    contactManager: "Escribir al manager",
+    chooseChannel: "Cómo escribir",
+    whatsapp: "WhatsApp",
+    telegram: "Telegram",
     requestTitle: "Solicitud de reserva",
     steps:
       "1. Envía la solicitud → 2. El manager confirma el precio exacto → 3. El prepago bloquea las fechas",
@@ -85,9 +109,37 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
 };
 
+const MANAGER_MESSAGE: Record<string, (title: string) => string> = {
+  en: (title) =>
+    `Hello! I'm interested in “${title}”. Could you tell me the price and available dates?`,
+  ru: (title) =>
+    `Здравствуйте! Интересует «${title}». Подскажите цену и свободные даты.`,
+  uk: (title) =>
+    `Вітаю! Цікавить «${title}». Підкажіть ціну та вільні дати.`,
+  pl: (title) =>
+    `Dzień dobry! Interesuje mnie „${title}”. Proszę o cenę i wolne terminy.`,
+  fr: (title) =>
+    `Bonjour ! Je suis intéressé par « ${title} ». Pouvez-vous indiquer le prix et les dates disponibles ?`,
+  de: (title) =>
+    `Hallo! Mich interessiert „${title}“. Bitte teilen Sie Preis und freie Termine mit.`,
+  es: (title) =>
+    `¡Hola! Me interesa «${title}». ¿Me puede indicar el precio y las fechas disponibles?`,
+};
+
 export function getApartmentBookingCopy(
   locale: Locale | string
 ): ApartmentBookingCopy {
   const key = localeContentKey(locale);
   return COPY[key] ?? COPY.en;
+}
+
+/** Prefill for WhatsApp / Telegram when writing the apartment manager. */
+export function getApartmentManagerMessage(
+  propertyTitle: string,
+  locale: Locale | string
+): string {
+  const title = propertyTitle.trim() || "apartment";
+  const key = localeContentKey(locale);
+  const build = MANAGER_MESSAGE[key] ?? MANAGER_MESSAGE.en;
+  return build(title);
 }

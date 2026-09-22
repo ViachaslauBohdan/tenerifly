@@ -7,10 +7,11 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { cmsLocale } from "@/types/locale";
 import { apartmentListingTypeLabel } from "./apartmentCardCopy";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
+import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import type { Locale } from "@/types/locale";
 import { formatPropertyPriceLabel } from "@/utils/propertyPrice";
-import { whatsAppInterestHref } from "@/utils/whatsapp";
+import { IconBrandTelegram, IconBrandWhatsapp } from "@tabler/icons-react";
 
 interface PropertyData {
   id: number;
@@ -152,9 +153,11 @@ const ApartmentCard = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isManagerContactOpen, setIsManagerContactOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<PropertyData | null>(
     null
   );
+  const [managerPropertyTitle, setManagerPropertyTitle] = useState("");
   const apartmentBooking = getApartmentBookingCopy(language);
 
   // Функция для создания заголовков с авторизацией
@@ -687,7 +690,7 @@ const ApartmentCard = ({
 
               {(property.property_status === "available" ||
                 property.property_status === "reserved") && (
-                <div className="flex flex-col gap-2 sm:flex-row">
+                <div className="flex flex-col gap-2">
                   <button
                     type="button"
                     onClick={() => handleBookNow(property)}
@@ -695,23 +698,18 @@ const ApartmentCard = ({
                   >
                     {apartmentBooking.checkPrice}
                   </button>
-                  <a
-                    href={whatsAppInterestHref(
-                      "accommodation",
-                      {
-                        title: property.title,
-                        price: property.price
-                          ? getPrice(property)
-                          : undefined,
-                      },
-                      language as Locale
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full px-4 py-2 bg-[#25D366] text-white rounded-md hover:bg-[#1ebe57] focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-colors text-center"
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setManagerPropertyTitle(property.title);
+                      setIsManagerContactOpen(true);
+                    }}
+                    className="w-full px-4 py-2 bg-[#25D366] text-white rounded-md hover:bg-[#1ebe57] focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-colors inline-flex items-center justify-center gap-2"
                   >
+                    <IconBrandWhatsapp className="h-4 w-4 shrink-0" stroke={2} />
+                    <IconBrandTelegram className="h-4 w-4 shrink-0" stroke={2} />
                     {apartmentBooking.contactManager}
-                  </a>
+                  </button>
                 </div>
               )}
             </div>
@@ -733,7 +731,16 @@ const ApartmentCard = ({
             contactEmail: selectedProperty.contact?.email,
           }}
           variant="apartment"
-          currentLocale={locale}
+          currentLocale={language as Locale}
+        />
+      )}
+
+      {isManagerContactOpen && (
+        <ApartmentManagerContactPopup
+          opened={isManagerContactOpen}
+          onClose={() => setIsManagerContactOpen(false)}
+          propertyTitle={managerPropertyTitle}
+          locale={language as Locale}
         />
       )}
     </div>

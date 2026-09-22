@@ -88,15 +88,8 @@ describe("HomeAccommodationSection localized CMS copy", () => {
       screen.getByRole("button", { name: /Узнать точную цену/i })
     ).toBeInTheDocument();
 
-    const manager = screen.getByRole("link", {
-      name: /Связаться с менеджером/i,
-    });
-    expect(manager).toHaveAttribute(
-      "href",
-      expect.stringMatching(/^https:\/\/wa\.me\/34604972372\?text=/)
-    );
-    expect(decodeURIComponent(manager.getAttribute("href")!)).toContain(
-      "Пентхаус Puerto de Santiago"
-    );
+    expect(
+      screen.getByRole("button", { name: /Написать менеджеру/i })
+    ).toBeInTheDocument();
   });
 });

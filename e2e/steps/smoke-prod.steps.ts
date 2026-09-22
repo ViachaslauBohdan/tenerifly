@@ -132,13 +132,17 @@ Then(
 Then(
   "the apartment contact-manager WhatsApp link should point to the work number",
   async function (this: CustomWorld) {
-    const link = this.page
-      .getByRole("link", {
-        name: /Связаться с менеджером|Contact manager|Contactar al manager|Skontaktuj się z managerem|Зв'язатися з менеджером|Contacter le manager|Manager kontaktieren/i,
+    const open = this.page
+      .getByRole("button", {
+        name: /Написать менеджеру|Message manager|Escribir al manager|Napisz do managera|Написати менеджеру|Écrire au manager|Manager schreiben/i,
       })
       .first();
-    await link.waitFor({ state: "visible", timeout: 30_000 });
-    const href = await link.getAttribute("href");
+    await open.waitFor({ state: "visible", timeout: 30_000 });
+    await open.click();
+
+    const whatsapp = this.page.getByTestId("apartment-manager-whatsapp");
+    await whatsapp.waitFor({ state: "visible", timeout: 15_000 });
+    const href = await whatsapp.getAttribute("href");
     assert.ok(href, "Missing manager WhatsApp href");
     assert.match(
       href,
@@ -148,6 +152,20 @@ Then(
     assert.ok(
       !href.includes("34613211069") && !href.includes("34656641433"),
       "Retired WhatsApp numbers must not appear in the manager link"
+    );
+
+    const telegram = this.page.getByTestId("apartment-manager-telegram");
+    const tgHref = await telegram.getAttribute("href");
+    assert.ok(tgHref, "Missing manager Telegram href");
+    assert.match(
+      tgHref,
+      /^https:\/\/t\.me\/adamsvts\?text=/,
+      `Expected Telegram deep link, got ${tgHref}`
+    );
+    assert.match(
+      decodeURIComponent(href),
+      /Интересует «.+»\. Подскажите цену и свободные даты/,
+      "WhatsApp prefill should include the listing title and price/dates ask"
     );
   }
 );

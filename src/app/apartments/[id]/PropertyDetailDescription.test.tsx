@@ -1,5 +1,7 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { MantineProvider } from "@mantine/core";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/hooks/useTranslation", () => ({
   useTranslation: () => ({
@@ -45,8 +47,28 @@ vi.mock("@/components/ui/carousel", () => ({
   CarouselPrevious: () => null,
 }));
 
+beforeEach(() => {
+  window.matchMedia = vi.fn().mockReturnValue({
+    matches: false,
+    media: "",
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  });
+  class ResizeObserverMock {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+});
+
 afterEach(() => {
   cleanup();
+  vi.unstubAllGlobals();
 });
 
 describe("PropertyDetailPageClient description localization", () => {
@@ -102,61 +124,70 @@ describe("PropertyDetailPageClient description localization", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows a manager WhatsApp link to the work number with the apartment title", async () => {
+  it("shows a write-to-manager button that opens WhatsApp/Telegram with the title", async () => {
+    const user = userEvent.setup();
     const PropertyDetailPageClient = (
       await import("./PropertyDetailPageClient")
     ).default;
 
     render(
-      <PropertyDetailPageClient
-        property={{
-          id: 1,
-          documentId: "duplex-test",
-          title: "Sunny Duplex in Playa de San Juan",
-          slug: null,
-          description: "Bright apartment.",
-          type: "rent",
-          property_status: "available",
-          featured: false,
-          category: "apartment",
-          createdAt: "",
-          updatedAt: "",
-          publishedAt: "",
-          images: [],
-          price: { amount: 70, currency: "EUR", period: "day" },
-          location: null,
-          features: null,
-          specifications: null,
-          rental_terms: null,
-          contact: {
-            name: "Adam",
-            email: "adam@example.com",
-            phone: "+34613211069",
-            whatsapp: "+34613211069",
-            preferred_contact: "whatsapp",
-          },
-        }}
-      />
+      <MantineProvider>
+        <PropertyDetailPageClient
+          property={{
+            id: 1,
+            documentId: "duplex-test",
+            title: "Sunny Duplex in Playa de San Juan",
+            slug: null,
+            description: "Bright apartment.",
+            type: "rent",
+            property_status: "available",
+            featured: false,
+            category: "apartment",
+            createdAt: "",
+            updatedAt: "",
+            publishedAt: "",
+            images: [],
+            price: { amount: 70, currency: "EUR", period: "day" },
+            location: null,
+            features: null,
+            specifications: null,
+            rental_terms: null,
+            contact: {
+              name: "Adam",
+              email: "adam@example.com",
+              phone: "+34613211069",
+              whatsapp: "+34613211069",
+              preferred_contact: "whatsapp",
+            },
+          }}
+        />
+      </MantineProvider>
     );
 
-    const link = screen.getByRole("link", { name: /Зв'язатися з менеджером/i });
-    expect(link).toHaveAttribute(
-      "href",
-      expect.stringMatching(/^https:\/\/wa\.me\/34604972372\?text=/)
-    );
-    expect(decodeURIComponent(link.getAttribute("href")!)).toContain(
-      "Sunny Duplex in Playa de San Juan"
-    );
-    expect(link.getAttribute("href")).not.toContain("34613211069");
-    expect(
-      screen.queryByRole("link", { name: /^WhatsApp/i })
-    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /Дізнатися точну ціну/i })
     ).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", { name: /Написати менеджеру/i })
+    );
+
+    const whatsapp = await screen.findByTestId("apartment-manager-whatsapp");
+    const telegram = screen.getByTestId("apartment-manager-telegram");
+    expect(whatsapp).toHaveAttribute(
+      "href",
+      expect.stringMatching(/^https:\/\/wa\.me\/34604972372\?text=/)
+    );
+    expect(telegram).toHaveAttribute(
+      "href",
+      expect.stringMatching(/^https:\/\/t\.me\/adamsvts\?text=/)
+    );
+    expect(decodeURIComponent(whatsapp.getAttribute("href")!)).toContain(
+      "Sunny Duplex in Playa de San Juan"
+    );
   });
 
-  it("still shows the manager WhatsApp CTA when listing contact is missing", async () => {
+  it("still shows the manager CTA when listing contact is missing", async () => {
     const PropertyDetailPageClient = (
       await import("./PropertyDetailPageClient")
     ).default;
@@ -188,7 +219,7 @@ describe("PropertyDetailPageClient description localization", () => {
     );
 
     expect(
-      screen.getByRole("link", { name: /Зв'язатися з менеджером/i })
+      screen.getByRole("button", { name: /Написати менеджеру/i })
     ).toBeInTheDocument();
   });
 });
