@@ -75,28 +75,38 @@ export function getPropertyPeriodLabel(
   return PERIOD_LABELS[key]?.[lang] || PERIOD_LABELS[key]?.en || key;
 }
 
-/** e.g. `€70/day` for home tiles and client loaders. */
+/** e.g. `≈ €70/день` for apartment tiles (indicative rent price). */
 export function formatPropertyPriceLabel(options: {
   amount: number;
   currency?: string;
   period?: string | null;
   language: string;
+  approximate?: boolean;
 }): string {
-  const { amount, currency, period, language } = options;
+  const { amount, currency, period, language, approximate = true } = options;
   const prefix = currencyPrefix(currency);
   const label = getPropertyPeriodLabel(period, language);
-  return `${prefix}${amount}/${label}`;
+  const amountPart = `${prefix}${amount}/${label}`;
+  return approximate ? `≈ ${amountPart}` : amountPart;
 }
 
-/** e.g. `EUR 70/day` for booking popup and detail views. */
+/** e.g. `≈ EUR 70/день` for booking popup and detail views. */
 export function formatPropertyPriceWithCurrency(options: {
   amount: number;
   currency: string;
   period?: string | null;
   language: string;
+  approximate?: boolean;
 }): string {
-  const { amount, currency, period, language } = options;
+  const {
+    amount,
+    currency,
+    period,
+    language,
+    approximate = true,
+  } = options;
   const formatted = amount.toLocaleString();
   const label = getPropertyPeriodLabel(period, language);
-  return `${currency} ${formatted}/${label}`;
+  const amountPart = `${currency} ${formatted}/${label}`;
+  return approximate ? `≈ ${amountPart}` : amountPart;
 }

@@ -7,6 +7,8 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { cmsLocale } from "@/types/locale";
 import { apartmentListingTypeLabel } from "./apartmentCardCopy";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
+import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
+import { formatPropertyPriceLabel } from "@/utils/propertyPrice";
 
 interface PropertyData {
   id: number;
@@ -151,6 +153,7 @@ const ApartmentCard = ({
   const [selectedProperty, setSelectedProperty] = useState<PropertyData | null>(
     null
   );
+  const apartmentBooking = getApartmentBookingCopy(language);
 
   // Функция для создания заголовков с авторизацией
   const getAuthHeaders = () => {
@@ -248,15 +251,20 @@ const ApartmentCard = ({
 
   const getPrice = (property: PropertyData) => {
     if (property.price && property.price.amount) {
-      console.log("property.price", property.price);
-      return `${property.price.amount}/${property.price?.period == "month" ? `${translations.perMonth}` : property.price?.period == "day" ? `${translations.perDay}` : translations.perTotal}`;
+      return formatPropertyPriceLabel({
+        amount: property.price.amount,
+        currency: property.price.currency,
+        period: property.price.period,
+        language,
+      });
     }
-    return property.type === "rent" ? 850 : 250000;
+    return property.type === "rent" ? "≈ €850/day" : "€250000";
   };
 
   const getCurrency = (property: PropertyData) => {
-    if (property.price && property.price.currency) {
-      return property.price.currency;
+    // Price label already includes currency symbol when using formatPropertyPriceLabel.
+    if (property.price && property.price.amount) {
+      return "";
     }
     return "EUR";
   };
@@ -658,9 +666,14 @@ const ApartmentCard = ({
                 </span>
                 <div className="text-right">
                   {property.type === "rent" ? (
-                    <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {translations.from} {getCurrency(property)} {getPrice(property)}
-                    </span>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        {translations.from} {getPrice(property)}
+                      </span>
+                      <span className="max-w-[14rem] text-right text-[11px] leading-snug text-gray-500">
+                        {apartmentBooking.priceDisclaimer}
+                      </span>
+                    </div>
                   ) : (
                     <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
                       {getCurrency(property)}
@@ -691,7 +704,7 @@ const ApartmentCard = ({
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                    {translations.bookNow}
+                    {apartmentBooking.checkPrice}
                   </button>
                 )}
               </div>
@@ -708,11 +721,12 @@ const ApartmentCard = ({
           item={{
             name: selectedProperty.title,
             price: selectedProperty.price
-              ? `${getCurrency(selectedProperty)} ${getPrice(selectedProperty)}`
+              ? getPrice(selectedProperty)
               : undefined,
             currency: selectedProperty.price?.currency,
             contactEmail: selectedProperty.contact?.email,
           }}
+          variant="apartment"
           currentLocale={locale}
         />
       )}

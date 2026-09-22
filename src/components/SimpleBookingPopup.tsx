@@ -30,6 +30,7 @@ import {
 } from "@/components/PhoneNumberInput";
 import type { E164Number } from "libphonenumber-js";
 import {gtagReportConversion} from "@/lib/gtag";
+import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 
 const SELECT_COUNTRY_FIRST: Partial<Record<Locale, string>> = {
   en: "Select country first",
@@ -51,6 +52,8 @@ interface SimpleBookingPopupProps {
     contactEmail?: string;
   };
   mode?: "contact" | "booking";
+  /** Apartment rent request flow (indicative price + check-price CTA). */
+  variant?: "default" | "apartment";
   /** Current locale for translations. Defaults to "en" if not provided. */
   currentLocale?: Locale;
 }
@@ -59,7 +62,8 @@ export function SimpleBookingPopup({
   opened,
   onClose,
   item,
-  mode = "booking",
+  mode = "contact",
+  variant = "default",
   currentLocale = "en",
 }: SimpleBookingPopupProps) {
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -460,6 +464,10 @@ export function SimpleBookingPopup({
 
   // Use current locale; fallback to English if locale not in map
   const t = translations[currentLocale] ?? translations.en;
+  const apartmentCopy =
+    variant === "apartment" ? getApartmentBookingCopy(currentLocale) : null;
+  const modalTitle = apartmentCopy?.requestTitle ?? t.title;
+  const modalSuccess = apartmentCopy?.success ?? t.success;
   const isWideDatePicker = useMediaQuery("(min-width: 520px)", false, {
     getInitialValueInEffect: false,
   });
@@ -608,12 +616,23 @@ ${comments ? `Дополнительная информация: ${comments}` : 
       >
         <Group justify="space-between" align="center">
           <Text size="lg" fw={600} c="#1a202c">
-            {t.title}
+            {modalTitle}
           </Text>
           <Button variant="subtle" color="gray" size="sm" onClick={onClose}>
             ✕
           </Button>
         </Group>
+        {apartmentCopy ? (
+          <Text
+            size="xs"
+            c="dimmed"
+            mt={6}
+            style={{ lineHeight: 1.4 }}
+            data-testid="apartment-booking-steps"
+          >
+            {apartmentCopy.steps}
+          </Text>
+        ) : null}
       </Box>
 
       {/* Success state */}
@@ -622,7 +641,7 @@ ${comments ? `Дополнительная информация: ${comments}` : 
           <Stack align="center" gap="md">
             <IconCheck size={48} color="#22c55e" stroke={2.5} />
             <Text size="lg" fw={500} c="#166534" ta="center">
-              {t.success}
+              {modalSuccess}
             </Text>
           </Stack>
         </Box>
@@ -641,12 +660,21 @@ ${comments ? `Дополнительная информация: ${comments}` : 
             data-testid="simple-booking-scroll"
           >
             <Stack gap="sm">
-              <Group gap="xs" mb={4}>
-                <IconMapPin size={16} color="#3182ce" />
-                <Text size="sm" fw={500} c="dimmed">
-                  {item.name}
-                  {item.price ? ` · ${item.price}` : ""}
-                </Text>
+              <Group gap="xs" mb={4} align="flex-start" wrap="nowrap">
+                <IconMapPin size={16} color="#3182ce" style={{ marginTop: 2 }} />
+                <div>
+                  <Text size="sm" fw={500} c="dimmed">
+                    {item.name}
+                    {item.price
+                      ? ` · ${item.price.startsWith("≈") ? item.price : `≈ ${item.price}`}`
+                      : ""}
+                  </Text>
+                  {apartmentCopy && item.price ? (
+                    <Text size="xs" c="dimmed" mt={4} style={{ lineHeight: 1.35 }}>
+                      {apartmentCopy.priceDisclaimer}
+                    </Text>
+                  ) : null}
+                </div>
               </Group>
               <TextInput
                 label={t.fullName}

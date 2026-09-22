@@ -28,6 +28,7 @@ describe("useBookingModal", () => {
 
     expect(preloadSimpleBookingPopup).toHaveBeenCalledTimes(2);
     expect(result.current.isOpen).toBe(true);
+    expect(result.current.bookingType).toBe("accommodation");
     expect(result.current.bookingItem).toEqual({
       title: "Villa Azul",
       price: "€120",
@@ -44,5 +45,6 @@ describe("useBookingModal", () => {
 
     expect(result.current.isOpen).toBe(false);
     expect(result.current.bookingItem).toBeNull();
+    expect(result.current.bookingType).toBeNull();
   });
 });

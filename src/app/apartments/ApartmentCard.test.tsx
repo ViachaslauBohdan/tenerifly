@@ -87,8 +87,10 @@ describe("ApartmentCard localized copy", () => {
         /Dream Homes Tenerife przedstawia nowo wyremontowany apartament/
       )
     ).toBeInTheDocument();
-    expect(screen.getByText(/Od EUR 70\/dzień/)).toBeInTheDocument();
+    expect(screen.getByText(/Od ≈ €70\/dzień/)).toBeInTheDocument();
     expect(screen.queryByText(/FROM/)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Poznaj dokładną cenę/i })).toBeInTheDocument();
+    expect(screen.getByText(/Cena orientacyjna/i)).toBeInTheDocument();
   });
 
   it("shows Polish sale label", async () => {

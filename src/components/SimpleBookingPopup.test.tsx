@@ -35,14 +35,15 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function renderPopup() {
+function renderPopup(variant: "default" | "apartment" = "apartment") {
   return render(
     <MantineProvider>
       <SimpleBookingPopup
         opened
         onClose={vi.fn()}
-        item={{ name: "Hostel Los Cristianos", price: "€70/день" }}
+        item={{ name: "Hostel Los Cristianos", price: "≈ €70/день" }}
         mode="contact"
+        variant={variant}
         currentLocale="ru"
       />
     </MantineProvider>
@@ -53,7 +54,7 @@ describe("SimpleBookingPopup mobile layout", () => {
   it("keeps the send action outside the scroll area so it stays reachable", () => {
     renderPopup();
 
-    expect(screen.getByText(/Предварительное бронирование/i)).toBeInTheDocument();
+    expect(screen.getByText(/Запрос на бронирование/i)).toBeInTheDocument();
 
     const scroll = screen.getByTestId("simple-booking-scroll");
     const actions = screen.getByTestId("simple-booking-actions");
@@ -64,8 +65,14 @@ describe("SimpleBookingPopup mobile layout", () => {
     expect(scroll).toHaveStyle({ overflowY: "auto" });
   });
 
-  it("shows a localized country-first phone placeholder", () => {
-    renderPopup();
+  it("shows apartment request steps, disclaimer, and localized country-first phone placeholder", () => {
+    renderPopup("apartment");
+    expect(screen.getByTestId("apartment-booking-steps")).toHaveTextContent(
+      /Вы отправляете запрос/
+    );
+    expect(
+      screen.getByText(/Ориентировочная цена/i)
+    ).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText(/Сначала выберите страну/i)
     ).toBeInTheDocument();

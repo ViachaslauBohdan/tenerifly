@@ -6,7 +6,8 @@ import { HomeCardImage } from "@/components/HomeCardImage";
 import { HomeEmptyState } from "@/components/home/HomeEmptyState";
 import { TilePriceBadge } from "@/components/TilePriceBadge";
 import { ViewAllLink } from "@/components/ViewAllLink";
-import type { BookingItem, HomeProperty } from "@/components/home/types";
+import type { BookingItem, HomeProperty, LanguageCode } from "@/components/home/types";
+import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import translationsJson from "@/i18n/main.json";
 
 type AccommodationCopy = (typeof translationsJson)["en"]["sections"]["accommodation"];
@@ -17,6 +18,7 @@ type HomeAccommodationSectionProps = {
   dataLoading: boolean;
   copy: AccommodationCopy;
   common: CommonCopy;
+  language: LanguageCode;
   apartmentsHref: string;
   createLocaleLink: (path: string) => string;
   onBook: (item: BookingItem) => void;
@@ -27,12 +29,14 @@ export function HomeAccommodationSection({
   dataLoading,
   copy,
   common,
+  language,
   apartmentsHref,
   createLocaleLink,
   onBook,
 }: HomeAccommodationSectionProps) {
   const router = useRouter();
   const previewItems = items.slice(0, 3);
+  const apartmentBooking = getApartmentBookingCopy(language);
 
   return (
     <section
@@ -134,10 +138,19 @@ export function HomeAccommodationSection({
                       <div className="flex flex-wrap items-center gap-2 text-sm">
                         <TilePriceBadge>
                           <span className="text-sm font-semibold tabular-nums text-yellow-900">
-                            {place.price}
+                            {place.price?.startsWith("≈")
+                              ? place.price
+                              : place.price
+                                ? `≈ ${place.price}`
+                                : place.price}
                           </span>
                         </TilePriceBadge>
                       </div>
+                      {place.price ? (
+                        <p className="text-xs leading-snug text-gray-500">
+                          {apartmentBooking.priceDisclaimer}
+                        </p>
+                      ) : null}
                     </div>
                     <div className="flex gap-3">
                       <button
@@ -156,7 +169,7 @@ export function HomeAccommodationSection({
                         }
                         className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
-                        {common.bookNow}
+                        {apartmentBooking.checkPrice}
                       </button>
                     </div>
                   </div>

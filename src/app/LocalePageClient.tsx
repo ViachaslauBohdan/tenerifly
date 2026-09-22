@@ -55,7 +55,7 @@ export function LocalePageClient({
     handleSearch,
   } = useHeroSearch({ createLocaleLink });
 
-  const { isOpen, bookingItem, openBookingModal, closeBookingModal } =
+  const { isOpen, bookingItem, bookingType, openBookingModal, closeBookingModal } =
     useBookingModal();
 
   const t = pickLocaleBundle(translationsJson, language);
@@ -139,6 +139,7 @@ export function LocalePageClient({
         dataLoading={dataLoading}
         copy={t.sections.accommodation}
         common={t.common}
+        language={language}
         apartmentsHref={createLocaleLink("/apartments")}
         createLocaleLink={createLocaleLink}
         onBook={(item) => openBookingModal("accommodation", item)}
@@ -200,6 +201,7 @@ export function LocalePageClient({
             contactEmail: bookingItem.contact?.email,
           }}
           mode="contact"
+          variant={bookingType === "accommodation" ? "apartment" : "default"}
           currentLocale={locale as Locale}
         />
       )}

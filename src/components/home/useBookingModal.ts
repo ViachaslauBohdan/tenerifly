@@ -13,13 +13,15 @@ export type BookingItemType =
 export function useBookingModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [bookingItem, setBookingItem] = useState<BookingItem | null>(null);
+  const [bookingType, setBookingType] = useState<BookingItemType | null>(null);
 
   useEffect(() => {
     preloadSimpleBookingPopup();
   }, []);
 
-  const openBookingModal = (_type: BookingItemType, item: BookingItem) => {
+  const openBookingModal = (type: BookingItemType, item: BookingItem) => {
     preloadSimpleBookingPopup();
+    setBookingType(type);
     setBookingItem(item);
     setIsOpen(true);
   };
@@ -27,11 +29,13 @@ export function useBookingModal() {
   const closeBookingModal = () => {
     setIsOpen(false);
     setBookingItem(null);
+    setBookingType(null);
   };
 
   return {
     isOpen,
     bookingItem,
+    bookingType,
     openBookingModal,
     closeBookingModal,
   };

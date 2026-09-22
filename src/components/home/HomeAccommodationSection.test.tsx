@@ -36,6 +36,7 @@ describe("HomeAccommodationSection localized CMS copy", () => {
         dataLoading={false}
         copy={pl.sections.accommodation}
         common={pl.common}
+        language="pl"
         apartmentsHref="/pl/apartments"
         createLocaleLink={(path) => `/pl${path}`}
         onBook={vi.fn()}
@@ -48,6 +49,11 @@ describe("HomeAccommodationSection localized CMS copy", () => {
       })
     ).toBeInTheDocument();
     expect(screen.getByText("Polski opis apartamentu")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Poznaj dokładną cenę/i })).toBeInTheDocument();
+    expect(screen.getByText(/≈ 70 EUR/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Cena orientacyjna/i)
+    ).toBeInTheDocument();
     expect(
       screen.queryByText("Fantastic View Los Gigantes Apartment")
     ).not.toBeInTheDocument();

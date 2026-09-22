@@ -19,6 +19,7 @@ import {
   formatPropertyPriceWithCurrency,
   getPropertyPeriodLabel,
 } from "@/utils/propertyPrice";
+import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import { whatsappHref } from "@/lib/siteContact";
 
 interface PropertyData {
@@ -666,12 +667,15 @@ export default function PropertyDetailPage({
               {property.price && (
                 <div className="mb-6">
                   <div className="text-3xl font-bold text-gray-900 mb-1">
-                    {property.price.currency}{" "}
+                    ≈ {property.price.currency}{" "}
                     {property.price.amount.toLocaleString()}
                   </div>
                   <div className="text-sm text-gray-600">
                     / {getPropertyPeriodLabel(property.price.period, locale)}
                   </div>
+                  <p className="mt-2 text-xs leading-snug text-gray-500">
+                    {getApartmentBookingCopy(locale).priceDisclaimer}
+                  </p>
                 </div>
               )}
 
@@ -856,7 +860,7 @@ export default function PropertyDetailPage({
                   onClick={handleOpenBookingModal}
                   className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                 >
-                  {t.bookNow}
+                  {getApartmentBookingCopy(locale).checkPrice}
                 </button>
               )}
             </div>
@@ -880,6 +884,7 @@ export default function PropertyDetailPage({
               currency: property.price?.currency,
               contactEmail: property.contact?.email,
             }}
+            variant="apartment"
             currentLocale={locale}
           />
         )}

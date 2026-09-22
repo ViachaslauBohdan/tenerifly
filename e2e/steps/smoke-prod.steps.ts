@@ -45,7 +45,9 @@ Given(
       `Apartment detail failed (${response.status()})`
     );
     await this.page
-      .getByRole("button", { name: /Забронировать|Book|Reservar/i })
+      .getByRole("button", {
+        name: /Узнать точную цену|Get exact price|Saber el precio exacto|Poznaj dokładną cenę|Проверить цену|Check price|Consultar precio|Sprawdź cenę|Забронировать|Book|Reservar/i,
+      })
       .first()
       .waitFor({ state: "visible", timeout: 60_000 });
   }
@@ -55,7 +57,9 @@ When(
   "I open the apartment pre-booking modal",
   async function (this: CustomWorld) {
     const book = this.page
-      .getByRole("button", { name: /Забронировать|Book|Reservar/i })
+      .getByRole("button", {
+        name: /Узнать точную цену|Get exact price|Saber el precio exacto|Poznaj dokładną cenę|Проверить цену|Check price|Consultar precio|Sprawdź cenę|Забронировать|Book|Reservar/i,
+      })
       .first();
     await book.scrollIntoViewIfNeeded();
     await book.click();
