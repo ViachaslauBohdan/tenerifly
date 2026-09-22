@@ -31,6 +31,8 @@ export interface PhoneNumberInputProps {
   onChange: (value: E164Number | undefined) => void;
   error?: string;
   placeholder?: string;
+  /** Shown on the number field until a country is chosen. */
+  emptyCountryPlaceholder?: string;
   styles?: InputStyles;
 }
 
@@ -79,6 +81,7 @@ export function PhoneNumberInput({
   onChange,
   error,
   placeholder,
+  emptyCountryPlaceholder = "Select country first",
   styles: labelStyles,
 }: PhoneNumberInputProps) {
   const [national, setNational] = useState("");
@@ -192,7 +195,7 @@ export function PhoneNumberInput({
           inputMode="tel"
           autoComplete="tel-national"
           placeholder={
-            country ? placeholder ?? "612 345 678" : "Select country first"
+            country ? placeholder ?? "612 345 678" : emptyCountryPlaceholder
           }
           value={national}
           onChange={(e) => handleNationalChange(e.target.value)}

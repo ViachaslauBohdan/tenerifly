@@ -14,6 +14,7 @@ import {
 } from "@mantine/core";
 import { DatePickerInput, DatesProvider } from "@mantine/dates";
 import type { DatesRangeValue } from "@mantine/dates";
+import { useMediaQuery } from "@mantine/hooks";
 import {
   IconSend,
   IconCalendar,
@@ -29,6 +30,16 @@ import {
 } from "@/components/PhoneNumberInput";
 import type { E164Number } from "libphonenumber-js";
 import {gtagReportConversion} from "@/lib/gtag";
+
+const SELECT_COUNTRY_FIRST: Partial<Record<Locale, string>> = {
+  en: "Select country first",
+  ru: "Сначала выберите страну",
+  ua: "Спочатку оберіть країну",
+  pl: "Najpierw wybierz kraj",
+  fr: "Choisissez d'abord le pays",
+  de: "Zuerst Land wählen",
+  es: "Seleccione el país primero",
+};
 
 interface SimpleBookingPopupProps {
   opened: boolean;
@@ -449,6 +460,11 @@ export function SimpleBookingPopup({
 
   // Use current locale; fallback to English if locale not in map
   const t = translations[currentLocale] ?? translations.en;
+  const isWideDatePicker = useMediaQuery("(min-width: 520px)", false, {
+    getInitialValueInEffect: false,
+  });
+  const selectCountryFirst =
+    SELECT_COUNTRY_FIRST[currentLocale] ?? SELECT_COUNTRY_FIRST.en!;
 
   const handleSend = async () => {
     if (!isFormValid) return;
@@ -559,18 +575,37 @@ ${comments ? `Дополнительная информация: ${comments}` : 
       size="md"
       centered
       withCloseButton={false}
+      zIndex={1100}
       styles={{
-        body: { padding: 0 },
+        body: {
+          padding: 0,
+          display: "flex",
+          flexDirection: "column",
+          maxHeight: "min(90dvh, 920px)",
+          overflow: "hidden",
+        },
         content: {
           maxWidth: "min(520px, 95vw)",
+          maxHeight: "min(90dvh, 920px)",
           borderRadius: "12px",
           overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
           boxShadow: "0 20px 40px -10px rgba(0, 0, 0, 0.15)",
           border: "1px solid #e2e8f0",
         },
+        inner: {
+          padding: "max(0.75rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left))",
+          alignItems: "center",
+        },
       }}
     >
-      <Box px="md" pt="md" pb="xs">
+      <Box
+        px="md"
+        pt="md"
+        pb="xs"
+        style={{ flexShrink: 0, borderBottom: "1px solid #edf2f7" }}
+      >
         <Group justify="space-between" align="center">
           <Text size="lg" fw={600} c="#1a202c">
             {t.title}
@@ -592,99 +627,125 @@ ${comments ? `Дополнительная информация: ${comments}` : 
           </Stack>
         </Box>
       ) : (
-        <Box px="md" pb="md">
-          <Stack gap="sm">
-            <Group gap="xs" mb={4}>
-              <IconMapPin size={16} color="#3182ce" />
-              <Text size="sm" fw={500} c="dimmed">
-                {item.name}
-                {item.price ? ` · ${item.price}` : ""}
-              </Text>
-            </Group>
-            <TextInput
-              label={t.fullName}
-              placeholder={t.fullName}
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              required
-              withAsterisk
-              styles={inputStyles}
-            />
-            <PhoneNumberInput
-              label={t.phone}
-              required
-              country={phoneCountry}
-              value={phone}
-              onCountryChange={setPhoneCountry}
-              onChange={setPhone}
-              placeholder="612 345 678"
-              error={
-                (phone || phoneCountry) && !phoneIsValid
-                  ? t.phoneError
-                  : undefined
-              }
-              styles={inputStyles}
-            />
-            <TextInput
-              label={t.email}
-              placeholder={t.email}
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              withAsterisk
-              error={email && !isValidEmail(email) ? t.emailError : undefined}
-              styles={inputStyles}
-            />
-            <DatesProvider
-              settings={{
-                locale: dayjsLocale(currentLocale),
-                firstDayOfWeek: 1,
-                weekendDays: [0, 6],
-              }}
-            >
-              <DatePickerInput
-                type="range"
-                label={t.selectDates}
-                placeholder={t.rentPeriodPlaceholder}
-                value={[startDate, endDate]}
-                onChange={(range: DatesRangeValue) => {
-                  const [start, end] = range ?? [null, null];
-                  setStartDate(start);
-                  setEndDate(end);
-                }}
-                leftSection={<IconCalendar size={16} />}
-                clearable
-                allowSingleDateInRange
-                numberOfColumns={2}
-                valueFormat={getDateValueFormat(currentLocale)}
-                minDate={new Date()}
-                maxDate={
-                  new Date(new Date().getFullYear() + 1, 11, 31)
-                }
-                popoverProps={{ withinPortal: true, zIndex: 400 }}
+        <>
+          <Box
+            px="md"
+            pt="sm"
+            pb="md"
+            style={{
+              flex: 1,
+              minHeight: 0,
+              overflowY: "auto",
+              WebkitOverflowScrolling: "touch",
+            }}
+            data-testid="simple-booking-scroll"
+          >
+            <Stack gap="sm">
+              <Group gap="xs" mb={4}>
+                <IconMapPin size={16} color="#3182ce" />
+                <Text size="sm" fw={500} c="dimmed">
+                  {item.name}
+                  {item.price ? ` · ${item.price}` : ""}
+                </Text>
+              </Group>
+              <TextInput
+                label={t.fullName}
+                placeholder={t.fullName}
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                withAsterisk
                 styles={inputStyles}
               />
-            </DatesProvider>
-            <Textarea
-              label={t.comments}
-              placeholder={t.commentsPlaceholder}
-              value={comments}
-              onChange={(e) => setComments(e.target.value)}
-              minRows={2}
-              maxRows={3}
-              autosize
-              styles={{
-                ...inputStyles,
-                input: { ...inputStyles.input, resize: "none" },
-              }}
-            />
-            {sendError && (
-              <Alert color="red" variant="light">
-                {sendError}
-              </Alert>
-            )}
-            <Group justify="space-between" mt="md">
+              <PhoneNumberInput
+                label={t.phone}
+                required
+                country={phoneCountry}
+                value={phone}
+                onCountryChange={setPhoneCountry}
+                onChange={setPhone}
+                placeholder="612 345 678"
+                emptyCountryPlaceholder={selectCountryFirst}
+                error={
+                  (phone || phoneCountry) && !phoneIsValid
+                    ? t.phoneError
+                    : undefined
+                }
+                styles={inputStyles}
+              />
+              <TextInput
+                label={t.email}
+                placeholder={t.email}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                withAsterisk
+                error={email && !isValidEmail(email) ? t.emailError : undefined}
+                styles={inputStyles}
+              />
+              <DatesProvider
+                settings={{
+                  locale: dayjsLocale(currentLocale),
+                  firstDayOfWeek: 1,
+                  weekendDays: [0, 6],
+                }}
+              >
+                <DatePickerInput
+                  type="range"
+                  label={t.selectDates}
+                  placeholder={t.rentPeriodPlaceholder}
+                  value={[startDate, endDate]}
+                  onChange={(range: DatesRangeValue) => {
+                    const [start, end] = range ?? [null, null];
+                    setStartDate(start);
+                    setEndDate(end);
+                  }}
+                  leftSection={<IconCalendar size={16} />}
+                  clearable
+                  allowSingleDateInRange
+                  numberOfColumns={isWideDatePicker ? 2 : 1}
+                  valueFormat={getDateValueFormat(currentLocale)}
+                  minDate={new Date()}
+                  maxDate={
+                    new Date(new Date().getFullYear() + 1, 11, 31)
+                  }
+                  popoverProps={{ withinPortal: true, zIndex: 1200 }}
+                  styles={inputStyles}
+                />
+              </DatesProvider>
+              <Textarea
+                label={t.comments}
+                placeholder={t.commentsPlaceholder}
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+                minRows={2}
+                maxRows={3}
+                autosize
+                styles={{
+                  ...inputStyles,
+                  input: { ...inputStyles.input, resize: "none" },
+                }}
+              />
+              {sendError && (
+                <Alert color="red" variant="light">
+                  {sendError}
+                </Alert>
+              )}
+            </Stack>
+          </Box>
+          <Box
+            px="md"
+            py="sm"
+            style={{
+              flexShrink: 0,
+              borderTop: "1px solid #edf2f7",
+              background: "#fff",
+              paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
+            }}
+            data-testid="simple-booking-actions"
+          >
+            <Group justify="space-between">
               <Button variant="subtle" color="gray" onClick={onClose}>
                 {t.close}
               </Button>
@@ -699,8 +760,8 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                 {t.send}
               </Button>
             </Group>
-          </Stack>
-        </Box>
+          </Box>
+        </>
       )}
     </Modal>
   );
