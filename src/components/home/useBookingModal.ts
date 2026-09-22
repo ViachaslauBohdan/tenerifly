@@ -8,7 +8,8 @@ export type BookingItemType =
   | "excursion"
   | "car"
   | "accommodation"
-  | "transfer";
+  | "transfer"
+  | "package";
 
 export function useBookingModal() {
   const [isOpen, setIsOpen] = useState(false);

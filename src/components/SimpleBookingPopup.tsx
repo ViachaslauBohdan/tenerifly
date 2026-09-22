@@ -31,6 +31,7 @@ import {
 import type { E164Number } from "libphonenumber-js";
 import {gtagReportConversion} from "@/lib/gtag";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
+import { getAuthorTourBundle } from "@/lib/authorTours";
 
 const SELECT_COUNTRY_FIRST: Partial<Record<Locale, string>> = {
   en: "Select country first",
@@ -52,8 +53,8 @@ interface SimpleBookingPopupProps {
     contactEmail?: string;
   };
   mode?: "contact" | "booking";
-  /** Apartment or car rent request (indicative price + check-price CTA). */
-  variant?: "default" | "apartment" | "car";
+  /** Apartment, car, or packaged author-tour request. */
+  variant?: "default" | "apartment" | "car" | "package";
   /** Current locale for translations. Defaults to "en" if not provided. */
   currentLocale?: Locale;
 }
@@ -465,8 +466,12 @@ export function SimpleBookingPopup({
   // Use current locale; fallback to English if locale not in map
   const t = translations[currentLocale] ?? translations.en;
   const apartmentCopy =
-    variant === "apartment" || variant === "car"
+    variant === "apartment" || variant === "car" || variant === "package"
       ? getApartmentBookingCopy(currentLocale)
+      : null;
+  const packageNote =
+    variant === "package"
+      ? getAuthorTourBundle(currentLocale).ui.priceNote
       : null;
   const modalTitle = apartmentCopy?.requestTitle ?? t.title;
   const modalSuccess = apartmentCopy?.success ?? t.success;
@@ -668,10 +673,18 @@ ${comments ? `Дополнительная информация: ${comments}` : 
                   <Text size="sm" fw={500} c="dimmed">
                     {item.name}
                     {item.price
-                      ? ` · ${item.price.startsWith("≈") ? item.price : `≈ ${item.price}`}`
+                      ? ` · ${
+                          variant === "package" || item.price.startsWith("≈")
+                            ? item.price
+                            : `≈ ${item.price}`
+                        }`
                       : ""}
                   </Text>
-                  {apartmentCopy && item.price ? (
+                  {packageNote ? (
+                    <Text size="xs" c="dimmed" mt={4} style={{ lineHeight: 1.35 }}>
+                      {packageNote}
+                    </Text>
+                  ) : apartmentCopy && item.price ? (
                     <Text size="xs" c="dimmed" mt={4} style={{ lineHeight: 1.35 }}>
                       {apartmentCopy.priceDisclaimer}
                     </Text>

@@ -49,6 +49,17 @@ const headerNavTransfers: Record<string, string> = {
   es: "Traslados",
 };
 
+const headerNavAuthorTours: Record<string, string> = {
+  en: "Author tours",
+  ru: "Авторские туры",
+  pl: "Wycieczki autorskie",
+  fr: "Circuits auteur",
+  uk: "Авторські тури",
+  ua: "Авторські тури",
+  de: "Autorentouren",
+  es: "Tours de autor",
+};
+
 const headerAnchorClass =
   "touch-manipulation whitespace-nowrap rounded-lg px-2 py-1.5 text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white lg:px-2.5";
 
@@ -246,6 +257,9 @@ export function SiteHeader({
       <a {...navLinkProps("excursions")} className={linkClass}>
         {tabLabels.excursions}
       </a>
+      <a {...navLinkProps("author-tours")} className={linkClass}>
+        {pickLocaleBundle(headerNavAuthorTours, language)}
+      </a>
       {BLOG_ENABLED ? (
         <a {...navLinkProps("blog")} className={linkClass}>
           {tabLabels.blog}
@@ -302,6 +316,9 @@ export function SiteHeader({
       )}
       <a {...navLinkPropsMobile("excursions")} className={mobileNavLinkClass}>
         {tabLabels.excursions}
+      </a>
+      <a {...navLinkPropsMobile("author-tours")} className={mobileNavLinkClass}>
+        {pickLocaleBundle(headerNavAuthorTours, language)}
       </a>
       {BLOG_ENABLED ? (
         <a {...navLinkPropsMobile("blog")} className={mobileNavLinkClass}>

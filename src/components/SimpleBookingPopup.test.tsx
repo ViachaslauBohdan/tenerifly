@@ -85,4 +85,25 @@ describe("SimpleBookingPopup mobile layout", () => {
     );
     expect(screen.getByText(/Запрос на бронирование/i)).toBeInTheDocument();
   });
+
+  it("shows a packaged tour price without the approximate prefix", () => {
+    render(
+      <MantineProvider>
+        <SimpleBookingPopup
+          opened
+          onClose={vi.fn()}
+          item={{ name: "Авторский тур на Тенерифе — 8 дней", price: "700 € с человека" }}
+          mode="contact"
+          variant="package"
+          currentLocale="ru"
+        />
+      </MantineProvider>
+    );
+    expect(screen.getByText(/700 € с человека/)).toBeInTheDocument();
+    expect(screen.queryByText(/≈/)).not.toBeInTheDocument();
+    expect(screen.getByText(/Авиаперелёт и питание/i)).toBeInTheDocument();
+    expect(screen.getByTestId("apartment-booking-steps")).toHaveTextContent(
+      /Вы отправляете запрос/
+    );
+  });
 });

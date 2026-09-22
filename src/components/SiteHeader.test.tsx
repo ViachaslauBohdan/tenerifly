@@ -82,6 +82,30 @@ describe("SiteHeader navigation", () => {
     expect(onScrollToSection).toHaveBeenCalledWith("excursions");
   });
 
+  it("links author tours to the home section", async () => {
+    const user = userEvent.setup();
+    const onScrollToSection = vi.fn(
+      () => (e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.preventDefault();
+      }
+    );
+
+    render(
+      <SiteHeader
+        {...headerProps}
+        variant="home"
+        onScrollToSection={onScrollToSection}
+      />
+    );
+
+    const links = screen.getAllByRole("link", { name: "Author tours" });
+    expect(links.some((link) => link.getAttribute("href") === "#author-tours")).toBe(
+      true
+    );
+    await user.click(links[0]);
+    expect(onScrollToSection).toHaveBeenCalledWith("author-tours");
+  });
+
   it("points section links at the locale home hash on standalone pages", () => {
     render(<SiteHeader {...headerProps} variant="standalone" />);
 

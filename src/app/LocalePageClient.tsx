@@ -10,6 +10,7 @@ import { HomeAccommodationSection } from "@/components/home/HomeAccommodationSec
 import { HomeCarsSection } from "@/components/home/HomeCarsSection";
 import { HomeTransfersSection } from "@/components/home/HomeTransfersSection";
 import { HomeExcursionsSection } from "@/components/home/HomeExcursionsSection";
+import { HomeAuthorToursSection } from "@/components/home/HomeAuthorToursSection";
 import { HomeBlogSection } from "@/components/home/HomeBlogSection";
 import { BLOG_ENABLED } from "@/lib/siteFeatures";
 import { HomeFaqSection } from "@/components/home/HomeFaqSection";
@@ -170,6 +171,11 @@ export function LocalePageClient({
         toursHref={createLocaleLink("/tours")}
       />
 
+      <HomeAuthorToursSection
+        language={language}
+        onBook={(item) => openBookingModal("package", item)}
+      />
+
       {BLOG_ENABLED ? (
         <HomeBlogSection
           items={blogPosts}
@@ -202,11 +208,13 @@ export function LocalePageClient({
           }}
           mode="contact"
           variant={
-            bookingType === "car"
-              ? "car"
-              : bookingType === "accommodation"
-                ? "apartment"
-                : "default"
+            bookingType === "package"
+              ? "package"
+              : bookingType === "car"
+                ? "car"
+                : bookingType === "accommodation"
+                  ? "apartment"
+                  : "default"
           }
           currentLocale={locale as Locale}
         />
