@@ -5,7 +5,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
+import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import { carTransmissionLabel } from "@/lib/carSpecLabels";
+import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
+import { IconBrandTelegram, IconBrandWhatsapp } from "@tabler/icons-react";
 
 interface CarData {
   id: number;
@@ -104,7 +107,10 @@ const CarCard = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isManagerContactOpen, setIsManagerContactOpen] = useState(false);
+  const [managerCarTitle, setManagerCarTitle] = useState("");
   const [selectedCar, setSelectedCar] = useState<CarData | null>(null);
+  const requestCopy = getApartmentBookingCopy(language);
 
   // Функция для создания заголовков с авторизацией
   const getAuthHeaders = () => {
@@ -193,25 +199,25 @@ const CarCard = ({
     return "/placeholder.svg?height=200&width=300";
   };
 
-  const getPrice = (car: CarData) => {
-    if (car.rental_prices && car.rental_prices.day_1) {
-      return car.rental_prices.day_1;
-    }
-    return 45;
-  };
-
-  const getCurrency = (car: CarData) => {
-    if (car.rental_prices && car.rental_prices.currency) {
-      return car.rental_prices.currency;
-    }
-    return "EUR";
-  };
-
-  const getLocalizedCurrency = (car: CarData) => {
-    const currency = getCurrency(car);
-    const currencyMap =
-      (translations as { currency?: Record<string, string> }).currency || {};
-    return currencyMap[currency] || currency;
+  const formatDailyRent = (car: CarData): string | null => {
+    const raw = car.rental_prices?.day_1;
+    const amount = typeof raw === "number" ? raw : Number(raw);
+    if (!Number.isFinite(amount) || amount <= 0) return null;
+    const code = car.rental_prices?.currency || "EUR";
+    const symbol =
+      ({ EUR: "€", USD: "$", GBP: "£" } as Record<string, string>)[code] ||
+      code;
+    const perDay: Record<string, string> = {
+      en: "/day",
+      ru: "/день",
+      ua: "/день",
+      uk: "/день",
+      pl: "/dzień",
+      de: "/Tag",
+      es: "/día",
+      fr: "/jour",
+    };
+    return `${symbol}${amount}${perDay[language] || perDay.en}`;
   };
 
   const getLocation = (car: CarData) => {
@@ -632,40 +638,40 @@ const CarCard = ({
                 >
                   {getStatusText(car.car_status)}
                 </span>
-                {car.type === "rent" && (
+                {car.type === "rent" && formatDailyRent(car) && (
                   <div className="text-right">
                     <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {translations.priceFrom} {getLocalizedCurrency(car)}{" "}
-                      {getPrice(car)}
-                      {translations.pricePerDay}
+                      {formatDailyRent(car)}
                     </span>
                   </div>
                 )}
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3">
+              <div className="flex flex-col gap-2">
                 {(car.car_status === "available" ||
                   car.car_status === "reserved") && (
-                  <button
-                    onClick={() => handleOpenBookingModal(car)}
-                    className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center"
-                  >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleOpenBookingModal(car)}
+                      className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                    {translations.bookNow}
-                  </button>
+                      {requestCopy.checkPrice}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setManagerCarTitle(car.title);
+                        setIsManagerContactOpen(true);
+                      }}
+                      className="w-full px-4 py-2 bg-[#25D366] text-white rounded-md hover:bg-[#1ebe57] focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-colors inline-flex items-center justify-center gap-2"
+                    >
+                      <IconBrandWhatsapp className="h-4 w-4 shrink-0" stroke={2} />
+                      <IconBrandTelegram className="h-4 w-4 shrink-0" stroke={2} />
+                      {requestCopy.contactManager}
+                    </button>
+                  </>
                 )}
               </div>
             </div>
@@ -680,12 +686,20 @@ const CarCard = ({
           onClose={handleCloseBookingModal}
           item={{
             name: selectedCar.title,
-            price: selectedCar.rental_prices
-              ? `${getLocalizedCurrency(selectedCar)} ${getPrice(selectedCar)}/day`
-              : undefined,
+            price: formatDailyRent(selectedCar) ?? undefined,
             contactEmail: selectedCar.contact?.email,
           }}
+          variant="car"
           currentLocale={locale}
+        />
+      )}
+
+      {isManagerContactOpen && (
+        <ApartmentManagerContactPopup
+          opened={isManagerContactOpen}
+          onClose={() => setIsManagerContactOpen(false)}
+          propertyTitle={managerCarTitle}
+          locale={language}
         />
       )}
     </div>

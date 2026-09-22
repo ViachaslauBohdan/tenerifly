@@ -55,6 +55,36 @@ describe("HomeCarsSection transmission locale", () => {
 
     expect(screen.getAllByText(/Automatyczna/).length).toBeGreaterThanOrEqual(1);
     expect(screen.queryByText(/^automatic$/i)).not.toBeInTheDocument();
+    expect(screen.getByText("120")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Poznaj dokładną cenę/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Napisz do managera/i })
+    ).toBeInTheDocument();
+  });
+
+  it("hides the price when the daily rate is zero", () => {
+    render(
+      <HomeCarsSection
+        items={[
+          {
+            ...automaticCar,
+            rental_prices: { day_1: 0, currency: "EUR" },
+          },
+        ]}
+        dataLoading={false}
+        language="pl"
+        copy={pl.sections.cars}
+        common={pl.common}
+        carsHref="/pl/cars"
+        createLocaleLink={(path) => `/pl${path}`}
+        onBook={vi.fn()}
+      />
+    );
+
+    expect(screen.queryByText("120")).not.toBeInTheDocument();
+    expect(screen.queryByText("/dzień")).not.toBeInTheDocument();
   });
 
   it("shows Ukrainian Автомат for ua", () => {

@@ -13,7 +13,9 @@ export function getHomeCarCurrency(
   currencyMap: CarsCurrencyMap = {}
 ): string {
   const currency = car.rental_prices?.currency || "€";
-  return currencyMap[currency] || currency;
+  if (currencyMap[currency]) return currencyMap[currency];
+  const symbols: Record<string, string> = { EUR: "€", USD: "$", GBP: "£" };
+  return symbols[currency] || currency;
 }
 
 export function getHomeCarFeatures(car: HomeCar, locale = "en"): string {

@@ -35,7 +35,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function renderPopup(variant: "default" | "apartment" = "apartment") {
+function renderPopup(variant: "default" | "apartment" | "car" = "apartment") {
   return render(
     <MantineProvider>
       <SimpleBookingPopup
@@ -76,5 +76,13 @@ describe("SimpleBookingPopup mobile layout", () => {
     expect(
       screen.getByPlaceholderText(/Сначала выберите страну/i)
     ).toBeInTheDocument();
+  });
+
+  it("shows the same request steps for a car enquiry", () => {
+    renderPopup("car");
+    expect(screen.getByTestId("apartment-booking-steps")).toHaveTextContent(
+      /Вы отправляете запрос/
+    );
+    expect(screen.getByText(/Запрос на бронирование/i)).toBeInTheDocument();
   });
 });

@@ -38,6 +38,10 @@ describe("homeCars helpers", () => {
     expect(getHomeCarCurrency(baseCar, { EUR: "€" })).toBe("€");
   });
 
+  it("turns a bare EUR code into €", () => {
+    expect(getHomeCarCurrency(baseCar)).toBe("€");
+  });
+
   it("defaults currency to €", () => {
     expect(getHomeCarCurrency({ title: "X" })).toBe("€");
   });

@@ -52,8 +52,8 @@ interface SimpleBookingPopupProps {
     contactEmail?: string;
   };
   mode?: "contact" | "booking";
-  /** Apartment rent request flow (indicative price + check-price CTA). */
-  variant?: "default" | "apartment";
+  /** Apartment or car rent request (indicative price + check-price CTA). */
+  variant?: "default" | "apartment" | "car";
   /** Current locale for translations. Defaults to "en" if not provided. */
   currentLocale?: Locale;
 }
@@ -465,7 +465,9 @@ export function SimpleBookingPopup({
   // Use current locale; fallback to English if locale not in map
   const t = translations[currentLocale] ?? translations.en;
   const apartmentCopy =
-    variant === "apartment" ? getApartmentBookingCopy(currentLocale) : null;
+    variant === "apartment" || variant === "car"
+      ? getApartmentBookingCopy(currentLocale)
+      : null;
   const modalTitle = apartmentCopy?.requestTitle ?? t.title;
   const modalSuccess = apartmentCopy?.success ?? t.success;
   const isWideDatePicker = useMediaQuery("(min-width: 520px)", false, {

@@ -69,6 +69,41 @@ describe("CarCard transmission locale", () => {
 
     expect(screen.getByText("Automatyczna")).toBeInTheDocument();
     expect(screen.queryByText(/^automatic$/i)).not.toBeInTheDocument();
+    expect(screen.getByText("€120/dzień")).toBeInTheDocument();
+    expect(screen.queryByText(/Cena \(€\/dzień\)/)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Poznaj dokładną cenę/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Napisz do managera/i })
+    ).toBeInTheDocument();
+  });
+
+  it("hides the price badge when the daily rate is missing or zero", async () => {
+    const CarCard = (await import("./CarCard")).default;
+
+    const { rerender } = render(
+      <CarCard
+        translations={plCopy}
+        language="pl"
+        cars={[{ ...automaticCar, rental_prices: null }]}
+      />
+    );
+    expect(screen.queryByText(/€/)).not.toBeInTheDocument();
+
+    rerender(
+      <CarCard
+        translations={plCopy}
+        language="pl"
+        cars={[
+          {
+            ...automaticCar,
+            rental_prices: { day_1: 0, month: 0, currency: "EUR" },
+          },
+        ]}
+      />
+    );
+    expect(screen.queryByText(/€/)).not.toBeInTheDocument();
   });
 
   it("shows Manualna for manual gearbox", async () => {

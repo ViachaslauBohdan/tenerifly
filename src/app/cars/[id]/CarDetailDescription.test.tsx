@@ -1,5 +1,7 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { MantineProvider } from "@mantine/core";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/hooks/useTranslation", () => ({
   useTranslation: () => ({
@@ -45,8 +47,28 @@ vi.mock("@/components/ui/carousel", () => ({
   CarouselPrevious: () => null,
 }));
 
+beforeEach(() => {
+  window.matchMedia = vi.fn().mockReturnValue({
+    matches: false,
+    media: "",
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  });
+  class ResizeObserverMock {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+  vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+});
+
 afterEach(() => {
   cleanup();
+  vi.unstubAllGlobals();
 });
 
 describe("CarDetailPageClient description localization", () => {
@@ -104,58 +126,72 @@ describe("CarDetailPageClient description localization", () => {
     expect(screen.queryByText(/^automatic$/i)).not.toBeInTheDocument();
   });
 
-  it("rewrites a retired listing WhatsApp number to the work number", async () => {
+  it("opens manager WhatsApp for the work number with the car title", async () => {
+    const user = userEvent.setup();
     const CarDetailPageClient = (await import("./client")).default;
 
     render(
-      <CarDetailPageClient
-        car={{
-          id: 1,
-          documentId: "bmw-test",
-          title: "BMW 420 Cabrio Aut. 2024",
-          slug: null,
-          description: "Cabrio.",
-          type: "rent",
-          car_status: "available",
-          featured: false,
-          createdAt: "",
-          updatedAt: "",
-          publishedAt: "",
-          images: [],
-          rental_prices: {
-            day_1: 120,
-            month: 2000,
-            currency: "EUR",
-          },
-          specifications: {
-            make: "BMW",
-            model: "420",
-            year: 2024,
-            fuel: "petrol",
-            transmission: "automatic",
-            power: 180,
-            seats: 4,
-            doors: 2,
-            color: "grey",
-            body_type: "convertible",
-            drive_type: "rwd",
-          },
-          features: null,
-          location: null,
-          contact: {
-            name: "Office",
-            email: "office@example.com",
-            phone: "+34656641433",
-            whatsapp: "+34656641433",
-            preferred_contact: "whatsapp",
-          },
-        }}
-      />
+      <MantineProvider>
+        <CarDetailPageClient
+          car={{
+            id: 1,
+            documentId: "bmw-test",
+            title: "BMW 420 Cabrio Aut. 2024",
+            slug: null,
+            description: "Cabrio.",
+            type: "rent",
+            car_status: "available",
+            featured: false,
+            createdAt: "",
+            updatedAt: "",
+            publishedAt: "",
+            images: [],
+            rental_prices: {
+              day_1: 120,
+              month: 2000,
+              currency: "EUR",
+            },
+            specifications: {
+              make: "BMW",
+              model: "420",
+              year: 2024,
+              fuel: "petrol",
+              transmission: "automatic",
+              power: 180,
+              seats: 4,
+              doors: 2,
+              color: "grey",
+              body_type: "convertible",
+              drive_type: "rwd",
+            },
+            features: null,
+            location: null,
+            contact: {
+              name: "Office",
+              email: "office@example.com",
+              phone: "+34656641433",
+              whatsapp: "+34656641433",
+              preferred_contact: "whatsapp",
+            },
+          }}
+        />
+      </MantineProvider>
     );
 
-    expect(screen.getByRole("link", { name: /WhatsApp/ })).toHaveAttribute(
-      "href",
-      "https://wa.me/34604972372"
+    expect(
+      screen.getByRole("button", { name: /Дізнатися точну ціну/i })
+    ).toBeInTheDocument();
+    await user.click(
+      screen.getByRole("button", { name: /Написати менеджеру/i })
     );
+    const whatsapp = await screen.findByTestId("apartment-manager-whatsapp");
+    expect(whatsapp).toHaveAttribute(
+      "href",
+      expect.stringMatching(/^https:\/\/wa\.me\/34604972372\?text=/)
+    );
+    expect(decodeURIComponent(whatsapp.getAttribute("href")!)).toContain(
+      "BMW 420 Cabrio Aut. 2024"
+    );
+    expect(whatsapp.getAttribute("href")).not.toContain("34656641433");
   });
 });

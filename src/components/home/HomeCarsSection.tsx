@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Car, Home, Star } from "lucide-react";
+import { IconBrandTelegram, IconBrandWhatsapp } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import { HomeCardImage } from "@/components/HomeCardImage";
 import { HomeEmptyState } from "@/components/home/HomeEmptyState";
 import { TileCarPrice, formatTileAmount } from "@/components/TilePriceBadge";
@@ -15,6 +18,7 @@ import {
   getHomeCarFeatures,
   getHomeCarPrice,
 } from "@/components/home/homeCars";
+import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import { getHomeCarImageUrl, HOME_DISPLAY_LIMIT } from "@/lib/homeListing";
 import { carTransmissionLabel } from "@/lib/carSpecLabels";
 import type { BookingItem, HomeCar, LanguageCode } from "@/components/home/types";
@@ -51,6 +55,9 @@ export function HomeCarsSection({
 }: HomeCarsSectionProps) {
   const router = useRouter();
   const currencyMap: Record<string, string> = {};
+  const requestCopy = getApartmentBookingCopy(language);
+  const [managerOpen, setManagerOpen] = useState(false);
+  const [managerTitle, setManagerTitle] = useState("");
 
   return (
     <section
@@ -171,22 +178,27 @@ export function HomeCarsSection({
                           {copy.features}: {getHomeCarFeatures(car, language)}
                         </span>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2 text-sm">
-                        <TileCarPrice
-                          currencySymbol={currency}
-                          amount={price}
-                          perDaySuffix={common.perDay}
-                          locale={language as Locale}
-                        />
-                      </div>
+                      {price > 0 ? (
+                        <div className="flex flex-wrap items-center gap-2 text-sm">
+                          <TileCarPrice
+                            currencySymbol={currency}
+                            amount={price}
+                            perDaySuffix={common.perDay}
+                            locale={language as Locale}
+                          />
+                        </div>
+                      ) : null}
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex flex-col gap-2">
                       <button
                         type="button"
                         onClick={() =>
                           onBook({
                             title: car.title,
-                            price: `${currency.trim()} ${formatTileAmount(price, language as Locale)}${common.perDay}`,
+                            price:
+                              price > 0
+                                ? `${currency.trim()} ${formatTileAmount(price, language as Locale)}${common.perDay}`
+                                : undefined,
                             brand: car.specifications?.make,
                             model: car.specifications?.model,
                             duration: car.duration,
@@ -196,7 +208,19 @@ export function HomeCarsSection({
                         }
                         className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
-                        {common.bookNow}
+                        {requestCopy.checkPrice}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setManagerTitle(car.title);
+                          setManagerOpen(true);
+                        }}
+                        className="w-full px-4 py-2 bg-[#25D366] text-white rounded-lg hover:bg-[#1ebe57] transition-colors inline-flex items-center justify-center gap-2"
+                      >
+                        <IconBrandWhatsapp className="h-4 w-4 shrink-0" stroke={2} />
+                        <IconBrandTelegram className="h-4 w-4 shrink-0" stroke={2} />
+                        {requestCopy.contactManager}
                       </button>
                     </div>
                   </div>
@@ -206,6 +230,15 @@ export function HomeCarsSection({
           </div>
         )}
       </div>
+
+      {managerOpen && (
+        <ApartmentManagerContactPopup
+          opened={managerOpen}
+          onClose={() => setManagerOpen(false)}
+          propertyTitle={managerTitle}
+          locale={language}
+        />
+      )}
     </section>
   );
 }

@@ -201,7 +201,13 @@ export function LocalePageClient({
             contactEmail: bookingItem.contact?.email,
           }}
           mode="contact"
-          variant={bookingType === "accommodation" ? "apartment" : "default"}
+          variant={
+            bookingType === "car"
+              ? "car"
+              : bookingType === "accommodation"
+                ? "apartment"
+                : "default"
+          }
           currentLocale={locale as Locale}
         />
       )}
