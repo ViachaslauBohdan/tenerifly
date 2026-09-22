@@ -14,6 +14,7 @@
     "test:watch": "vitest",
     "test:browser": "cucumber-js",
     "test:browser:ci": "node scripts/run-browser-tests.js",
+    "test:browser:prod": "node scripts/run-prod-smoke-tests.js",
     "test:all": "npm test && npm run test:browser:ci",
     "fetch-translations": "node scripts/fetch-translations.js",
     "prepare": "husky"
