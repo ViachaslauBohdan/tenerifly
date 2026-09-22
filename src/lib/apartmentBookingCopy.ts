@@ -5,6 +5,7 @@ export const APARTMENT_PRICE_RESPONSE_MINUTES = 30;
 
 type ApartmentBookingCopy = {
   checkPrice: string;
+  contactManager: string;
   requestTitle: string;
   steps: string;
   priceDisclaimer: string;
@@ -14,6 +15,7 @@ type ApartmentBookingCopy = {
 const COPY: Record<string, ApartmentBookingCopy> = {
   en: {
     checkPrice: "Get exact price",
+    contactManager: "Contact manager",
     requestTitle: "Booking request",
     steps:
       "1. You send a request → 2. Manager confirms the exact price → 3. Prepayment locks the dates",
@@ -23,6 +25,7 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   ru: {
     checkPrice: "Узнать точную цену",
+    contactManager: "Связаться с менеджером",
     requestTitle: "Запрос на бронирование",
     steps:
       "1. Вы отправляете запрос → 2. Менеджер подтверждает точную цену → 3. Предоплата закрывает даты",
@@ -30,8 +33,9 @@ const COPY: Record<string, ApartmentBookingCopy> = {
       "Ориентировочная цена. Может быть выше или ниже в зависимости от сезона и длительности",
     success: `Запрос принят. Менеджер уточнит стоимость на выбранные даты и свяжется с вами в течение ${APARTMENT_PRICE_RESPONSE_MINUTES} минут. Даты закрепляются только после подтверждения цены и предоплаты.`,
   },
-  ua: {
+  uk: {
     checkPrice: "Дізнатися точну ціну",
+    contactManager: "Зв'язатися з менеджером",
     requestTitle: "Запит на бронювання",
     steps:
       "1. Ви надсилаєте запит → 2. Менеджер підтверджує точну ціну → 3. Передоплата фіксує дати",
@@ -41,6 +45,7 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   pl: {
     checkPrice: "Poznaj dokładną cenę",
+    contactManager: "Skontaktuj się z managerem",
     requestTitle: "Zapytanie o rezerwację",
     steps:
       "1. Wysyłasz zapytanie → 2. Manager potwierdza dokładną cenę → 3. Przedpłata rezerwuje terminy",
@@ -50,6 +55,7 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   fr: {
     checkPrice: "Connaître le prix exact",
+    contactManager: "Contacter le manager",
     requestTitle: "Demande de réservation",
     steps:
       "1. Vous envoyez une demande → 2. Le manager confirme le prix exact → 3. L'acompte bloque les dates",
@@ -59,6 +65,7 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   de: {
     checkPrice: "Genauen Preis erfahren",
+    contactManager: "Manager kontaktieren",
     requestTitle: "Buchungsanfrage",
     steps:
       "1. Sie senden eine Anfrage → 2. Manager bestätigt den genauen Preis → 3. Anzahlung sichert die Daten",
@@ -68,6 +75,7 @@ const COPY: Record<string, ApartmentBookingCopy> = {
   },
   es: {
     checkPrice: "Saber el precio exacto",
+    contactManager: "Contactar al manager",
     requestTitle: "Solicitud de reserva",
     steps:
       "1. Envía la solicitud → 2. El manager confirma el precio exacto → 3. El prepago bloquea las fechas",

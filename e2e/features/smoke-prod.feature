@@ -24,3 +24,7 @@ Feature: Production smoke against tenerifejoy.com
     When I open the apartment pre-booking modal
     Then the pre-booking send button should be visible in the action bar
     And I must not submit the pre-booking form
+
+  Scenario: Production apartment detail offers manager WhatsApp next to price check
+    Given I open a production Russian apartment detail page
+    Then the apartment contact-manager WhatsApp link should point to the work number

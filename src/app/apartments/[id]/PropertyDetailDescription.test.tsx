@@ -102,7 +102,7 @@ describe("PropertyDetailPageClient description localization", () => {
     ).toBeInTheDocument();
   });
 
-  it("rewrites a retired listing WhatsApp number to the work number", async () => {
+  it("shows a manager WhatsApp link to the work number with the apartment title", async () => {
     const PropertyDetailPageClient = (
       await import("./PropertyDetailPageClient")
     ).default;
@@ -139,9 +139,56 @@ describe("PropertyDetailPageClient description localization", () => {
       />
     );
 
-    expect(screen.getByRole("link", { name: /WhatsApp/ })).toHaveAttribute(
+    const link = screen.getByRole("link", { name: /Зв'язатися з менеджером/i });
+    expect(link).toHaveAttribute(
       "href",
-      "https://wa.me/34604972372"
+      expect.stringMatching(/^https:\/\/wa\.me\/34604972372\?text=/)
     );
+    expect(decodeURIComponent(link.getAttribute("href")!)).toContain(
+      "Sunny Duplex in Playa de San Juan"
+    );
+    expect(link.getAttribute("href")).not.toContain("34613211069");
+    expect(
+      screen.queryByRole("link", { name: /^WhatsApp/i })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Дізнатися точну ціну/i })
+    ).toBeInTheDocument();
+  });
+
+  it("still shows the manager WhatsApp CTA when listing contact is missing", async () => {
+    const PropertyDetailPageClient = (
+      await import("./PropertyDetailPageClient")
+    ).default;
+
+    render(
+      <PropertyDetailPageClient
+        property={{
+          id: 2,
+          documentId: "no-contact",
+          title: "Ocean View Studio",
+          slug: null,
+          description: "Studio.",
+          type: "rent",
+          property_status: "available",
+          featured: false,
+          category: "apartment",
+          createdAt: "",
+          updatedAt: "",
+          publishedAt: "",
+          images: [],
+          price: { amount: 55, currency: "EUR", period: "day" },
+          location: null,
+          features: null,
+          specifications: null,
+          rental_terms: null,
+          contact: null,
+        }}
+      />
+    );
+
+    expect(
+      screen.getByRole("link", { name: /Зв'язатися з менеджером/i })
+    ).toBeInTheDocument();
   });
 });

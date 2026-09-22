@@ -1,8 +1,26 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { openBookingWhatsApp, openWhatsApp } from "./whatsapp";
+import {
+  openBookingWhatsApp,
+  openWhatsApp,
+  whatsAppInterestHref,
+} from "./whatsapp";
 
 afterEach(() => {
   vi.restoreAllMocks();
+});
+
+describe("whatsAppInterestHref", () => {
+  it("builds a work-number link with a Russian accommodation enquiry", () => {
+    const href = whatsAppInterestHref(
+      "accommodation",
+      { title: "Sunny Duplex", price: "≈ €70/день" },
+      "ru"
+    );
+    expect(href.startsWith("https://wa.me/34604972372?text=")).toBe(true);
+    expect(decodeURIComponent(href)).toContain(
+      'Привет! Меня интересует жилье "Sunny Duplex" за ≈ €70/день'
+    );
+  });
 });
 
 describe("openWhatsApp", () => {

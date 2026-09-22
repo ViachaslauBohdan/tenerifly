@@ -8,6 +8,8 @@ import { TilePriceBadge } from "@/components/TilePriceBadge";
 import { ViewAllLink } from "@/components/ViewAllLink";
 import type { BookingItem, HomeProperty, LanguageCode } from "@/components/home/types";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
+import type { Locale } from "@/types/locale";
+import { whatsAppInterestHref } from "@/utils/whatsapp";
 import translationsJson from "@/i18n/main.json";
 
 type AccommodationCopy = (typeof translationsJson)["en"]["sections"]["accommodation"];
@@ -152,7 +154,7 @@ export function HomeAccommodationSection({
                         </p>
                       ) : null}
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex flex-col gap-2 sm:flex-row">
                       <button
                         type="button"
                         onClick={() =>
@@ -171,6 +173,21 @@ export function HomeAccommodationSection({
                       >
                         {apartmentBooking.checkPrice}
                       </button>
+                      <a
+                        href={whatsAppInterestHref(
+                          "accommodation",
+                          {
+                            title: place.title,
+                            price: place.price,
+                          },
+                          language as Locale
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full px-4 py-2 bg-[#25D366] text-white rounded-lg hover:bg-[#1ebe57] transition-colors text-center"
+                      >
+                        {apartmentBooking.contactManager}
+                      </a>
                     </div>
                   </div>
                 </div>

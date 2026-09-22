@@ -17,6 +17,7 @@ afterEach(() => {
 });
 
 const pl = pickLocaleBundle(translationsJson, "pl");
+const ru = pickLocaleBundle(translationsJson, "ru");
 
 describe("HomeAccommodationSection localized CMS copy", () => {
   it("renders overlayed Polish titles and descriptions", () => {
@@ -57,5 +58,45 @@ describe("HomeAccommodationSection localized CMS copy", () => {
     expect(
       screen.queryByText("Fantastic View Los Gigantes Apartment")
     ).not.toBeInTheDocument();
+  });
+
+  it("offers a manager WhatsApp link next to the check-price CTA", () => {
+    render(
+      <HomeAccommodationSection
+        items={[
+          {
+            documentId: "feat",
+            title: "Пентхаус Puerto de Santiago",
+            description: "Описание",
+            location: "Puerto de Santiago",
+            amenities: "WiFi",
+            price: "≈ €180/день",
+            rating: 5,
+          },
+        ]}
+        dataLoading={false}
+        copy={ru.sections.accommodation}
+        common={ru.common}
+        language="ru"
+        apartmentsHref="/ru/apartments"
+        createLocaleLink={(path) => `/ru${path}`}
+        onBook={vi.fn()}
+      />
+    );
+
+    expect(
+      screen.getByRole("button", { name: /Узнать точную цену/i })
+    ).toBeInTheDocument();
+
+    const manager = screen.getByRole("link", {
+      name: /Связаться с менеджером/i,
+    });
+    expect(manager).toHaveAttribute(
+      "href",
+      expect.stringMatching(/^https:\/\/wa\.me\/34604972372\?text=/)
+    );
+    expect(decodeURIComponent(manager.getAttribute("href")!)).toContain(
+      "Пентхаус Puerto de Santiago"
+    );
   });
 });

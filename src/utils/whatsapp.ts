@@ -24,19 +24,14 @@ interface BookingDetails extends WhatsAppDetails {
   telegram?: string;
 }
 
-export const openWhatsApp = (
-  itemType: "excursion" | "car" | "accommodation" | "general",
+type WhatsAppItemType = "excursion" | "car" | "accommodation" | "general";
+
+function interestMessage(
+  itemType: WhatsAppItemType,
   details: WhatsAppDetails,
-  language: Locale = "en"
-) => {
-  // Check if we're in the browser
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  const phoneNumber = SITE_WHATSAPP_DIGITS;
-
-  const messages = {
+  language: Locale
+): string {
+  const messages: Record<Locale, Record<WhatsAppItemType, string>> = {
     en: {
       excursion: `Hi! I'm interested in the tour "${details.title}" (${details.duration}, ${details.language}) for ${details.price}`,
       car: `Hi! I'd like to rent a car ${details.brand} ${details.model} "${details.title}" for ${details.price}`,
@@ -81,19 +76,36 @@ export const openWhatsApp = (
     },
   };
 
-  let refCode = "";
+  const localeMessages = messages[language] ?? messages.en;
+  let message = localeMessages[itemType];
   if (typeof window !== "undefined") {
-    refCode = localStorage.getItem("ref_code") || "";
+    const refCode = localStorage.getItem("ref_code") || "";
+    if (refCode) {
+      message += ` (ref: ${refCode})`;
+    }
   }
+  return message;
+}
 
-  let message = messages[language][itemType];
-  if (refCode) {
-    message += ` (ref: ${refCode})`;
+/** WhatsApp deep link to the work number with a prefilled interest message. */
+export function whatsAppInterestHref(
+  itemType: WhatsAppItemType,
+  details: WhatsAppDetails,
+  language: Locale = "en"
+): string {
+  const text = encodeURIComponent(interestMessage(itemType, details, language));
+  return `https://wa.me/${SITE_WHATSAPP_DIGITS}?text=${text}`;
+}
+
+export const openWhatsApp = (
+  itemType: WhatsAppItemType,
+  details: WhatsAppDetails,
+  language: Locale = "en"
+) => {
+  if (typeof window === "undefined") {
+    return;
   }
-
-  const encodedMessage = encodeURIComponent(message);
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-  window.open(whatsappUrl, "_blank");
+  window.open(whatsAppInterestHref(itemType, details, language), "_blank");
 };
 
 export const openBookingWhatsApp = (

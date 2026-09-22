@@ -128,3 +128,26 @@ Then(
     assert.ok((await send.count()) >= 0);
   }
 );
+
+Then(
+  "the apartment contact-manager WhatsApp link should point to the work number",
+  async function (this: CustomWorld) {
+    const link = this.page
+      .getByRole("link", {
+        name: /Связаться с менеджером|Contact manager|Contactar al manager|Skontaktuj się z managerem|Зв'язатися з менеджером|Contacter le manager|Manager kontaktieren/i,
+      })
+      .first();
+    await link.waitFor({ state: "visible", timeout: 30_000 });
+    const href = await link.getAttribute("href");
+    assert.ok(href, "Missing manager WhatsApp href");
+    assert.match(
+      href,
+      /^https:\/\/wa\.me\/34604972372\?text=/,
+      `Expected work WhatsApp deep link, got ${href}`
+    );
+    assert.ok(
+      !href.includes("34613211069") && !href.includes("34656641433"),
+      "Retired WhatsApp numbers must not appear in the manager link"
+    );
+  }
+);

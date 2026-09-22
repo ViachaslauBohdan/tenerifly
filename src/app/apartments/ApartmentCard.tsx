@@ -8,7 +8,9 @@ import { cmsLocale } from "@/types/locale";
 import { apartmentListingTypeLabel } from "./apartmentCardCopy";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
+import type { Locale } from "@/types/locale";
 import { formatPropertyPriceLabel } from "@/utils/propertyPrice";
+import { whatsAppInterestHref } from "@/utils/whatsapp";
 
 interface PropertyData {
   id: number;
@@ -683,31 +685,35 @@ const ApartmentCard = ({
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                {(property.property_status === "available" ||
-                  property.property_status === "reserved") && (
+              {(property.property_status === "available" ||
+                property.property_status === "reserved") && (
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <button
+                    type="button"
                     onClick={() => handleBookNow(property)}
-                    className="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors flex items-center justify-center"
+                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                   >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
                     {apartmentBooking.checkPrice}
                   </button>
-                )}
-              </div>
+                  <a
+                    href={whatsAppInterestHref(
+                      "accommodation",
+                      {
+                        title: property.title,
+                        price: property.price
+                          ? getPrice(property)
+                          : undefined,
+                      },
+                      language as Locale
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full px-4 py-2 bg-[#25D366] text-white rounded-md hover:bg-[#1ebe57] focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-colors text-center"
+                  >
+                    {apartmentBooking.contactManager}
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         ))}
