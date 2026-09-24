@@ -23,6 +23,7 @@ const publicPaths = [
   '/apple-icon',
   '/robots.txt',
   '/sitemap.xml',
+  '/admin',
 ];
 
 export function middleware(request: NextRequest) {
