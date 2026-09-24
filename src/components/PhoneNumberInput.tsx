@@ -155,7 +155,7 @@ export function PhoneNumberInput({
             )
           }
           leftSectionWidth={36}
-          comboboxProps={{ withinPortal: true, zIndex: 400 }}
+          comboboxProps={{ withinPortal: true, zIndex: 1200 }}
           renderOption={({ option }) => {
             const meta = countryMetaByCode.get(option.value as Country);
             return (

@@ -78,6 +78,19 @@ describe("SimpleBookingPopup mobile layout", () => {
     ).toBeInTheDocument();
   });
 
+  it("keeps the country list above the booking modal", () => {
+    renderPopup();
+
+    let node: HTMLElement | null = screen.getByText("Ukraine");
+    let zIndex = 0;
+    while (node) {
+      const value = Number(getComputedStyle(node).zIndex);
+      if (value > zIndex) zIndex = value;
+      node = node.parentElement;
+    }
+    expect(zIndex).toBeGreaterThan(1100);
+  });
+
   it("shows the same request steps for a car enquiry", () => {
     renderPopup("car");
     expect(screen.getByTestId("apartment-booking-steps")).toHaveTextContent(
