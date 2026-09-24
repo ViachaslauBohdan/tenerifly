@@ -233,6 +233,8 @@ export function useDataLoader(
                 title:
                   car.title ||
                   `${(car.specifications as { make?: string })?.make || "Car"} ${(car.specifications as { model?: string })?.model || ""}`.trim(),
+                description:
+                  typeof car.description === "string" ? car.description : "",
                 images: first?.url ? [first] : [],
                 specifications: car.specifications,
                 type: car.type,

@@ -159,6 +159,7 @@ export function LocalePageClient({
 
       <HomeTransfersSection
         transfers={transfers}
+        cars={cars}
         language={language}
         createLocaleLink={createLocaleLink}
         onBook={(item) => openBookingModal("transfer", item)}

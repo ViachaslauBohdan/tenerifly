@@ -54,6 +54,7 @@ export type HomeCar = {
     model?: string;
     fuel?: string;
     transmission?: string;
+    seats?: number;
   };
 };
 

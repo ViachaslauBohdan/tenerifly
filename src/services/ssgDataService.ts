@@ -756,11 +756,13 @@ export async function getAllBlogIds() {
 type HomeCarStrapiRow = HomeCarRow & {
   id: number;
   documentId: string;
+  description?: string;
   specifications?: {
     make?: string;
     model?: string;
     transmission?: string;
     fuel?: string;
+    seats?: number;
   };
   rental_prices?: { day_1?: number; currency?: string };
   type?: string;
@@ -775,6 +777,7 @@ function toHomeCar(car: HomeCarStrapiRow) {
     title:
       car.title ||
       `${car.specifications?.make || "Car"} ${car.specifications?.model || ""}`.trim(),
+    description: car.description || "",
     images: firstImage?.url ? [firstImage] : [],
     specifications: car.specifications,
     type: car.type,

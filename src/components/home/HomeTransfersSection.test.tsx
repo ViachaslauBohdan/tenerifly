@@ -83,4 +83,51 @@ describe("HomeTransfersSection locale copy", () => {
     ).not.toBeInTheDocument();
     expect(screen.queryByText("Airport Transfers")).not.toBeInTheDocument();
   });
+
+  it("shows a Renault passenger car and one Sprinter that covers 8 and 13 seats", () => {
+    render(
+      <HomeTransfersSection
+        transfers={[
+          transfer,
+          {
+            ...transfer,
+            id: 2,
+            documentId: "sprinter-13",
+            title: "Mercedes Sprinter 13 seats airport transfer",
+            seats: 13,
+          },
+        ]}
+        cars={[
+          {
+            documentId: "renault-captur",
+            title: "Renault Captur",
+            description: "Compact crossover, 5 seats.",
+            images: [{ url: "https://res.cloudinary.com/dlnvckilf/image/upload/v1/captur.jpg" }],
+            specifications: { make: "Renault", model: "Captur", seats: 5 },
+          },
+          {
+            documentId: "renault-trafic",
+            title: "Renault Trafic",
+            specifications: { make: "Renault", model: "Trafic", seats: 9 },
+          },
+        ]}
+        language="ru"
+        createLocaleLink={(path) => `/ru${path}`}
+        onBook={vi.fn()}
+      />
+    );
+
+    expect(screen.getByRole("heading", { name: "Renault Captur" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Renault Captur" })).toHaveAttribute(
+      "href",
+      "/ru/cars/renault-captur"
+    );
+    expect(screen.getByText("5 мест")).toBeInTheDocument();
+    expect(screen.getByText("на 8 и на 13 мест")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /13 мест/ })
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /8 мест/ })).not.toBeInTheDocument();
+    expect(screen.queryByText("Renault Trafic")).not.toBeInTheDocument();
+  });
 });

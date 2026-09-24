@@ -54,6 +54,7 @@ export const transferText = {
     sectionSubtitle:
       "Private Tenerife airport transfers for families and groups",
     seats: "seats",
+    bothSeats: "8 and 13 seats",
     southAirport: "South Airport",
     northAirport: "North Airport",
     from: "from",
@@ -74,6 +75,7 @@ export const transferText = {
     sectionSubtitle:
       "Индивидуальные трансферы по Тенерифе для семей и групп",
     seats: "мест",
+    bothSeats: "на 8 и на 13 мест",
     southAirport: "Южный аэропорт",
     northAirport: "Северный аэропорт",
     from: "от",
@@ -93,6 +95,7 @@ export const transferText = {
     sectionTitle: "Transfery z lotniska",
     sectionSubtitle: "Prywatne transfery na Teneryfie dla rodzin i grup",
     seats: "miejsc",
+    bothSeats: "8 i 13 miejsc",
     southAirport: "Lotnisko południowe",
     northAirport: "Lotnisko północne",
     from: "od",
@@ -113,6 +116,7 @@ export const transferText = {
     sectionSubtitle:
       "Transferts privés à Tenerife pour familles et groupes",
     seats: "places",
+    bothSeats: "8 et 13 places",
     southAirport: "Aéroport Sud",
     northAirport: "Aéroport Nord",
     from: "à partir de",
@@ -133,6 +137,7 @@ export const transferText = {
     sectionSubtitle:
       "Індивідуальні трансфери по Тенерифе для сімей і груп",
     seats: "місць",
+    bothSeats: "на 8 і на 13 місць",
     southAirport: "Південний аеропорт",
     northAirport: "Північний аеропорт",
     from: "від",
@@ -152,6 +157,7 @@ export const transferText = {
     sectionTitle: "Flughafentransfers",
     sectionSubtitle: "Private Transfers auf Teneriffa für Familien und Gruppen",
     seats: "Sitze",
+    bothSeats: "8 und 13 Sitze",
     southAirport: "Flughafen Süd",
     northAirport: "Flughafen Nord",
     from: "ab",
@@ -172,6 +178,7 @@ export const transferText = {
     sectionSubtitle:
       "Traslados privados en Tenerife para familias y grupos",
     seats: "plazas",
+    bothSeats: "8 y 13 plazas",
     southAirport: "Aeropuerto Sur",
     northAirport: "Aeropuerto Norte",
     from: "desde",
@@ -363,3 +370,34 @@ export const formatTransferPrice = (
   transfer: Transfer,
   airport: "south" | "north"
 ) => `${transfer.currency || "EUR"} ${getTransferPrice(transfer, airport)}`;
+
+type PassengerCar = {
+  title?: string;
+  documentId?: string;
+  description?: string;
+  images?: Array<{ url?: string } | null> | null;
+  specifications?: { make?: string; model?: string; seats?: number };
+};
+
+export function isPassengerRenault(
+  car: PassengerCar
+): boolean {
+  const name = `${car.specifications?.make ?? ""} ${car.specifications?.model ?? ""} ${car.title ?? ""}`;
+  return /renault/i.test(name) && /captur/i.test(name);
+}
+
+/** Home shows one minibus card. Prefer the 13-seat Sprinter when both sizes exist. */
+export function pickHomeBusTransfer(transfers: Transfer[]): Transfer | null {
+  const thirteen = transfers.find(
+    (transfer) => getTransferVehicleKey(transfer) === "13"
+  );
+  if (thirteen) return thirteen;
+  return transfers.find((transfer) => getTransferVehicleKey(transfer) === "8") ?? null;
+}
+
+export function homeBusHasBothSizes(transfers: Transfer[]): boolean {
+  const keys = new Set(
+    transfers.map((transfer) => getTransferVehicleKey(transfer))
+  );
+  return keys.has("8") && keys.has("13");
+}
