@@ -7,6 +7,7 @@ import {
   getAllTransferIds,
 } from "@/services/ssgDataService";
 import { listAtlanticoTourCodes } from "@/lib/atlantico/resolveTour";
+import { listAuthorTourIds } from "@/lib/authorTours";
 import { LOCALES } from "@/types/locale";
 import { absoluteUrlForLocale } from "@/lib/seo";
 import { BLOG_ENABLED } from "@/lib/siteFeatures";
@@ -109,6 +110,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }))
   );
 
+  const authorTourPages: MetadataRoute.Sitemap = listAuthorTourIds().flatMap(
+    (id) =>
+      LOCALES.map((locale) => ({
+        url: absoluteUrlForLocale(locale.code, `/author-tours/${id}`),
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      }))
+  );
+
   const transferPages: MetadataRoute.Sitemap = transferIds.flatMap(
     (transfer: { documentId: string }) =>
       LOCALES.map((locale) => ({
@@ -126,5 +137,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...tourPages,
     ...blogPages,
     ...transferPages,
+    ...authorTourPages,
   ];
 }

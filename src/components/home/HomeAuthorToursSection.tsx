@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { IconBrandTelegram, IconBrandWhatsapp } from "@tabler/icons-react";
 import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import { HomeCardImage } from "@/components/HomeCardImage";
@@ -48,15 +49,20 @@ export function HomeAuthorToursSection({
                 key={tour.id}
                 className="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl"
               >
-                <div className="relative aspect-video overflow-hidden">
+                <Link
+                  href={`/${language}/author-tours/${tour.id}`}
+                  className="relative block aspect-video overflow-hidden"
+                >
                   <HomeCardImage
                     src={getAuthorTourImageSrc(tour.id)}
                     alt={tour.title}
                   />
-                </div>
+                </Link>
                 <div className="flex flex-1 flex-col p-6">
                   <h3 className="mb-4 text-lg font-semibold text-gray-900">
-                    {tour.title}
+                    <Link href={`/${language}/author-tours/${tour.id}`}>
+                      {tour.title}
+                    </Link>
                   </h3>
                   <p className="mb-4 line-clamp-2 text-sm text-gray-600">
                     {tour.summary}

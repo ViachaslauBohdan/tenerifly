@@ -18,6 +18,26 @@ describe("authorTours", () => {
 
   it("falls back to English outside ru and uk", () => {
     expect(getAuthorTourBundle("pl").ui.sectionTitle).toBe("Author tours");
-    expect(getAuthorTourBundle("ua").tours[0].title).toMatch(/8 дней/);
+  });
+
+  it("keeps Ukrainian tour copy in Ukrainian", () => {
+    const { ui, tours } = getAuthorTourBundle("ua");
+    const text = [
+      ui.sectionTitle,
+      ui.sectionSubtitle,
+      ui.priceNote,
+      ...tours.flatMap((tour) => [
+        tour.title,
+        tour.summary,
+        ...tour.highlights,
+        ...tour.program,
+        ...tour.included,
+        ...tour.excluded,
+      ]),
+    ].join(" ");
+
+    expect(tours[0].title).toMatch(/8 днів/);
+    expect(tours[1].title).toMatch(/7 пляжів/);
+    expect(text).not.toMatch(/8 дней|Авиаперелёт|Выселение|ужин/);
   });
 });

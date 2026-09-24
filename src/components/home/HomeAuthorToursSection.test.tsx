@@ -47,6 +47,12 @@ describe("HomeAuthorToursSection", () => {
       screen.getByRole("heading", { name: /8 дней/i })
     ).toBeInTheDocument();
     expect(
+      screen.getAllByRole("link", { name: /8 дней/i }).map((link) => link.getAttribute("href"))
+    ).toEqual([
+      "/ru/author-tours/tenerife-8-days",
+      "/ru/author-tours/tenerife-8-days",
+    ]);
+    expect(
       screen.getByRole("heading", { name: /7 пляжей/i })
     ).toBeInTheDocument();
     expect(screen.getByText("700 €")).toBeInTheDocument();
