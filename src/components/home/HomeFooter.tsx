@@ -11,6 +11,7 @@ type HomeFooterProps = {
   footer: FooterCopy;
   excursionsTitle: ExcursionsCopy["title"];
   legalPageTitle?: string;
+  cookiePolicyTitle?: string;
   createLocaleLink: (path: string) => string;
 };
 
@@ -18,6 +19,7 @@ export function HomeFooter({
   footer,
   excursionsTitle,
   legalPageTitle,
+  cookiePolicyTitle,
   createLocaleLink,
 }: HomeFooterProps) {
   const legalNotice = (footer as { legalNotice?: string }).legalNotice;
@@ -56,6 +58,14 @@ export function HomeFooter({
                   className="block text-gray-400 hover:text-white transition-colors"
                 >
                   {legalPageTitle}
+                </Link>
+              ) : null}
+              {cookiePolicyTitle ? (
+                <Link
+                  href={createLocaleLink("/cookies")}
+                  className="block text-gray-400 hover:text-white transition-colors"
+                >
+                  {cookiePolicyTitle}
                 </Link>
               ) : null}
             </nav>

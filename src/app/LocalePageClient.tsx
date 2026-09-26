@@ -15,6 +15,7 @@ import { HomeBlogSection } from "@/components/home/HomeBlogSection";
 import { BLOG_ENABLED } from "@/lib/siteFeatures";
 import { HomeFaqSection } from "@/components/home/HomeFaqSection";
 import { HomeFooter } from "@/components/home/HomeFooter";
+import { cookiePolicyCopy } from "@/components/cookieConsent/cookiePolicyCopy";
 import { useBookingModal } from "@/components/home/useBookingModal";
 import { useHeroSearch } from "@/components/home/useHeroSearch";
 import type {
@@ -194,6 +195,7 @@ export function LocalePageClient({
         footer={t.footer}
         excursionsTitle={t.sections.excursions.title}
         legalPageTitle={legalPageTitle}
+        cookiePolicyTitle={cookiePolicyCopy(language).title}
         createLocaleLink={createLocaleLink}
       />
 

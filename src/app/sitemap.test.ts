@@ -20,6 +20,7 @@ describe("sitemap without blog", () => {
 
     expect(urls.some((url) => url.includes("/blog"))).toBe(false);
     expect(urls.some((url) => url.includes("/transfers/van-1"))).toBe(true);
+    expect(urls.some((url) => url.includes("/cookies"))).toBe(true);
     expect(getAllBlogIds).not.toHaveBeenCalled();
   });
 });

@@ -12,8 +12,9 @@ import {
     DeferredReferral,
     DeferredWhatsApp,
 } from "@/components/DeferredLayoutWidgets";
+import {CookieConsentBanner} from "@/components/cookieConsent/CookieConsentBanner";
+import {GoogleAdsTag} from "@/components/cookieConsent/GoogleAdsTag";
 import {OTPUSK_BODY_CLASS_GUARD_INLINE} from "@/lib/otpuskBodyClassGuard";
-import Script from 'next/script'
 import {
     DEFAULT_OG_IMAGE,
     SEO_HOME,
@@ -145,21 +146,9 @@ export default async function RootLayout({
             <DeferredReferral/>
             {children}
             <DeferredWhatsApp/>
+            <CookieConsentBanner/>
+            <GoogleAdsTag/>
         </MantineProvider>
-        <Script
-            src="https://www.googletagmanager.com/gtag/js?id=AW-679583815"
-            strategy="afterInteractive"
-        />
-
-        <Script id="google-analytics" strategy="afterInteractive">
-            {`
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'AW-679583815');
-    `}
-        </Script>
         </body>
         </html>
     );

@@ -39,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/cars",
     ...(BLOG_ENABLED ? ["/blog"] : []),
     "/aviso-legal",
+    "/cookies",
   ];
 
   const staticPages: MetadataRoute.Sitemap = LOCALES.flatMap((locale) =>

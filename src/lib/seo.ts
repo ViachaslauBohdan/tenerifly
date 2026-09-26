@@ -623,6 +623,44 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
   },
 };
 
+export const SEO_COOKIE_POLICY: Record<Locale, PageSeo> = {
+  en: {
+    title: `Cookie policy | ${SITE_BRAND}`,
+    description: `Cookie policy for ${SITE_HOST}: essential storage, Google Ads only after consent, how to withdraw consent, and how to contact PanaFera.`,
+    keywords: ["Tenerife Joy cookie policy", "PanaFera cookies", "Google Ads consent"],
+  },
+  pl: {
+    title: `Polityka cookie | ${SITE_BRAND}`,
+    description: `Polityka cookie ${SITE_HOST}: niezbędne zapisy, Google Ads tylko po zgodzie i sposób wycofania zgody.`,
+    keywords: ["polityka cookie Tenerife Joy", "PanaFera cookies"],
+  },
+  fr: {
+    title: `Politique cookies | ${SITE_BRAND}`,
+    description: `Politique cookies de ${SITE_HOST} : stockage essentiel, Google Ads uniquement après consentement, et retrait du consentement.`,
+    keywords: ["politique cookies Tenerife Joy", "PanaFera cookies"],
+  },
+  ru: {
+    title: `Политика cookie | ${SITE_BRAND}`,
+    description: `Политика cookie ${SITE_HOST}: необходимое хранение, Google Ads только после согласия и как отозвать согласие.`,
+    keywords: ["политика cookie Tenerife Joy", "PanaFera cookies"],
+  },
+  ua: {
+    title: `Політика cookie | ${SITE_BRAND}`,
+    description: `Політика cookie ${SITE_HOST}: необхідне зберігання, Google Ads лише після згоди і як відкликати згоду.`,
+    keywords: ["політика cookie Tenerife Joy", "PanaFera cookies"],
+  },
+  de: {
+    title: `Cookie-Richtlinie | ${SITE_BRAND}`,
+    description: `Cookie-Richtlinie für ${SITE_HOST}: notwendige Speicherung, Google Ads nur nach Einwilligung, und Widerruf.`,
+    keywords: ["Cookie-Richtlinie Tenerife Joy", "PanaFera Cookies"],
+  },
+  es: {
+    title: `Política de cookies | ${SITE_BRAND}`,
+    description: `Política de cookies de ${SITE_HOST}: almacenamiento esencial, Google Ads solo tras el consentimiento y cómo retirarlo.`,
+    keywords: ["política de cookies Tenerife Joy", "PanaFera cookies"],
+  },
+};
+
 export const SEO_BLOG: Record<Locale, PageSeo> = {
   en: {
     title: `Tenerife travel blog | tips & local guides | ${SITE_BRAND}`,

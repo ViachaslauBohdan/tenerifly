@@ -16,6 +16,7 @@ describe("HomeFooter contact number", () => {
       <HomeFooter
         footer={copy.footer}
         excursionsTitle={copy.sections.excursions.title}
+        cookiePolicyTitle="Cookie policy"
         createLocaleLink={(path) => path}
       />
     );
@@ -24,5 +25,9 @@ describe("HomeFooter contact number", () => {
     expect(tel).toHaveAttribute("href", "tel:+34604972372");
     expect(screen.queryByText("+34613211069")).not.toBeInTheDocument();
     expect(screen.queryByText("+34656641433")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Cookie policy" })).toHaveAttribute(
+      "href",
+      "/cookies"
+    );
   });
 });
