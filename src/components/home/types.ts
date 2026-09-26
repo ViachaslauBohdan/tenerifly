@@ -75,4 +75,5 @@ export type LocalePageInitialData = {
   cars: HomeCar[];
   blogs: HomeBlogPost[];
   transfers?: Transfer[];
+  passengerCar?: HomeCar | null;
 };

@@ -386,6 +386,16 @@ export function isPassengerRenault(
   return /renault/i.test(name) && /captur/i.test(name);
 }
 
+export function passengerRenaultCarsPath(locale: string): string {
+  return `/cars?filters[title][$containsi]=Captur&publicationState=live&populate=*&pagination[pageSize]=10&locale=${encodeURIComponent(locale)}`;
+}
+
+export function pickPassengerRenault<T extends PassengerCar>(
+  cars: T[]
+): T | null {
+  return cars.find((car) => isPassengerRenault(car) && Boolean(car.documentId)) ?? null;
+}
+
 /** Home shows one minibus card. Prefer the 13-seat Sprinter when both sizes exist. */
 export function pickHomeBusTransfer(transfers: Transfer[]): Transfer | null {
   const thirteen = transfers.find(

@@ -4,6 +4,7 @@ import {
   getTransferImage,
   getTransferLocaleText,
   localizeTransfer,
+  pickPassengerRenault,
   resolveTransferMediaUrl,
   type Transfer,
 } from "./transfers";
@@ -76,6 +77,24 @@ describe("localizeTransfer", () => {
       description: "CMS український опис",
     };
     expect(localizeTransfer(cmsUk, "ua").title).toBe("CMS українська назва");
+  });
+});
+
+describe("pickPassengerRenault", () => {
+  it("keeps the Captur and skips the Trafic minibus", () => {
+    const picked = pickPassengerRenault([
+      {
+        documentId: "trafic",
+        title: "Renault Trafic",
+        specifications: { make: "Renault", model: "Trafic", seats: 9 },
+      },
+      {
+        documentId: "captur",
+        title: "Renault Captur",
+        specifications: { make: "Renault", model: "Captur", seats: 5 },
+      },
+    ]);
+    expect(picked?.documentId).toBe("captur");
   });
 });
 

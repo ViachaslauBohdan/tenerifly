@@ -1,7 +1,12 @@
 import { cmsLocale, localeContentKey, type Locale } from "@/types/locale";
 // Сервис для получения данных на сервере для SSG
 
-import { Transfer, localizeTransfer } from "@/lib/transfers";
+import {
+  Transfer,
+  localizeTransfer,
+  passengerRenaultCarsPath,
+  pickPassengerRenault,
+} from "@/lib/transfers";
 import {
   CMS_CACHE_TAGS,
   CMS_FETCH_REVALIDATE,
@@ -880,12 +885,17 @@ async function getHomeTransfers(language: string = "en"): Promise<unknown[]> {
 // Получение данных для главной страницы с трансформацией
 export async function getHomePageData(language: string = "en") {
   try {
-    const [carsResult, propertiesResult, blogsResult, transfersResult] =
+    const [carsResult, propertiesResult, blogsResult, transfersResult, renaultResult] =
       await Promise.allSettled([
         getHomeCars(language),
         getHomeProperties(language),
         BLOG_ENABLED ? getHomeBlogs(language) : Promise.resolve([]),
         getHomeTransfers(language),
+        fetchWithCache(
+          passengerRenaultCarsPath(cmsLocale(language)),
+          `home-passenger-renault-${cmsLocale(language)}`,
+          [CMS_CACHE_TAGS.home, CMS_CACHE_TAGS.cars]
+        ),
       ]);
 
     const cars =
@@ -995,11 +1005,29 @@ export async function getHomePageData(language: string = "en") {
             .map((transfer) => localizeTransfer(transfer, language))
         : [];
 
+    let renaultRows =
+      renaultResult.status === "fulfilled" && Array.isArray(renaultResult.value)
+        ? (renaultResult.value as HomeCarStrapiRow[])
+        : [];
+    let passengerRenault = pickPassengerRenault(renaultRows);
+    if (!passengerRenault && cmsLocale(language) !== "en") {
+      const englishRows = await fetchWithCache(
+        passengerRenaultCarsPath("en"),
+        "home-passenger-renault-en",
+        [CMS_CACHE_TAGS.home, CMS_CACHE_TAGS.cars]
+      );
+      renaultRows = Array.isArray(englishRows)
+        ? (englishRows as HomeCarStrapiRow[])
+        : [];
+      passengerRenault = pickPassengerRenault(renaultRows);
+    }
+
     return {
       properties,
       cars,
       blogs,
       transfers,
+      passengerCar: passengerRenault ? toHomeCar(passengerRenault) : null,
     };
   } catch (error) {
     console.error("Error loading home page data:", error);
@@ -1008,6 +1036,7 @@ export async function getHomePageData(language: string = "en") {
       cars: [],
       blogs: [],
       transfers: [],
+      passengerCar: null,
     };
   }
 }

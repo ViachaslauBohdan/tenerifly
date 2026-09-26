@@ -20,6 +20,7 @@ import type { BookingItem, HomeCar, LanguageCode } from "@/components/home/types
 type HomeTransfersSectionProps = {
   transfers: Transfer[];
   cars?: HomeCar[];
+  passengerCar?: HomeCar | null;
   language: LanguageCode;
   createLocaleLink: (path: string) => string;
   onBook: (item: BookingItem) => void;
@@ -28,11 +29,15 @@ type HomeTransfersSectionProps = {
 export function HomeTransfersSection({
   transfers,
   cars = [],
+  passengerCar = null,
   language,
   createLocaleLink,
   onBook,
 }: HomeTransfersSectionProps) {
-  const renault = cars.find(isPassengerRenault) ?? null;
+  const renault =
+    (passengerCar && isPassengerRenault(passengerCar) ? passengerCar : null) ??
+    cars.find(isPassengerRenault) ??
+    null;
   const bus = pickHomeBusTransfer(transfers);
   const bothSizes = homeBusHasBothSizes(transfers);
   if (!renault && !bus && transfers.length === 0) return null;

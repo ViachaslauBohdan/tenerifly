@@ -117,6 +117,11 @@ describe("HomeTransfersSection locale copy", () => {
       />
     );
 
+    const vehicleHeadings = screen
+      .getAllByRole("heading", { level: 3 })
+      .map((heading) => heading.textContent);
+    expect(vehicleHeadings[0]).toBe("Renault Captur");
+    expect(vehicleHeadings[1]).toMatch(/13 мест/);
     expect(screen.getByRole("heading", { name: "Renault Captur" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Renault Captur" })).toHaveAttribute(
       "href",
@@ -129,5 +134,47 @@ describe("HomeTransfersSection locale copy", () => {
     ).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: /8 мест/ })).not.toBeInTheDocument();
     expect(screen.queryByText("Renault Trafic")).not.toBeInTheDocument();
+  });
+
+  it("shows the Renault car to the left of the bus even when it is not in the home car preview", () => {
+    render(
+      <HomeTransfersSection
+        transfers={[transfer]}
+        cars={[
+          {
+            documentId: "citroen-c3",
+            title: "AC Citroen C3",
+            specifications: { make: "Citroen", model: "C3", seats: 5 },
+          },
+        ]}
+        passengerCar={{
+          documentId: "ti2y8r8d2ey4zadqznszt27y",
+          title: "Renault Captur",
+          description: "Private car transfer",
+          images: [
+            {
+              url: "https://res.cloudinary.com/dlnvckilf/image/upload/v1774360830/renault_captur_9b89369e9d.jpg",
+            },
+          ],
+          specifications: { make: "Renault", model: "Captur", seats: 5 },
+        }}
+        language="en"
+        createLocaleLink={(path) => `/en${path}`}
+        onBook={vi.fn()}
+      />
+    );
+
+    const vehicleHeadings = screen
+      .getAllByRole("heading", { level: 3 })
+      .map((heading) => heading.textContent);
+    expect(vehicleHeadings).toEqual([
+      "Renault Captur",
+      "Mercedes Sprinter 8 seats airport transfer",
+    ]);
+    expect(screen.getByRole("link", { name: "Renault Captur" })).toHaveAttribute(
+      "href",
+      "/en/cars/ti2y8r8d2ey4zadqznszt27y"
+    );
+    expect(screen.queryByText("AC Citroen C3")).not.toBeInTheDocument();
   });
 });

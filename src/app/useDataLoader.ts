@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Transfer, localizeTransfer } from "@/lib/transfers";
+import {
+  Transfer,
+  localizeTransfer,
+  passengerRenaultCarsPath,
+  pickPassengerRenault,
+} from "@/lib/transfers";
 import {
   HOME_CARS_FETCH_LIMIT,
   HOME_PREVIEW_LIMIT,
@@ -14,6 +19,7 @@ import { mergeLocalizedCatalog } from "@/lib/cmsLocalizedContent";
 import { cmsLocale, localeContentKey } from "@/types/locale";
 import { formatPropertyPriceLabel } from "@/utils/propertyPrice";
 import { BLOG_ENABLED } from "@/lib/siteFeatures";
+import type { HomeCar } from "@/components/home/types";
 
 type LanguageCode = "en" | "ru" | "pl" | "fr" | "ua" | "de" | "es";
 
@@ -146,6 +152,7 @@ export function useDataLoader(
   );
   const [blogPosts, setBlogPosts] = useState<Record<string, unknown>[]>([]);
   const [transfers, setTransfers] = useState<Transfer[]>([]);
+  const [passengerCar, setPassengerCar] = useState<HomeCar | null>(null);
   const [dataLoading, setDataLoading] = useState(enabled);
   const [hasError, setHasError] = useState(false);
 
@@ -201,7 +208,7 @@ export function useDataLoader(
           return { data: mergeLocalizedCatalog(enRows, locRows) };
         };
 
-        const [carsResult, propertiesResult, blogsResult, transfersResult] =
+        const [carsResult, propertiesResult, blogsResult, transfersResult, renaultResult] =
           await Promise.allSettled([
             fetchWithLocaleFallback(carsBase),
             fetchPropertiesMerged(),
@@ -211,6 +218,7 @@ export function useDataLoader(
                 )
               : Promise.resolve({ data: [] }),
             fetchWithLocaleFallback(`/transfers?${populate}&${list}`),
+            fetchFromStrapi(passengerRenaultCarsPath(key)),
           ]);
 
         if (
@@ -343,6 +351,34 @@ export function useDataLoader(
         } else {
           setTransfers([]);
         }
+
+        const renaultRows =
+          renaultResult.status === "fulfilled" &&
+          Array.isArray(renaultResult.value?.data)
+            ? renaultResult.value.data
+            : [];
+        let renault = pickPassengerRenault(renaultRows);
+        if (!renault && key !== "en") {
+          try {
+            const english = await fetchFromStrapi(passengerRenaultCarsPath("en"));
+            renault = pickPassengerRenault(
+              Array.isArray(english?.data) ? english.data : []
+            );
+          } catch {
+            renault = null;
+          }
+        }
+        setPassengerCar(
+          renault
+            ? {
+                documentId: renault.documentId,
+                title: renault.title || "Renault Captur",
+                description: renault.description || "",
+                images: renault.images?.[0]?.url ? [renault.images[0]] : [],
+                specifications: renault.specifications,
+              }
+            : null
+        );
       } catch {
         setHasError(true);
       } finally {
@@ -360,6 +396,7 @@ export function useDataLoader(
     accommodation,
     blogPosts,
     transfers,
+    passengerCar,
     dataLoading,
     hasError,
   };

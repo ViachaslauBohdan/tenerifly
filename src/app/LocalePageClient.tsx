@@ -83,6 +83,9 @@ export function LocalePageClient({
   const transfers = initialData
     ? initialData.transfers || []
     : dataFromHook.transfers;
+  const passengerCar = initialData
+    ? initialData.passengerCar ?? null
+    : dataFromHook.passengerCar;
   const dataLoading = initialData ? false : dataFromHook.dataLoading;
 
   const handleLanguageChange = (langCode: LanguageCode) => {
@@ -161,6 +164,7 @@ export function LocalePageClient({
       <HomeTransfersSection
         transfers={transfers}
         cars={cars}
+        passengerCar={passengerCar}
         language={language}
         createLocaleLink={createLocaleLink}
         onBook={(item) => openBookingModal("transfer", item)}
