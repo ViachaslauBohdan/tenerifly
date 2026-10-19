@@ -180,7 +180,7 @@ describe("PropertyDetailPageClient description localization", () => {
     );
     expect(telegram).toHaveAttribute(
       "href",
-      expect.stringMatching(/^https:\/\/t\.me\/adamsvts\?text=/)
+      expect.stringMatching(/^https:\/\/t\.me\/panafera\?text=/)
     );
     expect(decodeURIComponent(whatsapp.getAttribute("href")!)).toContain(
       "Sunny Duplex in Playa de San Juan"

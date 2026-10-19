@@ -21,6 +21,7 @@ export type HeroWorld = {
   baseUrl: string;
   previousSelectValue?: string;
   rememberedScrollY?: number;
+  bookingCode?: string;
 };
 
 export class CustomWorld extends World implements HeroWorld {
@@ -30,6 +31,7 @@ export class CustomWorld extends World implements HeroWorld {
   baseUrl = process.env.BROWSER_BASE_URL ?? "http://127.0.0.1:3000";
   previousSelectValue?: string;
   rememberedScrollY?: number;
+  bookingCode?: string;
 
   constructor(options: IWorldOptions) {
     super(options);

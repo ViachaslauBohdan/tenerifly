@@ -159,7 +159,7 @@ Then(
     assert.ok(tgHref, "Missing manager Telegram href");
     assert.match(
       tgHref,
-      /^https:\/\/t\.me\/adamsvts\?text=/,
+      /^https:\/\/t\.me\/panafera\?text=/,
       `Expected Telegram deep link, got ${tgHref}`
     );
     assert.match(

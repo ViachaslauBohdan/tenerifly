@@ -4,7 +4,7 @@ export const SITE_WHATSAPP_DIGITS = "34604972372";
 
 /** Public manager Telegram used for apartment “write to manager” CTA. */
 export const SITE_TELEGRAM_USERNAME = (
-  process.env.NEXT_PUBLIC_TELEGRAM_USERNAME || "adamsvts"
+  process.env.NEXT_PUBLIC_TELEGRAM_USERNAME || "panafera"
 ).replace(/^@/, "");
 
 /** Retired numbers still present on some CMS listings and old dumps. */

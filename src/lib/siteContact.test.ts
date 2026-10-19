@@ -14,7 +14,7 @@ describe("siteContact", () => {
   it("uses the work number as the public default", () => {
     expect(SITE_PHONE_E164).toBe("+34604972372");
     expect(SITE_WHATSAPP_DIGITS).toBe("34604972372");
-    expect(SITE_TELEGRAM_USERNAME).toBe("adamsvts");
+    expect(SITE_TELEGRAM_USERNAME).toBe("panafera");
     expect(toWhatsAppDigits()).toBe(SITE_WHATSAPP_DIGITS);
     expect(toWhatsAppDigits(null)).toBe(SITE_WHATSAPP_DIGITS);
     expect(toWhatsAppDigits("")).toBe(SITE_WHATSAPP_DIGITS);
@@ -48,7 +48,7 @@ describe("siteContact", () => {
     const tg = telegramWithTextHref(text);
     expect(wa.startsWith("https://wa.me/34604972372?text=")).toBe(true);
     expect(decodeURIComponent(wa)).toContain("Sunny Duplex");
-    expect(tg.startsWith("https://t.me/adamsvts?text=")).toBe(true);
+    expect(tg.startsWith("https://t.me/panafera?text=")).toBe(true);
     expect(decodeURIComponent(tg)).toContain("Sunny Duplex");
     expect(telegramWithTextHref(text, "@someone")).toContain("t.me/someone?");
   });

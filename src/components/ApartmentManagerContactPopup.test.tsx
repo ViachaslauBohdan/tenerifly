@@ -55,7 +55,7 @@ describe("ApartmentManagerContactPopup", () => {
     );
     expect(telegram).toHaveAttribute(
       "href",
-      expect.stringMatching(/^https:\/\/t\.me\/adamsvts\?text=/)
+      expect.stringMatching(/^https:\/\/t\.me\/panafera\?text=/)
     );
 
     const expected =

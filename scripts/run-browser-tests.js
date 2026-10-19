@@ -109,9 +109,11 @@ async function main() {
 
   try {
     await Promise.race([waitForServer(baseUrl), serverExit]);
-    const { code } = await run("npx", ["cucumber-js", "--tags", "not @smoke-prod"], {
-      BROWSER_BASE_URL: baseUrl,
-    });
+    const { code } = await run(
+      "npx",
+      ["cucumber-js", "--tags", "not @smoke-prod and not @smoke-excursion-booking"],
+      { BROWSER_BASE_URL: baseUrl }
+    );
     stopServer();
     process.exit(code);
   } catch (error) {
