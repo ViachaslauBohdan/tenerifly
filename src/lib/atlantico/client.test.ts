@@ -49,10 +49,41 @@ describe("Atlantico client (mocked network)", () => {
     );
   });
 
-  it("rejects placeholder confirm values 0 and 1", async () => {
+  it("rejects placeholder confirm values 0, 1, and -1", async () => {
     const { parseConfirmResponse } = await import("./client");
     expect(() => parseConfirmResponse("0")).toThrow(/booking code/i);
     expect(() => parseConfirmResponse("1")).toThrow(/booking code/i);
+    expect(() => parseConfirmResponse("-1")).toThrow(/booking code/i);
+  });
+
+  it("tries the second confirm host when the first URL returns 404", async () => {
+    vi.stubEnv("ATLANTICO_API_BASE_URL", "https://atlantico.primary.invalid");
+    vi.stubEnv(
+      "ATLANTICO_API_CONFIRM_FALLBACK_URL",
+      "https://atlantico.fallback.invalid"
+    );
+    vi.resetModules();
+    const fetchMock = vi.fn(async (input: RequestInfo) => {
+      const url = String(input);
+      expect(url).not.toMatch(REAL_SUPPLIER_HOST);
+      if (url.startsWith("https://atlantico.primary.invalid/")) {
+        return {
+          ok: false,
+          status: 404,
+          headers: { get: () => "text/html" },
+          text: async () => "Not Found",
+        };
+      }
+      expect(url).toBe("https://atlantico.fallback.invalid/confirm/");
+      return jsonResponse({ bookingCode: "AE-456" });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { confirmAtlanticoBooking } = await import("./client");
+    const result = await confirmAtlanticoBooking(confirmPayload);
+
+    expect(result.bookingCode).toBe("AE-456");
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it("posts /confirm/ only to the mocked fetch, never a live supplier host", async () => {

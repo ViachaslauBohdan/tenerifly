@@ -1,4 +1,4 @@
-import { getAtlanticoConfig } from "./config";
+import { atlanticoConfirmBaseUrls, getAtlanticoConfig } from "./config";
 import { toAtlanticoLanguage } from "./language";
 import { ATLANTICO_PATHS } from "./paths";
 import { withPositiveTourCounts } from "./parse";
@@ -47,10 +47,14 @@ function asObject<T>(data: unknown): T | null {
 
 async function atlanticoFetch(
   path: string,
-  init: RequestInit & { revalidateSeconds?: number } = {}
+  init: RequestInit & { revalidateSeconds?: number; baseUrl?: string } = {}
 ): Promise<unknown> {
-  const { baseUrl, token } = getAtlanticoConfig();
-  const { revalidateSeconds, headers, ...rest } = init;
+  const { token } = getAtlanticoConfig();
+  const { revalidateSeconds, headers, baseUrl: baseUrlOverride, ...rest } = init;
+  const baseUrl = (baseUrlOverride || getAtlanticoConfig().baseUrl).replace(
+    /\/$/,
+    ""
+  );
   const url = `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
   const isMutating = Boolean(rest.method && rest.method !== "GET");
   const noStore = isMutating || revalidateSeconds === 0;
@@ -282,12 +286,34 @@ export async function getAtlanticoLimits(
   return asObject<AtlanticoLoadLimitsResponse>(data);
 }
 
+function looksLikeBookingCode(value: string): boolean {
+  if (value === "0" || value === "1" || value === "-1") return false;
+  return /^[A-Za-z0-9_-]{2,40}$/.test(value);
+}
+
+function supplierConfirmMessage(data: unknown): string | null {
+  if (typeof data !== "string") return null;
+  const text = data
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!text || text === "0" || text === "1" || text === "-1") return null;
+  if (looksLikeBookingCode(text)) return null;
+  return text.slice(0, 300);
+}
+
 export function parseConfirmResponse(data: unknown): AtlanticoConfirmResponse {
   if (typeof data === "string") {
     const trimmed = data.trim().replace(/^"+|"+$/g, "");
-    if (trimmed && trimmed !== "0" && trimmed !== "1") {
+    if (looksLikeBookingCode(trimmed)) {
       return { bookingCode: trimmed };
     }
+    const message = supplierConfirmMessage(data);
+    throw new AtlanticoApiError(
+      message || "Atlantico confirm did not return a booking code.",
+      502,
+      "invalid_confirm_response"
+    );
   }
   if (data && typeof data === "object") {
     const record = data as Record<string, unknown>;
@@ -297,7 +323,7 @@ export function parseConfirmResponse(data: unknown): AtlanticoConfirmResponse {
       record.reference ??
       record.ref ??
       record.code;
-    if (code != null && String(code).trim()) {
+    if (code != null && looksLikeBookingCode(String(code).trim())) {
       return {
         bookingCode: String(code).trim(),
         message: typeof record.message === "string" ? record.message : undefined,
@@ -311,17 +337,63 @@ export function parseConfirmResponse(data: unknown): AtlanticoConfirmResponse {
   );
 }
 
+function confirmFormBody(body: AtlanticoConfirmRequest): string {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(body)) {
+    if (value === undefined || value === null || value === "") continue;
+    params.set(key, String(value));
+  }
+  return params.toString();
+}
+
+async function postConfirm(
+  baseUrl: string,
+  body: AtlanticoConfirmRequest,
+  asForm: boolean
+): Promise<unknown> {
+  return atlanticoFetch(ATLANTICO_PATHS.confirm, {
+    method: "POST",
+    cache: "no-store",
+    baseUrl,
+    headers: {
+      "Content-Type": asForm
+        ? "application/x-www-form-urlencoded"
+        : "application/json",
+    },
+    body: asForm ? confirmFormBody(body) : JSON.stringify(body),
+  });
+}
+
 export async function confirmAtlanticoBooking(
   body: AtlanticoConfirmRequest
 ): Promise<AtlanticoConfirmResponse> {
-  // Affiliate / account booking — no payment gateway. Trailing slash required.
-  const data = await atlanticoFetch(ATLANTICO_PATHS.confirm, {
-    method: "POST",
-    cache: "no-store",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  return parseConfirmResponse(data);
+  // Affiliate reserve. Trailing slash is required. If the first host does not
+  // return a booking code (404, -1, credit text), try the next host.
+  let lastError: unknown;
+  for (const baseUrl of atlanticoConfirmBaseUrls()) {
+    try {
+      return parseConfirmResponse(await postConfirm(baseUrl, body, false));
+    } catch (error) {
+      lastError = error;
+      const status = error instanceof AtlanticoApiError ? error.status : 0;
+      if (status >= 400 && status < 500 && status !== 401) {
+        continue;
+      }
+    }
+
+    try {
+      return parseConfirmResponse(await postConfirm(baseUrl, body, true));
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (lastError instanceof Error) throw lastError;
+  throw new AtlanticoApiError(
+    "Atlantico confirm did not return a booking code.",
+    502,
+    "invalid_confirm_response"
+  );
 }
 
 /**
