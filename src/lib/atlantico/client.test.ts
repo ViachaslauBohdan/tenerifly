@@ -139,6 +139,42 @@ describe("Atlantico client (mocked network)", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
+  it("submits the Comercio Simulador auto-post form instead of showing its script", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo) => {
+      const url = String(input);
+      expect(url).not.toMatch(REAL_SUPPLIER_HOST);
+      expect(url).toBe("https://atlantico.test.invalid/payment/");
+      return {
+        ok: true,
+        status: 200,
+        headers: { get: () => "text/html" },
+        text: async () => `<html><head><title>Comercio Simulador</title></head><body>
+          <form action="https://sis-t.redsys.es/sis/realizarPago" method="post">
+            <input type="hidden" name="Ds_SignatureVersion" value="HMAC_SHA256_V1" />
+            <input type="hidden" name="Ds_MerchantParameters" value="eyJ" />
+            <input type="hidden" name="Ds_Signature" value="sig" />
+          </form>
+          <script>document.forms[0].submit();</script>
+        </body></html>`,
+      };
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { startAtlanticoPayment } = await import("./client");
+    const result = await startAtlanticoPayment(confirmPayload);
+
+    expect(result.paymentForm).toEqual({
+      action: "https://sis-t.redsys.es/sis/realizarPago",
+      method: "POST",
+      fields: [
+        { name: "Ds_SignatureVersion", value: "HMAC_SHA256_V1" },
+        { name: "Ds_MerchantParameters", value: "eyJ" },
+        { name: "Ds_Signature", value: "sig" },
+      ],
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it("tries the second payment host when the first URL returns 404", async () => {
     vi.stubEnv("ATLANTICO_API_BASE_URL", "https://atlantico.primary.invalid");
     vi.stubEnv(

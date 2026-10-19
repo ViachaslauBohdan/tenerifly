@@ -102,9 +102,17 @@ export type AtlanticoConfirmResponse = {
   message?: string;
 };
 
-/** Result of POST /payment/ — customer should be sent to paymentUrl. */
+/** Hidden fields from an auto-submit gateway page such as Redsys. */
+export type AtlanticoPaymentForm = {
+  action: string;
+  method: "GET" | "POST";
+  fields: { name: string; value: string }[];
+};
+
+/** Result of POST /payment/ — either a redirect URL or a gateway form to submit. */
 export type AtlanticoPaymentResponse = {
-  paymentUrl: string;
+  paymentUrl?: string;
+  paymentForm?: AtlanticoPaymentForm;
 };
 
 export type PerPersonPrices = {

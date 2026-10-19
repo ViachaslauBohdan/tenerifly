@@ -10,12 +10,14 @@ import { getAtlanticoUiCopy } from "./atlanticoCopy";
 import { sessionsForIsoDate, weekdayTimeForIsoDate } from "@/lib/atlantico/availability";
 import { toAtlanticoLanguage } from "@/lib/atlantico/language";
 import { estimateBookingTotal } from "@/lib/atlantico/prices";
+import { submitPaymentForm } from "@/lib/atlantico/paymentForm";
 import { isValidEmail } from "@/lib/atlantico/parse";
 import { gtagReportConversion } from "@/lib/gtag";
 import { formatTileAmount } from "@/components/TilePriceBadge";
 import type {
   AtlanticoEventDetails,
   AtlanticoLoadLimitsResponse,
+  AtlanticoPaymentForm,
   ParsedPrices,
 } from "@/lib/atlantico/types";
 import type { Locale } from "@/types/locale";
@@ -218,13 +220,18 @@ export function AtlanticoBookingPanel({
       });
       const data = (await res.json()) as {
         paymentUrl?: string;
+        paymentForm?: AtlanticoPaymentForm;
         error?: string;
       };
-      if (!res.ok || !data.paymentUrl) {
+      if (!res.ok || (!data.paymentUrl && !data.paymentForm)) {
         throw new Error(data.error || copy.errorGeneric);
       }
       gtagReportConversion();
-      window.location.assign(data.paymentUrl);
+      if (data.paymentUrl) {
+        window.location.assign(data.paymentUrl);
+        return;
+      }
+      if (data.paymentForm) submitPaymentForm(data.paymentForm);
     } catch (err) {
       setError(err instanceof Error ? err.message : copy.errorGeneric);
     } finally {

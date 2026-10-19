@@ -1,5 +1,6 @@
 import { atlanticoConfirmBaseUrls, getAtlanticoConfig } from "./config";
 import { toAtlanticoLanguage } from "./language";
+import { parsePaymentForm } from "./paymentForm";
 import { ATLANTICO_PATHS } from "./paths";
 import { withPositiveTourCounts } from "./parse";
 import { normalizeAtlanticoPriceRaw } from "./prices";
@@ -460,9 +461,11 @@ export async function startAtlanticoPayment(
             paymentUrl: new URL(response.location, `${baseUrl}/`).toString(),
           };
         }
-        const paymentUrl = paymentUrlFromBody(response.rawText, baseUrl);
-        if (paymentUrl && response.status >= 200 && response.status < 300) {
-          return { paymentUrl };
+        if (response.status >= 200 && response.status < 300) {
+          const paymentUrl = paymentUrlFromBody(response.rawText, baseUrl);
+          if (paymentUrl) return { paymentUrl };
+          const paymentForm = parsePaymentForm(response.rawText, baseUrl);
+          if (paymentForm) return { paymentForm };
         }
         const plain = response.rawText
           .replace(/<[^>]+>/g, " ")
