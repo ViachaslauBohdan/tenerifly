@@ -7,7 +7,7 @@ import {
   type Country,
 } from "@/components/PhoneNumberInput";
 import { getAtlanticoUiCopy } from "./atlanticoCopy";
-import { sessionsForIsoDate } from "@/lib/atlantico/availability";
+import { sessionsForIsoDate, weekdayTimeForIsoDate } from "@/lib/atlantico/availability";
 import { toAtlanticoLanguage } from "@/lib/atlantico/language";
 import { estimateBookingTotal } from "@/lib/atlantico/prices";
 import { isValidEmail } from "@/lib/atlantico/parse";
@@ -169,12 +169,16 @@ export function AtlanticoBookingPanel({
     }
 
     const firstSession = sessionsForIsoDate(limits, tourDate)[0];
-    setSesTime(firstSession?.time || "00:00");
+    setSesTime(
+      firstSession?.time ||
+        weekdayTimeForIsoDate(selectedEvent?.times, tourDate) ||
+        "00:00"
+    );
     void loadPrices();
     return () => {
       cancelled = true;
     };
-  }, [eventCode, limits, selectedEvent?.pProd, tourDate]);
+  }, [eventCode, limits, selectedEvent?.pProd, selectedEvent?.times, tourDate]);
 
   const total = estimateBookingTotal(prices, adults, childs, infants);
   const phoneValid = isPhoneNumberValid(phoneCountry, phone);

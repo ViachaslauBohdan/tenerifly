@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { availableIsoDates, sessionsForIsoDate } from "./availability";
+import {
+  availableIsoDates,
+  sessionsForIsoDate,
+  weekdayTimeForIsoDate,
+} from "./availability";
 import type { AtlanticoLoadLimitsResponse } from "./types";
 import { parseConfirmResponse } from "./client";
 
@@ -31,6 +35,49 @@ const limits: AtlanticoLoadLimitsResponse = {
 describe("availableIsoDates", () => {
   it("prefers sessions with remaining places", () => {
     expect(availableIsoDates(limits)).toEqual(["2026-08-22"]);
+  });
+
+  it("builds a calendar from Monday-first weekdays when no date list is returned", () => {
+    const dates = availableIsoDates(
+      {
+        id: "2232",
+        dates: { wdays: [0, 2, 0, 4, 0, 0, 0] },
+      },
+      { fromIso: "2026-10-19", horizonDays: 6 }
+    );
+    expect(dates).toEqual(["2026-10-20", "2026-10-22"]);
+  });
+
+  it("keeps a real date list instead of expanding weekdays", () => {
+    expect(
+      availableIsoDates(
+        {
+          id: "1920",
+          dates: {
+            date: ["20261020"],
+            wdays: [0, 2, 0, 0, 5, 0, 0],
+          },
+        },
+        { fromIso: "2026-10-19" }
+      )
+    ).toEqual(["2026-10-20"]);
+  });
+
+  it("returns nothing when every weekday is closed", () => {
+    expect(
+      availableIsoDates(
+        { id: "538", dates: { wdays: [0, 0, 0, 0, 0, 0, 0] } },
+        { fromIso: "2026-10-19" }
+      )
+    ).toEqual([]);
+  });
+});
+
+describe("weekdayTimeForIsoDate", () => {
+  it("reads the Monday-first departure time and skips closed days", () => {
+    const times = ["-", "08:00", "-", "08:00", "-", "-", "-"];
+    expect(weekdayTimeForIsoDate(times, "2026-10-20")).toBe("08:00");
+    expect(weekdayTimeForIsoDate(times, "2026-10-19")).toBeNull();
   });
 });
 
