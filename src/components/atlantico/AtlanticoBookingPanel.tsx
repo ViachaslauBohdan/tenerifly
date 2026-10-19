@@ -65,7 +65,6 @@ function GuestStepper({
 
 export function AtlanticoBookingPanel({
   tourCode,
-  tourName,
   events,
   locale,
 }: AtlanticoBookingPanelProps) {
@@ -88,7 +87,6 @@ export function AtlanticoBookingPanel({
   const [loadingAvailability, setLoadingAvailability] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [bookingCode, setBookingCode] = useState<string | null>(null);
   const [attempted, setAttempted] = useState(false);
 
   const selectedEvent = events.find(
@@ -219,35 +217,20 @@ export function AtlanticoBookingPanel({
         }),
       });
       const data = (await res.json()) as {
-        bookingCode?: string;
+        paymentUrl?: string;
         error?: string;
       };
-      if (!res.ok || !data.bookingCode) {
+      if (!res.ok || !data.paymentUrl) {
         throw new Error(data.error || copy.errorGeneric);
       }
-      setBookingCode(data.bookingCode);
       gtagReportConversion();
+      window.location.assign(data.paymentUrl);
     } catch (err) {
       setError(err instanceof Error ? err.message : copy.errorGeneric);
     } finally {
       setSubmitting(false);
     }
   };
-
-  if (bookingCode) {
-    return (
-      <div className="rounded-lg border border-green-200 bg-green-50 p-5">
-        <h3 className="text-lg font-semibold text-green-800">{copy.successTitle}</h3>
-        <p className="mt-2 text-sm text-green-800">{copy.successBody}</p>
-        <p className="mt-4 text-sm text-gray-700">
-          {tourName}
-        </p>
-        <p className="mt-2 font-mono text-base font-semibold text-gray-900">
-          {copy.bookingCode}: {bookingCode}
-        </p>
-      </div>
-    );
-  }
 
   if (events.length === 0) {
     return (

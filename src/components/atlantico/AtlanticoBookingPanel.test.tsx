@@ -85,7 +85,9 @@ describe("AtlanticoBookingPanel", () => {
         if (url.includes("/api/atlantico/book")) {
           return {
             ok: true,
-            json: async () => ({ bookingCode: "AE-1001" }),
+            json: async () => ({
+              paymentUrl: "https://pay.example/checkout/abc",
+            }),
           };
         }
         return { ok: false, json: async () => ({ error: "unexpected" }) };
@@ -104,7 +106,7 @@ describe("AtlanticoBookingPanel", () => {
       />
     );
 
-    const bookNow = await screen.findByRole("button", { name: /book now/i });
+    const bookNow = await screen.findByRole("button", { name: /pay now/i });
     expect(bookNow).toBeEnabled();
 
     await user.click(bookNow);
@@ -117,8 +119,13 @@ describe("AtlanticoBookingPanel", () => {
     );
   });
 
-  it("confirms a booking and shows the reference", async () => {
+  it("sends the customer to the card payment page", async () => {
     const user = userEvent.setup();
+    const assign = vi.fn();
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: { assign },
+    });
     render(
       <AtlanticoBookingPanel
         tourCode="12"
@@ -129,18 +136,16 @@ describe("AtlanticoBookingPanel", () => {
     );
 
     expect(
-      await screen.findByRole("button", { name: /book now/i })
+      await screen.findByRole("button", { name: /pay now/i })
     ).toBeInTheDocument();
 
     await user.type(screen.getByRole("textbox", { name: /full name/i }), "Ada Lovelace");
     await user.type(screen.getByRole("textbox", { name: /email/i }), "ada@example.com");
     await user.type(screen.getByLabelText(/phone/i), "+34600111222");
-    await user.click(screen.getByRole("button", { name: /book now/i }));
+    await user.click(screen.getByRole("button", { name: /pay now/i }));
 
-    expect(
-      await screen.findByText(/reservation confirmed/i)
-    ).toBeInTheDocument();
-    expect(screen.getByText(/AE-1001/)).toBeInTheDocument();
+    expect(assign).toHaveBeenCalledWith("https://pay.example/checkout/abc");
+    expect(screen.queryByText(/reservation confirmed/i)).not.toBeInTheDocument();
 
     const booked = vi
       .mocked(fetch)

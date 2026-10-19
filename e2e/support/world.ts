@@ -22,6 +22,7 @@ export type HeroWorld = {
   previousSelectValue?: string;
   rememberedScrollY?: number;
   bookingCode?: string;
+  paymentUrl?: string;
 };
 
 export class CustomWorld extends World implements HeroWorld {
@@ -32,6 +33,7 @@ export class CustomWorld extends World implements HeroWorld {
   previousSelectValue?: string;
   rememberedScrollY?: number;
   bookingCode?: string;
+  paymentUrl?: string;
 
   constructor(options: IWorldOptions) {
     super(options);

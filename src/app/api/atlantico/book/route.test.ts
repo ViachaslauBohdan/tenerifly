@@ -5,11 +5,11 @@ vi.mock("@/lib/atlantico/client", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/atlantico/client")>();
   return {
     ...actual,
-    confirmAtlanticoBooking: vi.fn(),
+    startAtlanticoPayment: vi.fn(),
   };
 });
 
-import { confirmAtlanticoBooking } from "@/lib/atlantico/client";
+import { startAtlanticoPayment } from "@/lib/atlantico/client";
 import { POST } from "./route";
 
 const validBody = {
@@ -38,9 +38,9 @@ function postBook(body: unknown) {
 
 describe("POST /api/atlantico/book", () => {
   beforeEach(() => {
-    vi.mocked(confirmAtlanticoBooking).mockReset();
-    vi.mocked(confirmAtlanticoBooking).mockResolvedValue({
-      bookingCode: "TEST-NO-LIVE-BOOKING",
+    vi.mocked(startAtlanticoPayment).mockReset();
+    vi.mocked(startAtlanticoPayment).mockResolvedValue({
+      paymentUrl: "https://pay.example/checkout/test",
     });
   });
 
@@ -52,23 +52,23 @@ describe("POST /api/atlantico/book", () => {
     const response = await postBook("{");
     expect(response.status).toBe(400);
     expect(await response.json()).toEqual({ error: "Invalid JSON" });
-    expect(confirmAtlanticoBooking).not.toHaveBeenCalled();
+    expect(startAtlanticoPayment).not.toHaveBeenCalled();
   });
 
-  it("rejects an incomplete payload without calling confirm", async () => {
+  it("rejects an incomplete payload without calling payment", async () => {
     const response = await postBook({ name: "Ada Lovelace" });
     expect(response.status).toBe(400);
-    expect(confirmAtlanticoBooking).not.toHaveBeenCalled();
+    expect(startAtlanticoPayment).not.toHaveBeenCalled();
   });
 
-  it("returns a mocked booking code and never hits Atlántico", async () => {
+  it("returns a mocked payment URL and never hits Atlántico", async () => {
     const response = await postBook(validBody);
-    const payload = (await response.json()) as { bookingCode?: string };
+    const payload = (await response.json()) as { paymentUrl?: string };
 
     expect(response.status).toBe(200);
-    expect(payload.bookingCode).toBe("TEST-NO-LIVE-BOOKING");
-    expect(confirmAtlanticoBooking).toHaveBeenCalledTimes(1);
-    expect(vi.mocked(confirmAtlanticoBooking).mock.calls[0][0]).toMatchObject({
+    expect(payload.paymentUrl).toBe("https://pay.example/checkout/test");
+    expect(startAtlanticoPayment).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(startAtlanticoPayment).mock.calls[0][0]).toMatchObject({
       t_id: "184",
       t_group: "12",
       userId: "3726",
@@ -79,13 +79,13 @@ describe("POST /api/atlantico/book", () => {
 
   it("omits optional hotel and notes from the confirm payload", async () => {
     await postBook(validBody);
-    const sent = vi.mocked(confirmAtlanticoBooking).mock.calls[0][0];
+    const sent = vi.mocked(startAtlanticoPayment).mock.calls[0][0];
     expect(sent).not.toHaveProperty("hotel");
     expect(sent).not.toHaveProperty("Notes");
   });
 
   it("maps a mocked supplier error without creating a booking", async () => {
-    vi.mocked(confirmAtlanticoBooking).mockRejectedValue(
+    vi.mocked(startAtlanticoPayment).mockRejectedValue(
       new AtlanticoApiError("Session full", 409, "sold_out")
     );
 

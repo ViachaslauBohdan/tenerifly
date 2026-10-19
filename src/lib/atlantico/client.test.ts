@@ -139,6 +139,48 @@ describe("Atlantico client (mocked network)", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
+  it("tries the second payment host when the first URL returns 404", async () => {
+    vi.stubEnv("ATLANTICO_API_BASE_URL", "https://atlantico.primary.invalid");
+    vi.stubEnv(
+      "ATLANTICO_API_CONFIRM_FALLBACK_URL",
+      "https://atlantico.fallback.invalid"
+    );
+    vi.resetModules();
+    const fetchMock = vi.fn(async (input: RequestInfo) => {
+      const url = String(input);
+      expect(url).not.toMatch(REAL_SUPPLIER_HOST);
+      if (url.startsWith("https://atlantico.primary.invalid/")) {
+        return {
+          ok: false,
+          status: 404,
+          headers: { get: () => "text/html" },
+          text: async () => "Not Found",
+        };
+      }
+      expect(url).toBe("https://atlantico.fallback.invalid/payment/");
+      return {
+        ok: false,
+        status: 302,
+        headers: {
+          get: (name: string) =>
+            name.toLowerCase() === "location"
+              ? "https://pay.example/checkout/fallback"
+              : null,
+        },
+        text: async () => "",
+      };
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { startAtlanticoPayment } = await import("./client");
+    const result = await startAtlanticoPayment(confirmPayload);
+
+    expect(result).toEqual({
+      paymentUrl: "https://pay.example/checkout/fallback",
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
   it("unwraps JSON-encoded loadPrices strings and skips empty office responses", async () => {
     const fetchMock = vi.fn(async (input: RequestInfo) => {
       const url = String(input);

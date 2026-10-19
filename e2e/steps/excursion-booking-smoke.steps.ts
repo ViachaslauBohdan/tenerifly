@@ -48,7 +48,7 @@ When("I open the Teide Half Day tour", async function (this: CustomWorld) {
   await card.getByRole("link", { name: "View details" }).click();
   await this.page.waitForURL(/\/en\/tours\/\d+/, { timeout: 60_000 });
   await this.page
-    .getByRole("button", { name: "Book now" })
+    .getByRole("button", { name: "Pay now" })
     .waitFor({ state: "visible", timeout: 60_000 });
 });
 
@@ -74,49 +74,29 @@ When(
       .locator("textarea")
       .fill("Automated smoke test. Please cancel.");
 
-    await this.page.getByRole("button", { name: "Book now" }).click();
-
-    const confirmed = this.page.getByRole("heading", { name: "Reservation confirmed" });
-    const error = this.page.locator("form p.text-red-600").last();
-    await Promise.race([
-      confirmed.waitFor({ state: "visible", timeout: 45_000 }),
-      error.waitFor({ state: "visible", timeout: 45_000 }),
-    ]);
-
-    if (await error.isVisible().catch(() => false)) {
-      const message = (await error.textContent())?.trim() || "Booking failed";
-      assert.fail(message);
-    }
+    const paymentResponse = this.page.waitForResponse(
+      (response) =>
+        response.url().includes("/api/atlantico/book") &&
+        response.request().method() === "POST",
+      { timeout: 45_000 }
+    );
+    await this.page.getByRole("button", { name: "Pay now" }).click();
+    const response = await paymentResponse;
+    const payload = (await response.json()) as { paymentUrl?: string; error?: string };
+    assert.equal(
+      response.status(),
+      200,
+      payload.error || `Payment request failed (${response.status()})`
+    );
+    assert.match(
+      payload.paymentUrl || "",
+      /^https?:\/\//,
+      `Expected a payment URL, got ${JSON.stringify(payload)}`
+    );
+    this.paymentUrl = payload.paymentUrl;
   }
 );
 
-Then("the excursion booking should be confirmed", async function (this: CustomWorld) {
-  await this.page
-    .getByRole("heading", { name: "Reservation confirmed" })
-    .waitFor({ state: "visible" });
-  const reference = this.page.locator("p.font-mono");
-  const text = (await reference.textContent())?.trim() || "";
-  const code = text.replace(/^Booking code:\s*/i, "").trim();
-  assert.match(code, /\S+/, `Expected a booking code, got "${text}"`);
-  assert.notEqual(code, "0");
-  assert.notEqual(code, "1");
-  this.bookingCode = code;
-});
-
-Then("the smoke-test booking should be cancelled", async function (this: CustomWorld) {
-  const code = this.bookingCode;
-  assert.ok(code, "No booking code to cancel");
-  const note = encodeURIComponent("smoke test");
-  const response = await fetch(
-    `https://api.atlanticoexcursiones.com/cancelBooking/${encodeURIComponent(code)}/${note}`,
-    {
-      method: "POST",
-      headers: { Accept: "application/json" },
-    }
-  );
-  const body = (await response.text()).slice(0, 300);
-  assert.ok(
-    response.ok,
-    `Booking ${code} was created but cancel failed (${response.status}): ${body}`
-  );
+Then("the excursion booking should open card payment", async function (this: CustomWorld) {
+  assert.match(this.paymentUrl || "", /^https?:\/\//);
 });

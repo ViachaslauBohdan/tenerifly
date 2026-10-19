@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { validateBookRequest } from "@/lib/atlantico/bookRequest";
-import { confirmAtlanticoBooking } from "@/lib/atlantico/client";
+import { startAtlanticoPayment } from "@/lib/atlantico/client";
 import {
   getAtlanticoConfig,
   isAtlanticoBookingConfigured,
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
   const { userId } = getAtlanticoConfig();
 
   try {
-    const result = await confirmAtlanticoBooking({
+    const result = await startAtlanticoPayment({
       ...parsed.value,
       userId,
     });
