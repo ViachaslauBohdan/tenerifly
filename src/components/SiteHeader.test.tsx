@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SiteHeader } from "./SiteHeader";
@@ -43,7 +43,7 @@ describe("SiteHeader navigation", () => {
     expect(screen.queryByRole("link", { name: "Blog" })).not.toBeInTheDocument();
     expect(screen.queryByText("Blog")).not.toBeInTheDocument();
     expect(screen.getAllByText("Cars").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Tours").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Excursions").length).toBeGreaterThan(0);
   });
 
   it("does not link to /blog or #blog on catalog pages", () => {
@@ -73,7 +73,7 @@ describe("SiteHeader navigation", () => {
       />
     );
 
-    const toursLinks = screen.getAllByRole("link", { name: "Tours" });
+    const toursLinks = screen.getAllByRole("link", { name: "Excursions" });
     expect(toursLinks.some((link) => link.getAttribute("href") === "#excursions")).toBe(
       true
     );
@@ -109,15 +109,36 @@ describe("SiteHeader navigation", () => {
   it("points section links at the locale home hash on standalone pages", () => {
     render(<SiteHeader {...headerProps} variant="standalone" />);
 
-    const toursLinks = screen.getAllByRole("link", { name: "Tours" });
+    const toursLinks = screen.getAllByRole("link", { name: "Excursions" });
     expect(
       toursLinks.some((link) => link.getAttribute("href") === "/en/#excursions")
+    ).toBe(true);
+    expect(
+      screen.getAllByRole("link", { name: "Stays" }).some(
+        (link) => link.getAttribute("href") === "/en/apartments"
+      )
     ).toBe(true);
 
     const homeHrefs = screen
       .getAllByRole("link", { name: "Home" })
       .map((link) => link.getAttribute("href") ?? "");
     expect(homeHrefs.some((href) => /^\/en\/?$/.test(href))).toBe(true);
+  });
+
+  it("orders the main links as home, excursions, stays, cars, transfers", () => {
+    render(<SiteHeader {...headerProps} variant="home" showTransfers />);
+
+    const names = within(screen.getByRole("navigation", { name: "Page sections" }))
+      .getAllByRole("link")
+      .map((link) => link.textContent);
+
+    expect(names.slice(0, 5)).toEqual([
+      "Home",
+      "Excursions",
+      "Stays",
+      "Cars",
+      "Transfers",
+    ]);
   });
 
   it("notifies the parent when the language select changes", async () => {

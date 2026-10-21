@@ -49,6 +49,17 @@ const headerNavTransfers: Record<string, string> = {
   es: "Traslados",
 };
 
+const headerNavExcursions: Record<string, string> = {
+  en: "Excursions",
+  ru: "Экскурсии",
+  pl: "Wycieczki",
+  fr: "Excursions",
+  uk: "Екскурсії",
+  ua: "Екскурсії",
+  de: "Ausflüge",
+  es: "Excursiones",
+};
+
 const headerNavAuthorTours: Record<string, string> = {
   en: "Author tours",
   ru: "Авторские туры",
@@ -232,10 +243,21 @@ export function SiteHeader({
     </div>
   );
 
-  const renderNavLinks = (linkClass: string, worldToursLinkClass: string) => (
+  const apartmentsHref = createLocaleLink("/apartments");
+  const excursionsLabel = pickLocaleBundle(headerNavExcursions, language);
+
+  const renderPrimaryLinks = (
+    linkClass: string,
+    linkProps: (
+      sectionId: string
+    ) => {
+      href: string;
+      onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+    }
+  ) => (
     <>
       {variant === "home" ? (
-        <a {...navLinkProps("home")} className={linkClass}>
+        <a {...linkProps("home")} className={linkClass}>
           {pickLocaleBundle(headerNavHome, language)}
         </a>
       ) : (
@@ -243,31 +265,37 @@ export function SiteHeader({
           {pickLocaleBundle(headerNavHome, language)}
         </Link>
       )}
-      <a {...navLinkProps("accommodation")} className={linkClass}>
-        {tabLabels.accommodation}
+      <a {...linkProps("excursions")} className={linkClass}>
+        {excursionsLabel}
       </a>
-      <a {...navLinkProps("cars")} className={linkClass}>
+      <Link href={apartmentsHref} className={linkClass} onClick={closeMobileMenu}>
+        {tabLabels.accommodation}
+      </Link>
+      <a {...linkProps("cars")} className={linkClass}>
         {tabLabels.cars}
       </a>
       {showTransfers && (
-        <a {...navLinkProps("transfers")} className={linkClass}>
+        <a {...linkProps("transfers")} className={linkClass}>
           {pickLocaleBundle(headerNavTransfers, language)}
         </a>
       )}
-      <a {...navLinkProps("excursions")} className={linkClass}>
-        {tabLabels.excursions}
-      </a>
-      <a {...navLinkProps("author-tours")} className={linkClass}>
+      <a {...linkProps("author-tours")} className={linkClass}>
         {pickLocaleBundle(headerNavAuthorTours, language)}
       </a>
       {BLOG_ENABLED ? (
-        <a {...navLinkProps("blog")} className={linkClass}>
+        <a {...linkProps("blog")} className={linkClass}>
           {tabLabels.blog}
         </a>
       ) : null}
-      <a {...navLinkProps("faq")} className={linkClass}>
+      <a {...linkProps("faq")} className={linkClass}>
         {pickLocaleBundle(navShortFaqLabel, language)}
       </a>
+    </>
+  );
+
+  const renderNavLinks = (linkClass: string, worldToursLinkClass: string) => (
+    <>
+      {renderPrimaryLinks(linkClass, navLinkProps)}
       <Link
         href={createLocaleLink("/world-tours")}
         className={worldToursLinkClass}
@@ -277,11 +305,7 @@ export function SiteHeader({
         {worldToursNav.badge}
       </Link>
       {legalPageTitle ? (
-        <Link
-          href={legalPageHref}
-          className={linkClass}
-          onClick={closeMobileMenu}
-        >
+        <Link href={legalPageHref} className={linkClass} onClick={closeMobileMenu}>
           {legalPageTitle}
         </Link>
       ) : null}
@@ -290,44 +314,7 @@ export function SiteHeader({
 
   const renderMobileNavLinks = () => (
     <>
-      {variant === "home" ? (
-        <a {...navLinkPropsMobile("home")} className={mobileNavLinkClass}>
-          {pickLocaleBundle(headerNavHome, language)}
-        </a>
-      ) : (
-        <Link
-          href={homeHref}
-          className={mobileNavLinkClass}
-          onClick={closeMobileMenu}
-        >
-          {pickLocaleBundle(headerNavHome, language)}
-        </Link>
-      )}
-      <a {...navLinkPropsMobile("accommodation")} className={mobileNavLinkClass}>
-        {tabLabels.accommodation}
-      </a>
-      <a {...navLinkPropsMobile("cars")} className={mobileNavLinkClass}>
-        {tabLabels.cars}
-      </a>
-      {showTransfers && (
-        <a {...navLinkPropsMobile("transfers")} className={mobileNavLinkClass}>
-          {pickLocaleBundle(headerNavTransfers, language)}
-        </a>
-      )}
-      <a {...navLinkPropsMobile("excursions")} className={mobileNavLinkClass}>
-        {tabLabels.excursions}
-      </a>
-      <a {...navLinkPropsMobile("author-tours")} className={mobileNavLinkClass}>
-        {pickLocaleBundle(headerNavAuthorTours, language)}
-      </a>
-      {BLOG_ENABLED ? (
-        <a {...navLinkPropsMobile("blog")} className={mobileNavLinkClass}>
-          {tabLabels.blog}
-        </a>
-      ) : null}
-      <a {...navLinkPropsMobile("faq")} className={mobileNavLinkClass}>
-        {pickLocaleBundle(navShortFaqLabel, language)}
-      </a>
+      {renderPrimaryLinks(mobileNavLinkClass, navLinkPropsMobile)}
       <Link
         href={createLocaleLink("/world-tours")}
         className={mobileWorldToursClassName}
