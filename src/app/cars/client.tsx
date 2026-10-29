@@ -58,6 +58,7 @@ const DEFAULT_CAR_FILTERS: CarFilterParams = {
   gps: false,
   type: "",
   carStatus: "",
+  q: "",
 };
 
 function carFiltersFromSearchParams(
@@ -90,6 +91,7 @@ function carFiltersFromSearchParams(
     gps: (urlFilters.gps as boolean) || false,
     type: (urlFilters.type as string) || "",
     carStatus: (urlFilters.carStatus as string) || "",
+    q: typeof urlFilters.q === "string" ? urlFilters.q : "",
   };
 }
 
@@ -565,6 +567,7 @@ export default function CarsPageClient({
             onResetFilters={resetFiltersSync}
             onCarsUpdate={handleCarsUpdate}
             translations={t}
+            locale={language}
             allCars={
               ((allCarsByLocale[localeContentKey(language)] ??
                 allCarsByLocale[language]) as CarData[]) || []

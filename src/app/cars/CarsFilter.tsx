@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { CatalogFilterMoreToggle } from "@/components/CatalogFilterMoreToggle";
+import { CatalogSearchField } from "@/components/CatalogSearchField";
+import { catalogSearchQuery, matchesCatalogSearch } from "@/lib/catalogSearch";
 
 interface FilterState {
   brand: string;
@@ -26,6 +28,7 @@ interface FilterState {
   multimedia: boolean;
   type: string; // rent or sale
   carStatus: string; // available, reserved, sold
+  q: string;
 }
 
 interface CarsFilterProps {
@@ -35,6 +38,7 @@ interface CarsFilterProps {
   onCarsUpdate: (cars: any[]) => void;
   translations: any;
   allCars: any[]; // Добавляем проп для всех автомобилей
+  locale?: string;
 }
 
 interface FilterOptions {
@@ -90,6 +94,7 @@ export default function CarsFilter({
   onCarsUpdate,
   translations: t,
   allCars,
+  locale = "en",
 }: CarsFilterProps) {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     brands: [],
@@ -202,7 +207,21 @@ export default function CarsFilter({
   // Мемоизированная функция фильтрации
   const applyFiltersToData = useCallback(
     (cars: CarData[], filterState: FilterState): CarData[] => {
+      const query = catalogSearchQuery(filterState.q);
       return cars.filter((car) => {
+        if (
+          !matchesCatalogSearch(query, [
+            car.title,
+            car.description,
+            car.specifications?.make,
+            car.specifications?.model,
+            car.location?.city,
+            car.location?.region,
+          ])
+        ) {
+          return false;
+        }
+
         // Фильтр по марке
         if (
           filterState.brand &&
@@ -401,6 +420,12 @@ export default function CarsFilter({
             </div>
           )}
         </div>
+
+        <CatalogSearchField
+          locale={locale}
+          value={filters.q || ""}
+          onChange={(value) => onFilterChange("q", value)}
+        />
 
         {/* Тип объявления */}
         <div className="mb-4">

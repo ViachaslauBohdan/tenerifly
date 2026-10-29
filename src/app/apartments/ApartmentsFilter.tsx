@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { ApartmentFilterParams } from "@/utils/filterUtils";
 import { CatalogFilterMoreToggle } from "@/components/CatalogFilterMoreToggle";
+import { CatalogSearchField } from "@/components/CatalogSearchField";
+import { catalogSearchQuery, matchesCatalogSearch } from "@/lib/catalogSearch";
 
 // Используем ApartmentFilterParams из utils
 type FilterState = ApartmentFilterParams;
@@ -14,6 +16,7 @@ interface ApartmentsFilterProps {
   onApartmentsUpdate: (apartments: any[]) => void;
   translations: Record<string, string>;
   allApartments: any[]; // Добавляем проп для всех апартаментов
+  locale?: string;
 }
 
 interface FilterOptions {
@@ -30,6 +33,7 @@ export default function ApartmentsFilter({
   onApartmentsUpdate,
   translations: t,
   allApartments, // Используем переданные данные
+  locale = "en",
 }: ApartmentsFilterProps) {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     cities: [],
@@ -122,7 +126,21 @@ export default function ApartmentsFilter({
   // Мемоизированная функция фильтрации
   const applyFiltersToData = useCallback(
     (apartments: any[], filterState: FilterState): any[] => {
+      const query = catalogSearchQuery(filterState.q);
       return apartments.filter((property) => {
+        if (
+          !matchesCatalogSearch(query, [
+            property.title,
+            property.description,
+            property.category,
+            property.location?.city,
+            property.location?.region,
+            property.location?.address,
+          ])
+        ) {
+          return false;
+        }
+
         // Фильтр по типу недвижимости
         if (
           filterState.propertyType &&
@@ -344,6 +362,12 @@ export default function ApartmentsFilter({
           </svg>
           <h2 className="text-lg font-semibold text-gray-900">{t.filters}</h2>
         </div>
+
+        <CatalogSearchField
+          locale={locale}
+          value={typeof filters.q === "string" ? filters.q : ""}
+          onChange={(value) => onFilterChange("q", value)}
+        />
 
         {/* Район (регион) – поднят первым */}
         <div className="mb-4">

@@ -40,6 +40,7 @@ const DEFAULT_APARTMENT_FILTERS: ApartmentFilterParams = {
   dishwasher: false,
   type: "",
   propertyStatus: "",
+  q: "",
 };
 
 const getLoadingPropertiesText = (locale: string) => {
@@ -417,6 +418,7 @@ export default function ApartmentsPageClient({
             onResetFilters={resetFiltersSync}
             onApartmentsUpdate={handleApartmentsUpdate}
             translations={t}
+            locale={locale}
             allApartments={allApartments}
           />
 

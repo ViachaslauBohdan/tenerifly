@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CatalogSearchField } from "@/components/CatalogSearchField";
+import { catalogSearchCopy, matchesCatalogSearch } from "@/lib/catalogSearch";
 import { useSearchParams } from "next/navigation";
 import { AtlanticoExcursionCard } from "@/components/AtlanticoExcursionCard";
 import { AtlanticoCategoriesHeading } from "./AtlanticoCategoriesHeading";
@@ -32,6 +34,7 @@ function AtlanticoTourCatalogApi({ locale }: AtlanticoTourCatalogProps) {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingTours, setLoadingTours] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -100,6 +103,16 @@ function AtlanticoTourCatalogApi({ locale }: AtlanticoTourCatalogProps) {
     };
   }, [categoryId, locale]);
 
+  const searchCopy = catalogSearchCopy(String(locale));
+  const visibleClassifications = classifications.filter(
+    (classification) =>
+      (classification.count ?? 0) > 0 &&
+      matchesCatalogSearch(query, [classification.name, classification.desc])
+  );
+  const visibleTours = tours.filter((tour) =>
+    matchesCatalogSearch(query, [tour.name, tour.desc, tour.duration])
+  );
+
   const selectedCategory = classifications.find(
     (item) => item.id === categoryId || item.code === categoryId
   );
@@ -115,6 +128,9 @@ function AtlanticoTourCatalogApi({ locale }: AtlanticoTourCatalogProps) {
     return (
       <div>
         <AtlanticoCategoriesHeading locale={String(locale)} as="h1" />
+        <div className="mx-auto mb-6 max-w-md">
+          <CatalogSearchField locale={String(locale)} value={query} onChange={setQuery} />
+        </div>
         {loadingCategories ? (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((index) => (
@@ -130,10 +146,11 @@ function AtlanticoTourCatalogApi({ locale }: AtlanticoTourCatalogProps) {
             <AtlanticoExcursionCard locale={locale} variant="tours" />
           </div>
         ) : (
+          visibleClassifications.length === 0 ? (
+            <p className="py-16 text-center text-gray-500">{searchCopy.empty}</p>
+          ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {classifications
-              .filter((classification) => (classification.count ?? 0) > 0)
-              .map((classification) => (
+            {visibleClassifications.map((classification) => (
                 <AtlanticoCategoryCard
                   key={classification.id || classification.code}
                   classification={classification}
@@ -141,6 +158,7 @@ function AtlanticoTourCatalogApi({ locale }: AtlanticoTourCatalogProps) {
                 />
               ))}
           </div>
+          )
         )}
       </div>
     );
@@ -155,13 +173,18 @@ function AtlanticoTourCatalogApi({ locale }: AtlanticoTourCatalogProps) {
       <h1 className="mb-8 text-center text-3xl font-bold text-gray-900">
         {selectedCategory?.name || copy.loadingTours}
       </h1>
+      <div className="mx-auto mb-6 max-w-md">
+        <CatalogSearchField locale={String(locale)} value={query} onChange={setQuery} />
+      </div>
       {loadingTours ? (
         <p className="py-16 text-center text-gray-500">{copy.loadingTours}</p>
       ) : tours.length === 0 ? (
         <p className="py-16 text-center text-gray-500">{copy.noTours}</p>
+      ) : visibleTours.length === 0 ? (
+        <p className="py-16 text-center text-gray-500">{searchCopy.empty}</p>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {tours.map((tour) => (
+          {visibleTours.map((tour) => (
             <AtlanticoTourCard
               key={tour.code || tour.id}
               tour={tour}

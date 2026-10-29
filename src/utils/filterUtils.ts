@@ -31,6 +31,7 @@ export interface ApartmentFilterParams {
   dishwasher: boolean;
   type: string;
   propertyStatus: string;
+  q: string;
   [key: string]: string | string[] | number | boolean | undefined;
 }
 
@@ -60,6 +61,7 @@ export interface CarFilterParams {
   gps: boolean;
   type: string;
   carStatus: string;
+  q: string;
   [key: string]: string | string[] | number | boolean | undefined;
 }
 
@@ -113,6 +115,10 @@ export const parseUrlParams = (
   const filters: BaseFilterParams = {};
 
   for (const [key, value] of searchParams.entries()) {
+    if (key === "q") {
+      filters[key] = value;
+      continue;
+    }
     // Обработка булевых значений
     if (value === "true" || value === "false") {
       filters[key] = value === "true";
