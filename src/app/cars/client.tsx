@@ -6,6 +6,7 @@ import CarCard from "./CarCard";
 import CarsFilter from "./CarsFilter";
 import {
   parseUrlParamsExcludingPagination,
+  filtersToUrlParams,
   CarFilterParams,
 } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
@@ -14,6 +15,7 @@ import { pickLocaleBundle, localeContentKey } from "@/types/locale";
 import { hybridLocalizedRow } from "@/lib/cmsLocalizedContent";
 import { CatalogBackLink } from "@/components/CatalogBackLink";
 import { CatalogDetailShell } from "@/components/CatalogDetailShell";
+import { CatalogSearchField } from "@/components/CatalogSearchField";
 import translations from "@/i18n/cars.json";
 import {
   getCanariasRentacarAffiliateUrl,
@@ -245,10 +247,8 @@ export default function CarsPageClient({
   const updateUrlWithPage = useCallback(
     (page: number) => {
       if (page < 1) return;
-      const params = new URLSearchParams(searchParams?.toString() || "");
-      if (page === 1) {
-        params.delete("page");
-      } else {
+      const params = filtersToUrlParams(filters);
+      if (page > 1) {
         params.set("page", page.toString());
       }
       const queryString = params.toString();
@@ -256,7 +256,7 @@ export default function CarsPageClient({
       const url = queryString ? `${path}?${queryString}` : path;
       router.replace(url, { scroll: false });
     },
-    [searchParams, router, createLocaleLink]
+    [filters, router, createLocaleLink]
   );
 
   // Функция для обновления отфильтрованных автомобилей — используется в CarsFilter
@@ -559,6 +559,12 @@ export default function CarsPageClient({
           </a>
         </div>
 
+        <CatalogSearchField
+          locale={language}
+          value={typeof filters.q === "string" ? filters.q : ""}
+          onChange={(value) => handleFilterChangeSync("q", value)}
+        />
+
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filters Sidebar - передаем все автомобили в компонент фильтра */}
           <CarsFilter
@@ -567,7 +573,6 @@ export default function CarsPageClient({
             onResetFilters={resetFiltersSync}
             onCarsUpdate={handleCarsUpdate}
             translations={t}
-            locale={language}
             allCars={
               ((allCarsByLocale[localeContentKey(language)] ??
                 allCarsByLocale[language]) as CarData[]) || []

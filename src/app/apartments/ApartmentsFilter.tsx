@@ -3,8 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { ApartmentFilterParams } from "@/utils/filterUtils";
 import { CatalogFilterMoreToggle } from "@/components/CatalogFilterMoreToggle";
-import { CatalogSearchField } from "@/components/CatalogSearchField";
-import { catalogSearchQuery, matchesCatalogSearch } from "@/lib/catalogSearch";
+import { catalogSearchQuery, matchesCatalogName } from "@/lib/catalogSearch";
 
 // Используем ApartmentFilterParams из utils
 type FilterState = ApartmentFilterParams;
@@ -16,7 +15,6 @@ interface ApartmentsFilterProps {
   onApartmentsUpdate: (apartments: any[]) => void;
   translations: Record<string, string>;
   allApartments: any[]; // Добавляем проп для всех апартаментов
-  locale?: string;
 }
 
 interface FilterOptions {
@@ -33,7 +31,6 @@ export default function ApartmentsFilter({
   onApartmentsUpdate,
   translations: t,
   allApartments, // Используем переданные данные
-  locale = "en",
 }: ApartmentsFilterProps) {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     cities: [],
@@ -42,6 +39,13 @@ export default function ApartmentsFilter({
     conditions: [],
   });
   const [filtersExpanded, setFiltersExpanded] = useState(false);
+  const activeFilterCount = Object.entries(filters).filter(([key, value]) => {
+    if (key === "q") return false;
+    if (typeof value === "boolean") return value;
+    if (typeof value === "string") return value !== "";
+    if (typeof value === "number") return value > 0;
+    return false;
+  }).length;
 
   const hasHiddenActiveFilters = Boolean(
     filters.propertyStatus ||
@@ -128,16 +132,7 @@ export default function ApartmentsFilter({
     (apartments: any[], filterState: FilterState): any[] => {
       const query = catalogSearchQuery(filterState.q);
       return apartments.filter((property) => {
-        if (
-          !matchesCatalogSearch(query, [
-            property.title,
-            property.description,
-            property.category,
-            property.location?.city,
-            property.location?.region,
-            property.location?.address,
-          ])
-        ) {
+        if (!matchesCatalogName(query, property.title)) {
           return false;
         }
 
@@ -343,41 +338,22 @@ export default function ApartmentsFilter({
     applyFilters();
   }, [filters, allApartments, applyFiltersToData]); // Removed onApartmentsUpdate to prevent circular dependency
 
+  const fieldClass = "min-w-[12.5rem] flex-1";
+  const controlClass =
+    "h-11 w-full min-w-0 flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 outline-none transition focus:border-slate-900 focus:bg-white focus:ring-4 focus:ring-slate-900/5";
+
   return (
-    <div className="lg:w-80">
-      <div className="bg-white rounded-lg shadow-sm border p-6 max-h-screen overflow-y-auto">
-        <div className="flex items-center mb-6">
-          <svg
-            className="w-5 h-5 mr-2 text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
-            />
-          </svg>
-          <h2 className="text-lg font-semibold text-gray-900">{t.filters}</h2>
-        </div>
-
-        <CatalogSearchField
-          locale={locale}
-          value={typeof filters.q === "string" ? filters.q : ""}
-          onChange={(value) => onFilterChange("q", value)}
-        />
-
+    <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-wrap items-end gap-3">
         {/* Район (регион) – поднят первым */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.district}
           </label>
           <select
             value={filters.district}
             onChange={(e) => onFilterChange("district", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className={controlClass}
           >
             <option value="">{t.allDistricts}</option>
             {filterOptions.districts.map((district) => (
@@ -389,14 +365,14 @@ export default function ApartmentsFilter({
         </div>
 
         {/* Город */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.location}
           </label>
           <select
             value={filters.city}
             onChange={(e) => onFilterChange("city", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className={controlClass}
           >
             <option value="">{t.allLocations}</option>
             {filterOptions.cities.map((city) => (
@@ -408,14 +384,14 @@ export default function ApartmentsFilter({
         </div>
 
         {/* Тип объявления */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.type || "Type"}
           </label>
           <select
             value={filters.type}
             onChange={(e) => onFilterChange("type", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className={controlClass}
           >
             <option value="">{t.allTypes}</option>
             <option value="rent">{t.rent || "Rent"}</option>
@@ -428,19 +404,31 @@ export default function ApartmentsFilter({
           onToggle={() => setFiltersExpanded((prev) => !prev)}
           showMoreLabel={t.showMoreFilters || "Show more filters"}
           showLessLabel={t.showLessFilters || "Show less filters"}
+          className="h-11 shrink-0 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
         />
 
-        {filtersExpanded && (
-          <>
+        {activeFilterCount > 0 ? (
+          <button
+            type="button"
+            onClick={onResetFilters}
+            className="h-11 shrink-0 rounded-xl px-4 text-sm font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+          >
+            {t.resetFilters}
+          </button>
+        ) : null}
+      </div>
+
+      {filtersExpanded && (
+        <div className="mt-4 flex flex-wrap items-end gap-3 border-t border-slate-100 pt-4">
         {/* Статус недвижимости */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.status || "Status"}
           </label>
           <select
             value={filters.propertyStatus}
             onChange={(e) => onFilterChange("propertyStatus", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className={controlClass}
           >
             <option value="">{t.allStatuses || "All statuses"}</option>
             <option value="available">{t.available}</option>
@@ -451,14 +439,14 @@ export default function ApartmentsFilter({
         </div>
 
         {/* Тип недвижимости */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.propertyType}
           </label>
           <select
             value={filters.propertyType}
             onChange={(e) => onFilterChange("propertyType", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className={controlClass}
           >
             <option value="">{t.allTypes}</option>
             {filterOptions.propertyTypes.map((type) => (
@@ -476,14 +464,14 @@ export default function ApartmentsFilter({
         </div>
 
         {/* Количество комнат */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.rooms}
           </label>
           <select
             value={filters.rooms}
             onChange={(e) => onFilterChange("rooms", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className={controlClass}
           >
             <option value="">{t.any}</option>
             <option value="0">{t.studio}</option>
@@ -496,8 +484,8 @@ export default function ApartmentsFilter({
         </div>
 
         {/* Площадь */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.area}
           </label>
           <div className="flex gap-2">
@@ -506,21 +494,21 @@ export default function ApartmentsFilter({
               placeholder={t.from}
               value={filters.areaFrom}
               onChange={(e) => onFilterChange("areaFrom", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className={controlClass}
             />
             <input
               type="number"
               placeholder={t.to}
               value={filters.areaTo}
               onChange={(e) => onFilterChange("areaTo", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className={controlClass}
             />
           </div>
         </div>
 
         {/* Цена */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {filters.type === "rent" ? t.pricePerMonth : t.price}
           </label>
           <div className="flex gap-2">
@@ -529,21 +517,21 @@ export default function ApartmentsFilter({
               placeholder={t.from}
               value={filters.priceFrom}
               onChange={(e) => onFilterChange("priceFrom", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className={controlClass}
             />
             <input
               type="number"
               placeholder={t.to}
               value={filters.priceTo}
               onChange={(e) => onFilterChange("priceTo", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className={controlClass}
             />
           </div>
         </div>
 
         {/* Этаж */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.floor}
           </label>
           <div className="flex gap-2">
@@ -552,21 +540,21 @@ export default function ApartmentsFilter({
               placeholder={t.from}
               value={filters.floorFrom}
               onChange={(e) => onFilterChange("floorFrom", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className={controlClass}
             />
             <input
               type="number"
               placeholder={t.to}
               value={filters.floorTo}
               onChange={(e) => onFilterChange("floorTo", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className={controlClass}
             />
           </div>
         </div>
 
         {/* Год постройки */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.yearBuilt}
           </label>
           <div className="flex gap-2">
@@ -575,27 +563,27 @@ export default function ApartmentsFilter({
               placeholder={t.from}
               value={filters.yearBuiltFrom}
               onChange={(e) => onFilterChange("yearBuiltFrom", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className={controlClass}
             />
             <input
               type="number"
               placeholder={t.to}
               value={filters.yearBuiltTo}
               onChange={(e) => onFilterChange("yearBuiltTo", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className={controlClass}
             />
           </div>
         </div>
 
         {/* Состояние */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.condition}
           </label>
           <select
             value={filters.condition}
             onChange={(e) => onFilterChange("condition", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className={controlClass}
           >
             <option value="">{t.allTypes}</option>
             {filterOptions.conditions.map((condition) => (
@@ -615,12 +603,12 @@ export default function ApartmentsFilter({
         
 
         {/* Дополнительные опции */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+        <div className="min-w-full">
+          <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.features}
           </label>
-          <div className="space-y-2">
-            <label className="flex items-center">
+          <div className="flex flex-wrap gap-2">
+            <label className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
               <input
                 type="checkbox"
                 checked={filters.balcony}
@@ -629,7 +617,7 @@ export default function ApartmentsFilter({
               />
               <span className="ml-2 text-sm text-gray-700">{t.pool}</span>
             </label>
-            <label className="flex items-center">
+            <label className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
               <input
                 type="checkbox"
                 checked={filters.terrace}
@@ -638,7 +626,7 @@ export default function ApartmentsFilter({
               />
               <span className="ml-2 text-sm text-gray-700">{t.terrace}</span>
             </label>
-            <label className="flex items-center">
+            <label className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
               <input
                 type="checkbox"
                 checked={filters.garden}
@@ -647,7 +635,7 @@ export default function ApartmentsFilter({
               />
               <span className="ml-2 text-sm text-gray-700">{t.garden}</span>
             </label>
-            <label className="flex items-center">
+            <label className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
               <input
                 type="checkbox"
                 checked={filters.parking}
@@ -656,7 +644,7 @@ export default function ApartmentsFilter({
               />
               <span className="ml-2 text-sm text-gray-700">{t.garage}</span>
             </label>
-            <label className="flex items-center">
+            <label className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
               <input
                 type="checkbox"
                 checked={filters.furnished}
@@ -665,7 +653,7 @@ export default function ApartmentsFilter({
               />
               <span className="ml-2 text-sm text-gray-700">{t.furnished}</span>
             </label>
-            <label className="flex items-center">
+            <label className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
               <input
                 type="checkbox"
                 checked={filters.airConditioner}
@@ -678,7 +666,7 @@ export default function ApartmentsFilter({
                 {t.airConditioner}
               </span>
             </label>
-            <label className="flex items-center">
+            <label className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
               <input
                 type="checkbox"
                 checked={filters.wifi}
@@ -687,7 +675,7 @@ export default function ApartmentsFilter({
               />
               <span className="ml-2 text-sm text-gray-700">{t.internet}</span>
             </label>
-            <label className="flex items-center">
+            <label className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
               <input
                 type="checkbox"
                 checked={filters.washingMachine}
@@ -698,7 +686,7 @@ export default function ApartmentsFilter({
               />
               <span className="ml-2 text-sm text-gray-700">{t.heating}</span>
             </label>
-            <label className="flex items-center">
+            <label className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
               <input
                 type="checkbox"
                 checked={filters.dishwasher}
@@ -709,17 +697,8 @@ export default function ApartmentsFilter({
             </label>
           </div>
         </div>
-          </>
-        )}
-
-        {/* Reset Filters */}
-        <button
-          onClick={onResetFilters}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-        >
-          {t.resetFilters}
-        </button>
-      </div>
-    </div>
+        </div>
+      )}
+    </section>
   );
 }

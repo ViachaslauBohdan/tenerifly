@@ -6,6 +6,7 @@ import ApartmentCard from "./ApartmentCard";
 import ApartmentsFilter from "./ApartmentsFilter";
 import {
   parseUrlParamsExcludingPagination,
+  filtersToUrlParams,
   ApartmentFilterParams,
 } from "@/utils/filterUtils";
 import { useFilterSync } from "@/hooks/useFilterSync";
@@ -13,6 +14,8 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { pickLocaleBundle, cmsLocale } from "@/types/locale";
 import { CatalogBackLink } from "@/components/CatalogBackLink";
 import { CatalogDetailShell } from "@/components/CatalogDetailShell";
+import { CatalogSearchField } from "@/components/CatalogSearchField";
+import { catalogSearchCopy } from "@/lib/catalogSearch";
 import translations from "@/i18n/apartments.json";
 
 const DEFAULT_APARTMENT_FILTERS: ApartmentFilterParams = {
@@ -210,7 +213,6 @@ export default function ApartmentsPageClient({
       // Use SSG data - this is the primary path for production
       console.log("🏠 Using SSG data:", initialProperties.length, "properties");
       setAllApartments(initialProperties);
-      setFilteredApartments(initialProperties);
       setInitialLoadComplete(true);
     } else {
       // Fallback: only load on client if no SSG data available
@@ -271,10 +273,8 @@ export default function ApartmentsPageClient({
     (page: number) => {
       if (page < 1) return;
 
-      const params = new URLSearchParams(searchParams.toString());
-      if (page === 1) {
-        params.delete("page");
-      } else {
+      const params = filtersToUrlParams(filters);
+      if (page > 1) {
         params.set("page", page.toString());
       }
       const queryString = params.toString();
@@ -282,7 +282,7 @@ export default function ApartmentsPageClient({
       const url = queryString ? `${path}?${queryString}` : path;
       router.replace(url, { scroll: false });
     },
-    [searchParams, router, createLocaleLink]
+    [filters, router, createLocaleLink]
   );
 
   // Дополнительная проверка для корректной работы пагинации
@@ -410,7 +410,14 @@ export default function ApartmentsPageClient({
           </h1>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-6">
+        <CatalogSearchField
+          locale={locale}
+          value={typeof filters.q === "string" ? filters.q : ""}
+          placeholder={catalogSearchCopy(locale).namePlaceholder}
+          onChange={(value) => handleFilterChangeSync("q", value)}
+        />
+
+        <div className="space-y-6">
           {/* Filters Sidebar - передаем все апартаменты в компонент фильтра */}
           <ApartmentsFilter
             filters={filters}
@@ -418,7 +425,6 @@ export default function ApartmentsPageClient({
             onResetFilters={resetFiltersSync}
             onApartmentsUpdate={handleApartmentsUpdate}
             translations={t}
-            locale={locale}
             allApartments={allApartments}
           />
 

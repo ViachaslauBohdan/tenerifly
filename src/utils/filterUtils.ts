@@ -145,7 +145,7 @@ export const filtersToUrlParams = (
   Object.entries(filters).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
       if (typeof value === "boolean") {
-        params.append(key, value.toString());
+        if (value) params.append(key, "true");
       } else if (typeof value === "number") {
         params.append(key, value.toString());
       } else if (typeof value === "string") {

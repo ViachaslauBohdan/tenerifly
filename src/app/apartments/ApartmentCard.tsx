@@ -130,19 +130,6 @@ const getFoundPropertiesText = (locale: string): string => {
   return texts[locale] || texts.en;
 };
 
-const getFilterActiveText = (locale: string): string => {
-  const texts: Record<string, string> = {
-    en: "🔍 Filter active",
-    ru: "🔍 Фильтр активен",
-    pl: "🔍 Filtr aktywny",
-    fr: "🔍 Filtre actif",
-    uk: "🔍 Фільтр активний",    ua: "🔍 Фільтр активний",
-    de: "🔍 Filter aktiv",
-    es: "🔍 Filtro activo",
-  };
-  return texts[locale] || texts.en;
-};
-
 const ApartmentCard = ({
   translations,
   language,
@@ -496,19 +483,14 @@ const ApartmentCard = ({
             {apartments.length}
           </span>
         </div>
-        {providedApartments !== undefined && (
-          <div className="text-sm text-blue-600">
-            {getFilterActiveText(language)}
-          </div>
-        )}
       </div>
 
       {/* Сетка недвижимости */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         {apartments.map((property) => (
           <div
             key={property.id}
-            className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-lg transition-shadow"
+            className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
             <div className="aspect-video relative bg-gray-100">
               <Image
@@ -539,9 +521,9 @@ const ApartmentCard = ({
                 </button>
               </div>
             </div>
-            <div className="p-6">
+            <div className="p-4">
               <div className="mb-3">
-                <h3 className="text-xl font-bold text-gray-900 mb-1">
+                <h3 className="mb-1 line-clamp-2 text-lg font-semibold text-slate-900">
                   {property.title}
                 </h3>
                 <p className="text-sm text-gray-500 mb-2">

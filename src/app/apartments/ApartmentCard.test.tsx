@@ -77,9 +77,11 @@ describe("ApartmentCard localized copy", () => {
       />
     );
 
-    expect(
-      screen.getByRole("heading", { name: "Odnowiony apartament Chayofa" })
-    ).toBeInTheDocument();
+    const heading = screen.getByRole("heading", {
+      name: "Odnowiony apartament Chayofa",
+    });
+    expect(heading).toBeInTheDocument();
+    expect(heading.closest('[class*="lg:grid-cols-3"]')).not.toBeNull();
     expect(screen.getByText("Na wynajem")).toBeInTheDocument();
     expect(screen.queryByText("For Rent")).not.toBeInTheDocument();
     expect(

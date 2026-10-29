@@ -128,9 +128,7 @@ function AtlanticoTourCatalogApi({ locale }: AtlanticoTourCatalogProps) {
     return (
       <div>
         <AtlanticoCategoriesHeading locale={String(locale)} as="h1" />
-        <div className="mx-auto mb-6 max-w-md">
-          <CatalogSearchField locale={String(locale)} value={query} onChange={setQuery} />
-        </div>
+        <CatalogSearchField locale={String(locale)} value={query} onChange={setQuery} />
         {loadingCategories ? (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((index) => (
@@ -170,12 +168,10 @@ function AtlanticoTourCatalogApi({ locale }: AtlanticoTourCatalogProps) {
         href={createLocaleLink("/tours")}
         label={copy.backToCategories}
       />
-      <h1 className="mb-8 text-center text-3xl font-bold text-gray-900">
+      <h1 className="mb-6 text-center text-3xl font-bold text-gray-900">
         {selectedCategory?.name || copy.loadingTours}
       </h1>
-      <div className="mx-auto mb-6 max-w-md">
-        <CatalogSearchField locale={String(locale)} value={query} onChange={setQuery} />
-      </div>
+      <CatalogSearchField locale={String(locale)} value={query} onChange={setQuery} />
       {loadingTours ? (
         <p className="py-16 text-center text-gray-500">{copy.loadingTours}</p>
       ) : tours.length === 0 ? (

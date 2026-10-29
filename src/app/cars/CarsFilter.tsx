@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { CatalogFilterMoreToggle } from "@/components/CatalogFilterMoreToggle";
-import { CatalogSearchField } from "@/components/CatalogSearchField";
 import { catalogSearchQuery, matchesCatalogSearch } from "@/lib/catalogSearch";
 
 interface FilterState {
@@ -38,7 +37,6 @@ interface CarsFilterProps {
   onCarsUpdate: (cars: any[]) => void;
   translations: any;
   allCars: any[]; // Добавляем проп для всех автомобилей
-  locale?: string;
 }
 
 interface FilterOptions {
@@ -94,7 +92,6 @@ export default function CarsFilter({
   onCarsUpdate,
   translations: t,
   allCars,
-  locale = "en",
 }: CarsFilterProps) {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     brands: [],
@@ -104,7 +101,15 @@ export default function CarsFilter({
     regions: [],
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
+  const activeFilterCount = Object.entries(filters).filter(([key, value]) => {
+    if (key === "q") return false;
+    if (typeof value === "boolean") return value;
+    if (typeof value === "string") return value !== "";
+    if (typeof value === "number") return value > 0;
+    return false;
+  }).length;
 
   const hasHiddenActiveFilters = Boolean(
     filters.model ||
@@ -397,11 +402,20 @@ export default function CarsFilter({
   }, [filters, allCars, applyFiltersToData]);
 
   return (
-    <div className="lg:w-80">
-      <div className="bg-white rounded-lg shadow-sm border p-6 max-h-screen overflow-y-auto">
-        <div className="flex items-center mb-6">
+    <div className={panelOpen ? "lg:w-80" : "w-full lg:w-auto lg:self-start"}>
+      <div
+        className={`rounded-lg border bg-white shadow-sm ${
+          panelOpen ? "max-h-screen overflow-y-auto p-6" : "px-4 py-3"
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => setPanelOpen((open) => !open)}
+          aria-expanded={panelOpen}
+          className={`flex w-full items-center text-left ${panelOpen ? "mb-6" : ""}`}
+        >
           <svg
-            className="w-5 h-5 mr-2 text-gray-600"
+            className="mr-2 h-5 w-5 text-gray-600"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -414,19 +428,36 @@ export default function CarsFilter({
             />
           </svg>
           <h2 className="text-lg font-semibold text-gray-900">{t.filters}</h2>
-          {isLoading && (
-            <div className="ml-auto">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+          {activeFilterCount > 0 ? (
+            <span className="ml-2 rounded-full bg-slate-900 px-2 py-0.5 text-xs font-medium text-white">
+              {activeFilterCount}
+            </span>
+          ) : null}
+          {isLoading ? (
+            <div className="ml-2">
+              <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600"></div>
             </div>
-          )}
-        </div>
+          ) : null}
+          <svg
+            className={`ml-auto h-5 w-5 text-gray-500 transition-transform ${
+              panelOpen ? "rotate-180" : ""
+            }`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
 
-        <CatalogSearchField
-          locale={locale}
-          value={filters.q || ""}
-          onChange={(value) => onFilterChange("q", value)}
-        />
-
+        {panelOpen && (
+        <>
         {/* Тип объявления */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -774,6 +805,8 @@ export default function CarsFilter({
         >
           {t.resetFilters}
         </button>
+        </>
+        )}
       </div>
     </div>
   );
