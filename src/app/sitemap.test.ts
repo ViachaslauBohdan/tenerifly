@@ -4,6 +4,10 @@ const getAllBlogIds = vi.fn(async () => {
   throw new Error("hidden blog catalog must not be loaded");
 });
 
+vi.mock("@/lib/atlantico/resolveTour", () => ({
+  listAtlanticoTourCodes: async () => [],
+}));
+
 vi.mock("@/services/ssgDataService", () => ({
   getAllPropertyIds: async () => [],
   getAllCarIds: async () => [],
