@@ -1,7 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { parsePropertyImport, type PropertyImportIssue } from "@/lib/propertyImport";
+import { useMemo, useRef, useState } from "react";
+import {
+  parsePropertyImport,
+  readPropertyJsonDocuments,
+  type PropertyImportIssue,
+  type PropertyJsonFileIssue,
+} from "@/lib/propertyImport";
 import type { PropertyImportRow } from "@/lib/propertyImportCreate";
 
 const SAMPLE = `[
@@ -16,6 +21,15 @@ const SAMPLE = `[
     "location": { "city": "Costa Adeje", "region": "Tenerife" }
   }
 ]`;
+
+function readFileText(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsText(file);
+  });
+}
 
 function issueLabel(item: PropertyImportIssue): string {
   const where = item.index >= 0 ? `Объект ${item.index + 1}` : "JSON";
@@ -35,8 +49,29 @@ export function PropertyImportEditor({ onUpload }: PropertyImportEditorProps) {
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(false);
   const [results, setResults] = useState<PropertyImportRow[] | null>(null);
+  const [fileIssues, setFileIssues] = useState<PropertyJsonFileIssue[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const preview = useMemo(() => parsePropertyImport(json), [json]);
   const invalid = json.trim().length > 0 && !preview.ok;
+
+  const applyJson = (next: string) => {
+    setJson(next);
+    setResults(null);
+    setMessage("");
+  };
+
+  const handleFiles = async (list: FileList | null) => {
+    const selected = list ? Array.from(list) : [];
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (selected.length === 0) return;
+
+    const documents = await Promise.all(
+      selected.map(async (file) => ({ name: file.name, text: await readFileText(file) }))
+    );
+    const merged = readPropertyJsonDocuments(documents);
+    setFileIssues(merged.fileIssues);
+    if (merged.json) applyJson(merged.json);
+  };
 
   const handleUpload = async () => {
     setPending(true);
@@ -56,16 +91,48 @@ export function PropertyImportEditor({ onUpload }: PropertyImportEditorProps) {
 
   return (
     <div className="mt-6 flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-medium" htmlFor="property-json-files">
+          JSON-файлы
+        </label>
+        <input
+          id="property-json-files"
+          ref={fileInputRef}
+          type="file"
+          accept=".json,application/json"
+          multiple
+          onChange={(event) => {
+            void handleFiles(event.target.files);
+          }}
+          className="block w-full text-sm text-gray-700 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-900 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white"
+        />
+        <p className="text-sm text-gray-500">
+          Можно выбрать один файл с массивом или несколько файлов по одному объекту. Текст ниже можно править вручную.
+        </p>
+      </div>
+
+      {fileIssues.length > 0 ? (
+        <ul className="flex flex-col gap-2" aria-live="polite">
+          {fileIssues.map((item) => (
+            <li
+              key={`${item.name}-${item.message}`}
+              className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+            >
+              <span className="font-medium">{item.name}.</span> {item.message}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
       <label className="text-sm font-medium" htmlFor="property-json">
-        JSON апартаментов
+        JSON вручную
       </label>
       <textarea
         id="property-json"
         value={json}
         onChange={(event) => {
-          setJson(event.target.value);
-          setResults(null);
-          setMessage("");
+          applyJson(event.target.value);
+          setFileIssues([]);
         }}
         spellCheck={false}
         aria-invalid={invalid}

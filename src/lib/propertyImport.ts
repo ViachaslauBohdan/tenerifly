@@ -430,3 +430,40 @@ export function parsePropertyImport(raw: string): PropertyImportPreview {
   }
   return { ok: true, issues, properties };
 }
+
+export type PropertyJsonFileIssue = {
+  name: string;
+  message: string;
+};
+
+/** Combine uploaded JSON files into one array. A file may be one object or an array. */
+export function readPropertyJsonDocuments(
+  files: Array<{ name: string; text: string }>
+): { json: string; fileIssues: PropertyJsonFileIssue[] } {
+  const items: unknown[] = [];
+  const fileIssues: PropertyJsonFileIssue[] = [];
+
+  for (const file of files) {
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(file.text);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "некорректный JSON";
+      fileIssues.push({ name: file.name, message: `JSON не читается: ${message}` });
+      continue;
+    }
+
+    if (Array.isArray(parsed)) {
+      items.push(...parsed);
+    } else if (parsed && typeof parsed === "object") {
+      items.push(parsed);
+    } else {
+      fileIssues.push({ name: file.name, message: "нужен объект или массив объектов" });
+    }
+  }
+
+  return {
+    json: items.length > 0 ? JSON.stringify(items, null, 2) : "",
+    fileIssues,
+  };
+}

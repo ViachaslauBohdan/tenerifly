@@ -36,8 +36,8 @@ export default function PropertyImportPage() {
     <main className="mx-auto max-w-3xl px-4 py-16 text-gray-900">
       <h1 className="text-2xl font-semibold">Загрузка апартаментов</h1>
       <p className="mt-2 text-sm text-gray-600">
-        Вставьте массив JSON. Новые объекты создаются в Strapi. Уже существующие
-        по slug пропускаются. Старые записи не изменяются и не удаляются.
+        Вставьте JSON или выберите файлы. Новые объекты создаются в Strapi. Уже
+        существующие по slug пропускаются. Старые записи не изменяются и не удаляются.
       </p>
 
       {unlocked ? (

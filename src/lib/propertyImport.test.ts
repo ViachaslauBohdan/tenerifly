@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parsePropertyImport } from "./propertyImport";
+import { parsePropertyImport, readPropertyJsonDocuments } from "./propertyImport";
 
 const villa = {
   title: "5 bedrooms Villa Playa El Duque with heated pool",
@@ -89,6 +89,24 @@ describe("parsePropertyImport", () => {
         expect.objectContaining({ index: 1, path: "location.city" }),
       ])
     );
+  });
+
+  it("merges json files and reports a file that is not valid json", () => {
+    const merged = readPropertyJsonDocuments([
+      { name: "villa.json", text: JSON.stringify(villa) },
+      { name: "batch.json", text: JSON.stringify([{ ...villa, slug: "second", title: "Second" }]) },
+      { name: "broken.json", text: "{ title:" },
+    ]);
+
+    expect(merged.fileIssues).toEqual([
+      expect.objectContaining({ name: "broken.json" }),
+    ]);
+    const preview = parsePropertyImport(merged.json);
+    expect(preview.ok).toBe(true);
+    expect(preview.properties.map((item) => item.slug)).toEqual([
+      villa.slug,
+      "second",
+    ]);
   });
 
   it("highlights a repeated slug inside the same paste", () => {
