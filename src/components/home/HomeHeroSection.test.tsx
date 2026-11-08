@@ -19,10 +19,6 @@ vi.mock("@/components/HeroCompactDateInput", () => ({
   }) => <button type="button" aria-label={ariaLabel} />,
 }));
 
-vi.mock("@/components/WorldToursHeroSearch", () => ({
-  WorldToursHeroSearch: () => <div data-testid="world-tours-search" />,
-}));
-
 vi.mock("@/components/HeroSearchCta", () => ({
   HeroSearchCtaButton: ({
     label,
@@ -49,7 +45,6 @@ function renderHero(activeTab: HeroTab = "accommodation") {
       language="en"
       hero={hero}
       excursionsIntermediaryNotice=""
-      worldToursHref="/en/world-tours"
       activeTab={activeTab}
       dates={["2026-08-08", "2026-08-13"]}
       guests={2}
@@ -109,6 +104,17 @@ describe("HomeHeroSection full input fields", () => {
     expect(
       screen.getByRole("combobox", { name: hero.accommodation.guests })
     ).toHaveFocus();
+  });
+
+  it("does not render the worldwide tour search block", () => {
+    renderHero();
+    expect(screen.queryByText(hero.worldTours.heading)).not.toBeInTheDocument();
+    expect(document.getElementById("home")?.innerHTML ?? "").not.toContain(
+      "grid-rows-[1fr_auto_1fr_auto_1fr]"
+    );
+    expect(document.getElementById("home")?.className ?? "").not.toContain(
+      "70vh"
+    );
   });
 
   it("focuses leisure select when the Leisure field label is clicked", async () => {

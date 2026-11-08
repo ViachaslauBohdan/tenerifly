@@ -4,7 +4,7 @@
 export const heroGutterClass =
   "px-4 min-[400px]:px-5 sm:px-6 md:px-8";
 
-/** Page-level hero headings (H1 + worldwide tours line above the blue card). */
+/** Page-level hero heading above the search card. */
 export const heroTitleClass =
   "text-xl font-bold leading-snug text-white drop-shadow-lg sm:text-2xl md:text-3xl lg:text-4xl";
 
@@ -12,13 +12,13 @@ export const heroTitleClass =
 export const heroCardTitleClass =
   "text-base font-bold leading-snug text-white sm:text-lg";
 
-/** Homepage hero — mobile: content height only; sm+: viewport band. */
+/** Homepage hero — photo frames the title and search, without a tall empty band. */
 export const heroSectionClass =
-  "relative flex min-h-0 flex-col bg-cover bg-center bg-no-repeat pb-8 sm:min-h-[70vh] sm:pb-0";
+  "relative flex min-h-0 flex-col bg-cover bg-center bg-no-repeat";
 
-/** Inner hero stack — gap between Stays block and World Tours block on mobile. */
+/** Inner hero stack — header clearance plus photo above the title and below the search. */
 export const heroInnerClass =
-  `relative z-10 flex w-full flex-col justify-start gap-4 pt-[5.25rem] pb-6 min-[400px]:gap-5 min-[400px]:pt-[5.75rem] sm:min-h-0 sm:flex-1 sm:justify-center sm:grid sm:grid-rows-[1fr_auto_1fr_auto_1fr] sm:items-center sm:gap-0 sm:pt-[5.5rem] sm:pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] md:pt-[5.5rem] ${heroGutterClass}`;
+  `relative z-10 flex w-full flex-col justify-start pt-[8.25rem] pb-14 min-[400px]:pt-[8.75rem] sm:items-center sm:pt-[10rem] sm:pb-28 md:pt-[10rem] ${heroGutterClass}`;
 
 /** Space between title and search card inside each hero group. */
 export const heroBlockStackClass = "flex flex-col gap-3 sm:gap-4";

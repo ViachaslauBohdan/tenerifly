@@ -2,7 +2,6 @@
 
 import { Car, Home, MapPin, type LucideIcon } from "lucide-react";
 import { DatesProvider } from "@mantine/dates";
-import { WorldToursHeroSearch } from "@/components/WorldToursHeroSearch";
 import { HeroSearchCtaButton } from "@/components/HeroSearchCta";
 import { HeroCompactDateInput } from "@/components/HeroCompactDateInput";
 import { ExcursionsIntermediaryNotice } from "@/components/ExcursionsIntermediaryNotice";
@@ -43,7 +42,6 @@ type HomeHeroSectionProps = {
   language: LanguageCode;
   hero: HeroCopy;
   excursionsIntermediaryNotice: string;
-  worldToursHref: string;
   activeTab: HeroTab;
   dates: [string, string];
   guests: number;
@@ -62,7 +60,6 @@ export function HomeHeroSection({
   language,
   hero,
   excursionsIntermediaryNotice,
-  worldToursHref,
   activeTab,
   dates,
   guests,
@@ -78,13 +75,6 @@ export function HomeHeroSection({
 }: HomeHeroSectionProps) {
   const enHero = pickLocaleBundle(translationsJson, "en").hero;
   const leisureLabel = hero.leisure ?? enHero.leisure;
-  const worldToursBase = hero.worldTours ?? enHero.worldTours;
-  const searchGlobalToursLabel =
-    hero.searchGlobalTours ?? enHero.searchGlobalTours;
-  const worldToursCopy = {
-    ...worldToursBase,
-    search: searchGlobalToursLabel ?? worldToursBase.search,
-  };
 
   const heroTabOptions = [
     {
@@ -105,7 +95,6 @@ export function HomeHeroSection({
       }}
     >
       <div className={heroInnerClass}>
-        <div aria-hidden className="hidden min-h-0 sm:block" />
         <div
           className={`mx-auto w-full max-w-5xl xl:max-w-6xl ${heroBlockStackClass}`}
         >
@@ -269,18 +258,6 @@ export function HomeHeroSection({
             </div>
           </div>
         </div>
-        <div aria-hidden className="hidden min-h-0 sm:block" />
-        <div
-          className={`mx-auto w-full max-w-5xl xl:max-w-6xl ${heroBlockStackClass}`}
-        >
-          <h2
-            className={`${heroTitleClass} mb-0 text-center sm:mb-2 md:mb-4`}
-          >
-            {worldToursCopy.heading}
-          </h2>
-          <WorldToursHeroSearch href={worldToursHref} labels={worldToursCopy} />
-        </div>
-        <div aria-hidden className="hidden min-h-0 sm:block" />
       </div>
     </section>
   );

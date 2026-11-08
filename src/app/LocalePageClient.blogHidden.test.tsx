@@ -48,7 +48,7 @@ vi.mock("@/components/home/HomeTransfersSection", () => ({
 }));
 
 vi.mock("@/components/home/HomeExcursionsSection", () => ({
-  HomeExcursionsSection: () => null,
+  HomeExcursionsSection: () => <section id="excursions" />,
 }));
 
 vi.mock("@/components/home/HomeBlogSection", () => ({
@@ -104,5 +104,14 @@ describe("LocalePageClient hidden blog", () => {
     expect(screen.queryByTestId("home-blog-section")).not.toBeInTheDocument();
     expect(homeBlogSection).not.toHaveBeenCalled();
     expect(screen.getByTestId("home-faq")).toBeInTheDocument();
+
+    const excursions = document.getElementById("excursions");
+    const worldwide = document.getElementById("worldwide-tours");
+    expect(excursions).not.toBeNull();
+    expect(worldwide).not.toBeNull();
+    expect(
+      excursions!.compareDocumentPosition(worldwide!) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
   });
 });

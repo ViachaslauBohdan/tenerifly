@@ -10,6 +10,7 @@ import { HomeAccommodationSection } from "@/components/home/HomeAccommodationSec
 import { HomeCarsSection } from "@/components/home/HomeCarsSection";
 import { HomeTransfersSection } from "@/components/home/HomeTransfersSection";
 import { HomeExcursionsSection } from "@/components/home/HomeExcursionsSection";
+import { HomeWorldToursSection } from "@/components/home/HomeWorldToursSection";
 import { HomeAuthorToursSection } from "@/components/home/HomeAuthorToursSection";
 import { HomeBlogSection } from "@/components/home/HomeBlogSection";
 import { BLOG_ENABLED } from "@/lib/siteFeatures";
@@ -124,7 +125,6 @@ export function LocalePageClient({
         language={language}
         hero={t.hero}
         excursionsIntermediaryNotice={excursionsIntermediaryNotice}
-        worldToursHref={createLocaleLink("/world-tours")}
         activeTab={activeTab}
         dates={dates}
         guests={guests}
@@ -175,6 +175,11 @@ export function LocalePageClient({
         copy={t.sections.excursions}
         intermediaryNotice={excursionsIntermediaryNotice}
         toursHref={createLocaleLink("/tours")}
+      />
+
+      <HomeWorldToursSection
+        hero={t.hero}
+        href={createLocaleLink("/world-tours")}
       />
 
       <HomeAuthorToursSection
