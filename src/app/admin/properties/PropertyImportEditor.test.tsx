@@ -81,4 +81,30 @@ describe("PropertyImportEditor", () => {
     ).toContain("Villa El Duque");
     expect(screen.getByRole("button", { name: "Загрузить новые" })).toBeEnabled();
   });
+
+  it("shows which locales failed after a created import", async () => {
+    const user = userEvent.setup();
+    const onUpload = vi.fn(async () => ({
+      ok: true,
+      results: [
+        {
+          index: 0,
+          title: "Villa El Duque",
+          slug: "villa-el-duque",
+          status: "created" as const,
+          detail: "Создан, id 12. Не записаны локали: uk (Translation to uk looked invalid)",
+          localeErrors: [{ locale: "uk", error: "Translation to uk looked invalid" }],
+        },
+      ],
+    }));
+    render(<PropertyImportEditor onUpload={onUpload} />);
+    fireEvent.change(screen.getByLabelText("JSON вручную"), {
+      target: { value: valid },
+    });
+
+    await user.click(screen.getByRole("button", { name: "Загрузить новые" }));
+
+    const row = await screen.findByText(/Не записаны локали: uk/);
+    expect(row.closest("li")).toHaveClass("bg-amber-50");
+  });
 });

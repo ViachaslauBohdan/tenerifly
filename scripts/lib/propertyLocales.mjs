@@ -276,7 +276,8 @@ export async function localizeProperty({
   documentId,
   locales = TARGET_LOCALES,
   dryRun = true,
-  onProgress,
+  // Default keeps this callback optional when TypeScript imports the function.
+  onProgress = undefined,
 }) {
   const en = await fetchPropertyLocaleFull(apiUrl, token, documentId, "en");
   if (!en || !hasUsableText(en.title) || !hasUsableText(en.description)) {

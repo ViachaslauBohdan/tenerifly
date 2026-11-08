@@ -124,6 +124,52 @@ describe("PropertyDetailPageClient description localization", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders markdown description as headings and a list", async () => {
+    const PropertyDetailPageClient = (
+      await import("./PropertyDetailPageClient")
+    ).default;
+
+    render(
+      <PropertyDetailPageClient
+        property={{
+          id: 1,
+          documentId: "markdown-test",
+          title: "Jardines Del Mar",
+          slug: null,
+          description: [
+            "Located in Puerto de Santiago.",
+            "",
+            "**Location:**",
+            "Near La Arena Beach.",
+            "",
+            "- 1 bedroom with a double bed",
+            "- Fully equipped kitchen",
+          ].join("\n"),
+          type: "rent",
+          property_status: "available",
+          featured: false,
+          category: "apartment",
+          createdAt: "",
+          updatedAt: "",
+          publishedAt: "",
+          images: [],
+          price: { amount: 70, currency: "EUR", period: "day" },
+          location: null,
+          features: null,
+          specifications: null,
+          rental_terms: null,
+          contact: null,
+        }}
+      />
+    );
+
+    expect(screen.getByText("Location:")).toHaveClass("font-semibold");
+    expect(screen.getByText("Near La Arena Beach.")).toBeInTheDocument();
+    const item = screen.getByText("Fully equipped kitchen");
+    expect(item.tagName).toBe("LI");
+    expect(document.body.textContent).not.toContain("**");
+  });
+
   it("shows a write-to-manager button that opens WhatsApp/Telegram with the title", async () => {
     const user = userEvent.setup();
     const PropertyDetailPageClient = (

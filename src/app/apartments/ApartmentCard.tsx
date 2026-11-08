@@ -10,6 +10,7 @@ import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPo
 import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import type { Locale } from "@/types/locale";
+import { propertyDescriptionPlainText } from "@/lib/propertyDescription";
 import { formatPropertyPriceLabel } from "@/utils/propertyPrice";
 import { IconBrandTelegram, IconBrandWhatsapp } from "@tabler/icons-react";
 
@@ -530,7 +531,7 @@ const ApartmentCard = ({
                   {apartmentListingTypeLabel(property.type, language)}
                 </p>
                 <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                  {property.description}
+                  {propertyDescriptionPlainText(property.description)}
                 </p>
               </div>
 

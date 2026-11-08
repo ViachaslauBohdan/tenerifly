@@ -21,6 +21,7 @@ import {
 } from "@/utils/propertyPrice";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
+import { PropertyDescriptionBody } from "@/components/PropertyDescriptionBody";
 
 
 interface PropertyData {
@@ -316,9 +317,7 @@ export default function PropertyDetailPage({
               <h2 className="text-xl font-bold text-gray-900 mb-4">
                 {t.description}
               </h2>
-              <p className="text-gray-600 leading-relaxed">
-                {property.description}
-              </p>
+              <PropertyDescriptionBody text={property.description} />
             </div>
 
             {/* Specifications */}

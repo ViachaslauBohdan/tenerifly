@@ -36,6 +36,14 @@ function issueLabel(item: PropertyImportIssue): string {
   return item.path ? `${where} · ${item.path}` : where;
 }
 
+function resultClass(row: PropertyImportRow): string {
+  if (row.status === "failed") return "border-red-200 bg-red-50 text-red-800";
+  if (row.status === "skipped" || (row.localeErrors && row.localeErrors.length > 0)) {
+    return "border-amber-200 bg-amber-50 text-amber-900";
+  }
+  return "border-green-200 bg-green-50 text-green-800";
+}
+
 type PropertyImportEditorProps = {
   onUpload: (json: string) => Promise<{
     ok: boolean;
@@ -182,13 +190,7 @@ export function PropertyImportEditor({ onUpload }: PropertyImportEditorProps) {
           {results.map((row) => (
             <li
               key={`${row.slug}-${row.index}`}
-              className={`rounded-lg border px-3 py-2 text-sm ${
-                row.status === "created"
-                  ? "border-green-200 bg-green-50 text-green-800"
-                  : row.status === "skipped"
-                    ? "border-amber-200 bg-amber-50 text-amber-900"
-                    : "border-red-200 bg-red-50 text-red-800"
-              }`}
+              className={`rounded-lg border px-3 py-2 text-sm ${resultClass(row)}`}
             >
               <span className="font-medium">{row.title}.</span> {row.detail}
             </li>

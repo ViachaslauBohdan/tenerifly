@@ -1,4 +1,10 @@
 import { parsePropertyImport, type PropertyDraft, type PropertyImportIssue } from "./propertyImport";
+import { localizeProperty, TARGET_LOCALES } from "../../scripts/lib/propertyLocales.mjs";
+
+export type PropertyLocaleError = {
+  locale: string;
+  error: string;
+};
 
 export type PropertyImportRow = {
   index: number;
@@ -6,6 +12,7 @@ export type PropertyImportRow = {
   slug: string;
   status: "created" | "skipped" | "failed";
   detail: string;
+  localeErrors?: PropertyLocaleError[];
 };
 
 export type PropertyImportOutcome =
@@ -116,6 +123,110 @@ async function createProperty(
   return strapiData(await response.json());
 }
 
+type LocaleWriteResult = {
+  locale?: string;
+  status?: string;
+  error?: string;
+};
+
+type LocalizationReport = {
+  text: string;
+  errors: PropertyLocaleError[];
+};
+
+
+function clip(text: string): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  return clean.length > 300 ? `${clean.slice(0, 300)}…` : clean;
+}
+
+function summarizeLocales(results: LocaleWriteResult[]): LocalizationReport {
+  const written: string[] = [];
+  const kept: string[] = [];
+  const errors: PropertyLocaleError[] = [];
+
+  results.forEach((row, index) => {
+    const locale = row.locale || `#${index + 1}`;
+    if (row.status === "written") {
+      written.push(locale);
+      return;
+    }
+    if (row.status === "skipped-existing") {
+      kept.push(locale);
+      return;
+    }
+    errors.push({ locale, error: clip(row.error || row.status || "не записана") });
+  });
+
+  const parts: string[] = [];
+  if (written.length > 0) parts.push(`Переведены: ${written.join(", ")}`);
+  if (kept.length > 0) parts.push(`Уже были переводы: ${kept.join(", ")}`);
+  if (errors.length > 0) {
+    parts.push(
+      `Не записаны локали: ${errors.map((item) => `${item.locale} (${item.error})`).join("; ")}`
+    );
+  }
+  return { text: parts.join(". "), errors };
+}
+
+function failureForEveryLocale(error: string): LocalizationReport {
+  const reason = clip(error);
+  const locales = [...TARGET_LOCALES];
+  return {
+    text: `Не записаны локали: ${locales.join(", ")} (${reason})`,
+    errors: locales.map((locale) => ({ locale, error: reason })),
+  };
+}
+
+/**
+ * Site URL `ua` is Strapi locale `uk`. TARGET_LOCALES is every non-English
+ * property locale the site serves. English stays the source document.
+ * A translation failure is reported and does not undo the English create.
+ */
+async function localizeCreatedProperty(
+  apiUrl: string,
+  token: string,
+  documentId: string | undefined
+): Promise<LocalizationReport> {
+  const id = typeof documentId === "string" ? documentId.trim() : "";
+  if (!id) return failureForEveryLocale("Strapi не вернул documentId");
+
+  try {
+    const localized = await localizeProperty({
+      apiUrl,
+      token,
+      documentId: id,
+      locales: TARGET_LOCALES,
+      dryRun: false,
+    });
+    const results = Array.isArray(localized?.results) ? localized.results : [];
+    if (results.length === 0) return failureForEveryLocale("локализатор не вернул результат");
+    return summarizeLocales(results);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Не удалось перевести";
+    return failureForEveryLocale(message);
+  }
+}
+
+function createdRow(
+  index: number,
+  title: string,
+  slug: string,
+  created: { id?: number },
+  localization: LocalizationReport
+): PropertyImportRow {
+  const base = created.id ? `Создан, id ${created.id}` : "Создан";
+  const row: PropertyImportRow = {
+    index,
+    title,
+    slug,
+    status: "created",
+    detail: localization.text ? `${base}. ${localization.text}` : base,
+  };
+  if (localization.errors.length > 0) row.localeErrors = localization.errors;
+  return row;
+}
+
 /** Creates missing properties. Never updates or deletes existing Strapi records. */
 export async function createNewProperties(
   raw: string,
@@ -147,13 +258,8 @@ export async function createNewProperties(
         continue;
       }
       const created = await createProperty(apiUrl, options.token, draft, fetchImpl);
-      results.push({
-        index,
-        title,
-        slug,
-        status: "created",
-        detail: created.id ? `Создан, id ${created.id}` : "Создан",
-      });
+      const localization = await localizeCreatedProperty(apiUrl, options.token, created.documentId);
+      results.push(createdRow(index, title, slug, created, localization));
     } catch (error) {
       results.push({
         index,

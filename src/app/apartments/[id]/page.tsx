@@ -9,6 +9,7 @@ import {
   detailJsonLdGraph,
   productOfferJsonLd,
 } from "@/lib/jsonLd";
+import { propertyDescriptionPlainText } from "@/lib/propertyDescription";
 import {
   absoluteUrlForLocale,
   hreflangAlternates,
@@ -54,7 +55,8 @@ export async function generateMetadata({
 
     const title = property.title || "Property Details";
     const description =
-      property.description || "Beautiful property in Tenerife";
+      propertyDescriptionPlainText(property.description || "") ||
+      "Beautiful property in Tenerife";
     const imageUrl = property.images?.[0]?.url
       ? property.images[0].url.startsWith("http")
         ? property.images[0].url
@@ -140,7 +142,7 @@ export default async function PropertyDetailPage({
       productOfferJsonLd({
         url: pageUrl,
         name: title,
-        description: String(property.description || ""),
+        description: propertyDescriptionPlainText(String(property.description || "")),
         image: imageUrl,
         price: property.price?.amount,
         priceCurrency: property.price?.currency,

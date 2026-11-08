@@ -92,6 +92,15 @@ describe("POST /api/admin/properties/import", () => {
     expect(response.status).toBe(200);
     const body = await response.json();
     expect(body.results[0].status).toBe("created");
+    expect(body.results[0].detail).toContain("Strapi не вернул documentId");
+    expect(body.results[0].localeErrors.map((item: { locale: string }) => item.locale)).toEqual([
+      "ru",
+      "uk",
+      "pl",
+      "de",
+      "es",
+      "fr",
+    ]);
     const methods = fetchMock.mock.calls.map((call) => call[1]?.method || "GET");
     expect(methods.every((method) => method === "GET" || method === "POST")).toBe(true);
     expect(methods).not.toContain("DELETE");
