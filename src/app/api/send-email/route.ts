@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
 import { NextResponse } from 'next/server'
+import { sendBitrix24Lead } from '@/lib/bitrix24Lead'
 
 async function sendTelegramMessage(text: string) {
     const token = process.env.TELEGRAM_BOT_TOKEN
@@ -83,6 +84,17 @@ export async function POST(req: Request) {
             subject,
             html: htmlBody,
         })
+
+        try {
+            await sendBitrix24Lead({
+                email,
+                subject,
+                message,
+                contactEmail: emailOfContact,
+            })
+        } catch (error) {
+            console.error('Bitrix24 notification failed:', error)
+        }
 
         // TELEGRAM SEND
         await sendTelegramMessage(`
