@@ -141,6 +141,30 @@ describe("SiteHeader navigation", () => {
     ]);
   });
 
+  it("links Instagram, Facebook, TikTok, and Google Maps in a new tab", () => {
+    render(<SiteHeader {...headerProps} variant="home" />);
+
+    const expected = [
+      ["Instagram", "https://www.instagram.com/pana.fera"],
+      [
+        "Facebook",
+        "https://www.facebook.com/people/TenerifeJoy-PanaFera/61595340874144/",
+      ],
+      ["TikTok", "https://www.tiktok.com/@pana.fera.ru"],
+      ["Google Maps", "https://maps.app.goo.gl/TBbdVEqmjSkcTLEf6"],
+    ] as const;
+
+    for (const [name, href] of expected) {
+      const links = screen.getAllByRole("link", { name });
+      expect(links.length).toBeGreaterThan(0);
+      for (const link of links) {
+        expect(link).toHaveAttribute("href", href);
+        expect(link).toHaveAttribute("target", "_blank");
+        expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      }
+    }
+  });
+
   it("notifies the parent when the language select changes", async () => {
     const user = userEvent.setup();
     const onLanguageChange = vi.fn();

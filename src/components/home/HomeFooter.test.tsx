@@ -30,4 +30,38 @@ describe("HomeFooter contact number", () => {
       "/cookies"
     );
   });
+
+  it("links Instagram, Facebook, TikTok, and Google Maps in a new tab", () => {
+    const copy = pickLocaleBundle(translationsJson, "en");
+
+    render(
+      <HomeFooter
+        footer={copy.footer}
+        excursionsTitle={copy.sections.excursions.title}
+        createLocaleLink={(path) => path}
+      />
+    );
+
+    const expected = [
+      ["Instagram", "https://www.instagram.com/pana.fera"],
+      [
+        "Facebook",
+        "https://www.facebook.com/people/TenerifeJoy-PanaFera/61595340874144/",
+      ],
+      ["TikTok", "https://www.tiktok.com/@pana.fera.ru"],
+      ["Google Maps", "https://maps.app.goo.gl/TBbdVEqmjSkcTLEf6"],
+    ] as const;
+
+    for (const [name, href] of expected) {
+      const link = screen.getByRole("link", { name });
+      expect(link).toHaveAttribute("href", href);
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    }
+
+    expect(screen.getByRole("link", { name: "+34604972372" })).toHaveAttribute(
+      "href",
+      "tel:+34604972372"
+    );
+  });
 });
