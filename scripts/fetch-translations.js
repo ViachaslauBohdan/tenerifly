@@ -71,16 +71,16 @@ const HERO_SEARCH_BUTTON = {
 
 const HERO_SEARCH_GLOBAL_TOURS = { ...HERO_SEARCH_BUTTON };
 
-/** Legal copy: Tenerife Joy is an intermediary, not the excursion operator. */
+/** Legal copy: Tenerife Joy is a partner, not the excursion operator. */
 const EXCURSIONS_INTERMEDIARY_NOTICE = {
-  de: "Tenerife Joy — Vermittler beim Verkauf von Ausflügen auf Teneriffa",
-  en: "Tenerife Joy — intermediary in the sale of excursions in Tenerife",
-  es: "Tenerife Joy — intermediario en la venta de excursiones en Tenerife",
-  fr: "Tenerife Joy — intermédiaire dans la vente d'excursions à Tenerife",
-  pl: "Tenerife Joy — pośrednik w sprzedaży wycieczek na Teneryfie",
-  ru: "Tenerife Joy — посредник в продаже экскурсий на Тенерифе",
-  uk: "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе",
-  ua: "Tenerife Joy — посередник у продажу екскурсій на Тенеріфе",
+  de: "Tenerife Joy — Partner beim Verkauf von Ausflügen auf Teneriffa",
+  en: "Tenerife Joy — partner in the sale of excursions in Tenerife",
+  es: "Tenerife Joy — socio en la venta de excursiones en Tenerife",
+  fr: "Tenerife Joy — partenaire dans la vente d'excursions à Tenerife",
+  pl: "Tenerife Joy — partner w sprzedaży wycieczek na Teneryfie",
+  ru: "Tenerife Joy — партнёр в продаже экскурсий на Тенерифе",
+  uk: "Tenerife Joy — партнер у продажу екскурсій на Тенеріфе",
+  ua: "Tenerife Joy — партнер у продажу екскурсій на Тенеріфе",
 };
 
 function siteHostnameForBuild() {
@@ -96,14 +96,14 @@ function siteHostnameForBuild() {
 function buildFooterLegalNotice() {
   const host = siteHostnameForBuild();
   return {
-    de: `PanaFera betreibt ausschließlich einen Online-Vermittlungsdienst für Tourismus über die Website ${host}. Wir organisieren keine Pauschalreisen, Reisepakete, Unterkunftsdienste oder Transfers. Wir beschränken uns ausschließlich auf die Bewerbung und den Verkauf von Ausflügen, Freizeitaktivitäten und Einzeleintritten autorisierter lokaler Anbieter.`,
-    en: `PanaFera operates exclusively as an online tourism intermediation service through the website ${host}. We do not organise package tours, tourist packages, accommodation services or transfers. We are limited solely and exclusively to promoting and selling excursions, leisure activities and individual tickets from authorised local providers.`,
-    es: `PanaFera opera exclusivamente como un servicio de intermediación turística online a través de la web ${host}. No organizamos viajes combinados, paquetes turísticos, servicios de alojamiento ni traslados. Nos limitamos única y exclusivamente a la promoción y venta de excursiones, actividades de ocio y entradas individuales de proveedores locales autorizados.`,
-    fr: `PanaFera opère exclusivement en tant que service d'intermédiation touristique en ligne via le site ${host}. Nous n'organisons pas de voyages combinés, de forfaits touristiques, de services d'hébergement ni de transferts. Nous nous limitons uniquement et exclusivement à la promotion et à la vente d'excursions, d'activités de loisirs et de billets individuels auprès de prestataires locaux autorisés.`,
-    pl: `PanaFera działa wyłącznie jako internetowy serwis pośrednictwa turystycznego za pośrednictwem strony ${host}. Nie organizujemy wycieczek objazdowych, pakietów turystycznych, usług noclegowych ani transferów. Ograniczamy się wyłącznie do promocji i sprzedaży wycieczek, zajęć rekreacyjnych oraz pojedynczych biletów u autoryzowanych lokalnych dostawców.`,
-    ru: `PanaFera работает исключительно как онлайн-сервис туристического посредничества через сайт ${host}. Мы не организуем комбинированные поездки, туристические пакеты, услуги размещения и трансферы. Мы ограничиваемся исключительно продвижением и продажей экскурсий, досуговых мероприятий и отдельных билетов у авторизованных местных поставщиков.`,
-    uk: `PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт ${host}. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.`,
-    ua: `PanaFera працює виключно як онлайн-сервіс туристичного посередництва через сайт ${host}. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.`,
+    de: `PanaFera betreibt ausschließlich einen Online-Partnerdienst für Tourismus über die Website ${host}. Wir organisieren keine Pauschalreisen, Reisepakete, Unterkunftsdienste oder Transfers. Wir beschränken uns ausschließlich auf die Bewerbung und den Verkauf von Ausflügen, Freizeitaktivitäten und Einzeleintritten autorisierter lokaler Anbieter.`,
+    en: `PanaFera operates exclusively as an online tourism partnership service through the website ${host}. We do not organise package tours, tourist packages, accommodation services or transfers. We are limited solely and exclusively to promoting and selling excursions, leisure activities and individual tickets from authorised local providers.`,
+    es: `PanaFera opera exclusivamente como socio turístico online a través de la web ${host}. No organizamos viajes combinados, paquetes turísticos, servicios de alojamiento ni traslados. Nos limitamos única y exclusivamente a la promoción y venta de excursiones, actividades de ocio y entradas individuales de proveedores locales autorizados.`,
+    fr: `PanaFera opère exclusivement en tant que partenaire touristique en ligne via le site ${host}. Nous n'organisons pas de voyages combinés, de forfaits touristiques, de services d'hébergement ni de transferts. Nous nous limitons uniquement et exclusivement à la promotion et à la vente d'excursions, d'activités de loisirs et de billets individuels auprès de prestataires locaux autorisés.`,
+    pl: `PanaFera działa wyłącznie jako internetowy serwis partnerski w turystyce za pośrednictwem strony ${host}. Nie organizujemy wycieczek objazdowych, pakietów turystycznych, usług noclegowych ani transferów. Ograniczamy się wyłącznie do promocji i sprzedaży wycieczek, zajęć rekreacyjnych oraz pojedynczych biletów u autoryzowanych lokalnych dostawców.`,
+    ru: `PanaFera работает исключительно как онлайн-сервис туристического партнёрства через сайт ${host}. Мы не организуем комбинированные поездки, туристические пакеты, услуги размещения и трансферы. Мы ограничиваемся исключительно продвижением и продажей экскурсий, досуговых мероприятий и отдельных билетов у авторизованных местных поставщиков.`,
+    uk: `PanaFera працює виключно як онлайн-сервіс туристичного партнерства через сайт ${host}. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.`,
+    ua: `PanaFera працює виключно як онлайн-сервіс туристичного партнерства через сайт ${host}. Ми не організовуємо комбіновані подорожі, туристичні пакети, послуги розміщення та трансфери. Ми обмежуємося виключно просуванням і продажем екскурсій, дозвіллєвих заходів та окремих квитків у авторизованих місцевих постачальників.`,
   };
 }
 
@@ -137,63 +137,63 @@ function applyFooterLegalNoticePatches(translation) {
   return translation;
 }
 
-/** Legal notice page — intermediary clause only (intro stays in footer.legalNotice). */
+/** Legal notice page — partner clause only (intro stays in footer.legalNotice). */
 const LEGAL_PAGE_INTERMEDIARY = {
   de: {
     title: "Rechtlicher Hinweis",
     backToHome: "Zur Startseite",
-    intermediaryTitle: "Vermittlerbedingung",
+    intermediaryTitle: "Partnerbedingung",
     intermediaryText:
-      "Der Nutzer akzeptiert und versteht, dass PanaFera ausschließlich als unabhängiger Vermittler zwischen dem Endkunden und den tatsächlichen Organisatoren der Aktivitäten (Ausflüge, Boote, Helikopter, Shows) tätig ist. PanaFera ist weder Eigentümer, Betreiber noch Beförderer dieser Leistungen und übernimmt daher keine unmittelbare Verantwortung für die Durchführung der Aktivitäten und organisiert keine verknüpften Leistungen über 24 Stunden hinaus. Jede Beschwerde zum Service ist an den direkten Anbieter der Aktivität zu richten.",
+      "Der Nutzer akzeptiert und versteht, dass PanaFera ausschließlich als unabhängiger Partner zwischen dem Endkunden und den tatsächlichen Organisatoren der Aktivitäten (Ausflüge, Boote, Helikopter, Shows) tätig ist. PanaFera ist weder Eigentümer, Betreiber noch Beförderer dieser Leistungen und übernimmt daher keine unmittelbare Verantwortung für die Durchführung der Aktivitäten und organisiert keine verknüpften Leistungen über 24 Stunden hinaus. Jede Beschwerde zum Service ist an den direkten Anbieter der Aktivität zu richten.",
   },
   en: {
     title: "Legal Notice",
     backToHome: "Back to home",
-    intermediaryTitle: "Intermediary Condition",
+    intermediaryTitle: "Partner Condition",
     intermediaryText:
-      "The user accepts and understands that PanaFera acts solely and exclusively as an independent intermediary between the end customer and the actual organisers of the activities (excursions, boats, helicopters, shows). PanaFera is neither the owner, operator nor carrier of such services, and therefore does not assume direct responsibility for the performance of the activities nor does it organise linked services exceeding 24 hours. Any claim regarding the service must be directed to the direct provider of the activity.",
+      "The user accepts and understands that PanaFera acts solely and exclusively as an independent partner between the end customer and the actual organisers of the activities (excursions, boats, helicopters, shows). PanaFera is neither the owner, operator nor carrier of such services, and therefore does not assume direct responsibility for the performance of the activities nor does it organise linked services exceeding 24 hours. Any claim regarding the service must be directed to the direct provider of the activity.",
   },
   es: {
     title: "Aviso Legal",
     backToHome: "Volver al inicio",
-    intermediaryTitle: "Condición de Intermediario",
+    intermediaryTitle: "Condición de socio",
     intermediaryText:
-      "El usuario acepta y comprende que PanaFera actúa única y exclusivamente en calidad de intermediario independiente entre el cliente final y los organizadores reales de las actividades (excursiones, barcos, helicópteros, espectáculos). PanaFera no es propietaria, ni operadora, ni transportista de dichos servicios, por lo tanto, no asume la responsabilidad directa de la ejecución de las actividades ni organiza servicios vinculados superiores a 24 horas. Toda reclamación sobre el servicio deberá dirigirse al proveedor directo de la actividad.",
+      "El usuario acepta y comprende que PanaFera actúa única y exclusivamente en calidad de socio independiente entre el cliente final y los organizadores reales de las actividades (excursiones, barcos, helicópteros, espectáculos). PanaFera no es propietaria, ni operadora, ni transportista de dichos servicios, por lo tanto, no asume la responsabilidad directa de la ejecución de las actividades ni organiza servicios vinculados superiores a 24 horas. Toda reclamación sobre el servicio deberá dirigirse al proveedor directo de la actividad.",
   },
   fr: {
     title: "Mentions légales",
     backToHome: "Retour à l'accueil",
-    intermediaryTitle: "Condition d'intermédiation",
+    intermediaryTitle: "Condition de partenariat",
     intermediaryText:
-      "L'utilisateur accepte et comprend que PanaFera agit uniquement et exclusivement en qualité d'intermédiaire indépendant entre le client final et les organisateurs réels des activités (excursions, bateaux, hélicoptères, spectacles). PanaFera n'est ni propriétaire, ni exploitant, ni transporteur de ces services ; elle n'assume donc pas la responsabilité directe de l'exécution des activités et n'organise pas de services liés dépassant 24 heures. Toute réclamation concernant le service doit être adressée au prestataire direct de l'activité.",
+      "L'utilisateur accepte et comprend que PanaFera agit uniquement et exclusivement en qualité de partenaire indépendant entre le client final et les organisateurs réels des activités (excursions, bateaux, hélicoptères, spectacles). PanaFera n'est ni propriétaire, ni exploitant, ni transporteur de ces services ; elle n'assume donc pas la responsabilité directe de l'exécution des activités et n'organise pas de services liés dépassant 24 heures. Toute réclamation concernant le service doit être adressée au prestataire direct de l'activité.",
   },
   pl: {
     title: "Informacja prawna",
     backToHome: "Powrót do strony głównej",
-    intermediaryTitle: "Warunek pośrednictwa",
+    intermediaryTitle: "Warunek partnerstwa",
     intermediaryText:
-      "Użytkownik akceptuje i rozumie, że PanaFera działa wyłącznie jako niezależny pośrednik między klientem końcowym a rzeczywistymi organizatorami aktywności (wycieczki, łodzie, helikoptery, spektakle). PanaFera nie jest właścicielem, operatorem ani przewoźnikiem tych usług, dlatego nie ponosi bezpośredniej odpowiedzialności za realizację aktywności ani nie organizuje powiązanych usług przekraczających 24 godziny. Wszelkie reklamacje dotyczące usługi należy kierować bezpośrednio do dostawcy danej aktywności.",
+      "Użytkownik akceptuje i rozumie, że PanaFera działa wyłącznie jako niezależny partner między klientem końcowym a rzeczywistymi organizatorami aktywności (wycieczki, łodzie, helikoptery, spektakle). PanaFera nie jest właścicielem, operatorem ani przewoźnikiem tych usług, dlatego nie ponosi bezpośredniej odpowiedzialności za realizację aktywności ani nie organizuje powiązanych usług przekraczających 24 godziny. Wszelkie reklamacje dotyczące usługi należy kierować bezpośrednio do dostawcy danej aktywności.",
   },
   ru: {
     title: "Правовое уведомление",
     backToHome: "На главную",
-    intermediaryTitle: "Условие посредничества",
+    intermediaryTitle: "Условие партнёрства",
     intermediaryText:
-      "Пользователь принимает и понимает, что PanaFera действует исключительно как независимый посредник между конечным клиентом и фактическими организаторами мероприятий (экскурсии, катера, вертолёты, шоу). PanaFera не является владельцем, оператором или перевозчиком таких услуг, поэтому не несёт прямой ответственности за исполнение мероприятий и не организует связанные услуги продолжительностью более 24 часов. Все претензии по услуге следует направлять непосредственно поставщику соответствующей активности.",
+      "Пользователь принимает и понимает, что PanaFera действует исключительно как независимый партнёр между конечным клиентом и фактическими организаторами мероприятий (экскурсии, катера, вертолёты, шоу). PanaFera не является владельцем, оператором или перевозчиком таких услуг, поэтому не несёт прямой ответственности за исполнение мероприятий и не организует связанные услуги продолжительностью более 24 часов. Все претензии по услуге следует направлять непосредственно поставщику соответствующей активности.",
   },
   uk: {
     title: "Правове повідомлення",
     backToHome: "На головну",
-    intermediaryTitle: "Умова посередництва",
+    intermediaryTitle: "Умова партнерства",
     intermediaryText:
-      "Користувач приймає та розуміє, що PanaFera діє виключно як незалежний посередник між кінцевим клієнтом і фактичними організаторами заходів (екскурсії, човни, гелікоптери, шоу). PanaFera не є власником, оператором чи перевізником таких послуг, тому не несе прямої відповідальності за виконання заходів і не організує пов’язані послуги тривалістю понад 24 години. Усі скарги щодо послуги слід надсилати безпосередньо постачальнику відповідної активності.",
+      "Користувач приймає та розуміє, що PanaFera діє виключно як незалежний партнер між кінцевим клієнтом і фактичними організаторами заходів (екскурсії, човни, гелікоптери, шоу). PanaFera не є власником, оператором чи перевізником таких послуг, тому не несе прямої відповідальності за виконання заходів і не організує пов’язані послуги тривалістю понад 24 години. Усі скарги щодо послуги слід надсилати безпосередньо постачальнику відповідної активності.",
   },
   ua: {
     title: "Правове повідомлення",
     backToHome: "На головну",
-    intermediaryTitle: "Умова посередництва",
+    intermediaryTitle: "Умова партнерства",
     intermediaryText:
-      "Користувач приймає та розуміє, що PanaFera діє виключно як незалежний посередник між кінцевим клієнтом і фактичними організаторами заходів (екскурсії, човни, гелікоптери, шоу). PanaFera не є власником, оператором чи перевізником таких послуг, тому не несе прямої відповідальності за виконання заходів і не організує пов’язані послуги тривалістю понад 24 години. Усі скарги щодо послуги слід надсилати безпосередньо постачальнику відповідної активності.",
+      "Користувач приймає та розуміє, що PanaFera діє виключно як незалежний партнер між кінцевим клієнтом і фактичними організаторами заходів (екскурсії, човни, гелікоптери, шоу). PanaFera не є власником, оператором чи перевізником таких послуг, тому не несе прямої відповідальності за виконання заходів і не організує пов’язані послуги тривалістю понад 24 години. Усі скарги щодо послуги слід надсилати безпосередньо постачальнику відповідної активності.",
   },
 };
 
