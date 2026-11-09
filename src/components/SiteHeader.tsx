@@ -3,13 +3,8 @@
 import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
 // CreditCard used by commented Pay button below.
-import {
-  IconBrandFacebook,
-  IconBrandGoogleMaps,
-  IconBrandInstagram,
-  IconBrandTiktok,
-} from "@tabler/icons-react";
 import { ChevronDown, /* CreditCard, */ Languages, Menu, X } from "lucide-react";
+import { SiteSocialLinks } from "@/components/SiteSocialLinks";
 import { localeDisplayCode } from "@/types/locale";
 import worldToursJson from "@/i18n/worldTours.json";
 import mainJson from "@/i18n/main.json";
@@ -91,32 +86,6 @@ const headerAnchorActiveClass =
 
 const mobileNavLinkClass =
   "touch-manipulation block w-full rounded-lg px-3 py-3 text-left text-sm font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white active:bg-white/15";
-
-const headerSocialLinkClass =
-  "touch-manipulation inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/25 text-white/90 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/25 min-[360px]:h-8 min-[360px]:w-8 min-[400px]:h-9 min-[400px]:w-9";
-
-const headerSocialLinks = [
-  {
-    href: "https://www.instagram.com/pana.fera",
-    label: "Instagram",
-    Icon: IconBrandInstagram,
-  },
-  {
-    href: "https://www.facebook.com/people/TenerifeJoy-PanaFera/61595340874144/",
-    label: "Facebook",
-    Icon: IconBrandFacebook,
-  },
-  {
-    href: "https://www.tiktok.com/@pana.fera.ru",
-    label: "TikTok",
-    Icon: IconBrandTiktok,
-  },
-  {
-    href: "https://maps.app.goo.gl/TBbdVEqmjSkcTLEf6",
-    label: "Google Maps",
-    Icon: IconBrandGoogleMaps,
-  },
-] as const;
 
 type SiteHeaderProps = {
   language: SiteHeaderLanguage;
@@ -269,21 +238,10 @@ export function SiteHeader({
   );
 
   const socialLinks = (
-    <div className="flex shrink-0 items-center gap-1 min-[400px]:gap-1.5">
-      {headerSocialLinks.map(({ href, label, Icon }) => (
-        <a
-          key={label}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={label}
-          title={label}
-          className={headerSocialLinkClass}
-        >
-          <Icon className="h-4 w-4" aria-hidden />
-        </a>
-      ))}
-    </div>
+    <SiteSocialLinks
+      className="flex shrink-0 items-center gap-1 min-[400px]:gap-1.5"
+      linkClassName="h-7 w-7 min-[360px]:h-8 min-[360px]:w-8"
+    />
   );
 
   const headerControls = (

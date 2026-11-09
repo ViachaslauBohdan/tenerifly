@@ -1,37 +1,9 @@
 import Link from "next/link";
-import {
-  IconBrandFacebook,
-  IconBrandGoogleMaps,
-  IconBrandInstagram,
-  IconBrandTiktok,
-} from "@tabler/icons-react";
 import { Phone } from "lucide-react";
+import { SiteSocialLinks } from "@/components/SiteSocialLinks";
 import { SITE_BRAND } from "@/lib/site";
 import { SITE_PHONE_E164 } from "@/lib/siteContact";
 import translationsJson from "@/i18n/main.json";
-
-const footerSocialLinks = [
-  {
-    href: "https://www.instagram.com/pana.fera",
-    label: "Instagram",
-    Icon: IconBrandInstagram,
-  },
-  {
-    href: "https://www.facebook.com/people/TenerifeJoy-PanaFera/61595340874144/",
-    label: "Facebook",
-    Icon: IconBrandFacebook,
-  },
-  {
-    href: "https://www.tiktok.com/@pana.fera.ru",
-    label: "TikTok",
-    Icon: IconBrandTiktok,
-  },
-  {
-    href: "https://maps.app.goo.gl/TBbdVEqmjSkcTLEf6",
-    label: "Google Maps",
-    Icon: IconBrandGoogleMaps,
-  },
-] as const;
 
 type FooterCopy = (typeof translationsJson)["en"]["footer"];
 type ExcursionsCopy = (typeof translationsJson)["en"]["sections"]["excursions"];
@@ -111,21 +83,10 @@ export function HomeFooter({
                 <Phone className="w-4 h-4" />
                 {SITE_PHONE_E164}
               </a>
-              <div className="flex flex-wrap items-center gap-1">
-                {footerSocialLinks.map(({ href, label, Icon }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    title={label}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
-                  >
-                    <Icon className="h-5 w-5" aria-hidden />
-                  </a>
-                ))}
-              </div>
+              <SiteSocialLinks
+                className="flex flex-wrap items-center gap-1.5"
+                linkClassName="h-8 w-8"
+              />
             </div>
           </div>
         </div>
