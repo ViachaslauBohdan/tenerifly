@@ -21,7 +21,7 @@ const COPY: Record<Locale, CookiePolicyCopy> = {
     sections: [
       {
         title: "Who is responsible",
-        text: "PanaFera operates {brand} at {host} as an online tourism intermediary. For questions about this policy or your data, call {phone}.",
+        text: "PanaFera operates {brand} at {host} as an online tourism partner. For questions about this policy or your data, call {phone}.",
       },
       {
         title: "Essential storage",
@@ -53,7 +53,7 @@ const COPY: Record<Locale, CookiePolicyCopy> = {
     sections: [
       {
         title: "Кто отвечает",
-        text: "PanaFera ведёт {brand} на {host} как онлайн-посредник в туризме. Вопросы по этой политике или вашим данным: {phone}.",
+        text: "PanaFera ведёт {brand} на {host} как онлайн-партнёр в туризме. Вопросы по этой политике или вашим данным: {phone}.",
       },
       {
         title: "Необходимое хранение",
@@ -85,7 +85,7 @@ const COPY: Record<Locale, CookiePolicyCopy> = {
     sections: [
       {
         title: "Хто відповідає",
-        text: "PanaFera веде {brand} на {host} як онлайн-посередник у туризмі. Питання щодо цієї політики або ваших даних: {phone}.",
+        text: "PanaFera веде {brand} на {host} як онлайн-партнер у туризмі. Питання щодо цієї політики або ваших даних: {phone}.",
       },
       {
         title: "Необхідне зберігання",
@@ -117,7 +117,7 @@ const COPY: Record<Locale, CookiePolicyCopy> = {
     sections: [
       {
         title: "Kto odpowiada",
-        text: "PanaFera prowadzi {brand} pod adresem {host} jako internetowy pośrednik turystyczny. Pytania o tę politykę lub Twoje dane: {phone}.",
+        text: "PanaFera prowadzi {brand} pod adresem {host} jako internetowy partner turystyczny. Pytania o tę politykę lub Twoje dane: {phone}.",
       },
       {
         title: "Niezbędne zapisy",
@@ -149,7 +149,7 @@ const COPY: Record<Locale, CookiePolicyCopy> = {
     sections: [
       {
         title: "Wer verantwortlich ist",
-        text: "PanaFera betreibt {brand} unter {host} als Online-Vermittler für Tourismus. Fragen zu dieser Richtlinie oder Ihren Daten: {phone}.",
+        text: "PanaFera betreibt {brand} unter {host} als Online-Partner für Tourismus. Fragen zu dieser Richtlinie oder Ihren Daten: {phone}.",
       },
       {
         title: "Notwendige Speicherung",
@@ -181,7 +181,7 @@ const COPY: Record<Locale, CookiePolicyCopy> = {
     sections: [
       {
         title: "Quién es el responsable",
-        text: "PanaFera opera {brand} en {host} como intermediario turístico online. Para preguntas sobre esta política o sus datos, llame al {phone}.",
+        text: "PanaFera opera {brand} en {host} como socio turístico online. Para preguntas sobre esta política o sus datos, llame al {phone}.",
       },
       {
         title: "Almacenamiento esencial",
@@ -213,7 +213,7 @@ const COPY: Record<Locale, CookiePolicyCopy> = {
     sections: [
       {
         title: "Qui est responsable",
-        text: "PanaFera exploite {brand} sur {host} en tant qu'intermédiaire touristique en ligne. Pour toute question sur cette politique ou vos données, appelez le {phone}.",
+        text: "PanaFera exploite {brand} sur {host} en tant que partenaire touristique en ligne. Pour toute question sur cette politique ou vos données, appelez le {phone}.",
       },
       {
         title: "Stockage essentiel",

@@ -554,71 +554,71 @@ export const SEO_LEGAL_NOTICE: Record<Locale, PageSeo> = {
   en: {
     title: `Legal Notice | ${SITE_BRAND}`,
     description:
-      `Legal notice for ${SITE_HOST}: PanaFera acts as an online tourism intermediary. Intermediary conditions, scope of services, and claims procedure.`,
+      `Legal notice for ${SITE_HOST}: PanaFera acts as an online tourism partner. Partner conditions, scope of services, and claims procedure.`,
     keywords: [
       "Tenerife Joy legal notice",
-      "PanaFera intermediary",
-      "tourism intermediation Tenerife",
+      "PanaFera partner",
+      "tourism partnership Tenerife",
     ],
   },
   pl: {
     title: `Informacja prawna | ${SITE_BRAND}`,
     description:
-      `Informacja prawna ${SITE_HOST}: PanaFera jako pośrednik turystyczny online. Warunki pośrednictwa i zakres usług.`,
+      `Informacja prawna ${SITE_HOST}: PanaFera jako partner turystyczny online. Warunki partnerstwa i zakres usług.`,
     keywords: [
       "informacja prawna Tenerife Joy",
-      "PanaFera pośrednik",
-      "pośrednictwo turystyczne Teneryfa",
+      "PanaFera partner",
+      "partnerstwo turystyczne Teneryfa",
     ],
   },
   fr: {
     title: `Mentions légales | ${SITE_BRAND}`,
     description:
-      `Mentions légales de ${SITE_HOST} : PanaFera, service d'intermédiation touristique en ligne. Conditions d'intermédiation et champ des prestations.`,
+      `Mentions légales de ${SITE_HOST} : PanaFera, partenaire touristique en ligne. Conditions de partenariat et champ des prestations.`,
     keywords: [
       "mentions légales Tenerife Joy",
-      "PanaFera intermédiaire",
-      "intermédiation touristique Ténérife",
+      "PanaFera partenaire",
+      "partenariat touristique Ténérife",
     ],
   },
   ru: {
     title: `Правовое уведомление | ${SITE_BRAND}`,
     description:
-      `Правовое уведомление ${SITE_HOST}: PanaFera как онлайн-посредник в туризме. Условия посредничества и объём услуг.`,
+      `Правовое уведомление ${SITE_HOST}: PanaFera как онлайн-партнёр в туризме. Условия партнёрства и объём услуг.`,
     keywords: [
       "правовое уведомление Tenerife Joy",
-      "PanaFera посредник",
-      "туристическое посредничество Тенерифе",
+      "PanaFera партнёр",
+      "туристическое партнёрство Тенерифе",
     ],
   },
   ua: {
     title: `Правове повідомлення | ${SITE_BRAND}`,
     description:
-      `Правове повідомлення ${SITE_HOST}: PanaFera як онлайн-посередник у туризмі. Умови посередництва та обсяг послуг.`,
+      `Правове повідомлення ${SITE_HOST}: PanaFera як онлайн-партнер у туризмі. Умови партнерства та обсяг послуг.`,
     keywords: [
       "правове повідомлення Tenerife Joy",
-      "PanaFera посередник",
-      "туристичне посередництво Тенеріфе",
+      "PanaFera партнер",
+      "туристичне партнерство Тенеріфе",
     ],
   },
   de: {
     title: `Rechtlicher Hinweis | ${SITE_BRAND}`,
     description:
-      `Rechtlicher Hinweis zu ${SITE_HOST}: PanaFera als Online-Tourismevermittler. Vermittlerbedingungen und Leistungsumfang.`,
+      `Rechtlicher Hinweis zu ${SITE_HOST}: PanaFera als Online-Tourismuspartner. Partnerbedingungen und Leistungsumfang.`,
     keywords: [
       "rechtlicher Hinweis Tenerife Joy",
-      "PanaFera Vermittler",
-      "Tourismusvermittlung Teneriffa",
+      "PanaFera Partner",
+      "Tourismuspartnerschaft Teneriffa",
     ],
   },
   es: {
     title: `Aviso Legal | ${SITE_BRAND}`,
     description:
-      `Aviso legal de ${SITE_HOST}: PanaFera como intermediario turístico online. Condición de intermediario y alcance de los servicios.`,
+      `Aviso legal de ${SITE_HOST}: PanaFera como socio turístico online. Condición de socio y alcance de los servicios.`,
     keywords: [
       "aviso legal Tenerife Joy",
-      "PanaFera intermediario",
-      "intermediación turística Tenerife",
+      "PanaFera socio",
+      "socio turístico Tenerife",
     ],
   },
 };
