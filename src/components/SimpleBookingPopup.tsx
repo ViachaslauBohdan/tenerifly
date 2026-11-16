@@ -31,6 +31,7 @@ import {
 import type { E164Number } from "libphonenumber-js";
 import {gtagReportConversion} from "@/lib/gtag";
 import {captureUtm} from "@/lib/utm";
+import {stayDateFromPicker} from "@/lib/bitrix24Lead";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import { getAuthorTourBundle } from "@/lib/authorTours";
 
@@ -523,6 +524,10 @@ ${comments ? `Дополнительная информация: ${comments}` : 
             window.sessionStorage,
             window.localStorage,
           ]),
+          locale: currentLocale,
+          customerNote: comments.trim(),
+          checkIn: stayDateFromPicker(startDate),
+          checkOut: stayDateFromPicker(endDate),
         }),
       });
 

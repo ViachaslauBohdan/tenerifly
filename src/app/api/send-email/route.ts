@@ -40,7 +40,7 @@ async function sendTelegramMessage(text: string) {
 }
 
 export async function POST(req: Request) {
-    const { email, subject, message, contactEmail, utm } = await req.json()
+    const { email, subject, message, contactEmail, utm, locale, customerNote, checkIn, checkOut } = await req.json()
     const emailOfContact = contactEmail ?? "Not set"
     const defaultRecipient = (
         process.env.NEXT_DEFAULT_EMAIL_RECIPIENT ?? 'test@gmail.com'
@@ -92,6 +92,10 @@ export async function POST(req: Request) {
                 message,
                 contactEmail: emailOfContact,
                 utm,
+                locale,
+                customerNote,
+                checkIn,
+                checkOut,
             })
         } catch (error) {
             console.error('Bitrix24 notification failed:', error)

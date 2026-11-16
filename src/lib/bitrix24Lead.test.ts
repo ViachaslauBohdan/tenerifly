@@ -63,7 +63,7 @@ describe("sendBitrix24Lead", () => {
     expect(body.fields).toMatchObject({
       TITLE: "New Pre-Book request - Villa El Duque",
       NAME: "Ana Costa",
-      SOURCE_ID: "WEB",
+      SOURCE_ID: "54",
       SOURCE_DESCRIPTION: "Booking form on Tenerife Joy website",
       EMAIL: [{ VALUE: "ana@example.com", VALUE_TYPE: "WORK" }],
       PHONE: [{ VALUE: "+34600000000", VALUE_TYPE: "MOBILE" }],
@@ -105,6 +105,34 @@ describe("sendBitrix24Lead", () => {
     });
     expect(body.fields.COMMENTS).toContain("utm_source: google");
     expect(body.fields.COMMENTS).not.toContain("extra");
+  });
+
+  it("sends the portal source, language, customer note, and stay dates", async () => {
+    process.env.BITRIX24_WEBHOOK_URL = "https://example.bitrix24.com/rest/1/secret";
+    const fetchImpl = vi.fn(async () =>
+      new Response(JSON.stringify({ result: 8 }), { status: 200 })
+    );
+
+    await sendBitrix24Lead(
+      {
+        email: "ana@example.com",
+        message,
+        locale: "ru",
+        customerNote: "  Нужен поздний заезд  ",
+        checkIn: "2026-11-14",
+        checkOut: "2026-11-18",
+      },
+      fetchImpl
+    );
+
+    const body = JSON.parse(String((fetchImpl.mock.calls[0] as [string, RequestInit])[1].body));
+    expect(body.fields).toMatchObject({
+      SOURCE_ID: "54",
+      UF_CRM_1787589324067: "3387",
+      UF_CRM_1789785093941: "Нужен поздний заезд",
+      UF_CRM_1794258929: "2026-11-14T8:00:00+02:00",
+      UF_CRM_1794258961: "2026-11-18T8:00:00+02:00",
+    });
   });
 
   it("throws when Bitrix returns an error", async () => {

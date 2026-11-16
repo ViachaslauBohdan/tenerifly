@@ -6,6 +6,10 @@ export type Bitrix24LeadInput = {
   message?: string;
   contactEmail?: string;
   utm?: UtmParams;
+  locale?: string;
+  customerNote?: string;
+  checkIn?: string;
+  checkOut?: string;
 };
 
 const BITRIX_UTM_FIELDS = {
@@ -15,6 +19,52 @@ const BITRIX_UTM_FIELDS = {
   utm_term: "UTM_TERM",
   utm_content: "UTM_CONTENT",
 } as const;
+
+const BITRIX_SOURCE_ID = "54";
+const BITRIX_LANGUAGE_FIELD = "UF_CRM_1787589324067";
+const BITRIX_CUSTOMER_NOTE_FIELD = "UF_CRM_1789785093941";
+const BITRIX_CHECK_IN_FIELD = "UF_CRM_1794258929";
+const BITRIX_CHECK_OUT_FIELD = "UF_CRM_1794258961";
+
+const BITRIX_LANGUAGE_IDS: Record<string, string> = {
+  en: "3386",
+  ru: "3387",
+  ua: "3388",
+  uk: "3388",
+  de: "3389",
+  pl: "3390",
+  es: "3096",
+  cs: "3097",
+  fr: "3406",
+};
+
+export function bitrixLanguageId(locale: unknown): string {
+  if (typeof locale !== "string") return "";
+  return BITRIX_LANGUAGE_IDS[locale.trim().toLowerCase()] || "";
+}
+
+export function stayDateFromPicker(date: Date | null | undefined): string | undefined {
+  if (!date || Number.isNaN(date.getTime())) return undefined;
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+/** Calendar date from the form, at 08:00 in the offset Bitrix expects. */
+export function bitrixStayDateTime(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const match = value.trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return "";
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1 || day > 31) return "";
+  return `${match[1]}-${match[2]}-${match[3]}T8:00:00+02:00`;
+}
+
+export function bitrixCustomerNote(value: unknown): string {
+  if (typeof value !== "string") return "";
+  return value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim().slice(0, 2000);
+}
 
 export function extractField(message: string | undefined, fieldName: string) {
   if (!message) return "";
@@ -30,6 +80,10 @@ export function bitrix24LeadFields(input: Bitrix24LeadInput) {
   const utmFields = Object.fromEntries(
     UTM_KEYS.filter((key) => utm[key]).map((key) => [BITRIX_UTM_FIELDS[key], utm[key]])
   );
+  const languageId = bitrixLanguageId(input.locale);
+  const customerNote = bitrixCustomerNote(input.customerNote);
+  const checkIn = bitrixStayDateTime(input.checkIn);
+  const checkOut = bitrixStayDateTime(input.checkOut);
 
   return {
     TITLE: input.subject || "New pre-book request",
@@ -40,7 +94,7 @@ export function bitrix24LeadFields(input: Bitrix24LeadInput) {
       `Email объекта: ${input.contactEmail || "Not set"}`,
       ...(hasUtmParams(utm) ? ["", "UTM:", ...utmLines] : []),
     ].join("\n"),
-    SOURCE_ID: "WEB",
+    SOURCE_ID: BITRIX_SOURCE_ID,
     SOURCE_DESCRIPTION: "Booking form on Tenerife Joy website",
     EMAIL: input.email
       ? [
@@ -59,6 +113,10 @@ export function bitrix24LeadFields(input: Bitrix24LeadInput) {
         ]
       : [],
     ...utmFields,
+    ...(languageId ? { [BITRIX_LANGUAGE_FIELD]: languageId } : {}),
+    ...(customerNote ? { [BITRIX_CUSTOMER_NOTE_FIELD]: customerNote } : {}),
+    ...(checkIn ? { [BITRIX_CHECK_IN_FIELD]: checkIn } : {}),
+    ...(checkOut ? { [BITRIX_CHECK_OUT_FIELD]: checkOut } : {}),
   };
 }
 
