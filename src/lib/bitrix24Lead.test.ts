@@ -70,6 +70,41 @@ describe("sendBitrix24Lead", () => {
     });
     expect(body.fields.COMMENTS).toContain("Email объекта: owner@example.com");
     expect(body.fields.COMMENTS).toContain("Villa El Duque");
+    expect(body.fields.UTM_SOURCE).toBeUndefined();
+  });
+
+  it("sends campaign tags on the lead fields Bitrix stores for UTM", async () => {
+    process.env.BITRIX24_WEBHOOK_URL = "https://example.bitrix24.com/rest/1/secret";
+    const fetchImpl = vi.fn(async () =>
+      new Response(JSON.stringify({ result: 7 }), { status: 200 })
+    );
+
+    await sendBitrix24Lead(
+      {
+        email: "ana@example.com",
+        message,
+        utm: {
+          utm_source: "google",
+          utm_medium: "cpc",
+          utm_campaign: "spring",
+          utm_term: "tenerife villa",
+          utm_content: "banner",
+          extra: "ignore",
+        } as never,
+      },
+      fetchImpl
+    );
+
+    const body = JSON.parse(String((fetchImpl.mock.calls[0] as [string, RequestInit])[1].body));
+    expect(body.fields).toMatchObject({
+      UTM_SOURCE: "google",
+      UTM_MEDIUM: "cpc",
+      UTM_CAMPAIGN: "spring",
+      UTM_TERM: "tenerife villa",
+      UTM_CONTENT: "banner",
+    });
+    expect(body.fields.COMMENTS).toContain("utm_source: google");
+    expect(body.fields.COMMENTS).not.toContain("extra");
   });
 
   it("throws when Bitrix returns an error", async () => {

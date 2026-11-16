@@ -30,6 +30,7 @@ import {
 } from "@/components/PhoneNumberInput";
 import type { E164Number } from "libphonenumber-js";
 import {gtagReportConversion} from "@/lib/gtag";
+import {captureUtm} from "@/lib/utm";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import { getAuthorTourBundle } from "@/lib/authorTours";
 
@@ -518,6 +519,10 @@ ${comments ? `Дополнительная информация: ${comments}` : 
           contactEmail: item.contactEmail, // Property's contact email
           subject: `New Pre-Book request - ${item.name || "Personalized Request"}`,
           message: emailMessage,
+          utm: captureUtm(window.location.search, [
+            window.sessionStorage,
+            window.localStorage,
+          ]),
         }),
       });
 

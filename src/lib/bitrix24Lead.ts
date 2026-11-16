@@ -1,9 +1,20 @@
+import { hasUtmParams, normalizeUtm, UTM_KEYS, type UtmParams } from "@/lib/utm";
+
 export type Bitrix24LeadInput = {
   email?: string;
   subject?: string;
   message?: string;
   contactEmail?: string;
+  utm?: UtmParams;
 };
+
+const BITRIX_UTM_FIELDS = {
+  utm_source: "UTM_SOURCE",
+  utm_medium: "UTM_MEDIUM",
+  utm_campaign: "UTM_CAMPAIGN",
+  utm_term: "UTM_TERM",
+  utm_content: "UTM_CONTENT",
+} as const;
 
 export function extractField(message: string | undefined, fieldName: string) {
   if (!message) return "";
@@ -14,13 +25,21 @@ export function extractField(message: string | undefined, fieldName: string) {
 
 export function bitrix24LeadFields(input: Bitrix24LeadInput) {
   const phone = extractField(input.message, "Телефон");
+  const utm = normalizeUtm(input.utm);
+  const utmLines = UTM_KEYS.filter((key) => utm[key]).map((key) => `${key}: ${utm[key]}`);
+  const utmFields = Object.fromEntries(
+    UTM_KEYS.filter((key) => utm[key]).map((key) => [BITRIX_UTM_FIELDS[key], utm[key]])
+  );
 
   return {
     TITLE: input.subject || "New pre-book request",
     NAME: extractField(input.message, "Имя"),
-    COMMENTS: [input.message, "", `Email объекта: ${input.contactEmail || "Not set"}`].join(
-      "\n"
-    ),
+    COMMENTS: [
+      input.message,
+      "",
+      `Email объекта: ${input.contactEmail || "Not set"}`,
+      ...(hasUtmParams(utm) ? ["", "UTM:", ...utmLines] : []),
+    ].join("\n"),
     SOURCE_ID: "WEB",
     SOURCE_DESCRIPTION: "Booking form on Tenerife Joy website",
     EMAIL: input.email
@@ -39,6 +58,7 @@ export function bitrix24LeadFields(input: Bitrix24LeadInput) {
           },
         ]
       : [],
+    ...utmFields,
   };
 }
 

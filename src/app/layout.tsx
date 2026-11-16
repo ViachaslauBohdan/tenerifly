@@ -1,4 +1,5 @@
 import type {Metadata, Viewport} from "next";
+import {Suspense} from "react";
 import {headers} from "next/headers";
 import {Geist, Geist_Mono} from "next/font/google";
 import "../styles/globals.css";
@@ -12,6 +13,7 @@ import {
     DeferredReferral,
     DeferredWhatsApp,
 } from "@/components/DeferredLayoutWidgets";
+import {UtmPersistence} from "@/components/UtmPersistence";
 import {CookieConsentBanner} from "@/components/cookieConsent/CookieConsentBanner";
 import {GoogleAdsTag} from "@/components/cookieConsent/GoogleAdsTag";
 import {OTPUSK_BODY_CLASS_GUARD_INLINE} from "@/lib/otpuskBodyClassGuard";
@@ -144,6 +146,9 @@ export default async function RootLayout({
         <OtpuskBodyClassGuard/>
         <MantineProvider>
             <DeferredReferral/>
+            <Suspense fallback={null}>
+                <UtmPersistence/>
+            </Suspense>
             {children}
             <DeferredWhatsApp/>
             <CookieConsentBanner/>
