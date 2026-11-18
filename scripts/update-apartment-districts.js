@@ -126,6 +126,9 @@ async function fetchAllProperties() {
 
 async function updateProperty(documentId, location) {
     try {
+        // Remove id field from location object as Strapi v5 doesn't allow it in updates
+        const { id, ...locationWithoutId } = location;
+        
         const response = await fetch(
             `${API_URL}/api/properties/${documentId}?locale=en`,
             {
@@ -136,7 +139,7 @@ async function updateProperty(documentId, location) {
                 },
                 body: JSON.stringify({
                     data: {
-                        location: location
+                        location: locationWithoutId
                     }
                 })
             }
