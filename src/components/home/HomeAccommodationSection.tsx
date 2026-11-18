@@ -11,6 +11,12 @@ import { TilePriceBadge } from "@/components/TilePriceBadge";
 import { ViewAllLink } from "@/components/ViewAllLink";
 import type { BookingItem, HomeProperty, LanguageCode } from "@/components/home/types";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
+import {
+  managerContactButtonClass,
+  managerTelegramIconClass,
+  managerWhatsappIconClass,
+  priceRequestButtonClass,
+} from "@/components/requestActionButton";
 import type { Locale } from "@/types/locale";
 import translationsJson from "@/i18n/main.json";
 
@@ -173,7 +179,7 @@ export function HomeAccommodationSection({
                             contact: place.contact,
                           })
                         }
-                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className={priceRequestButtonClass}
                       >
                         {apartmentBooking.checkPrice}
                       </button>
@@ -183,10 +189,10 @@ export function HomeAccommodationSection({
                           setManagerTitle(place.title);
                           setManagerOpen(true);
                         }}
-                        className="w-full px-4 py-2 bg-[#25D366] text-white rounded-lg hover:bg-[#1ebe57] transition-colors inline-flex items-center justify-center gap-2"
+                        className={managerContactButtonClass}
                       >
-                        <IconBrandWhatsapp className="h-4 w-4 shrink-0" stroke={2} />
-                        <IconBrandTelegram className="h-4 w-4 shrink-0" stroke={2} />
+                        <IconBrandWhatsapp className={managerWhatsappIconClass} stroke={2} />
+                        <IconBrandTelegram className={managerTelegramIconClass} stroke={2} />
                         {apartmentBooking.contactManager}
                       </button>
                     </div>

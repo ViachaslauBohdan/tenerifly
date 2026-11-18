@@ -19,6 +19,12 @@ import translations from "@/i18n/carsDetail.json";
 import { carTransmissionLabel } from "@/lib/carSpecLabels";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import { IconBrandTelegram, IconBrandWhatsapp } from "@tabler/icons-react";
+import {
+  managerContactButtonClass,
+  managerTelegramIconClass,
+  managerWhatsappIconClass,
+  priceRequestButtonClass,
+} from "@/components/requestActionButton";
 
 interface CarData {
   id: number;
@@ -500,17 +506,17 @@ export default function CarDetailPageClient({ car }: { car: CarData }) {
         <button
           type="button"
           onClick={handleOpenBookingModal}
-          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+          className={priceRequestButtonClass}
         >
           {requestCopy.checkPrice}
         </button>
         <button
           type="button"
           onClick={() => setIsManagerContactOpen(true)}
-          className="w-full bg-[#25D366] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#1ebe57] focus:outline-none focus:ring-2 focus:ring-[#25D366] transition-colors inline-flex items-center justify-center gap-2"
+          className={managerContactButtonClass}
         >
-          <IconBrandWhatsapp className="h-5 w-5 shrink-0" stroke={2} />
-          <IconBrandTelegram className="h-5 w-5 shrink-0" stroke={2} />
+          <IconBrandWhatsapp className={managerWhatsappIconClass} stroke={2} />
+          <IconBrandTelegram className={managerTelegramIconClass} stroke={2} />
           {requestCopy.contactManager}
         </button>
       </div>

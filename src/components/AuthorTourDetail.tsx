@@ -3,6 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { IconBrandTelegram, IconBrandWhatsapp } from "@tabler/icons-react";
+import {
+  managerContactButtonClass,
+  managerTelegramIconClass,
+  managerWhatsappIconClass,
+  priceRequestButtonClass,
+} from "@/components/requestActionButton";
 import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import { CatalogDetailShell } from "@/components/CatalogDetailShell";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
@@ -114,17 +120,17 @@ export function AuthorTourDetail({ tourId }: AuthorTourDetailProps) {
             <button
               type="button"
               onClick={() => setBookingOpen(true)}
-              className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+              className={priceRequestButtonClass}
             >
               {requestCopy.checkPrice}
             </button>
             <button
               type="button"
               onClick={() => setManagerOpen(true)}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-2 text-white hover:bg-[#1ebe57]"
+              className={managerContactButtonClass}
             >
-              <IconBrandWhatsapp className="h-4 w-4 shrink-0" stroke={2} />
-              <IconBrandTelegram className="h-4 w-4 shrink-0" stroke={2} />
+              <IconBrandWhatsapp className={managerWhatsappIconClass} stroke={2} />
+              <IconBrandTelegram className={managerTelegramIconClass} stroke={2} />
               {requestCopy.contactManager}
             </button>
           </div>

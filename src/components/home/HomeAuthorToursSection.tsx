@@ -3,6 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { IconBrandTelegram, IconBrandWhatsapp } from "@tabler/icons-react";
+import {
+  managerContactButtonClass,
+  managerTelegramIconClass,
+  managerWhatsappIconClass,
+  priceRequestButtonClass,
+} from "@/components/requestActionButton";
 import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import { HomeCardImage } from "@/components/HomeCardImage";
 import { TilePriceBadge } from "@/components/TilePriceBadge";
@@ -118,7 +124,7 @@ export function HomeAuthorToursSection({
                           price: `${price} ${ui.perPerson}`,
                         })
                       }
-                      className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+                      className={priceRequestButtonClass}
                     >
                       {requestCopy.checkPrice}
                     </button>
@@ -128,10 +134,10 @@ export function HomeAuthorToursSection({
                         setManagerTitle(tour.title);
                         setManagerOpen(true);
                       }}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-2 text-white transition-colors hover:bg-[#1ebe57]"
+                      className={managerContactButtonClass}
                     >
-                      <IconBrandWhatsapp className="h-4 w-4 shrink-0" stroke={2} />
-                      <IconBrandTelegram className="h-4 w-4 shrink-0" stroke={2} />
+                      <IconBrandWhatsapp className={managerWhatsappIconClass} stroke={2} />
+                      <IconBrandTelegram className={managerTelegramIconClass} stroke={2} />
                       {requestCopy.contactManager}
                     </button>
                   </div>
