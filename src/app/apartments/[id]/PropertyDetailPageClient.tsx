@@ -28,6 +28,7 @@ import {
   priceRequestButtonClass,
 } from "@/components/requestActionButton";
 import { PropertyDescriptionBody } from "@/components/PropertyDescriptionBody";
+import { PropertyLocationMap } from "@/components/PropertyLocationMap";
 
 
 interface PropertyData {
@@ -427,6 +428,13 @@ export default function PropertyDetailPage({
                     </span>
                   </div>
                 </div>
+                <PropertyLocationMap
+                  address={property.location.address}
+                  city={property.location.city}
+                  region={property.location.region}
+                  latitude={property.location.latitude}
+                  longitude={property.location.longitude}
+                />
               </div>
             )}
 
