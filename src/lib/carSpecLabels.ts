@@ -65,6 +65,21 @@ function normalizeTransmission(value: string): string {
   return key;
 }
 
+const SEATS_LABELS: Record<string, string> = {
+  en: "Seats",
+  ru: "Места",
+  pl: "Miejsca",
+  fr: "Places",
+  uk: "Місця",
+  de: "Sitze",
+  es: "Asientos",
+};
+
+export function carSeatsFilterLabel(locale: string): string {
+  const lang = localeContentKey(locale);
+  return SEATS_LABELS[lang] || SEATS_LABELS.en;
+}
+
 /** CMS stores `automatic` / `manual` / `semi-automatic`; show the UI locale label. */
 export function carTransmissionLabel(
   value: string | null | undefined,

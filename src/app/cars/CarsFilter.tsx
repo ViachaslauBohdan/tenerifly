@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { CatalogFilterMoreToggle } from "@/components/CatalogFilterMoreToggle";
 import { catalogSearchQuery, matchesCatalogSearch } from "@/lib/catalogSearch";
+import { carSeatsFilterLabel, carTransmissionLabel } from "@/lib/carSpecLabels";
 
 interface FilterState {
   brand: string;
@@ -18,6 +19,7 @@ interface FilterState {
   bodyType: string;
   color: string;
   doors: string;
+  seats: string;
   powerFrom: string;
   powerTo: string;
   location: string;
@@ -36,15 +38,16 @@ interface CarsFilterProps {
   onResetFilters: () => void;
   onCarsUpdate: (cars: any[]) => void;
   translations: any;
+  locale?: string;
   allCars: any[]; // Добавляем проп для всех автомобилей
 }
 
 interface FilterOptions {
   brands: string[];
   models: string[];
-  colors: string[];
-  cities: string[];
-  regions: string[];
+  fuels: string[];
+  transmissions: string[];
+  seats: string[];
 }
 
 // Интерфейс для данных автомобиля из API
@@ -62,6 +65,7 @@ interface CarData {
     transmission?: string;
     power?: number;
     doors?: number;
+    seats?: number;
     body_type?: string;
     [key: string]: any;
   };
@@ -91,17 +95,16 @@ export default function CarsFilter({
   onResetFilters,
   onCarsUpdate,
   translations: t,
+  locale = "en",
   allCars,
 }: CarsFilterProps) {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     brands: [],
     models: [],
-    colors: [],
-    cities: [],
-    regions: [],
+    fuels: [],
+    transmissions: [],
+    seats: [],
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   const activeFilterCount = Object.entries(filters).filter(([key, value]) => {
     if (key === "q") return false;
@@ -117,19 +120,7 @@ export default function CarsFilter({
       filters.yearTo ||
       filters.priceFrom ||
       filters.priceTo ||
-      filters.mileageFrom ||
-      filters.mileageTo ||
-      filters.fuel ||
-      filters.transmission ||
-      filters.bodyType ||
-      filters.color ||
-      filters.doors ||
-      filters.powerFrom ||
-      filters.powerTo ||
-      filters.location ||
-      filters.airConditioner ||
-      filters.rearCamera ||
-      filters.multimedia
+      filters.fuel
   );
 
   useEffect(() => {
@@ -166,10 +157,10 @@ export default function CarsFilter({
         ),
       ].sort();
 
-      const colors: string[] = [
+      const fuels: string[] = [
         ...new Set(
           cars
-            .map((car: CarData) => car.specifications?.color)
+            .map((car: CarData) => car.specifications?.fuel)
             .filter(
               (value): value is string =>
                 Boolean(value) && typeof value === "string"
@@ -177,10 +168,10 @@ export default function CarsFilter({
         ),
       ].sort();
 
-      const cities: string[] = [
+      const transmissions: string[] = [
         ...new Set(
           cars
-            .map((car: CarData) => car.location?.city)
+            .map((car: CarData) => car.specifications?.transmission)
             .filter(
               (value): value is string =>
                 Boolean(value) && typeof value === "string"
@@ -188,23 +179,21 @@ export default function CarsFilter({
         ),
       ].sort();
 
-      const regions: string[] = [
+      const seats: string[] = [
         ...new Set(
           cars
-            .map((car: CarData) => car.location?.region)
-            .filter(
-              (value): value is string =>
-                Boolean(value) && typeof value === "string"
-            )
+            .map((car: CarData) => car.specifications?.seats)
+            .filter((value): value is number => typeof value === "number")
+            .map((value) => String(value))
         ),
-      ].sort();
+      ].sort((left, right) => Number(left) - Number(right));
 
       setFilterOptions({
         brands,
         models,
-        colors,
-        cities,
-        regions,
+        fuels,
+        transmissions,
+        seats,
       });
     }
   }, [allCars]);
@@ -304,6 +293,13 @@ export default function CarsFilter({
           return false;
         }
 
+        if (
+          filterState.seats &&
+          String(car.specifications?.seats ?? "") !== String(filterState.seats)
+        ) {
+          return false;
+        }
+
         // Фильтр по типу кузова
         if (
           filterState.bodyType &&
@@ -380,126 +376,48 @@ export default function CarsFilter({
     []
   );
 
-  // Применение фильтров локально без API запросов
+  const onCarsUpdateRef = useRef(onCarsUpdate);
+  onCarsUpdateRef.current = onCarsUpdate;
+
   useEffect(() => {
     if (!allCars || allCars.length === 0) {
       return;
     }
 
-    setIsLoading(true);
-
-    // Добавляем небольшую задержку для оптимизации
-    const timeoutId = setTimeout(() => {
-      const filteredCars = applyFiltersToData(allCars, filters);
-      onCarsUpdate(filteredCars);
-      setIsLoading(false);
-    }, 300);
-
-    return () => {
-      clearTimeout(timeoutId);
-      setIsLoading(false);
-    };
+    onCarsUpdateRef.current(applyFiltersToData(allCars, filters));
   }, [filters, allCars, applyFiltersToData]);
 
+  const visibleModels = filters.brand
+    ? [
+        ...new Set(
+          (allCars as CarData[])
+            .filter((car) => car.specifications?.make === filters.brand)
+            .map((car) => car.specifications?.model)
+            .filter((value): value is string => Boolean(value))
+        ),
+      ].sort()
+    : filterOptions.models;
+
+  const fieldClass = "min-w-[12.5rem] flex-1";
+  const controlClass =
+    "h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-900 outline-none transition focus:border-slate-900 focus:bg-white focus:ring-4 focus:ring-slate-900/5";
+
+  const fuelLabel = (value: string) => {
+    const key = value.trim().toLowerCase();
+    return t?.[key] || value;
+  };
+
   return (
-    <div className={panelOpen ? "lg:w-80" : "w-full lg:w-auto lg:self-start"}>
-      <div
-        className={`rounded-lg border bg-white shadow-sm ${
-          panelOpen ? "max-h-screen overflow-y-auto p-6" : "px-4 py-3"
-        }`}
-      >
-        <button
-          type="button"
-          onClick={() => setPanelOpen((open) => !open)}
-          aria-expanded={panelOpen}
-          className={`flex w-full items-center text-left ${panelOpen ? "mb-6" : ""}`}
-        >
-          <svg
-            className="mr-2 h-5 w-5 text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
-            />
-          </svg>
-          <h2 className="text-lg font-semibold text-gray-900">{t.filters}</h2>
-          {activeFilterCount > 0 ? (
-            <span className="ml-2 rounded-full bg-slate-900 px-2 py-0.5 text-xs font-medium text-white">
-              {activeFilterCount}
-            </span>
-          ) : null}
-          {isLoading ? (
-            <div className="ml-2">
-              <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600"></div>
-            </div>
-          ) : null}
-          <svg
-            className={`ml-auto h-5 w-5 text-gray-500 transition-transform ${
-              panelOpen ? "rotate-180" : ""
-            }`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
-
-        {panelOpen && (
-        <>
-        {/* Тип объявления */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.type || "Type"}
-          </label>
-          <select
-            value={filters.type}
-            onChange={(e) => onFilterChange("type", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-            <option value="">{t.allTypes}</option>
-            <option value="rent">{t.rent || "Rent"}</option>
-            <option value="sale">{t.sale || "Sale"}</option>
-          </select>
-        </div>
-
-        {/* Статус автомобиля */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.status || "Status"}
-          </label>
-          <select
-            value={filters.carStatus}
-            onChange={(e) => onFilterChange("carStatus", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-            <option value="">{t.allStatuses || "All statuses"}</option>
-            <option value="available">{t.available}</option>
-            <option value="reserved">{t.reserved || "Reserved"}</option>
-            <option value="sold">{t.sold || "Sold"}</option>
-          </select>
-        </div>
-
-        {/* Марка */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+    <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-wrap items-end gap-3">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.brand}
           </label>
           <select
             value={filters.brand}
             onChange={(e) => onFilterChange("brand", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className={controlClass}
           >
             <option value="">{t.allBrands}</option>
             {filterOptions.brands.map((brand) => (
@@ -510,304 +428,150 @@ export default function CarsFilter({
           </select>
         </div>
 
-        <CatalogFilterMoreToggle
-          expanded={filtersExpanded}
-          onToggle={() => setFiltersExpanded((prev) => !prev)}
-          showMoreLabel={t.showMoreFilters || "Show more filters"}
-          showLessLabel={t.showLessFilters || "Show less filters"}
-        />
-
-        {filtersExpanded && (
-          <>
-        {/* Модель */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.model}
-          </label>
-          <select
-            value={filters.model}
-            onChange={(e) => onFilterChange("model", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-            <option value="">{t.allModels}</option>
-            {filterOptions.models.map((model) => (
-              <option key={model} value={model}>
-                {model}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Год выпуска */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.yearOfManufacture}
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="number"
-              placeholder={t.from}
-              value={filters.yearFrom}
-              onChange={(e) => onFilterChange("yearFrom", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-            <input
-              type="number"
-              placeholder={t.to}
-              value={filters.yearTo}
-              onChange={(e) => onFilterChange("yearTo", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-          </div>
-        </div>
-
-        {/* Цена за день (только для аренды) */}
-        {filters.type === "rent" && (
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {t.pricePerDay}
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="number"
-                placeholder={t.from}
-                value={filters.priceFrom}
-                onChange={(e) => onFilterChange("priceFrom", e.target.value)}
-                className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-              />
-              <input
-                type="number"
-                placeholder={t.to}
-                value={filters.priceTo}
-                onChange={(e) => onFilterChange("priceTo", e.target.value)}
-                className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Пробег */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.mileageKm}
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="number"
-              placeholder={t.from}
-              value={filters.mileageFrom}
-              onChange={(e) => onFilterChange("mileageFrom", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-            <input
-              type="number"
-              placeholder={t.to}
-              value={filters.mileageTo}
-              onChange={(e) => onFilterChange("mileageTo", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-          </div>
-        </div>
-
-        {/* Тип топлива */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.fuelType}
-          </label>
-          <select
-            value={filters.fuel}
-            onChange={(e) => onFilterChange("fuel", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-            <option value="">{t.allTypes}</option>
-            <option value="petrol">{t.petrol}</option>
-            <option value="diesel">{t.diesel}</option>
-            <option value="hybrid">{t.hybrid}</option>
-            <option value="electric">{t.electric}</option>
-          </select>
-        </div>
-
-        {/* Коробка передач */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
             {t.transmission}
           </label>
           <select
             value={filters.transmission}
             onChange={(e) => onFilterChange("transmission", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-            <option value="">{t.allTypes}</option>
-            <option value="manual">{t.manual}</option>
-            <option value="automatic">{t.automatic}</option>
-          </select>
-        </div>
-
-        {/* Тип кузова */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.bodyType}
-          </label>
-          <select
-            value={filters.bodyType}
-            onChange={(e) => onFilterChange("bodyType", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-            <option value="">{t.allTypes}</option>
-            <option value="sedan">{t.sedan}</option>
-            <option value="hatchback">{t.hatchback}</option>
-            <option value="wagon">{t.wagon}</option>
-            <option value="suv">{t.suv}</option>
-            <option value="convertible">{t.convertible}</option>
-          </select>
-        </div>
-
-        {/* Цвет */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.color}
-          </label>
-          <select
-            value={filters.color}
-            onChange={(e) => onFilterChange("color", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-            <option value="">{t.allColors}</option>
-            {filterOptions.colors.map((color) => (
-              <option key={color} value={color}>
-                {color === "black"
-                  ? t.black
-                  : color === "white"
-                    ? t.white
-                    : color === "blue"
-                      ? t.blue
-                      : color === "red"
-                        ? t.red
-                        : color === "yellow"
-                          ? t.yellow
-                          : color === "silver"
-                            ? t.silver
-                            : color}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Количество дверей */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.numberOfDoors}
-          </label>
-          <select
-            value={filters.doors}
-            onChange={(e) => onFilterChange("doors", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className={controlClass}
           >
             <option value="">{t.any}</option>
-            <option value="2">{t.doors2}</option>
-            <option value="4">{t.doors4}</option>
-            <option value="5">{t.doors5}</option>
-          </select>
-        </div>
-
-        {/* Мощность двигателя */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.enginePower}
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="number"
-              placeholder={t.from}
-              value={filters.powerFrom}
-              onChange={(e) => onFilterChange("powerFrom", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-            <input
-              type="number"
-              placeholder={t.to}
-              value={filters.powerTo}
-              onChange={(e) => onFilterChange("powerTo", e.target.value)}
-              className="w-1/2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-          </div>
-        </div>
-
-        {/* Локация */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {t.location}
-          </label>
-          <select
-            value={filters.location}
-            onChange={(e) => onFilterChange("location", e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-          >
-            <option value="">{t.allLocations}</option>
-            {filterOptions.cities.map((city) => (
-              <option key={city} value={city}>
-                {city}
+            {filterOptions.transmissions.map((transmission) => (
+              <option key={transmission} value={transmission}>
+                {carTransmissionLabel(transmission, locale)}
               </option>
             ))}
           </select>
         </div>
 
-        {/* Дополнительные опции */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            {t.additionalOptions}
+        <div className={fieldClass}>
+          <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
+            {carSeatsFilterLabel(locale)}
           </label>
-          <div className="space-y-2">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={filters.airConditioner}
-                onChange={(e) =>
-                  onFilterChange("airConditioner", e.target.checked)
-                }
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="ml-2 text-sm text-gray-700">
-                {t.airConditioner}
-              </span>
-            </label>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={filters.rearCamera}
-                onChange={(e) => onFilterChange("rearCamera", e.target.checked)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="ml-2 text-sm text-gray-700">
-                {t.parkingSensors || "Parking sensors"}
-              </span>
-            </label>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={filters.multimedia}
-                onChange={(e) => onFilterChange("multimedia", e.target.checked)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="ml-2 text-sm text-gray-700">
-                {t.bluetooth || "Bluetooth"}
-              </span>
-            </label>
-          </div>
+          <select
+            value={filters.seats}
+            onChange={(e) => onFilterChange("seats", e.target.value)}
+            className={controlClass}
+          >
+            <option value="">{t.any}</option>
+            {filterOptions.seats.map((seats) => (
+              <option key={seats} value={seats}>
+                {seats}
+              </option>
+            ))}
+          </select>
         </div>
-          </>
-        )}
 
-        {/* Reset Filters */}
-        <button
-          onClick={onResetFilters}
-          className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-        >
-          {t.resetFilters}
-        </button>
-        </>
+        <CatalogFilterMoreToggle
+          expanded={filtersExpanded}
+          showMoreLabel={t.showMoreFilters}
+          showLessLabel={t.showLessFilters}
+          onToggle={() => setFiltersExpanded((open) => !open)}
+          className="h-11 shrink-0 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+        />
+
+        {activeFilterCount > 0 && (
+          <button
+            type="button"
+            onClick={onResetFilters}
+            className="h-11 rounded-xl px-3 text-sm font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+          >
+            {t.resetFilters}
+          </button>
         )}
       </div>
-    </div>
+
+      {filtersExpanded && (
+        <div className="mt-4 flex flex-wrap items-end gap-3 border-t border-slate-100 pt-4">
+          <div className={fieldClass}>
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
+              {t.fuelType}
+            </label>
+            <select
+              value={filters.fuel}
+              onChange={(e) => onFilterChange("fuel", e.target.value)}
+              className={controlClass}
+            >
+              <option value="">{t.any}</option>
+              {filterOptions.fuels.map((fuel) => (
+                <option key={fuel} value={fuel}>
+                  {fuelLabel(fuel)}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={fieldClass}>
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
+              {t.pricePerDay}
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                min="0"
+                placeholder={t.from}
+                value={filters.priceFrom}
+                onChange={(e) => onFilterChange("priceFrom", e.target.value)}
+                className={controlClass}
+              />
+              <input
+                type="number"
+                min="0"
+                placeholder={t.to}
+                value={filters.priceTo}
+                onChange={(e) => onFilterChange("priceTo", e.target.value)}
+                className={controlClass}
+              />
+            </div>
+          </div>
+
+          <div className={fieldClass}>
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
+              {t.yearOfManufacture}
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                min="1990"
+                max="2030"
+                placeholder={t.from}
+                value={filters.yearFrom}
+                onChange={(e) => onFilterChange("yearFrom", e.target.value)}
+                className={controlClass}
+              />
+              <input
+                type="number"
+                min="1990"
+                max="2030"
+                placeholder={t.to}
+                value={filters.yearTo}
+                onChange={(e) => onFilterChange("yearTo", e.target.value)}
+                className={controlClass}
+              />
+            </div>
+          </div>
+
+          <div className={fieldClass}>
+            <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
+              {t.model}
+            </label>
+            <select
+              value={filters.model}
+              onChange={(e) => onFilterChange("model", e.target.value)}
+              className={controlClass}
+            >
+              <option value="">{t.allModels}</option>
+              {visibleModels.map((model) => (
+                <option key={model} value={model}>
+                  {model}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+    </section>
   );
 }

@@ -49,6 +49,7 @@ const DEFAULT_CAR_FILTERS: CarFilterParams = {
   bodyType: "",
   color: "",
   doors: "",
+  seats: "",
   powerFrom: "",
   powerTo: "",
   location: "",
@@ -82,6 +83,10 @@ function carFiltersFromSearchParams(
     bodyType: (urlFilters.bodyType as string) || "",
     color: (urlFilters.color as string) || "",
     doors: (urlFilters.doors as string) || "",
+    seats:
+      urlFilters.seats === undefined || urlFilters.seats === null
+        ? ""
+        : String(urlFilters.seats),
     powerFrom: (urlFilters.powerFrom as string) || "",
     powerTo: (urlFilters.powerTo as string) || "",
     location: (urlFilters.location as string) || "",
@@ -459,13 +464,7 @@ export default function CarsPageClient({
   // Загружаем все автомобили только если нет initialCarsByLocale
   useEffect(() => {
     if (initialCarsByLocale && Object.keys(initialCarsByLocale).length > 0) {
-      // Сохраняем все автомобили по локалям
       setAllCarsByLocale(initialCarsByLocale);
-      // Устанавливаем автомобили для текущего языка
-      setFilteredCars(
-        ((initialCarsByLocale[localeContentKey(language)] ??
-          initialCarsByLocale[language]) as CarData[]) || []
-      );
       setInitialLoadComplete(true);
       return;
     }
@@ -475,14 +474,6 @@ export default function CarsPageClient({
   }, [initialCarsByLocale, language, loadCarsByLocales]);
 
   const t = pickLocaleBundle(translations, language);
-
-  // Обновляем отфильтрованные данные при смене языка (без догрузки)
-  useEffect(() => {
-    setFilteredCars(
-      ((allCarsByLocale[localeContentKey(language)] ??
-        allCarsByLocale[language]) as CarData[]) || []
-    );
-  }, [language, allCarsByLocale]);
 
   // Синхронизация текущей страницы с URL при изменении searchParams
   useEffect(() => {
@@ -565,22 +556,21 @@ export default function CarsPageClient({
           onChange={(value) => handleFilterChangeSync("q", value)}
         />
 
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Filters Sidebar - передаем все автомобили в компонент фильтра */}
+        <div className="space-y-6">
           <CarsFilter
             filters={filters}
             onFilterChange={handleFilterChangeSync}
             onResetFilters={resetFiltersSync}
             onCarsUpdate={handleCarsUpdate}
             translations={t}
+            locale={language}
             allCars={
               ((allCarsByLocale[localeContentKey(language)] ??
                 allCarsByLocale[language]) as CarData[]) || []
             }
           />
 
-          {/* Cars Grid - показываем отфильтрованные автомобили */}
-          <div className="flex-1">
+          <div>
             <div className="mb-6 flex justify-center lg:justify-center">
               <a
                 href={getCanariasRentacarAffiliateUrl(language)}

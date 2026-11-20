@@ -50,6 +50,7 @@ export interface CarFilterParams {
   bodyType: string;
   color: string;
   doors: string;
+  seats: string;
   powerFrom: string;
   powerTo: string;
   location: string;
