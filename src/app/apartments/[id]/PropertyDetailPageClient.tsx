@@ -681,16 +681,31 @@ export default function PropertyDetailPage({
 
               {/* Price */}
               {property.price && (
-                <div className="mb-6">
-                  <div className="text-3xl font-bold text-gray-900 mb-1">
-                    ≈ {property.price.currency}{" "}
-                    {property.price.amount.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    / {getPropertyPeriodLabel(property.price.period, locale)}
-                  </div>
-                  <p className="mt-2 text-xs leading-snug text-gray-500">
-                    {getApartmentBookingCopy(locale).priceDisclaimer}
+                <div className="mb-6 rounded-2xl border border-amber-200/80 bg-amber-50/70 px-4 py-3.5">
+                  <p className="flex flex-wrap items-baseline gap-x-1.5">
+                    <span className="text-sm font-medium text-amber-800/80">
+                      ≈
+                    </span>
+                    {property.price.currency.toUpperCase() === "EUR" ? (
+                      <span className="text-2xl font-semibold tracking-tight text-slate-900 tabular-nums">
+                        €{property.price.amount.toLocaleString()}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-baseline gap-1.5">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                          {property.price.currency}
+                        </span>
+                        <span className="text-2xl font-semibold tracking-tight text-slate-900 tabular-nums">
+                          {property.price.amount.toLocaleString()}
+                        </span>
+                      </span>
+                    )}
+                    <span className="text-sm font-medium text-slate-500">
+                      / {getPropertyPeriodLabel(property.price.period, locale)}
+                    </span>
+                  </p>
+                  <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                    {apartmentBooking.priceDisclaimer}
                   </p>
                 </div>
               )}
