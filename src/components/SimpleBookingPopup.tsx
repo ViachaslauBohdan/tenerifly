@@ -103,7 +103,7 @@ export function SimpleBookingPopup({
       comments: "Request Description",
       commentsPlaceholder: "Any special requests or additional information...",
       close: "Close",
-      send: "Send",
+      send: "Contact office",
       success:
         "Thanks for your contact request. Our Tenerife Joy team will analyze it and respond soon",
       emailError: "Please enter a valid email address",
@@ -129,7 +129,7 @@ export function SimpleBookingPopup({
       comments: "Описание запроса",
       commentsPlaceholder: "Особые пожелания или дополнительная информация...",
       close: "Закрыть",
-      send: "Отправить",
+      send: "Связаться с офисом",
       success:
         "Спасибо за ваш запрос на связь. Наша команда Tenerife Joy проанализирует его и ответит в ближайшее время",
       emailError: "Пожалуйста, введите корректный email адрес",
@@ -155,7 +155,7 @@ export function SimpleBookingPopup({
       comments: "Opis żądania",
       commentsPlaceholder: "Specjalne życzenia lub dodatkowe informacje...",
       close: "Zamknij",
-      send: "Wyślij",
+      send: "Kontakt z biurem",
       success:
         "Dziękujemy za Twoją prośbę o kontakt. Nasz zespół Tenerife Joy przeanalizuje ją i odpowie wkrótce",
       emailError: "Proszę wprowadzić poprawny adres email",
@@ -182,7 +182,7 @@ export function SimpleBookingPopup({
       commentsPlaceholder:
         "Demandes spéciales ou informations supplémentaires...",
       close: "Fermer",
-      send: "Envoyer",
+      send: "Contacter le bureau",
       success:
         "Merci pour votre demande de contact. Notre équipe Tenerife Joy l'analysera et répondra bientôt",
       emailError: "Veuillez saisir une adresse email valide",
@@ -208,7 +208,7 @@ export function SimpleBookingPopup({
       comments: "Опис запиту",
       commentsPlaceholder: "Особливі побажання або додаткова інформація...",
       close: "Закрити",
-      send: "Надіслати",
+      send: "Зв'язатися з офісом",
       success:
         "Дякуємо за ваш запит на зв'язок. Наша команда Tenerife Joy проаналізує його і відповість найближчим часом",
       emailError: "Будь ласка, введіть коректну email адресу",
@@ -235,7 +235,7 @@ export function SimpleBookingPopup({
       commentsPlaceholder:
         "Besondere Wünsche oder zusätzliche Informationen...",
       close: "Schließen",
-      send: "Senden",
+      send: "Büro kontaktieren",
       success:
         "Vielen Dank für Ihre Kontaktanfrage. Unser Tenerife Joy-Team wird sie analysieren und bald antworten",
       emailError: "Bitte geben Sie eine gültige E-Mail-Adresse ein",
@@ -261,7 +261,7 @@ export function SimpleBookingPopup({
       comments: "Descripción de la solicitud",
       commentsPlaceholder: "Solicitudes especiales o información adicional...",
       close: "Cerrar",
-      send: "Enviar",
+      send: "Contactar con la oficina",
       success:
         "Gracias por su solicitud de contacto. Nuestro equipo Tenerife Joy la analizará y responderá pronto",
       emailError: "Por favor, introduzca una dirección de email válida",

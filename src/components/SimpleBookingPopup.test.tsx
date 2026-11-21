@@ -58,7 +58,7 @@ describe("SimpleBookingPopup mobile layout", () => {
 
     const scroll = screen.getByTestId("simple-booking-scroll");
     const actions = screen.getByTestId("simple-booking-actions");
-    const send = screen.getByRole("button", { name: /Отправить/i });
+    const send = screen.getByRole("button", { name: /Связаться с офисом/i });
 
     expect(actions).toContainElement(send);
     expect(scroll).not.toContainElement(send);
