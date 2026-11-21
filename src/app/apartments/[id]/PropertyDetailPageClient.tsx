@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
 import { pickLocaleBundle } from "@/types/locale";
@@ -12,6 +12,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
 import translations from "@/i18n/apartmentDetail.json";
@@ -121,7 +122,29 @@ export default function PropertyDetailPage({
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isManagerContactOpen, setIsManagerContactOpen] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [activeImage, setActiveImage] = useState(0);
+  const [thumbsExpanded, setThumbsExpanded] = useState(false);
   const apartmentBooking = getApartmentBookingCopy(locale);
+
+  useEffect(() => {
+    if (!carouselApi) return;
+    const syncActiveImage = () => {
+      setActiveImage(carouselApi.selectedScrollSnap());
+    };
+    syncActiveImage();
+    carouselApi.on("select", syncActiveImage);
+    return () => {
+      carouselApi.off("select", syncActiveImage);
+    };
+  }, [carouselApi]);
+
+  const showImage = (index: number) => {
+    const lastIndex = Math.max(0, (property.images?.length ?? 1) - 1);
+    const nextIndex = Math.min(Math.max(index, 0), lastIndex);
+    setActiveImage(nextIndex);
+    carouselApi?.scrollTo(nextIndex);
+  };
 
   const t = pickLocaleBundle(translations, locale);
 
@@ -227,7 +250,7 @@ export default function PropertyDetailPage({
             <div className="mb-8">
               {property.images && property.images.length > 0 ? (
                 <div className="relative">
-                  <Carousel className="w-full">
+                  <Carousel className="w-full" setApi={setCarouselApi}>
                     <CarouselContent>
                       {property.images.map((image, index) => (
                         <CarouselItem key={image.id}>
@@ -249,6 +272,18 @@ export default function PropertyDetailPage({
                                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                                 onLoad={() => handleImageLoad(image.id)}
                               />
+                              {property.images.length > 1 && (
+                                <button
+                                  type="button"
+                                  className="absolute inset-0 z-[1] cursor-pointer"
+                                  aria-label="Next photo"
+                                  onClick={() =>
+                                    showImage(
+                                      (index + 1) % property.images.length
+                                    )
+                                  }
+                                />
+                              )}
                             </div>
                             {/* Image counter */}
                             <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm font-medium">
@@ -271,10 +306,21 @@ export default function PropertyDetailPage({
                   {/* Thumbnail grid below carousel */}
                   {property.images.length > 1 && (
                     <div className="mt-4 grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                      {property.images.slice(0, 8).map((image, index) => (
-                        <div
+                      {(thumbsExpanded
+                        ? property.images
+                        : property.images.slice(0, 8)
+                      ).map((image, index) => (
+                        <button
                           key={`thumb-${image.id}`}
-                          className="aspect-square relative bg-gray-100 rounded-md overflow-hidden cursor-pointer hover:opacity-75 transition-opacity group"
+                          type="button"
+                          onClick={() => showImage(index)}
+                          aria-label={`Show photo ${index + 1}`}
+                          aria-current={activeImage === index ? "true" : undefined}
+                          className={`aspect-square relative bg-gray-100 rounded-md overflow-hidden cursor-pointer hover:opacity-75 transition group ${
+                            activeImage === index
+                              ? "ring-2 ring-blue-700 ring-offset-2"
+                              : ""
+                          }`}
                         >
                           <Image
                             src={getImageUrl(image.url)}
@@ -285,16 +331,23 @@ export default function PropertyDetailPage({
                             sizes="(max-width: 768px) 25vw, (max-width: 1200px) 16vw, 12vw"
                             quality={60}
                           />
-                          {/* Hover effect */}
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200"></div>
-                        </div>
+                        </button>
                       ))}
-                      {property.images.length > 8 && (
-                        <div className="aspect-square bg-gray-200 rounded-md flex items-center justify-center">
-                          <span className="text-sm text-gray-600 font-medium">
+                      {!thumbsExpanded && property.images.length > 8 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setThumbsExpanded(true);
+                            showImage(8);
+                          }}
+                          aria-label={`Show ${property.images.length - 8} more photos`}
+                          className="aspect-square bg-gray-200 rounded-md flex items-center justify-center cursor-pointer transition hover:bg-gray-300"
+                        >
+                          <span className="text-sm text-gray-700 font-medium">
                             +{property.images.length - 8}
                           </span>
-                        </div>
+                        </button>
                       )}
                     </div>
                   )}

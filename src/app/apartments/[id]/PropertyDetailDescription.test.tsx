@@ -269,3 +269,59 @@ describe("PropertyDetailPageClient description localization", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("PropertyDetailPageClient gallery", () => {
+  it("shows a clicked thumbnail and the extra photos from the plus tile", async () => {
+    const PropertyDetailPageClient = (
+      await import("./PropertyDetailPageClient")
+    ).default;
+    const user = userEvent.setup();
+    const images = Array.from({ length: 10 }, (_, index) => ({
+      id: index + 1,
+      url: `https://example.com/${index + 1}.jpg`,
+    }));
+
+    render(
+      <PropertyDetailPageClient
+        property={{
+          id: 1,
+          documentId: "gallery",
+          title: "Gallery apartment",
+          slug: null,
+          description: "Photos",
+          type: "rent",
+          property_status: "available",
+          featured: false,
+          category: "apartment",
+          createdAt: "",
+          updatedAt: "",
+          publishedAt: "",
+          images,
+          price: null,
+          location: null,
+          features: null,
+          specifications: null,
+          rental_terms: null,
+          contact: null,
+        }}
+      />
+    );
+
+    await user.click(screen.getByRole("button", { name: "Show photo 3" }));
+    expect(
+      screen.getByRole("button", { name: "Show photo 3" })
+    ).toHaveAttribute("aria-current", "true");
+
+    await user.click(
+      screen.getByRole("button", { name: "Show 2 more photos" })
+    );
+    expect(
+      screen.queryByRole("button", { name: "Show 2 more photos" })
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Show photo 9" })).toHaveAttribute(
+      "aria-current",
+      "true"
+    );
+    expect(screen.getByRole("button", { name: "Show photo 10" })).toBeInTheDocument();
+  });
+});
