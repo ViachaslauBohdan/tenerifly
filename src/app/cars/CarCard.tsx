@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
+import { bookingDistrict } from "@/lib/bitrix24Lead";
 import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import { carTransmissionLabel } from "@/lib/carSpecLabels";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
@@ -694,6 +695,7 @@ const CarCard = ({
             name: selectedCar.title,
             price: formatDailyRent(selectedCar) ?? undefined,
             contactEmail: selectedCar.contact?.email,
+            district: bookingDistrict(selectedCar.location),
           }}
           variant="car"
           currentLocale={locale}

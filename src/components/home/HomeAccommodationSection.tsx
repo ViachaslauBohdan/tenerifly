@@ -11,6 +11,7 @@ import { TilePriceBadge } from "@/components/TilePriceBadge";
 import { ViewAllLink } from "@/components/ViewAllLink";
 import type { BookingItem, HomeProperty, LanguageCode } from "@/components/home/types";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
+import { bookingDistrict } from "@/lib/bitrix24Lead";
 import {
   managerContactButtonClass,
   managerTelegramIconClass,
@@ -177,6 +178,7 @@ export function HomeAccommodationSection({
                             brand: place.brand,
                             model: place.model,
                             contact: place.contact,
+                            district: bookingDistrict(place.location) || undefined,
                           })
                         }
                         className={priceRequestButtonClass}

@@ -217,6 +217,7 @@ export function LocalePageClient({
             price: bookingItem.price,
             currency: bookingItem.currency,
             contactEmail: bookingItem.contact?.email,
+            district: bookingItem.district,
           }}
           mode="contact"
           variant={

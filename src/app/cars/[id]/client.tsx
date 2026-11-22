@@ -14,6 +14,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
+import { bookingDistrict } from "@/lib/bitrix24Lead";
 import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import translations from "@/i18n/carsDetail.json";
 import { carTransmissionLabel } from "@/lib/carSpecLabels";
@@ -605,6 +606,7 @@ export default function CarDetailPageClient({ car }: { car: CarData }) {
                 : undefined,
               currency: car.rental_prices?.currency,
               contactEmail: car.contact?.email,
+              district: bookingDistrict(car.location),
             }}
             variant="car"
             currentLocale={locale}

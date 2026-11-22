@@ -7,6 +7,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { cmsLocale } from "@/types/locale";
 import { apartmentListingTypeLabel } from "./apartmentCardCopy";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
+import { bookingDistrict } from "@/lib/bitrix24Lead";
 import { ApartmentManagerContactPopup } from "@/components/ApartmentManagerContactPopup";
 import { getApartmentBookingCopy } from "@/lib/apartmentBookingCopy";
 import type { Locale } from "@/types/locale";
@@ -718,6 +719,7 @@ const ApartmentCard = ({
               : undefined,
             currency: selectedProperty.price?.currency,
             contactEmail: selectedProperty.contact?.email,
+            district: bookingDistrict(selectedProperty.location),
           }}
           variant="apartment"
           currentLocale={language as Locale}

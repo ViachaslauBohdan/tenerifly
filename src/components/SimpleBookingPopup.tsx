@@ -53,6 +53,8 @@ interface SimpleBookingPopupProps {
     price?: string;
     currency?: string;
     contactEmail?: string;
+    /** Town or area copied into the CRM district field when it is a real place. */
+    district?: string;
   };
   mode?: "contact" | "booking";
   /** Apartment, car, or packaged author-tour request. */
@@ -528,6 +530,9 @@ ${comments ? `Дополнительная информация: ${comments}` : 
           customerNote: comments.trim(),
           checkIn: stayDateFromPicker(startDate),
           checkOut: stayDateFromPicker(endDate),
+          budget: item.price,
+          district: item.district,
+          site: process.env.NEXT_PUBLIC_DOMAIN || "tenerifejoy.com",
         }),
       });
 

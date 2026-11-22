@@ -15,6 +15,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { DeferredSimpleBookingPopup } from "@/components/DeferredSimpleBookingPopup";
+import { bookingDistrict } from "@/lib/bitrix24Lead";
 import translations from "@/i18n/apartmentDetail.json";
 import {
   formatPropertyPriceWithCurrency,
@@ -954,6 +955,7 @@ export default function PropertyDetailPage({
                 : undefined,
               currency: property.price?.currency,
               contactEmail: property.contact?.email,
+              district: bookingDistrict(property.location),
             }}
             variant="apartment"
             currentLocale={locale}

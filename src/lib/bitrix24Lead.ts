@@ -1,4 +1,4 @@
-import { hasUtmParams, normalizeUtm, UTM_KEYS, type UtmParams } from "@/lib/utm";
+import { normalizeUtm, UTM_KEYS, type UtmParams } from "@/lib/utm";
 
 export type Bitrix24LeadInput = {
   email?: string;
@@ -10,6 +10,12 @@ export type Bitrix24LeadInput = {
   customerNote?: string;
   checkIn?: string;
   checkOut?: string;
+  /** Price text the visitor saw, written into the comment as «Бюджет». */
+  budget?: string;
+  /** Town or area for the Bitrix field «Район». Omitted when unknown. */
+  district?: string;
+  /** Site host shown next to the source, for example tenerifejoy.com. */
+  site?: string;
 };
 
 const BITRIX_UTM_FIELDS = {
@@ -66,6 +72,123 @@ export function bitrixCustomerNote(value: unknown): string {
   return value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").trim().slice(0, 2000);
 }
 
+const VAGUE_PLACES = new Set([
+  "-",
+  "apartment",
+  "canary islands",
+  "espana",
+  "españa",
+  "islas canarias",
+  "santa cruz de tenerife",
+  "spain",
+  "tenerife",
+  "test district",
+]);
+
+function specificPlace(value: string | null | undefined): string {
+  const place = bitrixCustomerNote(value);
+  if (!place || VAGUE_PLACES.has(place.toLowerCase())) return "";
+  return place;
+}
+
+/** City or region a renter would recognise. Island-wide names are skipped. */
+export function bookingDistrict(
+  location?: { city?: string | null; region?: string | null } | string | null
+): string {
+  if (typeof location === "string") return specificPlace(location);
+  const city = specificPlace(location?.city);
+  if (city) return city;
+  return specificPlace(location?.region);
+}
+
+export function bookingSiteHost(site?: string): string {
+  const raw = (site || process.env.NEXT_PUBLIC_DOMAIN || "tenerifejoy.com").trim();
+  return raw.replace(/^https?:\/\//i, "").replace(/\/.*$/, "") || "tenerifejoy.com";
+}
+
+const BUDGET_PERIODS: Record<string, string> = {
+  day: "day",
+  день: "day",
+  dzień: "day",
+  jour: "day",
+  tag: "day",
+  día: "day",
+  week: "week",
+  неделя: "week",
+  tydzień: "week",
+  semaine: "week",
+  woche: "week",
+  semana: "week",
+  month: "month",
+  месяц: "month",
+  miesiąc: "month",
+  mois: "month",
+  monat: "month",
+  mes: "month",
+  night: "night",
+  ночь: "night",
+  noc: "night",
+  nuit: "night",
+  nacht: "night",
+  noche: "night",
+  year: "year",
+  год: "year",
+  rok: "year",
+  an: "year",
+  jahr: "year",
+  año: "year",
+};
+
+/** Turns the price the visitor saw into `≈ EUR 70/day`. */
+export function bitrixBudgetText(value: unknown): string {
+  if (typeof value === "number" && Number.isFinite(value)) return `≈ EUR ${value}`;
+  if (typeof value !== "string") return "";
+  let text = value.replace(/[\u0000-\u001F\u007F]/g, " ").replace(/\s+/g, " ").trim();
+  if (!text) return "";
+  text = text.replace(/€\s*/g, "EUR ");
+  text = text.replace(/EUR(\d)/g, "EUR $1");
+  text = text.replace(/\/(\S+)/g, (_, period: string) => {
+    const mapped = BUDGET_PERIODS[period.toLowerCase()];
+    return mapped ? `/${mapped}` : `/${period}`;
+  });
+  return text.replace(/\s+/g, " ").trim().slice(0, 200);
+}
+
+export function formatBitrixDate(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const match = value.trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return "";
+  return `${match[3]}.${match[2]}.${match[1]}`;
+}
+
+/** Comment managers copy to owners. Contacts and the object name stay on the lead card. */
+export function bitrixBookingComment(input: {
+  leadId?: number | string;
+  district?: string;
+  budget?: string;
+  checkIn?: string;
+  checkOut?: string;
+  note?: string;
+}): string {
+  const leadId = input.leadId == null ? "" : String(input.leadId).trim();
+  const lines = [
+    leadId
+      ? `Новая заявка на бронирование (ID: ${leadId}):`
+      : "Новая заявка на бронирование:",
+  ];
+  const district = specificPlace(input.district);
+  if (district) lines.push(`Предпочитаемый район: ${district}`);
+  const budget = bitrixBudgetText(input.budget);
+  if (budget) lines.push(`Бюджет: ${budget}`);
+  const from = formatBitrixDate(input.checkIn);
+  const to = formatBitrixDate(input.checkOut);
+  const dates = from && to ? `${from} – ${to}` : from || to;
+  if (dates) lines.push(`Даты: ${dates}`);
+  const note = bitrixCustomerNote(input.note);
+  if (note) lines.push(`Дополнительная информация: ${note}`);
+  return lines.join("\n");
+}
+
 export function extractField(message: string | undefined, fieldName: string) {
   if (!message) return "";
 
@@ -73,10 +196,9 @@ export function extractField(message: string | undefined, fieldName: string) {
   return match?.[1]?.trim() || "";
 }
 
-export function bitrix24LeadFields(input: Bitrix24LeadInput) {
+export function bitrix24LeadFields(input: Bitrix24LeadInput, leadId?: number | string) {
   const phone = extractField(input.message, "Телефон");
   const utm = normalizeUtm(input.utm);
-  const utmLines = UTM_KEYS.filter((key) => utm[key]).map((key) => `${key}: ${utm[key]}`);
   const utmFields = Object.fromEntries(
     UTM_KEYS.filter((key) => utm[key]).map((key) => [BITRIX_UTM_FIELDS[key], utm[key]])
   );
@@ -84,18 +206,24 @@ export function bitrix24LeadFields(input: Bitrix24LeadInput) {
   const customerNote = bitrixCustomerNote(input.customerNote);
   const checkIn = bitrixStayDateTime(input.checkIn);
   const checkOut = bitrixStayDateTime(input.checkOut);
+  const district = bookingDistrict(input.district);
+  const budget =
+    bitrixBudgetText(input.budget) || bitrixBudgetText(extractField(input.message, "Цена"));
 
   return {
     TITLE: input.subject || "New pre-book request",
     NAME: extractField(input.message, "Имя"),
-    COMMENTS: [
-      input.message,
-      "",
-      `Email объекта: ${input.contactEmail || "Not set"}`,
-      ...(hasUtmParams(utm) ? ["", "UTM:", ...utmLines] : []),
-    ].join("\n"),
+    COMMENTS: bitrixBookingComment({
+      leadId,
+      district,
+      budget,
+      checkIn: input.checkIn,
+      checkOut: input.checkOut,
+      note: customerNote,
+    }),
     SOURCE_ID: BITRIX_SOURCE_ID,
-    SOURCE_DESCRIPTION: "Booking form on Tenerife Joy website",
+    SOURCE_DESCRIPTION: bookingSiteHost(input.site),
+    ...(district ? { ADDRESS_REGION: district } : {}),
     EMAIL: input.email
       ? [
           {
@@ -132,7 +260,8 @@ export async function sendBitrix24Lead(
     return;
   }
 
-  const response = await fetchImpl(`${webhookUrl.replace(/\/$/, "")}/crm.lead.add.json`, {
+  const base = webhookUrl.replace(/\/$/, "");
+  const response = await fetchImpl(`${base}/crm.lead.add.json`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -153,6 +282,34 @@ export async function sendBitrix24Lead(
     throw new Error(data.error_description || data.error || "Bitrix24 request failed");
   }
 
-  console.log("Bitrix24 lead created:", data.result);
-  return data.result;
+  const leadId = data.result;
+  console.log("Bitrix24 lead created:", leadId);
+
+  if (leadId != null) {
+    try {
+      const update = await fetchImpl(`${base}/crm.lead.update.json`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: leadId,
+          fields: {
+            COMMENTS: bitrix24LeadFields(input, leadId).COMMENTS,
+          },
+        }),
+      });
+      const updateData = (await update.json()) as {
+        error?: string;
+        error_description?: string;
+      };
+      if (!update.ok || updateData.error) {
+        console.error("Bitrix24 lead comment update error:", updateData);
+      }
+    } catch (error) {
+      console.error("Bitrix24 lead comment update failed:", error);
+    }
+  }
+
+  return leadId;
 }

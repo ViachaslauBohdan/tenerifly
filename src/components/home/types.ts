@@ -12,6 +12,7 @@ export type BookingItem = {
   brand?: string;
   model?: string;
   contact?: { email?: string };
+  district?: string;
 };
 
 export type HomeProperty = {
