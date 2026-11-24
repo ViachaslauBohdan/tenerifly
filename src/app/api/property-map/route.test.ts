@@ -33,6 +33,7 @@ describe("GET /api/property-map", () => {
       address: "",
       city: "Costa Adeje",
       region: "",
+      postalCode: "",
       latitude: null,
       longitude: null,
     });

@@ -11,11 +11,39 @@ describe("propertyMapSearch", () => {
 
     expect(search).toMatchObject({
       precision: "address",
-      label: "Calle Venezuela (Ponderosa complex)",
+      label: "Calle Venezuela",
       areaLabel: "Costa Adeje",
       placeKey: "costa adeje",
-      query: "Calle Venezuela (Ponderosa complex), Costa Adeje, Tenerife, Spain",
+      query: "Calle Venezuela, Costa Adeje, Tenerife",
     });
+  });
+
+  it("ties a pasted Google address to the street and the postal code on that line", () => {
+    const search = propertyMapSearch({
+      address: "C. Venezuela, 18, 38660 Costa Adeje, Santa Cruz de Tenerife",
+      city: "Costa Adeje",
+      region: "Costa Adeje",
+      postalCode: "38670",
+    });
+
+    expect(search?.queries[0]).toBe("18 Calle Venezuela, 38660, Tenerife");
+    expect(search?.label).toBe("Calle Venezuela");
+    expect(search?.precision).toBe("address");
+    expect(search?.queries).not.toContain("18 Calle Venezuela, 38670, Tenerife");
+  });
+
+  it("keeps the neighbourhood when the street number is a unit inside a complex", () => {
+    const search = propertyMapSearch({
+      address: "Calle Venezuela, 605 (Ponderosa), San Eugenio Bajo",
+      city: "Costa Adeje",
+      region: "Tenerife",
+      postalCode: "38670",
+    });
+
+    expect(search?.queries[0]).toBe(
+      "Calle Venezuela, San Eugenio Bajo, Tenerife"
+    );
+    expect(search?.queries.join(" ")).not.toContain("38670");
   });
 
   it("cuts an address that was pasted twice", () => {
@@ -26,9 +54,7 @@ describe("propertyMapSearch", () => {
       region: "Tenerife",
     });
 
-    expect(search?.query).toBe(
-      "C. la Hondura, 22, 38683 Santiago del Teide, Santa Cruz de Tenerife, Spain"
-    );
+    expect(search?.queries[0]).toBe("22 Calle la Hondura, 38683, Tenerife");
     expect(search?.precision).toBe("address");
     expect(search?.placeKey).toBe("acantilados de los gigantes");
   });

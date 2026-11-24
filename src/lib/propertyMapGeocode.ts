@@ -36,6 +36,7 @@ type NominatimHit = {
   lat?: string;
   lon?: string;
   type?: string;
+  address?: { postcode?: string };
 };
 
 const cache = new Map<string, PropertyMapPoint | null>();
@@ -140,6 +141,7 @@ async function nominatim(
 ): Promise<{ lat: number; lng: number; type?: string } | null> {
   const url = new URL(NOMINATIM_URL);
   url.searchParams.set("format", "jsonv2");
+  url.searchParams.set("addressdetails", "1");
   url.searchParams.set("limit", "5");
   url.searchParams.set("countrycodes", "es");
   url.searchParams.set("viewbox", "-16.95,28.6,-16.1,27.98");
@@ -161,19 +163,24 @@ async function nominatim(
   const hits = (await response.json()) as NominatimHit[];
   if (!Array.isArray(hits)) return null;
 
+  const wantedPostal = query.match(/\b(38\d{3})\b/)?.[1];
   const ranked = hits
     .map((hit, index) => ({ hit, index }))
     .filter(({ hit }) => {
       const lat = Number(hit.lat);
       const lng = Number(hit.lon);
-      return Number.isFinite(lat) && Number.isFinite(lng) && inTenerife(lat, lng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng) || !inTenerife(lat, lng)) {
+        return false;
+      }
+      const postcode = hit.address?.postcode;
+      return !wantedPostal || !postcode || postcode === wantedPostal;
     })
     .sort(
       (a, b) => hitRank(a.hit.type) - hitRank(b.hit.type) || a.index - b.index
     );
 
   const best = ranked[0]?.hit;
-  if (!best) return null;
+  if (!best || (wantedPostal && hitRank(best.type) > 0)) return null;
   return { lat: Number(best.lat), lng: Number(best.lon), type: best.type };
 }
 
@@ -214,40 +221,44 @@ export async function geocodePropertyLocation(
     if (known) return known;
   }
 
-  const cached = cache.get(search.query);
+  const cacheKey = search.queries.join(" | ") || search.query;
+  const cached = cache.get(cacheKey);
   if (cached !== undefined) return cached ?? knownPlace(search);
 
-  const pending = inflight.get(search.query);
+  const pending = inflight.get(cacheKey);
   if (pending) return pending;
 
   const fetchImpl = options?.fetchImpl ?? fetch;
   const gapMs = options?.minIntervalMs ?? 1100;
   const request = (async () => {
     try {
-      const hit = await nominatim(search.query, fetchImpl, gapMs);
-      if (!hit) {
-        const fallback = knownPlace(search);
-        cache.set(search.query, fallback);
-        return fallback;
+      let point: PropertyMapPoint | null = null;
+      for (const query of search.queries) {
+        const hit = await nominatim(query, fetchImpl, gapMs);
+        if (!hit) continue;
+        const streetLevel = hitRank(hit.type) === 0;
+        if (search.precision === "address" && !streetLevel) continue;
+        const precision =
+          search.precision === "address" &&
+          hit.type &&
+          SETTLEMENT_TYPES.has(hit.type)
+            ? "city"
+            : search.precision;
+        point = pointFrom(search, hit.lat, hit.lng, precision);
+        break;
       }
-      const precision =
-        search.precision === "address" &&
-        hit.type &&
-        SETTLEMENT_TYPES.has(hit.type)
-          ? "city"
-          : search.precision;
-      const point = pointFrom(search, hit.lat, hit.lng, precision);
-      cache.set(search.query, point);
-      return point;
+      const resolved = point ?? knownPlace(search);
+      cache.set(cacheKey, resolved);
+      return resolved;
     } catch {
       const fallback = knownPlace(search);
-      cache.set(search.query, fallback);
+      cache.set(cacheKey, fallback);
       return fallback;
     } finally {
-      inflight.delete(search.query);
+      inflight.delete(cacheKey);
     }
   })();
 
-  inflight.set(search.query, request);
+  inflight.set(cacheKey, request);
   return request;
 }

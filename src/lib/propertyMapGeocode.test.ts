@@ -62,6 +62,41 @@ describe("geocodePropertyLocation", () => {
     });
   });
 
+  it("uses the street hit when an earlier query misses", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(
+      nominatimResponse([
+        {
+          lat: "28.0706661",
+          lon: "-16.7293426",
+          type: "residential",
+        },
+      ])
+    );
+
+    const point = await geocodePropertyLocation(
+      {
+        address: "Calle Venezuela, 605 (Ponderosa), San Eugenio Bajo",
+        city: "Costa Adeje",
+        region: "Tenerife",
+        postalCode: "38670",
+      },
+      { fetchImpl, minIntervalMs: 0 }
+    );
+
+    expect(fetchImpl).toHaveBeenCalledOnce();
+    const requestUrl = String(fetchImpl.mock.calls[0]?.[0]);
+    expect(requestUrl).toContain(
+      "q=Calle+Venezuela%2C+San+Eugenio+Bajo%2C+Tenerife"
+    );
+    expect(point).toMatchObject({
+      lat: 28.0706661,
+      lng: -16.7293426,
+      precision: "address",
+      label: "Calle Venezuela",
+      radiusMeters: 0,
+    });
+  });
+
   it("falls back to the town when the street cannot be placed", async () => {
     const fetchImpl = vi.fn().mockResolvedValue(nominatimResponse([]));
     const point = await geocodePropertyLocation(

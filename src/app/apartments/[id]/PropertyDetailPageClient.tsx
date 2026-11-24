@@ -486,6 +486,7 @@ export default function PropertyDetailPage({
                   address={property.location.address}
                   city={property.location.city}
                   region={property.location.region}
+                  postalCode={property.location.postal_code}
                   latitude={property.location.latitude}
                   longitude={property.location.longitude}
                 />

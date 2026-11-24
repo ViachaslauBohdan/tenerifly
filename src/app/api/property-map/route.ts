@@ -9,7 +9,8 @@ export async function GET(request: Request) {
   const address = url.searchParams.get("address") ?? "";
   const city = url.searchParams.get("city") ?? "";
   const region = url.searchParams.get("region") ?? "";
-  if ([address, city, region].some((value) => value.length > 300)) {
+  const postalCode = url.searchParams.get("postalCode") ?? "";
+  if ([address, city, region, postalCode].some((value) => value.length > 300)) {
     return NextResponse.json({ error: "invalid" }, { status: 400 });
   }
 
@@ -19,6 +20,7 @@ export async function GET(request: Request) {
     address,
     city,
     region,
+    postalCode,
     latitude: latitude ? Number(latitude) : null,
     longitude: longitude ? Number(longitude) : null,
   });

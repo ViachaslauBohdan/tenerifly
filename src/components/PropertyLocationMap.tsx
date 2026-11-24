@@ -47,6 +47,7 @@ export function PropertyLocationMap(location: PropertyMapLocation) {
     if (location.address) params.set("address", location.address);
     if (location.city) params.set("city", location.city);
     if (location.region) params.set("region", location.region);
+    if (location.postalCode) params.set("postalCode", location.postalCode);
     if (location.latitude) params.set("latitude", String(location.latitude));
     if (location.longitude) params.set("longitude", String(location.longitude));
 
@@ -72,6 +73,7 @@ export function PropertyLocationMap(location: PropertyMapLocation) {
     location.address,
     location.city,
     location.region,
+    location.postalCode,
     location.latitude,
     location.longitude,
   ]);
